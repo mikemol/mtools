@@ -297,10 +297,39 @@ def test_the_wall_clock_judgement_reads_a_round_stamped_now(
     queue_file.write_text(json.dumps(_queue(W1="ready", W7="working")), encoding="utf-8")
     round_file = tmp_path / "round.json"
     monkeypatch.setenv(round_wire.ENV, str(round_file))
-    assert round_wire.now_reason(checkout) is None
+    outside = frozenset({"W7"})
+    assert round_wire.now_reason(checkout, outside) is None
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}'
     round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
-    assert "take W1 first" in str(round_wire.now_reason(checkout))
+    assert "take W1 first" in str(round_wire.now_reason(checkout, outside))
     _worktree(checkout, "mtools-W7", "scratch/W7")
-    assert "take W1 first" in str(round_wire.now_reason(checkout))
+    assert "take W1 first" in str(round_wire.now_reason(checkout, outside))
+
+
+def test_the_submit_judges_the_stacks_cards_not_the_queues_marks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2322: a stack outside the round is refused with no mark; one inside passes a stray mark."""
+    checkout = tmp_path / "mtools"
+    (checkout / ".claude").mkdir(parents=True)
+    queue_file = checkout / ".claude" / "paths-forward.json"
+    round_file = tmp_path / "round.json"
+    monkeypatch.setenv(round_wire.ENV, str(round_file))
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    row = '{"repo": "mtools", "symbol": "W1", "rank": "1", "salience": "1"}'
+    round_file.write_text(f'{{"as_of": "{stamp}"}}\n{row}\n', encoding="utf-8")
+    queue_file.write_text(json.dumps(_queue(W1="ready", W7="ready")), encoding="utf-8")
+    assert "take W1 first" in str(round_wire.now_reason(checkout, frozenset({"W7"})))
+    queue_file.write_text(json.dumps(_queue(W1="ready", W7="working")), encoding="utf-8")
+    assert round_wire.now_reason(checkout, frozenset({"W1"})) is None
+    assert round_wire.now_reason(checkout, frozenset()) is None
+
+
+def test_a_done_cards_leftover_tree_exempts_nothing(tmp_path: Path) -> None:
+    """W2321 review: a tree for a DONE card is no build; the outside working mark still refuses."""
+    checkout, round_file = _checkout(tmp_path, W1="ready", W7="done", W8="working")
+    _worktree(checkout, "mtools-W7", "scratch/W7")
+    assert "W1 is in this repository's round" in str(
+        round_wire.round_reason(checkout, _NOW, round_file)
+    )

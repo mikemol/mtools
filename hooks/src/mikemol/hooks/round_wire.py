@@ -211,6 +211,38 @@ def without_built(queue: object, built: frozenset[str]) -> object:
     return {**as_record(queue), "waypoints": swapped}
 
 
+def _submitted_status(card: dict[str, object], stack: frozenset[str]) -> str:
+    """Give a card the status a stack submit judges it by.
+
+    Returns:
+        `working` for a card the stack names, `building` for any other working card, else the
+        card's own status.
+
+    """
+    if text_of(card.get("symbol")) in stack:
+        return "working"
+    return "building" if card.get("status") == "working" else text_of(card.get("status"))
+
+
+def as_submitted(queue: object, stack: frozenset[str]) -> object:
+    """Read the queue as a stack submit sees it: the stack's cards are the working set (W2322).
+
+    ⚑ THE SUBMIT JUDGES WHAT IT IS GIVEN, NOT MARKS (github-14, W2316 review block 2): a stack is
+    work in hand whatever its cards' marks say, and a working mark nothing is building says nothing.
+    Each card the stack names counts as working; every other working card becomes `building`, so a
+    stray mark neither refuses a stack inside the round nor excuses one outside it.
+
+    Returns:
+        a copy of the queue with those statuses swapped; the queue itself when it has no card list.
+
+    """
+    raw = as_record(queue).get("waypoints")
+    if not isinstance(raw, list):
+        return queue
+    swapped = [{**card, "status": _submitted_status(card, stack)} for card in map(as_record, raw)]
+    return {**as_record(queue), "waypoints": swapped}
+
+
 def refusals(
     queue: object, text: str, repo: str, now: datetime, cited: frozenset[str] = frozenset()
 ) -> list[str]:
@@ -236,9 +268,12 @@ def round_reason(
     now: datetime,
     round_file: Path | None = None,
     *,
-    trees: bool = True,
+    stack: frozenset[str] | None = None,
 ) -> str | None:
     """Read the round and the queue under `directory` and judge them.
+
+    A `stack` is a submit's: its cards are the working set and no tree or mark is read
+    (W2322).
 
     Returns:
         the refusals joined into one reason, saying so when the commit queue could not be read;
@@ -253,8 +288,10 @@ def round_reason(
     seen = published_at(text)
     if seen is not None:
         note_stamp(directory, seen)
-    built = held_trees(directory) if trees else frozenset()
-    found = refusals(without_built(queue, built), text, directory.name, now, in_gate(directory))
+    judged = (
+        without_built(queue, held_trees(directory)) if stack is None else as_submitted(queue, stack)
+    )
+    found = refusals(judged, text, directory.name, now, in_gate(directory))
     if not found:
         return None
     blind = (
@@ -265,15 +302,15 @@ def round_reason(
     return " | ".join(found) + blind
 
 
-def now_reason(directory: Path) -> str | None:
-    """Judge `directory`'s queue against the round as of the wall clock.
+def now_reason(directory: Path, stack: frozenset[str]) -> str | None:
+    """Judge a submitted `stack`'s cards against the round as of the wall clock.
 
     Returns:
         what `round_reason` says at this moment; the stack submit's seam, since it has no clock
         of its own.
 
     """
-    # ⚑ AT SUBMIT NO SCRATCH TREE EXEMPTS ANYTHING (W2316): the submit refuses a stack whose card is
-    # outside the round while a ready round card is passed over, however honest the work. Only the
-    # Stop hook, which judges marks, admits a tree.
-    return round_reason(directory, datetime.now(UTC), None, trees=False)
+    # ⚑ AT SUBMIT THE STACK IS THE WORKING SET (W2322): it refuses a stack whose card is outside
+    # the round while a ready round card is passed over, however honest the work, and no mark or
+    # scratch tree changes that. Only the Stop hook, which judges marks, admits a tree.
+    return round_reason(directory, datetime.now(UTC), None, stack=stack)

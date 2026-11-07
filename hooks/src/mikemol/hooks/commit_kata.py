@@ -1155,6 +1155,17 @@ def admin_mode(args: Sequence[str], env: Mapping[str, str]) -> int | None:
     return unreadable_stack(stack_target(bare, env), bare)
 
 
+def stack_cards(stack_file: Path) -> frozenset[str]:
+    """Name the waypoints a stack file carries, for the round check at submit (W2322).
+
+    Returns:
+        the entries' waypoints; empty when the file cannot be read as entries.
+
+    """
+    items = stack_items(stack_file)
+    return frozenset() if isinstance(items, str) else frozenset(i.waypoint for i in items)
+
+
 def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
     """Judge a submitted stack by the refusals made before it waits for its turn.
 
@@ -1175,7 +1186,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
         or stack_build_refusal(root, stack_file, snap, run_git_in)
         or _ahead_refusal(_unbuilt_on(snap))
         or _shard_refusal(root, stack_file, env)
-        or _round_refusal(root)
+        or _round_refusal(root, stack_cards(stack_file))
         or _flake_refusal(root)
         or _pace_refusal(root, stack_file, env)
         or _test_refusal(root, stack_file, env)

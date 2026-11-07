@@ -2,6 +2,7 @@
 # Copyright (c) 2026 Mike Mol
 """A submitted stack meets the import, build-file, slow-grid and round refusals in order."""
 
+import json
 from pathlib import Path
 
 import pytest
@@ -121,3 +122,29 @@ def test_a_stack_sharing_nothing_with_a_stack_ahead_goes_on_to_the_grid(
     _set(monkeypatch, None, None, "grid")
     monkeypatch.setattr(commit_kata, "_unbuilt_on", nothing)
     assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "grid"
+
+
+def test_the_round_check_is_handed_the_waypoints_the_stack_carries(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2322: the submit judges the stack's own cards; an unreadable file names none."""
+    entries = [
+        {"waypoint": "W1", "subject": "one", "paths": ["a"]},
+        {"waypoint": "W2", "subject": "two", "paths": ["b"]},
+    ]
+    stack = tmp_path / "stack.json"
+    stack.write_text(json.dumps(entries), encoding="utf-8")
+    assert commit_kata.stack_cards(stack) == frozenset({"W1", "W2"})
+    stack.write_text("not json", encoding="utf-8")
+    assert commit_kata.stack_cards(stack) == frozenset()
+    asked: list[frozenset[str]] = []
+
+    def round_check(_root: Path, cards: frozenset[str]) -> str | None:
+        asked.append(cards)
+        return None
+
+    _set(monkeypatch, None, None, None)
+    monkeypatch.setattr(commit_kata, "_round_refusal", round_check)
+    stack.write_text(json.dumps(entries), encoding="utf-8")
+    assert commit_kata.submit_problem(_ROOT, stack, _ENV) is None
+    assert asked == [frozenset({"W1", "W2"})]
