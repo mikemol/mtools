@@ -114,3 +114,38 @@ def test_the_table_ships_empty_so_nothing_is_admitted_until_a_row_is_added() -> 
     """A row is a reviewed literal: with none added, the exact change above is not admitted."""
     assert admission.ROWS == ()
     assert admission.admitting(admission.ROWS, "nemik", ["W1660"], _EXACT) is None
+
+
+_RECORD = "bde02714-1533-475a-b934-d2ce58024a15:104181"
+_BIRTH = admission.Row(
+    repo="nemik",
+    card="W1978",
+    blobs={"codon-edges-baseline.json": _A},
+    kind=admission.BIRTH,
+    ratchet="codon-edges-baseline.json",
+    old=0,
+    new=7,
+    record=_RECORD,
+)
+_ENTRY = (
+    '{"rebaselines": [{"ratchet": "codon-edges-baseline.json", "old": 0, "new": 7, '
+    '"reason": "birth", "warrant": "' + _RECORD + '"}]}'
+)
+
+
+def test_a_repair_row_has_no_accident_checks() -> None:
+    """The control: only a birth row is asked the accident questions."""
+    assert admission.accident(_ROW, {"codon-edges-baseline.json"}, None) is None
+
+
+def test_a_birth_row_passes_when_the_file_is_new_and_the_entry_cites_the_record() -> None:
+    """The control for a birth: new file, matching entry, pinned record."""
+    assert admission.accident(_BIRTH, {"src/a.py"}, _ENTRY) is None
+
+
+def test_a_birth_row_is_refused_for_an_existing_file_a_missing_entry_or_another_record() -> None:
+    """Each accident check is reached through the row: file, entry, record."""
+    assert admission.accident(_BIRTH, {"codon-edges-baseline.json"}, _ENTRY) is not None
+    assert admission.accident(_BIRTH, {"src/a.py"}, None) is not None
+    other = _ENTRY.replace("104181", "104182")
+    assert admission.accident(_BIRTH, {"src/a.py"}, other) is not None

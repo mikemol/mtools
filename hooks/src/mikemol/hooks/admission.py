@@ -21,20 +21,33 @@ CONSUMED BY: the pace guard (`ratchet_pace`), once wired (W2310's next step), an
 that write the `Admission:` trailer (W2312).
 """
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Collection, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 
+from mikemol.hooks import birth_checks
 from mikemol.hooks.stacksnap import QUEUE_FILES, Frozen
+
+REPAIR = "repair"
+BIRTH = "birth"
 
 
 @dataclass(frozen=True, slots=True)
 class Row:
-    """One pinned admission: the repository, the card and the blob of each path it admits."""
+    """One pinned admission: the repository, the card and the blob of each path it admits.
+
+    A birth row also names the ratchet file it creates, the rise it declares (`old` to `new`)
+    and the operator record (`<uuid>:<line>`) the stack's rebaselines entry must cite.
+    """
 
     repo: str
     card: str
     blobs: Mapping[str, str] = field(default_factory=dict)
     review: str = ""
+    kind: str = REPAIR
+    ratchet: str = ""
+    old: int = 0
+    new: int = 0
+    record: str = ""
 
     def ident(self) -> str:
         """Name the row as the `Admission:` trailer carries it.
@@ -81,6 +94,26 @@ def refusal(row: Row, waypoints: Iterable[str], frozen: Iterable[Frozen]) -> str
         if held[path] != row.blobs[path]:
             return f"{path} is not the pinned blob (the stack holds {held[path] or 'a deletion'})"
     return None
+
+
+def accident(row: Row, head_paths: Collection[str], rebaselines: str | None) -> str | None:
+    """Run the birth row's accident checks (W2309); a repair row has none.
+
+    Args:
+        row: the row that matched the stack.
+        head_paths: the paths HEAD holds.
+        rebaselines: the stack's frozen rebaselines.json text, None when it has none.
+
+    Returns:
+        why this birth looks like an accident; None for a repair row and for a birth no
+        check refuses.
+
+    """
+    if row.kind != BIRTH:
+        return None
+    return birth_checks.absent_at_head(head_paths, row.ratchet) or birth_checks.warrant_matches(
+        rebaselines, row.ratchet, row.old, row.new, row.record
+    )
 
 
 def admitting(
