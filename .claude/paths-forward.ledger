@@ -6127,3 +6127,16 @@
 2026-11-07T03:29:51Z  status W1259 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T03:31:03Z  status W1259 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T03:31:37Z  status W1259 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T04:16:22Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:05:23Z  status W1267 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:19:49Z  status W2060 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:19:50Z  interrupt W2326 minted    -         "W2301 part D remainder: the operator-warrant verify of a birth row through hold_lift.run_reader (--claim operator over the row's pinned transcript path, uuid and line), the pure checks having landed in W2309"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2309
+2026-11-07T05:19:51Z  interrupt W2327 minted    -         "W2301 part B remainder: wire admission.accident and repin_admission.admits into ratchet_pace.stack_reason, so a stack matching a row or a repin is judged by them"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2310
+2026-11-07T05:20:00Z  interrupt W2328 minted    -         "W2301 part B remainder: the first real pinned Row (nemik W1660's reader repair), added as its own reviewed change to admission.ROWS with a cold review cited"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2310
+2026-11-07T05:20:01Z  status W2309 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:20:02Z  status W1259 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:20:02Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:20:02Z  status W2310 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:21:42Z  status W2322 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:23:34Z  status W2322 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T05:29:24Z  status W2327 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

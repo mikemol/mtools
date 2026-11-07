@@ -5,12 +5,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING
+
+import pytest
 
 from mikemol.hooks import commit_kata, siblingcensus, siblingcensus_cli
-
-if TYPE_CHECKING:
-    import pytest
 
 ROOT = Path("/h/github/mtools")
 
@@ -70,3 +68,9 @@ def test_the_command_counts_tracked_files_only_and_says_how_many_files(
     assert siblingcensus_cli.main([str(repo)]) == 0
     assert capsys.readouterr().out == "repo: 2 reach(es) in 1 file(s)\n"
     assert siblingcensus_cli.main([]) == siblingcensus_cli.EXIT_USAGE
+
+
+def test_a_directory_git_cannot_list_is_an_error_never_an_empty_census(tmp_path: Path) -> None:
+    """A failed listing raises, so it cannot read as a repository with no reaches."""
+    with pytest.raises(OSError, match="git ls-files failed"):
+        siblingcensus_cli.tracked_text(tmp_path)

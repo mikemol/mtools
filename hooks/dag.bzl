@@ -767,6 +767,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/admission.py",
         "src/mikemol/hooks/round_wire.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
@@ -989,6 +990,7 @@ GRAPH = {
     },
     "src/mikemol/hooks/siblingcensus_cli.py": {
       "imports": [
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/siblingcensus.py"
       ],
       "reads": [],
@@ -2854,6 +2856,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/admission.py",
         "src/mikemol/hooks/ratchet_pace.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stackfreeze.py",
         "src/mikemol/hooks/stackrun.py",
         "src/mikemol/hooks/stacksnap.py"
