@@ -122,7 +122,7 @@ def test_two_shas_in_one_stack_refuse_it() -> None:
     old, new = _stack(new)
     reason = repin_admission.admits(old, new)
     assert reason is not None
-    assert "exactly one new sha" in reason
+    assert "every pin to one sha" in reason
 
 
 def test_a_wheel_named_for_another_sha_refuses_the_stack() -> None:
@@ -132,7 +132,7 @@ def test_a_wheel_named_for_another_sha_refuses_the_stack() -> None:
     new[_wheel("abc1234")] = ""
     reason = repin_admission.admits(old, new)
     assert reason is not None
-    assert "exactly one new sha" in reason
+    assert "carries a sha other than the one the pins moved to" in reason
 
 
 def test_a_stack_that_names_no_sha_is_not_a_repin() -> None:
@@ -234,3 +234,80 @@ def test_the_one_new_sha_is_named_for_the_audit_trailer() -> None:
     old, new = _stack()
     assert repin_admission.new_sha(old, new) == _NEW
     assert repin_admission.new_sha(old, dict(old)) is None
+
+
+_OTHER = "9999999"
+_ROW_OTHER = "  ./mikemol_other-0.1.0+9999999-py3-none-any.whl\n"
+
+
+def _other_wheel() -> str:
+    return f"vendor/wheels/mikemol_other-0.1.0+{_OTHER}-py3-none-any.whl"
+
+
+def test_a_same_named_wheel_with_other_bytes_is_not_a_repin() -> None:
+    """D1: a repin never modifies an existing wheel path; the same name at another blob refuses."""
+    old, new = _stack()
+    old[_wheel(_NEW)] = "blob-a"
+    new[_wheel(_NEW)] = "blob-b"
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert "is an existing wheel with other bytes" in reason
+
+
+def test_a_changed_digest_on_a_row_whose_sha_did_not_move_is_not_a_repin() -> None:
+    """D1: an untouched held wheel's checksum row changing is no part of a repin."""
+    old, new = _stack()
+    old[_SUMS] = _sums(_OLD, _DIGEST_OLD) + "c" * 64 + _ROW_OTHER
+    new[_SUMS] = _sums(_NEW, _DIGEST_NEW) + "d" * 64 + _ROW_OTHER
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert "a digest on a pin whose sha did not move" in reason
+
+
+def _two_pins(second: str) -> tuple[dict[str, str | None], dict[str, str | None]]:
+    # A pyproject with two pins; the first moves to the new sha, the second to `second`.
+    other_old = "vendor/wheels/mikemol_converge-0.1.0+0f8267e-py3-none-any.whl"
+    other_new = f"vendor/wheels/mikemol_converge-0.1.0+{second}-py3-none-any.whl"
+    head = "[tool.uv.sources]\n"
+    first_old = f'mikemol-hooks = {{ path = "{_wheel(_OLD)}" }}\n'
+    first_new = f'mikemol-hooks = {{ path = "{_wheel(_NEW)}" }}\n'
+    old, new = _stack()
+    old[_PYPROJECT] = head + first_old + f'mikemol-converge = {{ path = "{other_old}" }}\n'
+    new[_PYPROJECT] = head + first_new + f'mikemol-converge = {{ path = "{other_new}" }}\n'
+    return old, new
+
+
+def test_two_pins_moving_to_two_shas_are_not_one_repin() -> None:
+    """D2: hooks to 636e39b with converge to another sha is two repins, whatever HEAD holds."""
+    old, new = _two_pins("5ba261f")
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert "every pin to one sha" in reason
+
+
+def test_two_pins_catching_up_to_the_same_sha_are_one_repin() -> None:
+    """D2: every changed pin moving to the one sha passes, however many pins moved."""
+    old, new = _two_pins(_NEW)
+    assert repin_admission.admits(old, new) is None
+
+
+def test_a_text_naming_a_sha_no_wheel_carries_is_not_a_repin() -> None:
+    """D3: pyproject alone, or a sha move that adds no wheel, names a wheel nobody supplies."""
+    old, new = _stack()
+    del old[_wheel(_NEW)]
+    del new[_wheel(_NEW)]
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert f"no wheel of the stack carries the new sha {_NEW}" in reason
+
+
+def test_deleting_a_wheel_a_new_text_still_names_is_not_a_repin() -> None:
+    """D3: the stack deletes a held wheel and a text it ships still names that wheel."""
+    old, new = _stack()
+    old[_other_wheel()] = "blob-held"
+    new[_other_wheel()] = None
+    old[_SUMS] = _sums(_OLD, _DIGEST_OLD) + "c" * 64 + _ROW_OTHER
+    new[_SUMS] = _sums(_NEW, _DIGEST_NEW) + "c" * 64 + _ROW_OTHER
+    reason = repin_admission.admits(old, new)
+    assert reason is not None
+    assert "is deleted but a text of the stack still names it" in reason

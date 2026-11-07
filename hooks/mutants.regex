@@ -1073,9 +1073,9 @@ src/mikemol/hooks/runproc.py|start-merges-the-streams|        stderr=subprocess\
 src/mikemol/hooks/runproc.py|start-ignores-the-directory|        cwd=cwd,|        cwd=None,|def=start
 src/mikemol/hooks/runproc.py|kill-leaves-the-child|            self\._process\.kill\(\)|            pass|def=Handle.kill
 src/mikemol/hooks/repin_admission.py|a-file-a-repin-does-not-own-is-owned|    return path in TEXT_FILES or _WHEEL\.fullmatch\(path\) is not None|    return True|def=_owned
-src/mikemol/hooks/repin_admission.py|a-changed-line-beyond-the-sha-passes|    if _mask\(before\) != _mask\(after\):|    if False:|def=_file_reason
-src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(fresh\) != 1:|    if len(fresh) > 1:|def=_verdict
-src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|            found\.add\(named\.group\("sha"\)\)|            pass|def=_shas_of
+src/mikemol/hooks/repin_admission.py|a-changed-line-beyond-the-sha-passes|        if e0 != e1 or w0 != w1 or _mask_line\(b0, belongs=w0\) != _mask_line\(b1, belongs=w1\):|        if False:|def=_file_verdict
+src/mikemol/hooks/repin_admission.py|a-stack-naming-no-sha-is-a-repin|    if len\(targets\) != 1:|    if len(targets) > 1:|def=_verdict
+src/mikemol/hooks/repin_admission.py|an-added-wheel-names-no-sha|    return None if carried else f"no wheel of the stack carries the new sha \{sha\}"|    return None|def=_wheel_reason
 src/mikemol/hooks/repin_admission.py|comment-prose-is-not-masked|        return _HEX\.sub\("H", body\)|        return body|def=_mask_line
 src/mikemol/hooks/repin_admission.py|a-sha-and-its-hash-are-not-masked|        return _SUM\.sub\("D", _DIGEST\.sub\("sha256:D", _TOKEN\.sub\(r"\\g<head>S", body\)\)\)|        return body|def=_mask_line
 src/mikemol/hooks/repin_admission.py|every-lock-package-is-a-mikemol-package|            inside = "mikemol" in body|            inside = True|def=_lines
@@ -1115,9 +1115,9 @@ src/mikemol/hooks/ratchet_pace.py|the-submit-skips-the-accident-checks|         
 src/mikemol/hooks/admission.py|an-unknown-row-kind-reads-as-a-repair|    if row\.kind not in \{REPAIR, BIRTH\}:|    if False:|def=_row_problem
 src/mikemol/hooks/traindrive.py|a-paced-group-is-not-dropped|        if reason is not None:|        if False:|def=_drop_paced
 src/mikemol/hooks/traindrive.py|the-train-judges-all-groups-as-one-stack|    return \[entry for group in groups for entry in entries_for\(group\.items, seams\)\]|    return entries_for(_flat(groups), seams)|def=_entries
-src/mikemol/hooks/repin_admission.py|a-new-sha-need-not-be-new|    fresh = sorted\(_shas_of\(new\) - _shas_of\(old\)\)|    fresh = sorted(_shas_of(new))|def=_verdict
+src/mikemol/hooks/repin_admission.py|a-new-sha-need-not-be-new|            if not to:|            if False:|def=_file_verdict
 src/mikemol/hooks/repin_admission.py|line-terminators-are-forgotten|        split\.append\(\(body, raw\[len\(body\) :\], belongs\)\)|        split.append((body, "", belongs))|def=_lines
-src/mikemol/hooks/repin_admission.py|an-unnamed-wheel-is-admitted|        if added and not any\(path\.rpartition\("/"\)\[2\] in text for text in texts\):|        if False:|def=_unnamed_wheel
+src/mikemol/hooks/repin_admission.py|an-unnamed-wheel-is-admitted|        elif any\(name in text for text in texts\):|        elif True:|def=_wheel_reason
 src/mikemol/hooks/ratchet_pace.py|a-path-frozen-twice-at-other-bytes-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if not _mode_clear(file, head):|def=_repin_sha
 src/mikemol/hooks/ratchet_pace.py|a-repin-leaves-no-mark|        return None if sha is None else f"\{root\.name\}/repin-\{sha\}"|        return None|def=admitted_ident
 src/mikemol/hooks/ratchet_pace.py|a-link-or-a-flipped-mode-is-a-repin|        if held\.setdefault\(file\.path, file\.blob\) != file\.blob or not _mode_clear\(file, head\):|        if held.setdefault(file.path, file.blob) != file.blob:|def=_repin_sha
@@ -1128,3 +1128,11 @@ src/mikemol/hooks/ratchet_pace.py|the-landing-refusal-drops-its-birth-reason|   
 src/mikemol/hooks/traindrive.py|an-admission-group-rides-the-round|        if at and seams\.needs_admission\(group\.items\):|        if False:|def=_round_of
 src/mikemol/hooks/traindrive.py|the-held-groups-are-lost|            return list\(remaining\[:at\]\), list\(remaining\[at:\]\)|            return list(remaining[:at]), []|def=_round_of
 src/mikemol/hooks/new_dist_cli.py|the-printed-warrants-step-names-the-dist-in-capitals|--write \{name\} smoke=smoke|--write {name.upper()} smoke=smoke|def=scaffold
+src/mikemol/hooks/repin_admission.py|two-pins-moving-to-two-shas-pass|    if len\(targets\) != 1:|    if len(targets) < 1:|def=_verdict
+src/mikemol/hooks/repin_admission.py|a-deleted-wheel-still-named-passes|            if any\(name in text for text in texts\):|            if False:|def=_wheel_reason
+src/mikemol/hooks/repin_admission.py|a-wheel-at-other-bytes-passes|            if old\[path\] != new\[path\]:|            if False:|def=_wheel_reason
+src/mikemol/hooks/ratchet_pace.py|the-git-read-folds-line-endings|        done = runproc\.run_exact\(\["git", "-C", str\(root\), \*argv\]\)|        done = runproc.run(["git", "-C", str(root), *argv])|def=_git_text
+src/mikemol/hooks/ratchet_pace.py|a-wheel-is-read-as-present-not-by-blob|            old\[file\.path\] = head\[file\.path\]\[1\] if file\.path in head else None|            old[file.path] = "" if file.path in head else None|def=_repin_sha
+src/mikemol/hooks/runproc.py|a-carriage-return-is-folded|        done\.returncode, done\.stdout\.decode\("utf-8"\), done\.stderr\.decode\("utf-8", errors="replace"\)|        done.returncode, done.stdout.decode("utf-8").replace(chr(13), ""), done.stderr.decode("utf-8", errors="replace")|def=run_exact
+src/mikemol/hooks/commit_kata.py|the-commit-drops-the-need-seam|        needs_admission=lambda planned: _needs_admission\(root, planned, env\),||def=stack_seams
+src/mikemol/hooks/commit_kata.py|the-commit-drops-the-landing-seam|        landing_refusal=lambda planned: _landing_refusal\(root, planned, env\),||def=stack_seams

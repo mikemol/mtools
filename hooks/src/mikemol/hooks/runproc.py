@@ -118,6 +118,28 @@ def run(
     return Result(done.returncode, done.stdout, done.stderr)
 
 
+def run_exact(argv: Sequence[str], cwd: Path | None = None) -> Result:
+    """Run a command and decode its output WHOLE, line endings kept (W2334, D4).
+
+    ⚑ `run` reads in text mode, which turns a carriage return and line feed into one line feed, so
+    a caller that must SEE a carriage return (the clause R comparison of a blob against HEAD's)
+    asks here. The output is UTF-8; bytes that are not raise `UnicodeDecodeError`, as a text read
+    of the same bytes would.
+
+    Returns:
+        the exit code, standard output with every byte kept, and standard error; 127, empty output
+        and a note on stderr when the program is missing.
+
+    """
+    try:
+        done = subprocess.run(list(argv), cwd=cwd, capture_output=True, check=False)
+    except FileNotFoundError:
+        return Result(127, "", f"{argv[0]}: not found")
+    return Result(
+        done.returncode, done.stdout.decode("utf-8"), done.stderr.decode("utf-8", errors="replace")
+    )
+
+
 class Handle:
     """A child that is still running: its pid, a bounded wait, and a kill (W2254)."""
 

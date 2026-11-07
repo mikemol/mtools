@@ -330,8 +330,9 @@ def _git_text(root: Path, argv: Sequence[str]) -> str | None:
     # What git printed for `argv` in `root`; None when git failed, so a failed read never
     # reads as an empty one.
     # N8: a name git prints that is not UTF-8 cannot be read as text, and is no answer.
+    # D4: read EXACTLY, line endings kept, so a CRLF reaches the clause R comparison.
     try:
-        done = runproc.run(["git", "-C", str(root), *argv])
+        done = runproc.run_exact(["git", "-C", str(root), *argv])
     except UnicodeDecodeError:
         return None
     return done.stdout if done.returncode == 0 else None
@@ -363,25 +364,27 @@ def _repin_clear(root: Path, files: Sequence[stacksnap.Frozen]) -> bool:
     return _repin_sha(root, files) is not None
 
 
-def _head_modes(root: Path) -> dict[str, str] | None:
-    # path -> file mode of HEAD's tree; None when HEAD cannot be listed.
+def _head_modes(root: Path) -> dict[str, tuple[str, str]] | None:
+    # path -> (file mode, blob sha) of HEAD's tree; None when HEAD cannot be listed.
     listing = _git_text(root, ["ls-tree", "-r", "-z", "HEAD"])
     if listing is None:
         return None
-    modes: dict[str, str] = {}
+    modes: dict[str, tuple[str, str]] = {}
     for record in listing.split("\0"):
         meta, _, path = record.partition("\t")
         if path:
-            modes[path] = meta.split(" ")[0]
+            mode, _kind, blob = meta.split(" ")
+            modes[path] = (mode, blob)
     return modes
 
 
-def _mode_clear(file: stacksnap.Frozen, head: Mapping[str, str]) -> bool:
+def _mode_clear(file: stacksnap.Frozen, head: Mapping[str, tuple[str, str]]) -> bool:
     # N2: a pinned file is a regular file and keeps the mode HEAD gave it, so a link or a
     # flipped execute bit is no part of a repin.
     if not file.blob:
         return True
-    return file.mode in {"100644", "100755"} and head.get(file.path, file.mode) == file.mode
+    held = head.get(file.path, (file.mode, ""))[0]
+    return file.mode in {"100644", "100755"} and held == file.mode
 
 
 def _repin_sha(root: Path, files: Sequence[stacksnap.Frozen]) -> str | None:
@@ -405,8 +408,9 @@ def _repin_sha(root: Path, files: Sequence[stacksnap.Frozen]) -> str | None:
             old[file.path] = _git_text(root, ["show", f"HEAD:{file.path}"])
             new[file.path] = _git_text(root, ["cat-file", "blob", file.blob]) if file.blob else None
         else:
-            old[file.path] = "" if file.path in head else None
-            new[file.path] = "" if file.blob else None
+            # D1: a wheel is read by its blob id, so an existing path with other bytes shows.
+            old[file.path] = head[file.path][1] if file.path in head else None
+            new[file.path] = file.blob or None
     return repin_admission.new_sha(old, new)
 
 

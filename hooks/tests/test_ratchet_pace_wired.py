@@ -509,3 +509,34 @@ def test_a_link_or_a_flipped_execute_bit_in_a_repin_stack_is_refused(tmp_path: P
         )
         odd = [Item("W1", "s", "", clean.paths, files)]
         assert ratchet_pace.landing_refusal(root, odd, env, [], now) is not None
+
+
+def test_a_crlf_in_a_repin_text_is_refused_on_the_wired_path(tmp_path: Path) -> None:
+    """D4: the blobs are read exactly, so a carriage return reaches the comparison and refuses."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    now = datetime.now(UTC)
+    clean = _pyproject(_NEW_SHA)
+    assert ratchet_pace.landing_refusal(root, _repin_items(root, clean), env, [], now) is None
+    whole = _repin_items(root, clean.replace("\n", "\r\n"))
+    assert ratchet_pace.landing_refusal(root, whole, env, [], now) is not None
+    first, _, rest = clean.partition("\n")
+    single = _repin_items(root, first + "\r\n" + rest)
+    assert ratchet_pace.landing_refusal(root, single, env, [], now) is not None
+
+
+def test_a_held_wheel_at_new_bytes_beside_a_repin_is_refused(tmp_path: Path) -> None:
+    """D1 wired: an existing wheel path in HEAD frozen at another blob is no part of a repin."""
+    root, env = _repo(tmp_path)
+    _repin_repo(root)
+    held = "vendor/wheels/mikemol_other-0.1.0+9999999-py3-none-any.whl"
+    (root / held).write_bytes(b"held wheel")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "hold another wheel")
+    now = datetime.now(UTC)
+    clean = _repin_items(root, _pyproject(_NEW_SHA))[0]
+    assert ratchet_pace.landing_refusal(root, [clean], env, [], now) is None
+    swapped = _git(root, "hash-object", "-w", "--stdin", text="other bytes")
+    files = (*(clean.files or ()), stacksnap.Frozen(held, _MODE, swapped))
+    beside = [Item("W1", "s", "", (*clean.paths, held), files)]
+    assert ratchet_pace.landing_refusal(root, beside, env, [], now) is not None

@@ -110,3 +110,22 @@ def test_a_wait_past_its_bound_raises_and_leaves_the_child_running_until_killed(
     child.kill()
     assert child.wait(_LONG_S).returncode != 0
     child.kill()
+
+
+def test_run_exact_keeps_a_carriage_return_that_run_folds(tmp_path: Path) -> None:
+    """W2334, D4: text mode turns CRLF into LF; the exact read hands the carriage return back."""
+    code = "import sys; sys.stdout.buffer.write(b'a\\r\\nb\\n')"
+    argv = [sys.executable, "-c", code]
+    assert runproc.run(argv, tmp_path).stdout == "a\nb\n"
+    assert runproc.run_exact(argv, tmp_path) == runproc.Result(0, "a\r\nb\n", "")
+
+
+def test_run_exact_raises_on_output_that_is_not_utf8_and_reports_a_missing_program(
+    tmp_path: Path,
+) -> None:
+    """The exact read decodes strictly, as a text read would, and a missing program is 127."""
+    code = "import sys; sys.stdout.buffer.write(b'\\xff\\xfe')"
+    with pytest.raises(UnicodeDecodeError):
+        runproc.run_exact([sys.executable, "-c", code], tmp_path)
+    got = runproc.run_exact(["/nonexistent/program"], tmp_path)
+    assert got == runproc.Result(127, "", "/nonexistent/program: not found")

@@ -18760,3 +18760,81 @@
   claim  = {B1: the train ends its round before a group the pace refuses; a paydown needs none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_group_needs_an_admission_exactly_when_the_pace_refuses_it},
 }
+
+@misc{hooks-repin-admission-same-named-wheel-with-other-bytes-is-not-a-repin,
+  section = {repin-admission},
+  title  = {D1: a repin never modifies an existing wheel path; the same name at another blob refuses},
+  claim  = {D1: a repin never modifies an existing wheel path; the same name at another blob
+            refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_same_named_wheel_with_other_bytes_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-changed-digest-on-a-row-whose-sha-did-not-move-is-not-a-repin,
+  section = {repin-admission},
+  title  = {D1: an untouched held wheel's checksum row changing is no part of a repin},
+  claim  = {D1: an untouched held wheel's checksum row changing is no part of a repin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_changed_digest_on_a_row_whose_sha_did_not_move_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-two-pins-moving-to-two-shas-are-not-one-repin,
+  section = {repin-admission},
+  title  = {D2: hooks to 636e39b with converge to another sha is two repins, whatever HEAD holds},
+  claim  = {D2: hooks to 636e39b with converge to another sha is two repins, whatever HEAD holds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_two_pins_moving_to_two_shas_are_not_one_repin},
+}
+
+@misc{hooks-repin-admission-two-pins-catching-up-to-the-same-sha-are-one-repin,
+  section = {repin-admission},
+  title  = {D2: every changed pin moving to the one sha passes, however many pins moved},
+  claim  = {D2: every changed pin moving to the one sha passes, however many pins moved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_two_pins_catching_up_to_the_same_sha_are_one_repin},
+}
+
+@misc{hooks-repin-admission-text-naming-a-sha-no-wheel-carries-is-not-a-repin,
+  section = {repin-admission},
+  title  = {D3: pyproject alone, or a sha move that adds no wheel, names a wheel nobody supplies},
+  claim  = {D3: pyproject alone, or a sha move that adds no wheel, names a wheel nobody supplies.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_a_text_naming_a_sha_no_wheel_carries_is_not_a_repin},
+}
+
+@misc{hooks-repin-admission-deleting-a-wheel-a-new-text-still-names-is-not-a-repin,
+  section = {repin-admission},
+  title  = {D3: the stack deletes a held wheel and a text it ships still names that wheel},
+  claim  = {D3: the stack deletes a held wheel and a text it ships still names that wheel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_repin_admission.py -k test_deleting_a_wheel_a_new_text_still_names_is_not_a_repin},
+}
+
+@misc{hooks-ratchet-pace-wired-crlf-in-a-repin-text-is-refused-on-the-wired-path,
+  section = {ratchet_pace},
+  title  = {D4: the blobs are read exactly, so a carriage return reaches the comparison and refuses},
+  claim  = {D4: the blobs are read exactly, so a carriage return reaches the comparison and refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_crlf_in_a_repin_text_is_refused_on_the_wired_path},
+}
+
+@misc{hooks-ratchet-pace-wired-held-wheel-at-new-bytes-beside-a-repin-is-refused,
+  section = {ratchet_pace},
+  title  = {D1 wired: an existing wheel path in HEAD frozen at another blob is no part of a repin},
+  claim  = {D1 wired: an existing wheel path in HEAD frozen at another blob is no part of a repin.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_held_wheel_at_new_bytes_beside_a_repin_is_refused},
+}
+
+@misc{hooks-runproc-run-exact-keeps-a-carriage-return-that-run-folds,
+  section = {runproc},
+  title  = {W2334, D4: text mode turns CRLF into LF; the exact read hands the carriage return back},
+  claim  = {W2334, D4: text mode turns CRLF into LF; the exact read hands the carriage return back.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_run_exact_keeps_a_carriage_return_that_run_folds},
+}
+
+@misc{hooks-runproc-run-exact-raises-on-output-that-is-not-utf8-and-reports-a-missing-program,
+  section = {runproc},
+  title  = {The exact read decodes strictly, as a text read would, and a missing program is 127},
+  claim  = {The exact read decodes strictly, as a text read would, and a missing program is 127.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_runproc.py -k test_run_exact_raises_on_output_that_is_not_utf8_and_reports_a_missing_program},
+}
+
+@misc{hooks-train-stale-head-stack-seams-the-commit-builds-carry-the-pace-questions,
+  section = {train_stale_head},
+  title  = {N-A: a seam left out of the commit's construction restores the stale-HEAD landing},
+  claim  = {N-A: a seam left out of the commit's construction restores the stale-HEAD landing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_train_stale_head.py -k test_the_stack_seams_the_commit_builds_carry_the_pace_questions},
+}

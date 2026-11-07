@@ -940,6 +940,32 @@ class TeeBuffer(io.StringIO):
         return super().write(text)
 
 
+def stack_seams(root: Path, env: Mapping[str, str], trailer: str) -> StackSeams:
+    """Build the seams a stack lands through: git, the gate's lint, and the pace's three questions.
+
+    ⚑ A FUNCTION, SO A TEST CAN ASK IT (W2334, N-A): `Seams.needs_admission` defaults to false, so a
+    seam left out of this call would restore the stale-HEAD landing with every other test green.
+
+    Returns:
+        the seams, each bound to `root` and `env`.
+
+    """
+    return StackSeams(
+        run=run_git_in,
+        namespace=Path(env.get(NAMESPACE_ENV, DEFAULT_NAMESPACE)),
+        message_of=lambda item: message_of(
+            Request(item.waypoint, item.subject, item.body, (), trailer)
+        ),
+        published=lambda sha: published(root, sha),
+        history=lambda repo: _fetch_history(repo, env),
+        lint=_chain_lints(_real_lint(root), _real_types(root)),
+        flaked=lambda git_dir: _emit_flakes(git_dir, root.name, env),
+        admission=lambda planned: _admitted_ident(root, planned, env),
+        landing_refusal=lambda planned: _landing_refusal(root, planned, env),
+        needs_admission=lambda planned: _needs_admission(root, planned, env),
+    )
+
+
 def run_stack_mode(
     root: Path,
     stack_file: Path,
@@ -979,20 +1005,7 @@ def run_stack_mode(
     if bad_trailer is not None:
         sys.stderr.write(f"mikemol-commit: {bad_trailer}\n")
         return EXIT_USAGE
-    seams = StackSeams(
-        run=run_git_in,
-        namespace=Path(env.get(NAMESPACE_ENV, DEFAULT_NAMESPACE)),
-        message_of=lambda item: message_of(
-            Request(item.waypoint, item.subject, item.body, (), trailer)
-        ),
-        published=lambda sha: published(root, sha),
-        history=lambda repo: _fetch_history(repo, env),
-        lint=_chain_lints(_real_lint(root), _real_types(root)),
-        flaked=lambda git_dir: _emit_flakes(git_dir, root.name, env),
-        admission=lambda planned: _admitted_ident(root, planned, env),
-        landing_refusal=lambda planned: _landing_refusal(root, planned, env),
-        needs_admission=lambda planned: _needs_admission(root, planned, env),
-    )
+    seams = stack_seams(root, env, trailer)
     tee = TeeBuffer()
     try:
         # ⚑ W1654: the stacks queued behind this one join its run, gated once at the joined tip;

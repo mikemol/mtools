@@ -35,6 +35,7 @@ _PY = 'dependencies = ["mikemol_x-1.0.0+gaaaaaaa-py3-none-any.whl"]\n'
 _LINE = 'extra = "real change"\n'
 _TOML = "pyproject.toml"
 _RATCHET = "a.txt"
+_NEW_SHA = "bbbbbbb"
 
 
 def _git(root: Path, *args: str) -> str:
@@ -108,6 +109,7 @@ def _seams(
 def _freeze(root: Path, path: str, text: str) -> stacksnap.Frozen:
     target = root / path
     keep = target.read_text(encoding="utf-8") if target.exists() else None
+    target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(text, encoding="utf-8")
     blob = _git(root, "hash-object", "-w", path).strip()
     if keep is None:
@@ -149,8 +151,10 @@ def _paydown(root: Path, other: tuple[str, str]) -> Follower:
 
 
 def _repin(root: Path, text: str) -> Follower:
-    files = (_freeze(root, _TOML, text),)
-    return Follower("2", (stackrun.Item("W2", "repin", "", (_TOML,), files),))
+    # A repin brings the wheel its text names (D3), so the new sha is carried by a wheel too.
+    wheel = f"vendor/wheels/mikemol_x-1.0.0+g{_NEW_SHA}-py3-none-any.whl"
+    files = (_freeze(root, _TOML, text), _freeze(root, wheel, "new wheel\n"))
+    return Follower("2", (stackrun.Item("W2", "repin", "", (_TOML, wheel), files),))
 
 
 def _verdicts(got: list[traindrive.Verdict]) -> dict[str, traindrive.Verdict]:
@@ -199,3 +203,17 @@ def test_a_clean_repin_of_the_text_the_group_before_it_landed_is_admitted(
     assert got["1"].code == 0
     assert got["2"].code == 0
     assert "gbbbbbbb" in _git(root, "show", f"HEAD:{_TOML}")
+
+
+def test_the_stack_seams_the_commit_builds_carry_the_pace_questions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """N-A: a seam left out of the commit's construction restores the stale-HEAD landing."""
+    root = _repo(tmp_path, monkeypatch)
+    seams = ck.stack_seams(root, _env(tmp_path), ck.DEFAULT_TRAILER)
+    plain = [stackrun.Item("W9", "plain", "", ("b.txt",))]
+    paying = [stackrun.Item("W9", "pays", "", (_RATCHET,))]
+    assert seams.needs_admission(plain)
+    assert not seams.needs_admission(paying)
+    assert seams.landing_refusal(plain) is not None
+    assert seams.landing_refusal(paying) is None
