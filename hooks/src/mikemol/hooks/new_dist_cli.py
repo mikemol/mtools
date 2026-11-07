@@ -60,7 +60,7 @@ def scaffold(root: Path, name: str, description: str, lock: bool = True) -> list
     return [
         f"bazel build //{name}:.venv",
         f"uv venv + sync in {name}/ for the host tools",
-        f"mikemol-gen-warrants --write {name.upper()} tests.test_smoke=smoke",
+        f'mikemol-gen-warrants --write {name} smoke=smoke --title "smoke=Smoke test"',
         f"mikemol-commit . --waypoint W<n> --subject 'add {name}' {name} MODULE.bazel INSTALL.md",
     ]
 

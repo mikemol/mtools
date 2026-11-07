@@ -60,6 +60,13 @@ def test_a_scaffold_writes_the_directory_and_both_edits(tmp_path: Path) -> None:
     assert any("mikemol-gen-warrants" in s for s in steps)
 
 
+def test_the_printed_gen_warrants_step_is_the_form_the_generator_accepts(tmp_path: Path) -> None:
+    """W1316: the dist name lowercase, module=section, and a --title for the new section."""
+    _repo(tmp_path)
+    steps = new_dist_cli.scaffold(tmp_path, "htmlstruct", "Read HTML.", lock=False)
+    assert 'mikemol-gen-warrants --write htmlstruct smoke=smoke --title "smoke=Smoke test"' in steps
+
+
 def test_a_refusal_leaves_the_tree_untouched(tmp_path: Path) -> None:
     """Bad name, existing directory and a missing template are each refused before any write."""
     _repo(tmp_path)
