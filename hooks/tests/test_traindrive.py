@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import stackrun, traindrive, trainround
 from mikemol.hooks.trainjoin import Follower
+from mikemol.hooks.traintel import Stats
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -40,6 +41,7 @@ _WITHDRAW_LATE = (
 _WITHDRAW_CODE = 75
 _NAMES = ("a.txt", "b.txt", "c.txt")
 _THREE = 3
+_TWO = 2
 
 
 def _git(root: Path, *args: str) -> str:
@@ -337,3 +339,59 @@ def test_a_groups_admission_trailer_is_its_own_not_a_neighbours(
     carriers = [body for body in bodies if "Admission: r/W2" in body]
     assert len(carriers) == 1
     assert "card 2" in carriers[0]
+
+
+def _second_needs_an_admission(items: Sequence[stackrun.Item]) -> bool:
+    return items[0].waypoint == "W2"
+
+
+def _train(
+    root: Path, tmp_path: Path, needs: Callable[[Sequence[stackrun.Item]], bool]
+) -> tuple[dict[str, traindrive.Verdict], Stats, list[tuple[str, str]]]:
+    seen: list[tuple[str, str]] = []
+
+    def judge(items: Sequence[stackrun.Item]) -> str | None:
+        head = ck.run_git_in(["rev-parse", "HEAD"], {}, root).stdout.strip()
+        seen.append((items[0].waypoint, head))
+        return None
+
+    groups = [
+        Follower(key, (stackrun.Item(f"W{key}", f"card {key}", "", (path,)),))
+        for key, path in zip(("1", "2", "3"), _NAMES, strict=True)
+    ]
+    seams = stackrun.Seams(
+        run=ck.run_git_in,
+        namespace=tmp_path / "gate",
+        message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
+        published=lambda _sha: "PUSHED",
+        landing_refusal=judge,
+        needs_admission=needs,
+    )
+    stats = Stats()
+    got = {v.key: v for v in traindrive.drive(root, groups, seams, stats)}
+    return got, stats, seen
+
+
+def test_a_group_needing_an_admission_is_judged_on_the_head_the_groups_before_it_landed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """B1: the round ends before group 2, so its judgement reads HEAD at 'card 1', not the start."""
+    root = _repo(tmp_path, monkeypatch)
+    start = _git(root, "rev-parse", "HEAD").strip()
+    got, stats, seen = _train(root, tmp_path, _second_needs_an_admission)
+    assert [got[k].code for k in ("1", "2", "3")] == [0, 0, 0]
+    assert stats.rounds == _TWO
+    second = [head for waypoint, head in seen if waypoint == "W2"]
+    assert second
+    assert start not in second
+    assert {_git(root, "log", "-1", "--format=%s", head).strip() for head in second} == {"card 1"}
+
+
+def test_with_no_group_needing_an_admission_the_train_is_one_round(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The break costs a round only where a group needs it."""
+    root = _repo(tmp_path, monkeypatch)
+    got, stats, _seen = _train(root, tmp_path, stackrun.needs_nothing)
+    assert [got[k].code for k in ("1", "2", "3")] == [0, 0, 0]
+    assert stats.rounds == 1

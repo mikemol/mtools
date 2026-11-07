@@ -261,6 +261,35 @@ def _land_prefix(
     return out
 
 
+def _round_of(remaining: Sequence[Group], seams: Seams) -> tuple[list[Group], list[Group]]:
+    """Split the groups into this round's and the ones held for a later round (W2333, B1).
+
+    ⚑ A GROUP THAT NEEDS AN ADMISSION ENDS THE ROUND BEFORE IT: a birth's accident checks and a
+    repin's one-new-sha test read HEAD, and a round judges every group at its START HEAD, not the
+    HEAD after the groups before it land. Held back, the group is judged alone on the landed HEAD
+    in the next round. The first group needs no break: nothing lands before it in its round.
+
+    Returns:
+        the groups up to the first one, after the first, that needs an admission, and the rest.
+
+    """
+    for at, group in enumerate(remaining):
+        if at and seams.needs_admission(group.items):
+            return list(remaining[:at]), list(remaining[at:])
+    return list(remaining), []
+
+
+def _raced(groups: Sequence[Group], name: str) -> list[Verdict]:
+    """Tell each group that HEAD moved while the train was gated and none of it landed.
+
+    Returns:
+        one RACED verdict per group.
+
+    """
+    said = f"RACED {name}: HEAD moved while the train was gated; none of it landed\n"
+    return [Verdict(group.key, EXIT_RACED, said) for group in groups]
+
+
 def drive(
     root: Path,
     groups: Sequence[Group],
@@ -277,7 +306,6 @@ def drive(
         the verdicts, one per group: landed, refused, raced or not committed exactly once.
 
     """
-    name = root.name
     count = stats if stats is not None else Stats()
     count.joined = len(groups)
     verdicts: list[Verdict] = []
@@ -292,37 +320,39 @@ def drive(
     while remaining:
         began = time.time_ns()
         before = seams.run(["rev-parse", "HEAD"], {}, root).stdout.strip()
-        if _drop_paced(remaining, verdicts, count, seams, (name, before)):
+        batch, later = _round_of(remaining, seams)
+        if _drop_paced(batch, verdicts, count, seams, (root.name, before)):
+            remaining = [*batch, *later]
             continue
-        stack = build(root, _entries(remaining, seams), seams.run, before)
+        stack = build(root, _entries(batch, seams), seams.run, before)
         count.rounds += 1
         if stack.failed is not None:
             tell(trainround.UNBUILT)
-            at, verdict = _unbuilt(remaining, stack, before, name)
+            at, verdict = _unbuilt(batch, stack, before, root.name)
             verdicts.append(verdict)
             count.dropped += 1
-            del remaining[at]
+            del batch[at]
+            remaining = [*batch, *later]
             continue
-        rnd = _Round(root, remaining, (stack, count), seams)
-        ended = _stopped(rnd.gate(len(remaining) - 1), groups, remaining, before, name)
+        rnd = _Round(root, batch, (stack, count), seams)
+        ended = _stopped(rnd.gate(len(batch) - 1), groups, [*batch, *later], before, root.name)
         if ended is not None:
             tell(trainround.WITHDRAWN, rnd)
             return [*verdicts, *ended]
         bad = rnd.first_bad()
-        landed = _land_prefix(
-            root, remaining[: len(remaining) if bad is None else bad], rnd, before
-        )
+        landed = _land_prefix(root, batch[: len(batch) if bad is None else bad], rnd, before)
         if landed is None:
             tell(trainround.RACED, rnd, bad)
-            said = f"RACED {name}: HEAD moved while the train was gated; none of it landed\n"
-            return [*verdicts, *(Verdict(g.key, EXIT_RACED, said) for g in remaining)]
+            return [*verdicts, *_raced([*batch, *later], root.name)]
         tell(trainround.GREEN if bad is None else trainround.RED, rnd, bad)
         verdicts.extend(landed)
         count.landed += len(landed)
         if bad is None:
-            return verdicts
-        refused = _refused(remaining[bad], rnd.gate(bad), before, name, seams.history(name))
-        verdicts.append(refused)
+            remaining = later
+            continue
+        verdicts.append(
+            _refused(batch[bad], rnd.gate(bad), before, root.name, seams.history(root.name))
+        )
         count.refused += 1
-        remaining = remaining[bad + 1 :]
+        remaining = [*batch[bad + 1 :], *later]
     return verdicts

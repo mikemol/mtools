@@ -120,7 +120,7 @@ def entries_in(root: Path, ratchet: str) -> int | None:
         return None
     try:
         body = path.read_text(encoding="utf-8")
-    except OSError:
+    except (OSError, UnicodeDecodeError):
         return None
     return sum(1 for line in body.splitlines() if line.strip() and not line.startswith("#"))
 
@@ -497,6 +497,28 @@ def landing_refusal(
     if _repin_clear(root, frozen):
         return None
     return reason
+
+
+def needs_admission(
+    root: Path,
+    items: Sequence[Item],
+    env: Mapping[str, str],
+    now: datetime | None = None,
+) -> bool:
+    """Say whether the pace would refuse these items without a row or a repin (W2333, B1).
+
+    ⚑ A GROUP THAT NEEDS AN ADMISSION IS JUDGED ALONE ON LANDED HEAD: a birth's accident checks and
+    a repin's one-new-sha test read HEAD, and the HEAD a train round judges is the round's start,
+    not the HEAD after the groups before it land. The train ends the round before such a group.
+
+    Returns:
+        True when `stack_reason` refuses the items' paths on their own.
+
+    """
+    named = env.get(ENV)
+    paths = [path for item in items for path in item.paths]
+    pace = Path(named) if named else None
+    return stack_reason(root, paths, now or datetime.now(UTC), pace) is not None
 
 
 def refusal(

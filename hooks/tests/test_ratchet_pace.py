@@ -74,6 +74,8 @@ def test_entries_skip_comments_and_blanks_and_are_unknown_for_a_missing_or_json_
     assert ratchet_pace.entries_in(tmp_path, "f.tsv") == _TWO
     assert ratchet_pace.entries_in(tmp_path, "missing.txt") is None
     assert ratchet_pace.entries_in(tmp_path, "doc.json") is None
+    (tmp_path / "binary.txt").write_bytes(b"\xff\xfe\x00 not utf-8\n")
+    assert ratchet_pace.entries_in(tmp_path, "binary.txt") is None
 
 
 def test_a_glob_key_is_unmatchable_and_is_never_owed(tmp_path: Path) -> None:

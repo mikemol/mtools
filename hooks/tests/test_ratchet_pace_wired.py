@@ -305,7 +305,20 @@ def test_the_landing_refuses_a_stack_the_pace_still_refuses_unless_a_row_clears_
     (root / _BIRTH_FILE).write_text("{}", encoding="utf-8")
     _git(root, "add", _BIRTH_FILE)
     _git(root, "commit", "-q", "-m", "a peer lands the ratchet file")
-    assert ratchet_pace.landing_refusal(root, landing, env, [row], now) is not None
+    said = ratchet_pace.landing_refusal(root, landing, env, [row], now)
+    assert said is not None
+    assert f"the birth row {row.ident()} did not clear: " in said
+    assert said.rsplit("did not clear: ", 1)[1]
+
+
+def test_a_group_needs_an_admission_exactly_when_the_pace_refuses_it(tmp_path: Path) -> None:
+    """B1: the train ends its round before a group the pace refuses; a paydown needs none."""
+    root, env = _repo(tmp_path)
+    now = datetime.now(UTC)
+    plain = [Item("W1", "s", "", ("hooks/x.py",))]
+    assert ratchet_pace.needs_admission(root, plain, env, now)
+    paying = [Item("W1", "s", "", ("hooks/x.py", _RATCHET))]
+    assert not ratchet_pace.needs_admission(root, paying, env, now)
 
 
 def _birth_at(

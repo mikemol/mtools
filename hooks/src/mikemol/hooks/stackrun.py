@@ -94,6 +94,16 @@ def no_admission(_items: Sequence[Item]) -> str | None:
     return None
 
 
+def needs_nothing(_items: Sequence[Item]) -> bool:
+    """Say that no group needs an admission: the default, so a test's train is one round (W2333).
+
+    Returns:
+        False, so no group ends a round before itself.
+
+    """
+    return False
+
+
 @dataclass(frozen=True)
 class Seams:
     """What a test replaces: the git runner, the namespace, the message, publish and history."""
@@ -107,6 +117,7 @@ class Seams:
     flaked: Callable[[Path], bool] = no_flaked
     admission: Callable[[Sequence[Item]], str | None] = no_admission
     landing_refusal: Callable[[Sequence[Item]], str | None] = no_admission
+    needs_admission: Callable[[Sequence[Item]], bool] = needs_nothing
 
 
 def refusal_line(name: str, reason: str) -> str:
