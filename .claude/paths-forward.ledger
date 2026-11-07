@@ -6206,3 +6206,18 @@
 2026-11-07T11:50:34Z  interrupt W2335 minted    -         "Tests a, b, c of the stale-HEAD train fix through drive on a real repository (github-14: a real round against a real landed HEAD)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2333
 2026-11-07T11:51:46Z  status W2335 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T11:52:22Z  status W1316 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T11:57:46Z  status W1334 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:20:17Z  status W2319 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:23:48Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:42:34Z  status W1388 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:43Z  status W1308 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:43Z  status W1334 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:43Z  status W1336 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:43Z  status W1388 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:43Z  status W2333 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:43Z  status W2335 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:44Z  status W1316 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:52:52Z  status W2334 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T12:56:04Z  interrupt W2336 minted    -         "Gate job count is one 2 s sample at gate start: b50 ran 3 slots, b51 ran 14, so a gate's slots follow the instant it started"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2319
+2026-11-07T12:56:04Z  interrupt W2337 minted    -         "Find who sends bazel shutdown to the gate's output base about hourly, so each gate starts a cold server and the analysis cache never hits"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2319
+2026-11-07T12:58:05Z  status W2337 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
