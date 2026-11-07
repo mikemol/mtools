@@ -53,14 +53,13 @@ import json
 import math
 import os
 import shutil
-import subprocess
 import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import cast
 
-from mikemol.hooks import heartbeat
+from mikemol.hooks import heartbeat, runproc
 from mikemol.hooks.commit_span import binary, store_named
 from mikemol.hooks.heartbeat import Beat
 from mikemol.hooks.vlogdetach import spawn_detached
@@ -365,13 +364,7 @@ def ready_from(writer: str, state: Path) -> int | None:
 
     """
     try:
-        done = subprocess.run(
-            [writer, "--state", str(state), "--ready-count"],
-            capture_output=True,
-            text=True,
-            check=False,
-            stdin=subprocess.DEVNULL,
-        )
+        done = runproc.run([writer, "--state", str(state), "--ready-count"], stdin_text="")
     except OSError:
         return None
     said = done.stdout.strip()
@@ -395,13 +388,7 @@ def hint_from(repo: str, env: Mapping[str, str]) -> str:
     heard: list[str] = []
     for extra in ([], ["--propose", "--json"]):
         try:
-            done = subprocess.run(
-                [str(tool), repo, *extra],
-                capture_output=True,
-                text=True,
-                check=False,
-                stdin=subprocess.DEVNULL,
-            )
+            done = runproc.run([str(tool), repo, *extra], stdin_text="")
         except OSError:
             return ""
         heard.append(done.stdout if done.returncode == 0 else "")

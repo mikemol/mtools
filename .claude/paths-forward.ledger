@@ -6161,3 +6161,8 @@
 2026-11-07T06:49:17Z  interrupt W2330 minted    -         "Fix the cold review's BLOCK of 9472087b: landing must fail closed on both paths (B1), the fail-closed tests must be able to fail (B2), and N1 N2 N4 N5 N6 N8 (first rebaselines blob vs the landing's last, nested ratchet, non-empty review and record required of a row, ratchet among blobs, pinned mode and no unpinned earlier bytes, non-UTF-8 HEAD name refuses)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2327
 2026-11-07T06:51:44Z  status W2328 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T07:26:12Z  status W2330 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T07:27:21Z  status W2329 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T07:45:08Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T08:05:23Z  status W796 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T08:22:47Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T08:22:47Z  status W2330 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

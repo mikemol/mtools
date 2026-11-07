@@ -371,3 +371,25 @@ def test_main_holds_the_pid_file_while_it_watches_and_removes_it_on_exit(
     assert code == watchdog.EXIT_IDLE
     assert seen == [True]
     assert not watchdog.pidfile_of(tmp_path / ".git").exists()
+
+
+_TOOL = (
+    '#!/bin/sh\nif [ "$2" = "--propose" ]; then echo \'{"symbol": "W3"}\'; '
+    'else echo "STACK nemik:W9 x"; fi\nexit CODE\n'
+)
+
+
+def _stackable(tmp_path: Path, code: int) -> dict[str, str]:
+    tool = tmp_path / "stackable"
+    tool.write_text(_TOOL.replace("CODE", str(code)), encoding="utf-8")
+    tool.chmod(tool.stat().st_mode | stat.S_IXUSR)
+    return {watchdog.STACKABLE_ENV: str(tool)}
+
+
+def test_the_hint_is_what_nemik_stackable_says_and_nothing_when_it_fails_or_is_absent(
+    tmp_path: Path,
+) -> None:
+    """Two questions are asked of the tool; a failing or missing tool gives no hint, no raise."""
+    assert watchdog.hint_from("nemik", _stackable(tmp_path, 0)) == "next: stack W9; atomize W3"
+    assert not watchdog.hint_from("nemik", _stackable(tmp_path, 1))
+    assert not watchdog.hint_from("nemik", {watchdog.STACKABLE_ENV: str(tmp_path / "absent")})

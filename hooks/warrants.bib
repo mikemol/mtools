@@ -18589,3 +18589,24 @@
   claim  = {Both landing paths build through entries_for, so the refusal is raised there.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_entries_for_raises_refused_whatever_the_admission_says},
 }
+
+@misc{hooks-watchdog-hint-is-what-nemik-stackable-says-and-nothing-when-it-fails-or-is-absent,
+  section = {heartbeat},
+  title  = {Two questions are asked of the tool; a failing or missing tool gives no hint, no raise},
+  claim  = {Two questions are asked of the tool; a failing or missing tool gives no hint, no raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdog.py -k test_the_hint_is_what_nemik_stackable_says_and_nothing_when_it_fails_or_is_absent},
+}
+
+@misc{hooks-ratchet-pace-wired-repin-is-admitted-by-clause-r-and-a-stray-line-or-a-second-sha-is-not,
+  section = {ratchet_pace},
+  title  = {W2329: only the vendored sha changes in the text files; anything else keeps the refusal},
+  claim  = {W2329: only the vendored sha changes in the text files; anything else keeps the refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_a_repin_is_admitted_by_clause_r_and_a_stray_line_or_a_second_sha_is_not},
+}
+
+@misc{hooks-ratchet-pace-wired-submit-refusal-admits-a-repin-the-same-way,
+  section = {ratchet_pace},
+  title  = {The submit asks clause R too, on the frozen snapshot, and still refuses a stray line},
+  claim  = {The submit asks clause R too, on the frozen snapshot, and still refuses a stray line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_the_submit_refusal_admits_a_repin_the_same_way},
+}

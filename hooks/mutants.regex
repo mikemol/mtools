@@ -84,7 +84,7 @@ src/mikemol/hooks/ratchet_pace.py|a-row-check-admits-whatever-it-is-asked|    if
 src/mikemol/hooks/ratchet_pace.py|the-rows-are-never-asked|    if admitted is not None and admitted\(\):|    if False:|def=stack_reason
 src/mikemol/hooks/ratchet_pace.py|a-paydown-spends-a-row-check|    if any\(_touches\(paths, o\.ratchet\) for o in behind\):|    if False:|def=stack_reason
 src/mikemol/hooks/ratchet_pace.py|a-missing-snapshot-is-read-as-files|        if frozen is None:|        if False:|def=_admitted_by
-src/mikemol/hooks/ratchet_pace.py|a-matching-row-reads-as-not-admitting|        return row is not None and _birth_clear\(row, root, files\)|        return row is None and _birth_clear(row, root, files)|def=_admitted_by
+src/mikemol/hooks/ratchet_pace.py|a-matching-row-reads-as-not-admitting|        if row is not None:|        if row is None:|def=_admitted_by
 src/mikemol/hooks/admission.py|another-card-is-admitted|        if named == \{row\.card\}|        if bool(named)|def=refusal
 src/mikemol/hooks/admission.py|an-unpinned-path-is-admitted|\{extra\[0\]\}" if extra else None,|{extra[0]}" if False else None,|def=refusal
 src/mikemol/hooks/admission.py|half-the-change-is-admitted|\{missing\[0\]\}" if missing else None,|{missing[0]}" if False else None,|def=refusal
@@ -1091,6 +1091,10 @@ src/mikemol/hooks/admission.py|the-pinned-record-is-not-passed-on|        rebase
 src/mikemol/hooks/refusal_log.py|a-hung-curl-raises-past-the-gate|, runproc\.TimeoutExpired\)\)|))|def=log_fallthrough
 src/mikemol/hooks/new_dist_cli.py|a-failed-uv-lock-scaffolds-anyway|        if locked\.returncode != 0:|        if False:|def=scaffold
 src/mikemol/hooks/new_dist_cli.py|uv-lock-runs-outside-the-new-directory|runproc\.run\(\["uv", "lock"\], cwd=target\)|runproc.run(["uv", "lock"], cwd=None)|def=scaffold
+src/mikemol/hooks/ratchet_pace.py|a-stray-change-reads-as-a-repin|    return repin_admission\.admits\(old, new\) is None|    return repin_admission.admits(old, new) is not None|def=_repin_clear
+src/mikemol/hooks/ratchet_pace.py|the-submit-never-asks-clause-r|        return _repin_clear\(root, files\)|        return False|def=_admitted_by
+src/mikemol/hooks/ratchet_pace.py|the-landing-never-asks-clause-r|    if row is None and _repin_clear\(root, frozen\):|    if False:|def=landing_refusal
+src/mikemol/hooks/watchdog.py|a-failing-stackable-is-believed|        heard\.append\(done\.stdout if done\.returncode == 0 else ""\)|        heard.append(done.stdout)|def=hint_from
 src/mikemol/hooks/vlogsink.py|a-failed-resolver-reads-as-success|    return done\.returncode, done\.stdout|    return 0, done.stdout|def=run_resolver
 src/mikemol/hooks/siblingcensus_cli.py|a-failed-listing-reads-as-an-empty-census|    if done\.returncode != 0:|    if False:|def=tracked_text
 src/mikemol/hooks/ratchet_pace.py|a-birth-row-skips-its-accident-checks|    if row\.kind != admission\.BIRTH:|    if True:|def=_birth_clear
@@ -1107,4 +1111,4 @@ src/mikemol/hooks/admission.py|an-earlier-entry-with-other-bytes-is-hidden|     
 src/mikemol/hooks/admission.py|a-symlink-mode-is-a-pinned-file|        if any\(f\.mode not in _REGULAR_MODES for f in carried\):|        if False:|def=_carried_problem
 src/mikemol/hooks/stackrun.py|a-refused-landing-builds-anyway|    if reason is not None:|    if False:|def=entries_for
 src/mikemol/hooks/ratchet_pace.py|the-landing-skips-the-accident-checks|    if row is None or not _birth_clear\(row, root, frozen\):|    if row is None:|def=admitted_ident
-src/mikemol/hooks/ratchet_pace.py|the-submit-skips-the-accident-checks|        return row is not None and _birth_clear\(row, root, files\)|        return row is not None|def=_admitted_by
+src/mikemol/hooks/ratchet_pace.py|the-submit-skips-the-accident-checks|            return _birth_clear\(row, root, files\)|            return True|def=_admitted_by

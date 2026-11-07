@@ -370,7 +370,6 @@ notice-rgx = '(?i)SPDX-License-Identifier: Apache-2\.0[ \t]*\n#[ \t]*Copyright \
 # ⚑ ASKING THE WRITER HOW MANY CARDS ARE READY IS THE WATCHDOG'S ONE SUBPROCESS (W1474): the argv is
 # the resolved writer, a fixed flag, and the queue path the caller named; nothing runs through a
 # shell, and the count has one definition because the writer is the only thing that answers it.
-"src/mikemol/hooks/watchdog.py" = ["suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
 
 # ⚑ THE SHARED GIT PRE-PUSH: asking git, and running a repo's own pre-push.local, ARE its
 # responsibility. MEASURED: git is resolved by `shutil.which` (absent → refuse); the local hook is

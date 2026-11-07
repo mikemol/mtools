@@ -767,6 +767,7 @@ GRAPH = {
     "src/mikemol/hooks/ratchet_pace.py": {
       "imports": [
         "src/mikemol/hooks/admission.py",
+        "src/mikemol/hooks/repin_admission.py",
         "src/mikemol/hooks/round_wire.py",
         "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/stackfreeze.py",
@@ -1433,6 +1434,7 @@ GRAPH = {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/heartbeat.py",
+        "src/mikemol/hooks/runproc.py",
         "src/mikemol/hooks/vlogdetach.py"
       ],
       "reads": [],

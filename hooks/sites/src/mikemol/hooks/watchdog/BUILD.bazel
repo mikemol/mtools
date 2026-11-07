@@ -2054,6 +2054,39 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_a-failing-stackable-is-believed",
+    dist = "hooks",
+    site = "src/mikemol/hooks/watchdog.py::a-failing-stackable-is-believed",
+    tests = "tests/test_beat_hook.py tests/test_call_stamp.py tests/test_hook_import_check.py tests/test_watchdog.py tests/test_watchdog_evidence.py tests/test_watchdog_exit.py tests/test_watchdog_hint.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/beat.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/heartbeat.py",
+        "//hooks:src/mikemol/hooks/hook_argv.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:src/mikemol/hooks/watchdog.py",
+        "//hooks:tests/test_beat_hook.py",
+        "//hooks:tests/test_call_stamp.py",
+        "//hooks:tests/test_hook_import_check.py",
+        "//hooks:tests/test_watchdog.py",
+        "//hooks:tests/test_watchdog_evidence.py",
+        "//hooks:tests/test_watchdog_exit.py",
+        "//hooks:tests/test_watchdog_hint.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -2120,6 +2153,7 @@ test_suite(
         ":declared_environment-beats-the-flag",
         ":declared_reversed-window-accepted",
         ":declared_bad-window-not-refused-at-start",
+        ":declared_a-failing-stackable-is-believed",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],
