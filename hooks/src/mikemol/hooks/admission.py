@@ -70,25 +70,36 @@ def _frozen_blobs(frozen: Iterable[Frozen]) -> dict[str, str]:
     return {f.path: f.blob for f in frozen if f.path not in QUEUE_FILES}
 
 
+def _birth_fields_problem(row: Row) -> str | None:
+    """Say why a birth row lacks what a birth must pin (N4, N5).
+
+    Returns:
+        the reason; None when it pins its operator record and names a ratchet among its paths.
+
+    """
+    if not row.record:
+        return "the birth row pins no operator record"
+    if row.ratchet not in row.blobs:
+        return f"the birth row's ratchet {row.ratchet!r} is not among its pinned paths"
+    return None
+
+
 def _row_problem(row: Row) -> str | None:
     """Say why a row is not a reviewed, pinned change before any stack is looked at.
 
     Returns:
-        the reason; None for a row that pins a path, cites its review and, for a birth, pins its
-        operator record and names a ratchet among its pinned paths (N4, N5).
+        the reason; None for a row of a known kind that pins a path, cites its review and, for a
+        birth, pins its record and names its ratchet. The kind is a closed set: a misspelt one is
+        refused, never read as a repair that skips the birth checks.
 
     """
     if not row.blobs:
         return "the row pins no path, so it admits nothing"
     if not row.review:
         return "the row cites no cold review, so it is not a reviewed change"
-    if row.kind != BIRTH:
-        return None
-    if not row.record:
-        return "the birth row pins no operator record"
-    if row.ratchet not in row.blobs:
-        return f"the birth row's ratchet {row.ratchet!r} is not among its pinned paths"
-    return None
+    if row.kind not in {REPAIR, BIRTH}:
+        return f"unknown row kind {row.kind!r}: a row is a repair or a birth"
+    return _birth_fields_problem(row) if row.kind == BIRTH else None
 
 
 def _carried_problem(row: Row, held_files: Sequence[Frozen]) -> str | None:

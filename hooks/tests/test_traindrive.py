@@ -19,6 +19,7 @@ from mikemol.hooks import stackrun, traindrive, trainround
 from mikemol.hooks.trainjoin import Follower
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
     from pathlib import Path
 
     import pytest
@@ -277,3 +278,62 @@ def test_a_withdraw_after_the_leader_has_its_verdict_tells_nobody_more(
     assert "COMMITTED repo" in got["1"].text
     assert got["2"].code != 0
     assert "found bad" in got["2"].text
+
+
+def _drive_with(
+    root: Path,
+    tmp_path: Path,
+    refusal: Callable[[Sequence[stackrun.Item]], str | None],
+    admission: Callable[[Sequence[stackrun.Item]], str | None],
+) -> dict[str, traindrive.Verdict]:
+    groups = [
+        Follower(key, (stackrun.Item(f"W{key}", f"card {key}", "", (path,)),))
+        for key, path in zip(("1", "2", "3"), _NAMES, strict=True)
+    ]
+    seams = stackrun.Seams(
+        run=ck.run_git_in,
+        namespace=tmp_path / "gate",
+        message_of=lambda item: f"{item.subject}\n\nWaypoint: {item.waypoint}\n",
+        published=lambda _sha: "PUSHED",
+        admission=admission,
+        landing_refusal=refusal,
+    )
+    return {v.key: v for v in traindrive.drive(root, groups, seams)}
+
+
+def _no(_items: Sequence[stackrun.Item]) -> str | None:
+    return None
+
+
+def _refuse_second(items: Sequence[stackrun.Item]) -> str | None:
+    return "behind its ratchet paydown" if items[0].waypoint == "W2" else None
+
+
+def test_a_group_the_pace_refuses_at_the_landing_is_a_verdict_and_the_others_land(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """F2: no exception; the refused group is told, HEAD gains only the others, the leader lives."""
+    root = _repo(tmp_path, monkeypatch)
+    got = _drive_with(root, tmp_path, _refuse_second, _no)
+    assert got["2"].code == 1
+    assert "refused at the landing: behind its ratchet paydown" in got["2"].text
+    assert got["1"].code == 0
+    assert got["3"].code == 0
+    assert _subjects(root)[:_THREE] == ["card 3", "card 1", "first"]
+
+
+def test_a_groups_admission_trailer_is_its_own_not_a_neighbours(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """F1: a row that admits only group 2 writes its trailer on group 2's commit alone."""
+
+    def only_second(items: Sequence[stackrun.Item]) -> str | None:
+        return "r/W2" if items[0].waypoint == "W2" else None
+
+    root = _repo(tmp_path, monkeypatch)
+    got = _drive_with(root, tmp_path, _no, only_second)
+    assert [got[k].code for k in ("1", "2", "3")] == [0, 0, 0]
+    bodies = _git(root, "log", "--format=%B%x00").split("\0")
+    carriers = [body for body in bodies if "Admission: r/W2" in body]
+    assert len(carriers) == 1
+    assert "card 2" in carriers[0]

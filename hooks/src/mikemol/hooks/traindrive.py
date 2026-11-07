@@ -56,6 +56,7 @@ from mikemol.hooks.stackrun import (
     Seams,
     culprit_note,
     entries_for,
+    refusal_line,
 )
 from mikemol.hooks.trainjoin import Follower as Group
 from mikemol.hooks.traintel import Stats
@@ -84,8 +85,32 @@ def _flat(groups: Sequence[Group]) -> list[Item]:
 
 
 def _entries(groups: Sequence[Group], seams: Seams) -> list[Entry]:
-    # The stack entries of every group's items, in order, for one build.
-    return entries_for(_flat(groups), seams)
+    # The stack entries of every group's items, in order, for one build. ⚑ EACH GROUP IS BUILT
+    # ALONE: the Admission trailer is a group's own, judged on its own items, so a group a row
+    # admits is not judged by what rides beside it (the 759a7e68 review, F1).
+    return [entry for group in groups for entry in entries_for(group.items, seams)]
+
+
+def _drop_paced(
+    remaining: list[Group],
+    verdicts: list[Verdict],
+    count: Stats,
+    seams: Seams,
+    who: tuple[str, str],
+) -> bool:
+    # Tell the first group the pace still refuses at the landing, drop it from the train and say
+    # whether one was dropped. ⚑ A REFUSAL IS A GROUP'S VERDICT, NEVER AN EXCEPTION (the 759a7e68
+    # review, F2): the other groups go on.
+    name, before = who
+    for place, group in enumerate(remaining):
+        reason = seams.landing_refusal(group.items)
+        if reason is not None:
+            text = refusal_line(name, reason) + f" HEAD is {before[:SHORT]}.\n"
+            verdicts.append(Verdict(group.key, 1, text))
+            count.dropped += 1
+            del remaining[place]
+            return True
+    return False
 
 
 class _Round:
@@ -267,6 +292,8 @@ def drive(
     while remaining:
         began = time.time_ns()
         before = seams.run(["rev-parse", "HEAD"], {}, root).stdout.strip()
+        if _drop_paced(remaining, verdicts, count, seams, (name, before)):
+            continue
         stack = build(root, _entries(remaining, seams), seams.run, before)
         count.rounds += 1
         if stack.failed is not None:

@@ -14,14 +14,14 @@ import json
 import os
 from typing import TYPE_CHECKING
 
-import pytest
-
 from mikemol.hooks import commit_kata as ck
 from mikemol.hooks import scratch, stackrun
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
+
+    import pytest
 
 
 _EXECUTABLE = 0o755
@@ -471,8 +471,10 @@ def test_a_stack_the_landing_refuses_never_becomes_a_commit(
     assert _git(root, "rev-parse", "HEAD").strip() == before
 
 
-def test_entries_for_raises_refused_whatever_the_admission_says(tmp_path: Path) -> None:
-    """Both landing paths build through entries_for, so the refusal is raised there."""
+def test_entries_for_builds_what_it_is_given_and_leaves_the_pace_to_its_callers(
+    tmp_path: Path,
+) -> None:
+    """The pace is judged by run_stack and, per group, by the train, not by the builder."""
     seams = stackrun.Seams(
         run=ck.run_git_in,
         namespace=tmp_path,
@@ -481,5 +483,5 @@ def test_entries_for_raises_refused_whatever_the_admission_says(tmp_path: Path) 
         admission=lambda _items: "nemik/W1660",
         landing_refusal=lambda _items: "still refused",
     )
-    with pytest.raises(stackrun.RefusedError, match="still refused"):
-        stackrun.entries_for([stackrun.Item("W1", "s", "", ("a.txt",))], seams)
+    entries = stackrun.entries_for([stackrun.Item("W1", "s", "", ("a.txt",))], seams)
+    assert entries[0].message.endswith("Admission: nemik/W1660\n")

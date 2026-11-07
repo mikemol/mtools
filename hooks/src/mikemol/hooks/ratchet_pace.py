@@ -338,19 +338,24 @@ def _git_text(root: Path, argv: Sequence[str]) -> str | None:
 
 
 def _birth_clear(row: admission.Row, root: Path, files: Sequence[stacksnap.Frozen]) -> bool:
+    # Whether a birth row's accident checks pass; a repair row has none.
+    return _birth_problem(row, root, files) is None
+
+
+def _birth_problem(row: admission.Row, root: Path, files: Sequence[stacksnap.Frozen]) -> str | None:
     # A birth row also passes its accident checks (W2309): the ratchet file is new at HEAD and
     # the stack's frozen rebaselines.json carries the entry citing the pinned record.
     # ⚑ FAILS CLOSED: a git read that fails, or a rebaselines blob that cannot be read, refuses.
     if row.kind != admission.BIRTH:
-        return True
+        return None
     listing = _git_text(root, ["ls-tree", "-r", "--name-only", "-z", "HEAD"])
     if listing is None:
-        return False
+        return "HEAD could not be listed"
     # N1: the landing keeps the LAST file for a path, so the last blob is what lands.
     blobs = [f.blob for f in files if f.path == REBASELINES]
     blob = blobs[-1] if blobs else ""
     entry = _git_text(root, ["cat-file", "blob", blob]) if blob else None
-    return admission.accident(row, frozenset(listing.split("\0")), entry) is None
+    return admission.accident(row, frozenset(listing.split("\0")), entry)
 
 
 def _repin_clear(root: Path, files: Sequence[stacksnap.Frozen]) -> bool:
@@ -452,9 +457,12 @@ def landing_refusal(
         return None
     frozen = [file for item in items for file in item.files or ()]
     row = admission.admitting(rows, root.name, [item.waypoint for item in items], frozen)
-    if row is not None and _birth_clear(row, root, frozen):
-        return None
-    if row is None and _repin_clear(root, frozen):
+    if row is not None:
+        problem = _birth_problem(row, root, frozen)
+        if problem is None:
+            return None
+        return f"{reason}; the birth row {row.ident()} did not clear: {problem}"
+    if _repin_clear(root, frozen):
         return None
     return reason
 

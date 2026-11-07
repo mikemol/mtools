@@ -186,3 +186,10 @@ def test_an_earlier_entry_with_unpinned_bytes_and_a_non_regular_mode_are_refused
     link = [Frozen("a.py", "120000", _A)]
     assert "not a regular file" in str(admission.refusal(row, ["W1660"], link))
     assert admission.refusal(row, ["W1660"], _stack(("a.py", _A))) is None
+
+
+def test_a_row_kind_outside_the_closed_set_is_refused_not_read_as_a_repair() -> None:
+    """A misspelt kind such as 'Birth' must not skip the birth checks by reading as a repair."""
+    odd = admission.Row(repo="nemik", card="W1", blobs={"a.py": _A}, review="r", kind="Birth")
+    reason = admission.refusal(odd, ["W1"], _stack(("a.py", _A)))
+    assert "unknown row kind" in str(reason)

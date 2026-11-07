@@ -94,10 +94,6 @@ def no_admission(_items: Sequence[Item]) -> str | None:
     return None
 
 
-class RefusedError(ValueError):
-    """The landing refuses a stack the submit let wait: the pace still refuses it (W2330)."""
-
-
 @dataclass(frozen=True)
 class Seams:
     """What a test replaces: the git runner, the namespace, the message, publish and history."""
@@ -113,6 +109,16 @@ class Seams:
     landing_refusal: Callable[[Sequence[Item]], str | None] = no_admission
 
 
+def refusal_line(name: str, reason: str) -> str:
+    """Word the verdict of a stack the landing refuses because the pace still refuses it.
+
+    Returns:
+        the line, naming the repository and the reason, without a newline.
+
+    """
+    return f"REFUSED {name} (rc=1): the stack is refused at the landing: {reason}; nothing landed."
+
+
 def entries_for(items: Sequence[Item], seams: Seams) -> list[Entry]:
     """Make the stack's entries, writing the Admission trailer for a stack a pinned row admits.
 
@@ -125,13 +131,7 @@ def entries_for(items: Sequence[Item], seams: Seams) -> list[Entry]:
     Returns:
         one entry per item, in order.
 
-    Raises:
-        RefusedError: when the landing judges the pace again and the stack is still refused.
-
     """
-    reason = seams.landing_refusal(items)
-    if reason is not None:
-        raise RefusedError(reason)
     messages = [seams.message_of(item) for item in items]
     row = seams.admission(items)
     if row is not None:
@@ -316,14 +316,11 @@ def run_stack(root: Path, items: Sequence[Item], out: TextIO, seams: Seams) -> i
             "from HEAD and no entry named it, W1941)\n"
         )
     before = run(["rev-parse", "HEAD"], {}, root).stdout.strip()
-    try:
-        entries = entries_for(items, seams)
-    except RefusedError as refused:
-        out.write(
-            f"REFUSED {name} (rc=1): the stack is refused at the landing: {refused}; "
-            f"nothing landed, HEAD is still {before[:SHORT]}\n"
-        )
+    refused = seams.landing_refusal(items)
+    if refused is not None:
+        out.write(refusal_line(name, refused) + f" HEAD is still {before[:SHORT]}\n")
         return 1
+    entries = entries_for(items, seams)
     stack = build(root, entries, run, before)
     if stack.failed is not None:
         place = len(stack.commits) + 1
