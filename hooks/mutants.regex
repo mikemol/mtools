@@ -1093,22 +1093,25 @@ src/mikemol/hooks/new_dist_cli.py|a-failed-uv-lock-scaffolds-anyway|        if l
 src/mikemol/hooks/new_dist_cli.py|uv-lock-runs-outside-the-new-directory|runproc\.run\(\["uv", "lock"\], cwd=target\)|runproc.run(["uv", "lock"], cwd=None)|def=scaffold
 src/mikemol/hooks/ratchet_pace.py|a-stray-change-reads-as-a-repin|    return repin_admission\.admits\(old, new\) is None|    return repin_admission.admits(old, new) is not None|def=_repin_clear
 src/mikemol/hooks/ratchet_pace.py|the-submit-never-asks-clause-r|        return _repin_clear\(root, files\)|        return False|def=_admitted_by
-src/mikemol/hooks/ratchet_pace.py|the-landing-never-asks-clause-r|    if row is None and _repin_clear\(root, frozen\):|    if False:|def=landing_refusal
+src/mikemol/hooks/ratchet_pace.py|the-landing-never-asks-clause-r|    if _repin_clear\(root, frozen\):|    if False:|def=landing_refusal
 src/mikemol/hooks/watchdog.py|a-failing-stackable-is-believed|        heard\.append\(done\.stdout if done\.returncode == 0 else ""\)|        heard.append(done.stdout)|def=hint_from
 src/mikemol/hooks/vlogsink.py|a-failed-resolver-reads-as-success|    return done\.returncode, done\.stdout|    return 0, done.stdout|def=run_resolver
 src/mikemol/hooks/siblingcensus_cli.py|a-failed-listing-reads-as-an-empty-census|    if done\.returncode != 0:|    if False:|def=tracked_text
-src/mikemol/hooks/ratchet_pace.py|a-birth-row-skips-its-accident-checks|    if row\.kind != admission\.BIRTH:|    if True:|def=_birth_clear
-src/mikemol/hooks/ratchet_pace.py|an-unreadable-head-reads-as-a-clean-birth|    listing = _git_text\(root, \["ls-tree", "-r", "--name-only", "-z", "HEAD"\]\)|    listing = _git_text(root, ["ls-tree", "-r", "--name-only", "-z", "HEAD"]) or ""|def=_birth_clear
+src/mikemol/hooks/ratchet_pace.py|a-birth-row-skips-its-accident-checks|    if row\.kind != admission\.BIRTH:|    if True:|def=_birth_problem
+src/mikemol/hooks/ratchet_pace.py|an-unreadable-head-reads-as-a-clean-birth|    listing = _git_text\(root, \["ls-tree", "-r", "--name-only", "-z", "HEAD"\]\)|    listing = _git_text(root, ["ls-tree", "-r", "--name-only", "-z", "HEAD"]) or ""|def=_birth_problem
 src/mikemol/hooks/ratchet_pace.py|a-failed-git-read-answers-with-its-stdout|    return done\.stdout if done\.returncode == 0 else None|    return done.stdout|def=_git_text
-src/mikemol/hooks/ratchet_pace.py|the-listing-is-not-recursive|"ls-tree", "-r", |"ls-tree", |def=_birth_clear
+src/mikemol/hooks/ratchet_pace.py|the-listing-is-not-recursive|"ls-tree", "-r", |"ls-tree", |def=_birth_problem
 src/mikemol/hooks/ratchet_pace.py|a-non-utf8-name-raises-past-the-refusal|    except UnicodeDecodeError:|    except OSError:|def=_git_text
 src/mikemol/hooks/ratchet_pace.py|the-landing-trusts-a-pace-that-refuses|    if reason is None:|    if True:|def=landing_refusal
-src/mikemol/hooks/ratchet_pace.py|the-landing-trusts-a-row-without-its-accident-checks|    if row is not None and _birth_clear\(row, root, frozen\):|    if row is not None:|def=landing_refusal
+src/mikemol/hooks/ratchet_pace.py|the-landing-trusts-a-row-without-its-accident-checks|        if problem is None:|        if True:|def=landing_refusal
 src/mikemol/hooks/admission.py|a-row-without-a-review-admits|    if not row\.review:|    if False:|def=_row_problem
-src/mikemol/hooks/admission.py|a-birth-without-a-record-admits|    if not row\.record:|    if False:|def=_row_problem
-src/mikemol/hooks/admission.py|a-birth-whose-ratchet-is-not-pinned-admits|    if row\.ratchet not in row\.blobs:|    if False:|def=_row_problem
+src/mikemol/hooks/admission.py|a-birth-without-a-record-admits|    if not row\.record:|    if False:|def=_birth_fields_problem
+src/mikemol/hooks/admission.py|a-birth-whose-ratchet-is-not-pinned-admits|    if row\.ratchet not in row\.blobs:|    if False:|def=_birth_fields_problem
 src/mikemol/hooks/admission.py|an-earlier-entry-with-other-bytes-is-hidden|        if any\(f\.blob != pinned for f in carried\[:-1\]\):|        if False:|def=_carried_problem
 src/mikemol/hooks/admission.py|a-symlink-mode-is-a-pinned-file|        if any\(f\.mode not in _REGULAR_MODES for f in carried\):|        if False:|def=_carried_problem
-src/mikemol/hooks/stackrun.py|a-refused-landing-builds-anyway|    if reason is not None:|    if False:|def=entries_for
+src/mikemol/hooks/stackrun.py|a-refused-landing-builds-anyway|    if refused is not None:|    if False:|def=run_stack
 src/mikemol/hooks/ratchet_pace.py|the-landing-skips-the-accident-checks|    if row is None or not _birth_clear\(row, root, frozen\):|    if row is None:|def=admitted_ident
 src/mikemol/hooks/ratchet_pace.py|the-submit-skips-the-accident-checks|            return _birth_clear\(row, root, files\)|            return True|def=_admitted_by
+src/mikemol/hooks/admission.py|an-unknown-row-kind-reads-as-a-repair|    if row\.kind not in \{REPAIR, BIRTH\}:|    if False:|def=_row_problem
+src/mikemol/hooks/traindrive.py|a-paced-group-is-not-dropped|        if reason is not None:|        if False:|def=_drop_paced
+src/mikemol/hooks/traindrive.py|the-train-judges-all-groups-as-one-stack|    return \[entry for group in groups for entry in entries_for\(group\.items, seams\)\]|    return entries_for(_flat(groups), seams)|def=_entries

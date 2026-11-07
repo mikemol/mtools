@@ -18583,13 +18583,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_a_stack_the_landing_refuses_never_becomes_a_commit},
 }
 
-@misc{hooks-stackrun-entries-for-raises-refused-whatever-the-admission-says,
-  section = {stackland},
-  title  = {Both landing paths build through entries_for, so the refusal is raised there},
-  claim  = {Both landing paths build through entries_for, so the refusal is raised there.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_entries_for_raises_refused_whatever_the_admission_says},
-}
-
 @misc{hooks-watchdog-hint-is-what-nemik-stackable-says-and-nothing-when-it-fails-or-is-absent,
   section = {heartbeat},
   title  = {Two questions are asked of the tool; a failing or missing tool gives no hint, no raise},
@@ -18609,4 +18602,33 @@
   title  = {The submit asks clause R too, on the frozen snapshot, and still refuses a stray line},
   claim  = {The submit asks clause R too, on the frozen snapshot, and still refuses a stray line.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_ratchet_pace_wired.py -k test_the_submit_refusal_admits_a_repin_the_same_way},
+}
+
+@misc{hooks-traindrive-group-the-pace-refuses-at-the-landing-is-a-verdict-and-the-others-land,
+  section = {stackland},
+  title  = {F2: no exception; the refused group is told, HEAD gains only the others, the leader lives},
+  claim  = {F2: no exception; the refused group is told, HEAD gains only the others, the leader
+            lives.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_group_the_pace_refuses_at_the_landing_is_a_verdict_and_the_others_land},
+}
+
+@misc{hooks-traindrive-groups-admission-trailer-is-its-own-not-a-neighbours,
+  section = {stackland},
+  title  = {F1: a row that admits only group 2 writes its trailer on group 2's commit alone},
+  claim  = {F1: a row that admits only group 2 writes its trailer on group 2's commit alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_traindrive.py -k test_a_groups_admission_trailer_is_its_own_not_a_neighbours},
+}
+
+@misc{hooks-admission-row-kind-outside-the-closed-set-is-refused-not-read-as-a-repair,
+  section = {admission},
+  title  = {A misspelt kind such as 'Birth' must not skip the birth checks by reading as a repair},
+  claim  = {A misspelt kind such as 'Birth' must not skip the birth checks by reading as a repair.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admission.py -k test_a_row_kind_outside_the_closed_set_is_refused_not_read_as_a_repair},
+}
+
+@misc{hooks-stackrun-entries-for-builds-what-it-is-given-and-leaves-the-pace-to-its-callers,
+  section = {stackland},
+  title  = {The pace is judged by run_stack and, per group, by the train, not by the builder},
+  claim  = {The pace is judged by run_stack and, per group, by the train, not by the builder.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackrun.py -k test_entries_for_builds_what_it_is_given_and_leaves_the_pace_to_its_callers},
 }
