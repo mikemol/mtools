@@ -23,8 +23,13 @@ def _git(root: Path, *argv: str) -> str:
     return done.stdout.strip()
 
 
-def _prepared(tmp_path: Path) -> tuple[Path, Path]:
-    # clean, dirty, ahead and gone worktrees, seen once so the next run classifies them.
+_ALL = ("clean", "dirty", "ahead", "gone")
+
+
+def _prepared(tmp_path: Path, names: tuple[str, ...] = _ALL) -> tuple[Path, Path]:
+    # the named worktrees (default: clean, dirty, ahead and gone), seen once so the next run
+    # classifies them. A case that needs only one class asks for only that one: every worktree is
+    # a handful of git processes, and the suite's cost is those processes (W2355).
     root = tmp_path / "repo"
     root.mkdir()
     _git(root, "init", "-b", "main")
@@ -32,18 +37,21 @@ def _prepared(tmp_path: Path) -> tuple[Path, Path]:
     _git(root, "add", "f.txt")
     _git(root, "commit", "-m", "one")
     wts = tmp_path / "wts"
-    for name in ("clean", "dirty", "ahead", "gone"):
+    for name in names:
         _git(root, "worktree", "add", "-b", f"scratch/{name}", str(wts / name))
-    (wts / "dirty" / "f.txt").write_text("changed\n", encoding="utf-8")
-    (wts / "ahead" / "g.txt").write_text("two\n", encoding="utf-8")
-    _git(wts / "ahead", "add", "g.txt")
-    _git(wts / "ahead", "commit", "-m", "ahead")
-    for child in sorted((wts / "gone").rglob("*"), reverse=True):
-        if child.is_file():
-            child.unlink()
-        elif child.is_dir():
-            child.rmdir()
-    (wts / "gone").rmdir()
+    if "dirty" in names:
+        (wts / "dirty" / "f.txt").write_text("changed\n", encoding="utf-8")
+    if "ahead" in names:
+        (wts / "ahead" / "g.txt").write_text("two\n", encoding="utf-8")
+        _git(wts / "ahead", "add", "g.txt")
+        _git(wts / "ahead", "commit", "-m", "ahead")
+    if "gone" in names:
+        for child in sorted((wts / "gone").rglob("*"), reverse=True):
+            if child.is_file():
+                child.unlink()
+            elif child.is_dir():
+                child.rmdir()
+        (wts / "gone").rmdir()
     reap.report(root)
     return root, wts
 
@@ -96,7 +104,7 @@ def test_a_first_run_removes_nothing_because_every_worktree_is_new(tmp_path: Pat
 
 def test_a_held_clean_worktree_is_kept(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A process inside the directory holds it: the class is held and nothing is removed."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(tmp_path, ("clean",))
     monkeypatch.chdir(wts / "clean")
     lines = reap.report(root, removing=True)
     held = next(line for line in lines if "scratch/clean" in line)
@@ -106,7 +114,7 @@ def test_a_held_clean_worktree_is_kept(tmp_path: Path, monkeypatch: pytest.Monke
 
 def test_git_refuses_a_worktree_that_turned_dirty_after_the_classification(tmp_path: Path) -> None:
     """Without --force git is the last gate: a file written since keeps the worktree."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(tmp_path, ("clean",))
     (wts / "clean" / "late.txt").write_text("written after the read\n", encoding="utf-8")
     wt = reap.Worktree(str(wts / "clean"), "scratch/clean", prunable=False)
     assert not reap.remove(root, wt, reap.CLEAN)
@@ -116,7 +124,7 @@ def test_git_refuses_a_worktree_that_turned_dirty_after_the_classification(tmp_p
 
 def test_only_gone_and_clean_are_ever_removable_and_a_held_one_is_not(tmp_path: Path) -> None:
     """The classes the function refuses are refused before git is asked."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(tmp_path, ("clean",))
     wt = reap.Worktree(str(wts / "clean"), "scratch/clean", prunable=False)
     for kind in (reap.DIRTY, reap.UNMERGED, reap.NEW, reap.HELD):
         assert not reap.remove(root, wt, kind)
@@ -127,7 +135,7 @@ def test_a_process_that_entered_the_directory_since_the_classification_keeps_it(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Held is read again just before removal, so a late entrant is a reason to leave it."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(tmp_path, ("clean",))
     wt = reap.Worktree(str(wts / "clean"), "scratch/clean", prunable=False)
     monkeypatch.chdir(wts / "clean")
     assert not reap.remove(root, wt, reap.CLEAN)
