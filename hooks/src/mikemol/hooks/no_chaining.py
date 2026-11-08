@@ -200,7 +200,7 @@ def _tokenize(cmd: str) -> list[str]:
         return []
 
 
-def _classify(tok: str, found: list[Finding], pending_interp: bool) -> bool:
+def _classify(tok: str, found: list[Finding], *, pending_interp: bool) -> bool:
     """Record any inline-script tell on `tok`; return the new pending-interp state.
 
     Returns:

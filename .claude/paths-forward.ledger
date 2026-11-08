@@ -6326,3 +6326,67 @@
 2026-11-07T23:57:30Z  status W2002 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T23:57:30Z  status W2346 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T23:59:29Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T00:04:33Z  interrupt W2350 minted    -         "stackempty passes silently with no snapshot or a length mismatch, and head_entry reads an ls-tree error as not in HEAD"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-08T00:04:41Z  status W2346 done>ready writer    "done -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T00:06:22Z  interrupt W2351 minted    -         "A withdraw request that cannot stop a stack refuses at request time with too late, will land, and an accepted one holds"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-08T00:07:34Z  status W2346 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T00:08:47Z  status W2000 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T00:08:48Z  interrupt W2352 minted    -         "List what changes in behaviour fleet-wide between mikemol-hooks 636e39b and the repin sha, before the repin"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-08T00:27:06Z  status W2002 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T00:40:15Z  interrupt W2353 minted    -         "isolated.refresh_tree removes or names a working file the landing deleted from HEAD (luthen-observability:W2334)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-08T00:41:02Z  status W2353 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T00:41:03Z  status W2003 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T00:59:35Z  status W2013 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:13:22Z  status W2002 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:13:22Z  status W2003 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:13:22Z  status W2013 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:13:22Z  status W2346 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:17:55Z  status W2002 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:18:36Z  status W2294 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:18:40Z  status W1667 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:28:30Z  status W2294 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:30:39Z  status W1667 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:30:48Z  status W1496 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:30:49Z  status W1494 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:41:09Z  interrupt W2354 minted    -         "Tell nemik which commit-path events exist for the dev-pipeline measure, and card emitting the missing ones"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-08T01:42:59Z  status W1494 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T01:43:57Z  status W1494 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:00:29Z  interrupt W2355 minted    -         "Shard or atomize //hooks:test_worktreereap_remove: it timed out at 60 s inside a 4307 s gate that refused b60 (load-only, not touched by that stack)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:11:28Z  interrupt W2356 minted    -         "Design to github-14: the kine-latency guard freezes and resumes a gate instead of killing it, its 4.0 s threshold learned from the series, each trip stored as a record (agree owner with luthen)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:12:11Z  status W1496 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:14:37Z  status W2003 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:18:22Z  status W2356 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:18:23Z  status W2013 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:21:19Z  interrupt W2357 minted    -         "W2356 unit 1: fence policy keys action, resume_samples, max_frozen_samples, on_cap (required, no defaults) with their parse problems"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2356
+2026-11-08T03:21:20Z  interrupt W2358 minted    -         "W2356 unit 2: watcher freeze state machine with the descendant fork loop, resume on N clear samples, and the cap action (resume or kill) recorded"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2356
+2026-11-08T03:21:20Z  interrupt W2359 minted    -         "W2356 unit 3: trip record (JSON lines) and OTLP counter for trip, freeze and resume events; shared-server rule recorded"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2356
+2026-11-08T03:21:21Z  interrupt W2360 minted    -         "W2356 unit 5: rehearsal measuring kine p99 against mtools gate spans for the 2026-11-03, 2026-11-05 and 2026-11-08 episodes, then the host guards.toml moves to freeze"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2356
+2026-11-08T03:21:27Z  interrupt W2361 minted    -         "W2356 unit 4a: fence admission holds a new claim while a live frozen record exists, and a janitor resumes a dead owner's record"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2356
+2026-11-08T03:21:27Z  interrupt W2362 minted    -         "W2356 unit 4b: the commit path waits on a lock held by a frozen process instead of timing out on it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2356
+2026-11-08T03:21:58Z  status W2355 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:22:53Z  status W2024 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:40:35Z  status W2357 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T03:41:16Z  status W2061 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T04:00:22Z  status W2076 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T04:00:22Z  status W2077 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T04:24:40Z  status W2077 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T05:29:11Z  status W2080 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T05:56:10Z  status W2358 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T05:56:50Z  status W2081 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T06:33:46Z  status W2082 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T07:30:55Z  interrupt W2363 minted    -         "The mdstruct mypy-domain witness fails or hangs inside the gate: b60 arm 1 failed, b62 stalled at its first phase"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2355
+2026-11-08T07:34:17Z  interrupt W2364 minted    -         "Stall detector names the lock a process-tree waits on, so a gate stalled on a bazel output-base lock refuses in seconds, not after 120 looks"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2363
+2026-11-08T07:34:28Z  status W2083 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T07:35:52Z  interrupt W2365 minted    -         "Commit-path fault class: the commit path imports venvs built from the working tree, so uncommitted code runs live in it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2356
+2026-11-08T07:36:40Z  status W2084 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T07:53:48Z  interrupt W2366 minted    -         "Admission row for nemik:W2069 pinned to its three blobs, citing operator line 151414 and github:W99, with its refusal witnesses"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-08T07:54:44Z  status W2089 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T08:03:06Z  status W2366 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T08:20:39Z  status W1935 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T08:20:39Z  status W2091 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T08:43:45Z  interrupt W2367 minted    -         "domain_witness.sh closes its lock fd 9 for every bazel it starts, so a bazel server cannot inherit and hold the witness lock"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2363
+2026-11-08T08:46:23Z  status W1935 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T08:47:11Z  status W2093 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T09:33:51Z  status W2367 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T09:34:38Z  status W2094 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-08T10:57:54Z  status W2096 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
