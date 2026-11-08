@@ -19028,3 +19028,37 @@
   claim  = {A changed file is no empty entry, and neither is one naming only a queue file.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_real_repository_stack_changing_the_file_or_only_the_queue_waits},
 }
+
+@misc{hooks-isolated-leftover-deleted-path-whose-leftover-holds-the-old-bytes-is-removed,
+  section = {isolated_commit},
+  title  = {Absent at HEAD and equal to what `start` held: nobody edited it, so it goes and is named},
+  claim  = {Absent at HEAD and equal to what `start` held: nobody edited it, so it goes and is
+            named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_leftover.py -k test_a_deleted_path_whose_leftover_holds_the_old_bytes_is_removed},
+}
+
+@misc{hooks-isolated-leftover-deleted-path-whose-leftover-was-edited-is-left-and-named,
+  section = {isolated_commit},
+  title  = {Absent at HEAD and different from `start`'s bytes: someone's edit, kept and reported},
+  claim  = {Absent at HEAD and different from `start`'s bytes: someone's edit, kept and reported.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_leftover.py -k test_a_deleted_path_whose_leftover_was_edited_is_left_and_named},
+}
+
+@misc{hooks-isolated-leftover-path-at-head-and-a-path-gone-from-both-say-nothing,
+  section = {isolated_commit},
+  title  = {The ordinary judgement stays: a file equal to HEAD, and one absent everywhere},
+  claim  = {The ordinary judgement stays: a file equal to HEAD, and one absent everywhere.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_leftover.py -k test_a_path_at_head_and_a_path_gone_from_both_say_nothing},
+}
+
+@misc{hooks-toy-harness-stack-built-on-a-held-stacks-bytes-waits-and-lands-in-order,
+  section = {toy-harness},
+  title  = {W2294: a second stack carrying the first's a.txt plus a new b.txt lands after the first},
+  claim  = {W2294: a second stack carrying the first's a.txt plus a new b.txt lands after the first.
+            THE SECOND STACK MUST ADD A FILE: it carries the SAME bytes of a.txt as the
+            stack ahead (any other bytes are refused at submit), so its own change to
+            a.txt is empty and only b.txt gives it a diff, which the empty-entry rule
+            (W2346) now demands. Both gates reach the held hook, so each announces on
+            `held` and waits on `release`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_stack_built_on_a_held_stacks_bytes_waits_and_lands_in_order},
+}

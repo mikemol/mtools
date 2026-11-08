@@ -1157,6 +1157,9 @@ src/mikemol/hooks/round_wire.py|the-co-lander-is-outside-the-round|    working =
 src/mikemol/hooks/round_wire.py|a-lone-co-lander-is-no-working-set|    working = \(stack - \{CO_LANDER\}\) or stack|    working = stack - {CO_LANDER}|def=as_submitted
 src/mikemol/hooks/stackempty.py|an-entry-equal-to-head-is-never-empty|        if files and all\(\(f\.mode, f\.blob\) == head_entry\(f\.path\) for f in files\):|        if False:|def=empty_entries
 src/mikemol/hooks/stackempty.py|a-queue-only-entry-is-empty|        if files and all\(|        if all(|def=empty_entries
+src/mikemol/hooks/isolated.py|a-deleted-leftover-is-ignored|        if leftover == "same":|        if False:|def=refresh_tree
+src/mikemol/hooks/isolated.py|an-edited-leftover-is-removed|        if leftover == "differs":|        if False:|def=refresh_tree
+src/mikemol/hooks/isolated.py|a-leftover-is-judged-equal-unread|    same = mine\.returncode == 0 and then\.returncode == 0 and mine\.stdout == then\.stdout|    same = True|def=_leftover
 src/mikemol/hooks/stackempty.py|the-mode-is-ignored|\(f\.mode, f\.blob\) == head_entry\(f\.path\)|f.blob == head_entry(f.path)[1]|def=empty_entries
 src/mikemol/hooks/stackempty.py|one-equal-file-makes-an-entry-empty|        if files and all\(|        if files and any(|def=empty_entries
 src/mikemol/hooks/commit_kata.py|empty-entry-not-asked-at-submit|        or _empty_refusal\(root, stack_file, snap, run_git_in\)|        or None|def=submit_problem

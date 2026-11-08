@@ -238,6 +238,51 @@ def test_a_stack_sharing_a_file_with_a_held_stack_is_refused_unless_built_on_its
     assert _git(repo, env, "log", "-1", "--format=%s").strip() == _SUBJECT
 
 
+def test_a_stack_built_on_a_held_stacks_bytes_waits_and_lands_in_order(tmp_path: Path) -> None:
+    """W2294: a second stack carrying the first's a.txt plus a new b.txt lands after the first.
+
+    ⚑ THE SECOND STACK MUST ADD A FILE: it carries the SAME bytes of a.txt as the stack ahead (any
+    other bytes are refused at submit), so its own change to a.txt is empty and only b.txt gives it
+    a diff, which the empty-entry rule (W2346) now demands. Both gates reach the held hook, so each
+    announces on `held` and waits on `release`.
+    """
+    hook, held, release = _held_hook(tmp_path)
+    env = _environment(tmp_path)
+    repo = _repo(tmp_path, env, _NAMING_HOOK)
+    (repo / ".githooks" / "pre-commit").write_text(hook, encoding="utf-8")
+    _git(repo, env, "add", ".githooks/pre-commit")
+    _git(repo, env, "commit", "--quiet", "--no-verify", "-m", "hold the gate")
+    runner = tmp_path / "run_commit.py"
+    runner.write_text(_RUNNER, encoding="utf-8")
+    first = runproc.start(
+        [sys.executable, str(runner), str(repo), "--stack", str(_stack(tmp_path))],
+        cwd=repo,
+        env=env,
+    )
+    assert held.read_text(encoding="utf-8") == "held\n"
+    (repo / "b.txt").write_text("new\n", encoding="utf-8")
+    entries: list[dict[str, object]] = [
+        {"waypoint": "W2", "subject": "W2 toy: built on the first", "paths": ["a.txt", "b.txt"]}
+    ]
+    other = tmp_path / "stack2.json"
+    other.write_text(json.dumps(entries), encoding="utf-8")
+    second = runproc.start(
+        [sys.executable, str(runner), str(repo), "--stack", str(other)], cwd=repo, env=env
+    )
+    release.write_text("go\n", encoding="utf-8")
+    one = first.wait(timeout=_TIMEOUT_S)
+    assert held.read_text(encoding="utf-8") == "held\n"
+    release.write_text("go\n", encoding="utf-8")
+    two = second.wait(timeout=_TIMEOUT_S)
+    assert one.returncode == 0, one.stdout + one.stderr
+    assert two.returncode == 0, two.stdout + two.stderr
+    subjects = _git(repo, env, "log", "-2", "--format=%s").splitlines()
+    assert subjects == ["W2 toy: built on the first", _SUBJECT]
+    assert _git(repo, env, "diff", "--name-only", "HEAD~1", "HEAD").split() == ["b.txt"]
+    assert _git(repo, env, "show", "HEAD:a.txt") == "two\n"
+    assert _git(repo, env, "show", "HEAD:b.txt") == "new\n"
+
+
 def test_a_stack_submitted_from_a_linked_worktree_is_refused_and_commits_nothing(
     tmp_path: Path,
 ) -> None:

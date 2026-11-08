@@ -2474,6 +2474,15 @@ GRAPH = {
       "reads": [],
       "typing_only": []
     },
+    "tests/test_isolated_leftover.py": {
+      "imports": [
+        "src/mikemol/hooks/commit_kata.py",
+        "src/mikemol/hooks/isolated.py",
+        "src/mikemol/hooks/scratch.py"
+      ],
+      "reads": [],
+      "typing_only": []
+    },
     "tests/test_kind_note.py": {
       "imports": [
         "src/mikemol/hooks/stackrun.py"

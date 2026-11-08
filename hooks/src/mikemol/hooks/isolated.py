@@ -140,6 +140,29 @@ def _restore(root: Path, paths: Sequence[str], run: EnvRunner) -> Done:
     return done
 
 
+def _leftover(root: Path, path: str, start: str, run: EnvRunner) -> str | None:
+    """Judge a working file the landing deleted from HEAD (luthen-observability:W2334).
+
+    ⚑ `git diff HEAD -- path` IS BLIND TO IT: the file is absent at HEAD, so the leftover working
+    copy is untracked and the diff exits 0, which `refresh_tree` read as "already equal" and
+    moved on from, leaving a tree a gate would read as holding a file HEAD no longer has.
+
+    Returns:
+        None when the path is at HEAD or is no file in the working tree (the ordinary judgement
+        applies); "same" when HEAD lacks it and the working file holds the bytes of `start`
+        (nobody edited it: remove it); "differs" when the bytes are anything else.
+
+    """
+    if run(["cat-file", "-e", f"HEAD:{path}"], {}, root).returncode == 0:
+        return None
+    if not (root / path).is_file():
+        return None
+    mine = run(["hash-object", "--", path], {}, root)
+    then = run(["rev-parse", "--verify", "--quiet", f"{start}:{path}"], {}, root)
+    same = mine.returncode == 0 and then.returncode == 0 and mine.stdout == then.stdout
+    return "same" if same else "differs"
+
+
 def refresh_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -> str | None:
     """Bring the main tree's working copies of landed paths to HEAD, losing no one's edit.
 
@@ -159,6 +182,14 @@ def refresh_tree(root: Path, paths: Sequence[str], start: str, run: EnvRunner) -
     differ: list[str] = []
     failed: list[str] = []
     for path in paths:
+        leftover = _leftover(root, path, start, run)
+        if leftover == "same":
+            (root / path).unlink()
+            restored.append(path)
+            continue
+        if leftover == "differs":
+            differ.append(path)
+            continue
         if run(["diff", "--quiet", "HEAD", "--", path], {}, root).returncode == 0:
             continue
         if run(["diff", "--quiet", start, "--", path], {}, root).returncode == 0:
