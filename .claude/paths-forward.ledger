@@ -6319,3 +6319,10 @@
 2026-11-07T22:54:32Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-07T22:55:33Z  interrupt W2348 minted    -         "A test drives the real submit then submit_problem order and shows the round check refusing with the stack's own entry written"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
 2026-11-07T22:55:34Z  interrupt W2349 minted    -         "A preset MIKEMOL_COMMIT_WAYPOINTS must not decide what the stack's own entry cites to the round check"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-14
+2026-11-07T23:03:48Z  status W2000 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T23:55:29Z  status W2002 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T23:57:30Z  status W1122 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T23:57:30Z  status W2000 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T23:57:30Z  status W2002 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T23:57:30Z  status W2346 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-07T23:59:29Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
