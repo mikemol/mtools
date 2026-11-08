@@ -18980,27 +18980,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_new_file_and_a_deletion_are_changes},
 }
 
-@misc{hooks-stackempty-later-entry-repeating-an-earlier-one-changes-nothing,
-  section = {stackempty},
-  title  = {The second entry names the bytes the first already set, so it adds no change},
-  claim  = {The second entry names the bytes the first already set, so it adds no change.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_later_entry_repeating_an_earlier_one_changes_nothing},
-}
-
-@misc{hooks-stackempty-later-entry-undoing-an-earlier-one-is-a-change,
-  section = {stackempty},
-  title  = {Back to HEAD's bytes after the first moved them is a change at its position},
-  claim  = {Back to HEAD's bytes after the first moved them is a change at its position.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_later_entry_undoing_an_earlier_one_is_a_change},
-}
-
-@misc{hooks-stackempty-entry-naming-no-file-changes-nothing,
-  section = {stackempty},
-  title  = {No file, no change: it is named like any other empty entry},
-  claim  = {No file, no change: it is named like any other empty entry.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_an_entry_naming_no_file_changes_nothing},
-}
-
 @misc{hooks-stackempty-stack-with-no-snapshot-is-not-judged,
   section = {stackempty},
   title  = {Without a submit-time snapshot the check cannot judge, so it says nothing},
@@ -19013,4 +18992,39 @@
   title  = {W2346: an empty entry is refused; the import finding still comes first},
   claim  = {W2346: an empty entry is refused; the import finding still comes first.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_an_entry_that_changes_nothing_is_the_stacks_problem_after_the_imports},
+}
+
+@misc{hooks-stackempty-queue-only-entry-freezes-to-nothing-and-is-never-refused,
+  section = {stackempty},
+  title  = {D1: queue files are read at land time, so an entry naming only them has no frozen file},
+  claim  = {D1: queue files are read at land time, so an entry naming only them has no frozen file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_queue_only_entry_freezes_to_nothing_and_is_never_refused},
+}
+
+@misc{hooks-stackempty-follower-carrying-an-earlier-entrys-bytes-still-lands,
+  section = {stackempty},
+  title  = {D2: an honest follower names the same blob as a stack ahead; earlier bytes do not count},
+  claim  = {D2: an honest follower names the same blob as a stack ahead; earlier bytes do not count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_follower_carrying_an_earlier_entrys_bytes_still_lands},
+}
+
+@misc{hooks-stackempty-mode-only-change-is-a-change,
+  section = {stackempty},
+  title  = {D3: the same bytes with the execute bit set differ in mode, which apply_argv commits},
+  claim  = {D3: the same bytes with the execute bit set differ in mode, which apply_argv commits.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_mode_only_change_is_a_change},
+}
+
+@misc{hooks-stackempty-real-repository-stack-naming-an-unchanged-file-is-refused,
+  section = {stackempty},
+  title  = {The 96297d1e shape end to end: the file exists and holds HEAD's bytes},
+  claim  = {The 96297d1e shape end to end: the file exists and holds HEAD's bytes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_real_repository_stack_naming_an_unchanged_file_is_refused},
+}
+
+@misc{hooks-stackempty-real-repository-stack-changing-the-file-or-only-the-queue-waits,
+  section = {stackempty},
+  title  = {A changed file is no empty entry, and neither is one naming only a queue file},
+  claim  = {A changed file is no empty entry, and neither is one naming only a queue file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_stackempty.py -k test_a_real_repository_stack_changing_the_file_or_only_the_queue_waits},
 }
