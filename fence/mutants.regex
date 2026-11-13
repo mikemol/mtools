@@ -60,14 +60,14 @@ src/mikemol/fence/reading.py|nan-is-a-reading|return None if math\.isnan\(number
 src/mikemol/fence/reading.py|error-answer-read|if top\.get\("status"\) != "success" or not isinstance\(data, dict\):|if not isinstance(data, dict):|def=value_of
 src/mikemol/fence/reading.py|failure-raises|if not isinstance\(caught, \(OSError, ValueError, HTTPException\)\):|if not isinstance(caught, HTTPException):|def=fetch
 src/mikemol/fence/policy.py|bool-samples-accepted|isinstance\(samples, int\) and not isinstance\(samples, bool\) and samples >= 1|isinstance(samples, int) and samples >= 1|def=_problems
-src/mikemol/fence/policy.py|unknown-key-ignored|found \+= \[f"\{label\}: unknown key \{key!r\}" for key in raw if key not in _KEYS\]|found += []|def=_problems
+src/mikemol/fence/policy.py|unknown-key-ignored|found \+= \[f"\{label\}: unknown key \{key!r\}" for key in raw if key not in _KNOWN\]|found += []|def=_problems
 src/mikemol/fence/guard_cli.py|signal-status-lost|return _SIGNAL_BASE - code if code < 0 else code|return code|def=exit_status
 src/mikemol/fence/guard_cli.py|named-missing-policy-silent|if explicit and not path\.is_file\(\):|if False:|def=main
 src/mikemol/fence/watcher.py|signalled-not-recorded|outcome\.signalled \+= sent|pass|def=watch
 src/mikemol/fence/watcher.py|trip-one-late|if streak >= row\.hold:|if streak > row.hold:|def=watch
 src/mikemol/fence/watcher.py|gone-process-fatal|except ProcessLookupError:|except KeyError:|def=_signal_all
-src/mikemol/fence/watcher.py|any-name-matches|if comm == name:|if True:|def=descendants_named
-src/mikemol/fence/watcher.py|children-only|queue\.append\(pid\)|pass|def=descendants_named
+src/mikemol/fence/watcher.py|any-name-matches|if name is None or comm == name:|if True:|def=_descendants
+src/mikemol/fence/watcher.py|children-only|queue\.append\(pid\)|pass|def=_descendants
 
 # W964: describe prints the code's own numbers and dispatch table. A retyped default, or a roster copied rather
 # than derived, drifts the day a verb is added.
@@ -85,3 +85,45 @@ src/mikemol/fence/membudget_cli.py|default-owner-is-the-short-command|os\.getppi
 # W1309: a claim held by a live holder is a deferral (3), an impossible request a refusal (4).
 src/mikemol/fence/admit.py|a-held-claim-is-a-refusal|Verdict\.CLAIMED: EXIT_DEFERRED|Verdict.CLAIMED: EXIT_REFUSED|def=exit_code
 src/mikemol/fence/admit.py|an-impossible-request-is-a-deferral|Verdict\.IMPOSSIBLE: EXIT_REFUSED|Verdict.IMPOSSIBLE: EXIT_DEFERRED|def=exit_code
+
+# W2357: a row with no action is the one-shot signal, a freeze row names every key, the cap's action is one of two.
+src/mikemol/fence/policy.py|an-absent-action-is-a-freeze|raw\.get\("action", "signal"\)|raw.get("action", "freeze")|def=_freeze_problems
+src/mikemol/fence/policy.py|a-signal-row-may-carry-a-freeze-key|if action == "signal":|if action == "never":|def=_freeze_problems
+src/mikemol/fence/policy.py|any-cap-action-is-admitted|raw\["on_cap"\] not in CAP_ACTIONS|raw["on_cap"] in CAP_ACTIONS|def=_freeze_problems
+# W2358: the freeze state machine. One pass stops what a fork leaves behind, an exited pid is skipped, an unreadable sample is not clear, a resume is last-stopped-first, a clear streak resets, the cap applies at the cap and kills only when told, a watch's end resumes what is stopped.
+src/mikemol/fence/freeze.py|the-tree-is-stopped-in-one-pass|for _ in range\(passes\):|for _ in range(1):|def=stop_tree
+src/mikemol/fence/freeze.py|an-exited-pid-aborts-the-signal|except OSError:|except ProcessLookupError:|def=_send_one
+src/mikemol/fence/freeze.py|the-stopped-set-is-kept-only-after-the-pass|stopped\.extend\(_sent\(fresh, _STOP, hands\.kill\)\)|stopped.extend(list(_sent(fresh, _STOP, hands.kill)))|def=stop_tree
+src/mikemol/fence/watcher.py|a-failed-watch-leaves-the-tree-stopped|    finally:|    except ZeroDivisionError:|def=watch_freeze
+src/mikemol/fence/freeze.py|an-unreadable-sample-is-clear|sample is not None and not math\.isnan\(sample\) and sample <= limit|sample is None or sample <= limit|def=_is_clear
+src/mikemol/fence/freeze.py|a-resume-runs-first-stopped-first|            for pid in state\.frozen:|            for pid in reversed(state.frozen):|def=_release
+src/mikemol/fence/freeze.py|the-watchs-end-leaves-the-tree-stopped|\[_release\(state, "resume:exit", kill\)\] if state\.frozen else \[\]|[]|def=finish
+src/mikemol/fence/freeze.py|an-unclear-sample-keeps-the-clear-streak|state\.clear = state\.clear \+ 1 if _is_clear\(sample, plan\.limit\) else 0|state.clear = state.clear + 1 if _is_clear(sample, plan.limit) else state.clear|def=advance
+src/mikemol/fence/freeze.py|the-resume-waits-one-sample-too-long|if state\.clear >= plan\.resume_hold:|if state.clear > plan.resume_hold:|def=advance
+src/mikemol/fence/freeze.py|the-cap-waits-one-sample-too-long|if state\.held >= plan\.max_frozen:|if state.held > plan.max_frozen:|def=advance
+src/mikemol/fence/freeze.py|the-cap-always-kills|if plan\.on_cap == "kill":|if True:|def=advance
+src/mikemol/fence/freeze.py|an-untripped-sample-freezes|        if not tripped:|        if False:|def=advance
+src/mikemol/fence/guard_cli.py|a-freeze-also-prints-the-signal-line|if guard\.outcome\.tripped and not guard\.outcome\.events:|if guard.outcome.tripped:|def=run
+src/mikemol/fence/guard_cli.py|the-freeze-events-are-not-printed|for event in guard\.outcome\.events:|for event in []:|def=run
+src/mikemol/fence/policy.py|zero-is-a-count|value >= 1|value >= 0|def=_count
+src/mikemol/fence/policy.py|resume-hold-reads-the-cap|raw\.get\("resume_samples", 0\)|raw.get("max_frozen_samples", 0)|def=parse
+src/mikemol/fence/triprecord.py|an-empty-batch-is-written|    if not blob:|    if blob:|def=append
+src/mikemol/fence/triprecord.py|counter-counts-each-event-once|            tally\[key\] = tally\.get\(key, 0\) \+ 1|            tally[key] = 1|def=counts
+src/mikemol/fence/triprecord.py|a-foreign-json-line-is-not-skipped|    if not isinstance\(row, dict\):|    if False:|def=_key_of
+src/mikemol/fence/guard_cli.py|a-freeze-is-also-recorded-as-a-trip|    if outcome\.tripped and not outcome\.events:|    if outcome.tripped:|def=_entries
+src/mikemol/fence/guard_cli.py|an-unwritable-record-fails-the-command|    except OSError as fault:|    except ZeroDivisionError as fault:|def=_keep
+src/mikemol/fence/frozen.py|janitor-resumes-a-live-owners-record|        if alive\(record\.owner, proc\):|        if False:|def=janitor
+src/mikemol/fence/frozen.py|janitor-signals-a-reused-pid|        if not alive\(who, proc\):|        if False:|def=_resume
+src/mikemol/fence/frozen.py|janitor-leaves-the-record|        path\.unlink\(missing_ok=True\)|        pass|def=janitor
+src/mikemol/fence/frozen.py|a-reused-pid-reads-alive|    return start_time\(who\.pid, proc\) == who\.start|    return start_time(who.pid, proc) is not None|def=alive
+src/mikemol/fence/frozen.py|start-time-anchors-on-the-first-paren|    rest = text\.rpartition\("\)"\)\[2\]\.split\(\)|    rest = text.partition(")")[2].split()|def=start_time
+src/mikemol/fence/freeze.py|resume-stops-at-the-first-raise|                stack\.callback\(resume, pid\)|                resume(pid)|def=_release
+src/mikemol/fence/guard_cli.py|a-dead-guard-is-not-recorded|        named\.append\(\("error", \(\)\)\)|        pass|def=_entries
+src/mikemol/fence/watcher.py|a-dead-guard-names-no-failure|                self\.failed = f"\{type\(fault\)\.__name__\}: \{fault\}"|                self.failed = ""|def=Guard._run
+src/mikemol/fence/watcher.py|a-freeze-ignores-the-outcome-it-was-given|    outcome = Outcome\(\) if outcome is None else outcome|    outcome = Outcome()|def=watch_freeze
+src/mikemol/fence/frozen.py|janitor-stops-at-a-pid-it-may-not-signal|        except OSError:|        except ZeroDivisionError:|def=_resume
+src/mikemol/fence/frozen.py|janitor-forgets-the-pid-it-could-not-resume|            left\.append\(who\)|            pass|def=_resume
+src/mikemol/fence/frozen.py|janitor-removes-a-record-that-still-names-a-pid|        if left:|        if False:|def=janitor
+src/mikemol/fence/triprecord.py|a-newline-in-a-label-is-left-raw|\.replace\("\\n", "\\\\n"\)|.strip()|def=_label
+src/mikemol/fence/triprecord.py|a-quote-in-a-label-is-left-raw|\.replace\('"', '\\\\"'\)|.strip()|def=_label
+src/mikemol/fence/triprecord.py|a-backslash-in-a-label-is-left-raw|value\.replace\("\\\\", "\\\\\\\\"\)|value.strip()|def=_label

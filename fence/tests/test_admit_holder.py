@@ -54,6 +54,11 @@ def test_a_request_with_no_claim_gets_no_note() -> None:
     assert admit.holder_note(_held(), admit.Request(1, "run"), 0) is None
 
 
+def test_a_plain_run_held_beside_a_plain_run_gets_no_note() -> None:
+    """Two requests with no claim share the key None; that holds no claim, so no holder is named."""
+    assert admit.holder_note(_held("run"), admit.Request(1, "run"), 0) is None
+
+
 def test_an_unheld_claim_gets_no_note() -> None:
     """Nothing to name: a claim another label does not hold."""
     other = admit.Request(0, "claim:path:/elsewhere")

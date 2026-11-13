@@ -33,6 +33,8 @@ from typing import cast
 from mikemol.fence.watcher import Row
 
 READINGS = ("promql",)
+ACTIONS = ("signal", "freeze")
+CAP_ACTIONS = ("resume", "kill")
 _KEYS = (
     "name",
     "reading",
@@ -44,6 +46,10 @@ _KEYS = (
     "signal",
     "target",
 )
+# W2356: an absent `action` is the one-shot signal every host file written before it declares, so
+# the key stays optional; a `freeze` row must then say every key of its own, with no default.
+_FREEZE_KEYS = ("resume_samples", "max_frozen_samples", "on_cap")
+_KNOWN = frozenset((*_KEYS, "action", *_FREEZE_KEYS))
 
 
 class PolicyError(ValueError):
@@ -74,6 +80,42 @@ def _number(value: object) -> bool:
     return isinstance(value, int | float) and not isinstance(value, bool)
 
 
+def _count(value: object) -> bool:
+    """Say whether a TOML value is an integer of at least 1 and not a bool.
+
+    Returns:
+        True for a positive integer.
+
+    """
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 1
+
+
+def _freeze_problems(label: str, raw: dict[object, object]) -> list[str]:
+    """Collect the faults in a row's `action` and in the keys that belong to a freeze.
+
+    Returns:
+        the faults; a `signal` row may not carry a freeze key, a `freeze` row needs all of them.
+
+    """
+    action = raw.get("action", "signal")
+    if action not in ACTIONS:
+        return [f"{label}: action must be one of {ACTIONS}, not {action!r}"]
+    present = [key for key in _FREEZE_KEYS if key in raw]
+    if action == "signal":
+        return [f"{label}: {key!r} only applies to action = 'freeze'" for key in present]
+    found = [
+        f"{label}: action 'freeze' needs key {key!r}" for key in _FREEZE_KEYS if key not in raw
+    ]
+    found += [
+        f"{label}: {key!r} must be an integer of at least 1"
+        for key in ("resume_samples", "max_frozen_samples")
+        if key in raw and not _count(raw[key])
+    ]
+    if "on_cap" in raw and raw["on_cap"] not in CAP_ACTIONS:
+        found.append(f"{label}: on_cap must be one of {CAP_ACTIONS}, not {raw['on_cap']!r}")
+    return found
+
+
 def _problems(index: int, raw: dict[object, object]) -> list[str]:
     """Collect every fault in one `[[guard]]` table.
 
@@ -83,7 +125,8 @@ def _problems(index: int, raw: dict[object, object]) -> list[str]:
     """
     label = f"guard #{index + 1} ({raw.get('name', '?')})"
     found = [f"{label}: missing key {key!r}" for key in _KEYS if key not in raw]
-    found += [f"{label}: unknown key {key!r}" for key in raw if key not in _KEYS]
+    found += [f"{label}: unknown key {key!r}" for key in raw if key not in _KNOWN]
+    found += _freeze_problems(label, raw)
     for key in ("name", "endpoint", "query", "target"):
         if key in raw and not (isinstance(raw[key], str) and raw[key]):
             found.append(f"{label}: {key!r} must be a non-empty string")
@@ -134,6 +177,10 @@ def parse(doc: object) -> list[Spec]:
                 interval_s=float(cast("float", raw["interval_s"])),
                 signal=int(signal.Signals[str(raw["signal"])]),
                 target=str(raw["target"]),
+                action=str(raw.get("action", "signal")),
+                resume_hold=int(cast("int", raw.get("resume_samples", 0))),
+                max_frozen=int(cast("int", raw.get("max_frozen_samples", 0))),
+                on_cap=str(raw.get("on_cap", "")),
             )
             specs.append(Spec(row, str(raw["endpoint"]), str(raw["query"])))
     if problems:

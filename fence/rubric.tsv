@@ -23,3 +23,6 @@ policy	The guard policy (W921)
 guard_cli	The guard launcher (W921)
 membudget_describe	membudget describe (W964)
 claims	Claims owned by a long-lived process
+triprecord	The guard's trip record: one JSON line per event, appended, and the counter derived from it (W2359)
+frozen	The freeze record: pids named with their start times, and a janitor that resumes only what a dead owner's record names (W2407)
+freeze	The freeze: stop the whole tree, resume the same set last stopped first, and never leave a pid stopped because another signal raised (W2358, W2370)

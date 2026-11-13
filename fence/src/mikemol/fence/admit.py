@@ -37,6 +37,7 @@ over it once it lands (letter, "After it lands").
 import contextlib
 import enum
 import fcntl
+import json
 import os
 import sys
 import time
@@ -44,6 +45,7 @@ import uuid
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field, replace
 from pathlib import Path
+from typing import cast
 
 # The ledger's three line kinds, and each one's word count (a lease's or waiter's label may hold
 # spaces, so its count is a minimum). ⚑ A WAITER HAS A LEASE'S SHAPE, ticket in the id's place, so
@@ -181,6 +183,46 @@ class Ledger:
         return "".join(f"{line}\n" for line in lines)
 
 
+def _json_fields(raw: str) -> dict[str, object] | None:
+    # The object a JSON ledger line holds; None for a line that is not a JSON object.
+    if not raw.startswith("{"):
+        return None
+    try:
+        value: object = json.loads(raw)
+    except ValueError:
+        return None
+    return cast("dict[str, object]", value) if isinstance(value, dict) else None
+
+
+def _texts(fields: Mapping[str, object], names: tuple[str, ...]) -> list[str]:
+    # The named fields as words; none at all when one is missing or not a string or integer,
+    # so a torn JSON record reads as the short, malformed line it is.
+    words: list[str] = []
+    for name in names:
+        value = fields.get(name)
+        if isinstance(value, bool) or not isinstance(value, (str, int)):
+            return []
+        words.append(str(value))
+    return words
+
+
+def _words_of(raw: str) -> list[str]:
+    # The words of one ledger line. ⚑ A JSON LINE IS READ AS THE OLD LINE IT STANDS FOR (W1267),
+    # so the one parser below serves both shapes and a mixed file parses: kind total, lease or
+    # wait, with the dataclass field names; any other JSON line is kept verbatim as an extra.
+    fields = _json_fields(raw)
+    if fields is None:
+        return raw.split(" ")
+    kind = fields.get("kind")
+    if kind == "total":
+        return [_TOTAL, *_texts(fields, ("total_mb",))]
+    if kind in {"lease", "wait"}:
+        key = "id" if kind == "lease" else "ticket"
+        words = _texts(fields, (key, "mb", "owner", "epoch", "parent", "label"))
+        return [_LEASE if kind == "lease" else _WAIT, *words]
+    return [raw]
+
+
 def parse(text: str) -> Ledger:
     """Read ledger text. A malformed lease is skipped; a line of neither kind is kept verbatim.
 
@@ -201,7 +243,7 @@ def parse(text: str) -> Ledger:
     waiters: list[Waiter] = []
     extra: list[str] = []
     for raw in text.splitlines():
-        words = raw.split(" ")
+        words = _words_of(raw)
         if words[0] == _TOTAL:
             # ⚑ COUNTED EVEN WHEN MALFORMED: a second total that does not parse is still a second
             # claim about the pool's size.

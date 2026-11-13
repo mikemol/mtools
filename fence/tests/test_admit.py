@@ -765,3 +765,46 @@ def test_admit_exports_its_lease_as_membudget_parent(tmp_path: Path) -> None:
     with admit.admit(store, admit.Request(_SMALL_MB), loose, host=_QUIET) as lease:
         assert os.environ.get(_PARENT_VAR) == lease.lease_id
     assert _PARENT_VAR not in os.environ
+
+
+_POOL_MB = 64
+_JSON_TOTAL = '{"kind": "total", "total_mb": 8192}'
+_JSON_LEASE = (
+    '{"kind": "lease", "id": "L1", "mb": 512, "owner": "4242:987654", '
+    '"epoch": 1793900000, "parent": "-", "label": "build //hooks:all"}'
+)
+_JSON_WAIT = (
+    '{"kind": "wait", "ticket": "T1", "mb": 1024, "owner": "4300:987700", '
+    '"epoch": 1793900001, "parent": "L1", "label": "claim:gate"}'
+)
+
+
+def test_json_ledger_lines_read_as_the_records_they_stand_for() -> None:
+    """W1267: total, lease and wait in JSON parse to the same snapshot as the old lines."""
+    old = (
+        "TOTAL_MB 8192\n"
+        "LEASE L1 512 4242:987654 1793900000 - build //hooks:all\n"
+        "WAIT T1 1024 4300:987700 1793900001 L1 claim:gate\n"
+    )
+    new = f"{_JSON_TOTAL}\n{_JSON_LEASE}\n{_JSON_WAIT}\n"
+    assert admit.parse(new) == admit.parse(old)
+
+
+def test_a_mixed_file_parses_and_a_torn_or_unknown_json_line_is_not_fatal() -> None:
+    """Old and JSON lines side by side; a JSON lease missing a field is skipped; others ride on."""
+    torn = '{"kind": "lease", "id": "L2", "mb": 5}'
+    unknown = '{"kind": "future", "x": 1}'
+    text = f"TOTAL_MB {_POOL_MB}\n{_JSON_LEASE}\n{torn}\n{unknown}\n# header\n"
+    got = admit.parse(text)
+    assert got.total_mb == _POOL_MB
+    assert [lease.lease_id for lease in got.leases] == ["L1"]
+    assert got.extra == (unknown, "# header")
+    assert got.total_lines == 1
+
+
+def test_a_json_total_that_is_not_a_number_still_counts_as_a_claim_on_the_pool() -> None:
+    """As a malformed old total does: counted, so two claims stay ambiguous, never resolved."""
+    text = '{"kind": "total", "total_mb": "x"}\nTOTAL_MB 64\n'
+    got = admit.parse(text)
+    assert got.total_lines == 2 + 0
+    assert got.ambiguous

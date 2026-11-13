@@ -2305,3 +2305,367 @@
   claim  = {Over the total and a file with no total are both 4 (REFUSE); within the total is 0.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_membudget_cli.py -k test_impossible_and_no_total_both_exit_4_as_refusals},
 }
+
+@misc{fence-policy-freeze-row-with-no-action-is-the-one-shot-signal,
+  section = {policy},
+  title  = {The legacy file keeps its meaning: action signal, no freeze counts},
+  claim  = {The legacy file keeps its meaning: action signal, no freeze counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy_freeze.py -k test_a_row_with_no_action_is_the_one_shot_signal},
+}
+
+@misc{fence-policy-freeze-freeze-row-carries-its-four-keys-into-the-row,
+  section = {policy},
+  title  = {The positive control: each freeze key lands where the watcher reads it},
+  claim  = {The positive control: each freeze key lands where the watcher reads it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy_freeze.py -k test_a_freeze_row_carries_its_four_keys_into_the_row},
+}
+
+@misc{fence-policy-freeze-freeze-row-missing-a-key-names-it,
+  section = {policy},
+  title  = {No default stands in for a freeze limit, least of all the cap's action},
+  claim  = {No default stands in for a freeze limit, least of all the cap's action.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy_freeze.py -k test_a_freeze_row_missing_a_key_names_it},
+}
+
+@misc{fence-policy-freeze-wrong-freeze-value-is-named,
+  section = {policy},
+  title  = {Each wrong value says which key and what it wanted},
+  claim  = {Each wrong value says which key and what it wanted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy_freeze.py -k test_a_wrong_freeze_value_is_named},
+}
+
+@misc{fence-policy-freeze-signal-row-may-not-carry-a-freeze-key,
+  section = {policy},
+  title  = {`on_cap` on a signal row would read as a cap that never fires},
+  claim  = {`on_cap` on a signal row would read as a cap that never fires.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_policy_freeze.py -k test_a_signal_row_may_not_carry_a_freeze_key},
+}
+
+@misc{fence-freeze-trip-stops-the-tree-and-no-trip-stops-nothing,
+  section = {watcher},
+  title  = {The positive control and its negative: only a trip sends SIGSTOP},
+  claim  = {The positive control and its negative: only a trip sends SIGSTOP.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_trip_stops_the_tree_and_no_trip_stops_nothing},
+}
+
+@misc{fence-freeze-process-forked-between-two-scans-is-stopped-too,
+  section = {watcher},
+  title  = {The fork race: the second scan finds 12, and a pid already stopped is not stopped twice},
+  claim  = {The fork race: the second scan finds 12, and a pid already stopped is not stopped twice.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_process_forked_between_two_scans_is_stopped_too},
+}
+
+@misc{fence-freeze-nothing-to-stop-is-not-a-freeze,
+  section = {watcher},
+  title  = {An empty scan leaves the state unfrozen, so the next trip tries again},
+  claim  = {An empty scan leaves the state unfrozen, so the next trip tries again.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_nothing_to_stop_is_not_a_freeze},
+}
+
+@misc{fence-freeze-set-resumes-after-exactly-resume-hold-clear-samples-last-stopped-first,
+  section = {watcher},
+  title  = {One clear sample is not enough; the second resumes in reverse stop order},
+  claim  = {One clear sample is not enough; the second resumes in reverse stop order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_the_set_resumes_after_exactly_resume_hold_clear_samples_last_stopped_first},
+}
+
+@misc{fence-freeze-over-limit-or-unreadable-sample-resets-the-clear-count,
+  section = {watcher},
+  title  = {Clear, over, clear is not two in a row; neither is clear, unreadable, clear},
+  claim  = {Clear, over, clear is not two in a row; neither is clear, unreadable, clear.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_an_over_limit_or_unreadable_sample_resets_the_clear_count},
+}
+
+@misc{fence-freeze-cap-with-resume-resumes-and-sends-no-other-signal,
+  section = {watcher},
+  title  = {on_cap resume: the event names the cap and only SIGCONT goes out},
+  claim  = {on_cap resume: the event names the cap and only SIGCONT goes out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_the_cap_with_resume_resumes_and_sends_no_other_signal},
+}
+
+@misc{fence-freeze-cap-with-kill-resumes-first-then-sends-the-rows-signal,
+  section = {watcher},
+  title  = {A stopped process holds a signal pending, so the kill follows the resume},
+  claim  = {A stopped process holds a signal pending, so the kill follows the resume.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_the_cap_with_kill_resumes_first_then_sends_the_rows_signal},
+}
+
+@misc{fence-freeze-process-that-exited-while-frozen-is-skipped-on-resume,
+  section = {watcher},
+  title  = {ProcessLookupError is the build finishing, not a failure of the freeze},
+  claim  = {ProcessLookupError is the build finishing, not a failure of the freeze.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_process_that_exited_while_frozen_is_skipped_on_resume},
+}
+
+@misc{fence-watch-freeze-freeze-row-stops-on-the-streak-and-resumes-on-the-clear-run,
+  section = {watcher},
+  title  = {Two over samples freeze (hold=2), two clear ones resume (resume_hold=2)},
+  claim  = {Two over samples freeze (hold=2), two clear ones resume (resume_hold=2).},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watch_freeze.py -k test_a_freeze_row_stops_on_the_streak_and_resumes_on_the_clear_run},
+}
+
+@misc{fence-watch-freeze-command-that-exits-while-frozen-leaves-nothing-stopped,
+  section = {watcher},
+  title  = {The watch ends frozen: `finish` resumes the set, and the event says it was the exit},
+  claim  = {The watch ends frozen: `finish` resumes the set, and the event says it was the exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watch_freeze.py -k test_a_command_that_exits_while_frozen_leaves_nothing_stopped},
+}
+
+@misc{fence-watch-freeze-signal-row-is-not-frozen-by-the-guard,
+  section = {watcher},
+  title  = {The legacy action still goes through `watch`: one signal at the target, no SIGSTOP},
+  claim  = {The legacy action still goes through `watch`: one signal at the target, no SIGSTOP.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watch_freeze.py -k test_a_signal_row_is_not_frozen_by_the_guard},
+}
+
+@misc{fence-watch-freeze-real-child-reads-stopped-while-frozen-and-not-after-the-clear-run,
+  section = {watcher},
+  title  = {Under a Guard the command's child reads `T` while frozen and not `T` once resumed},
+  claim  = {Under a Guard the command's child reads `T` while frozen and not `T` once resumed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watch_freeze.py -k test_a_real_child_reads_stopped_while_frozen_and_not_after_the_clear_run},
+}
+
+@misc{fence-guard-cli-freeze-row-reports-each-freeze-and-resume-and-not-a-signal,
+  section = {guard_cli},
+  title  = {W2358: a reading that never clears freezes the tree, hits the cap and resumes it, saying so},
+  claim  = {W2358: a reading that never clears freezes the tree, hits the cap and resumes it, saying
+            so. THE SIGNAL LINE IS NOT PRINTED FOR A FREEZE: it would read "signalled
+            nothing" for a row that stopped and resumed real processes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_freeze_row_reports_each_freeze_and_resume_and_not_a_signal},
+}
+
+@misc{fence-freeze-signal-the-user-may-not-send-does-not-strand-the-pids-stopped-before-it,
+  section = {watcher},
+  title  = {github-14's cold BLOCK D1: PermissionError on one pid is not-sent, and the walk goes on},
+  claim  = {github-14's cold BLOCK D1: PermissionError on one pid is not-sent, and the walk goes on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_signal_the_user_may_not_send_does_not_strand_the_pids_stopped_before_it},
+}
+
+@misc{fence-freeze-signal-that-raises-outside-oserror-still-leaves-earlier-pids-named,
+  section = {watcher},
+  title  = {D1, inside a pass: 10 and 11 are stopped, 12 raises a RuntimeError, 10 and 11 stay named},
+  claim  = {D1, inside a pass: 10 and 11 are stopped, 12 raises a RuntimeError, 10 and 11 stay
+            named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_signal_that_raises_outside_oserror_still_leaves_earlier_pids_named},
+}
+
+@misc{fence-freeze-scan-that-raises-partway-leaves-the-stopped-pids-named-for-the-finish,
+  section = {watcher},
+  title  = {D1, the other path: the second scan raises, yet the first scan's pid is on the list},
+  claim  = {D1, the other path: the second scan raises, yet the first scan's pid is on the list.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_scan_that_raises_partway_leaves_the_stopped_pids_named_for_the_finish},
+}
+
+@misc{fence-watch-freeze-reading-that-raises-while-frozen-still-resumes-the-set,
+  section = {watcher},
+  title  = {github-14's cold BLOCK D1: the guard thread dying must not leave the tree stopped},
+  claim  = {github-14's cold BLOCK D1: the guard thread dying must not leave the tree stopped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watch_freeze.py -k test_a_reading_that_raises_while_frozen_still_resumes_the_set},
+}
+
+@misc{fence-triprecord-line-carries-every-field-as-sorted-json,
+  section = {triprecord},
+  title  = {The grammar luthen reads: all nine fields, one line, newline-terminated},
+  claim  = {The grammar luthen reads: all nine fields, one line, newline-terminated.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_a_line_carries_every_field_as_sorted_json},
+}
+
+@misc{fence-triprecord-append-adds-lines-and-never-rewrites-an-earlier-one,
+  section = {triprecord},
+  title  = {Two appends leave the lines in order, in a directory that did not exist},
+  claim  = {Two appends leave the lines in order, in a directory that did not exist.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_append_adds_lines_and_never_rewrites_an_earlier_one},
+}
+
+@misc{fence-triprecord-empty-batch-creates-nothing,
+  section = {triprecord},
+  title  = {No event, no file: a quiet run leaves no record behind},
+  claim  = {No event, no file: a quiet run leaves no record behind.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_an_empty_batch_creates_nothing},
+}
+
+@misc{fence-triprecord-counter-is-derived-from-the-lines-by-guard-and-event,
+  section = {triprecord},
+  title  = {Two freezes and one resume read as two and one, per guard, sorted},
+  claim  = {Two freezes and one resume read as two and one, per guard, sorted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_the_counter_is_derived_from_the_lines_by_guard_and_event},
+}
+
+@misc{fence-triprecord-missing-record-and-a-damaged-line-count-nothing-wrong,
+  section = {triprecord},
+  title  = {A missing record is empty; a torn or foreign line is skipped, the rest still count},
+  claim  = {A missing record is empty; a torn or foreign line is skipped, the rest still count.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_a_missing_record_and_a_damaged_line_count_nothing_wrong},
+}
+
+@misc{fence-triprecord-write-counter-replaces-the-file-beside-the-record,
+  section = {triprecord},
+  title  = {The counter file sits beside the record and is rewritten whole, leaving no temp file},
+  claim  = {The counter file sits beside the record and is rewritten whole, leaving no temp file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_write_counter_replaces_the_file_beside_the_record},
+}
+
+@misc{fence-triprecord-record-path-is-the-environments-else-the-host-default,
+  section = {triprecord},
+  title  = {MIKEMOL_GUARD_RECORD wins; with none the default home is used, expanded},
+  claim  = {MIKEMOL_GUARD_RECORD wins; with none the default home is used, expanded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_the_record_path_is_the_environments_else_the_host_default},
+}
+
+@misc{fence-guard-cli-trip-is-recorded-as-one-line-and-counted,
+  section = {guard_cli},
+  title  = {W2359: a signalling guard's trip leaves a `trip` line in the record and a counter beside it},
+  claim  = {W2359: a signalling guard's trip leaves a `trip` line in the record and a counter beside
+            it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_trip_is_recorded_as_one_line_and_counted},
+}
+
+@misc{fence-guard-cli-freeze-is-recorded-with-its-resume,
+  section = {guard_cli},
+  title  = {W2359: a freeze row records the freeze and the cap's resume, and no `trip` of its own},
+  claim  = {W2359: a freeze row records the freeze and the cap's resume, and no `trip` of its own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_freeze_is_recorded_with_its_resume},
+}
+
+@misc{fence-guard-cli-record-that-cannot-be-written-is-said-and-the-status-is-unchanged,
+  section = {guard_cli},
+  title  = {W2359: a record path under a regular file fails; the command's own status still passes},
+  claim  = {W2359: a record path under a regular file fails; the command's own status still passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_record_that_cannot_be_written_is_said_and_the_status_is_unchanged},
+}
+
+@misc{fence-frozen-start-time-reads-field-22-even-when-the-name-has-parentheses,
+  section = {frozen},
+  title  = {The word after the LAST closing paren is the anchor, so a name like `a) b (c` is safe},
+  claim  = {The word after the LAST closing paren is the anchor, so a name like `a) b (c` is safe.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_start_time_reads_field_22_even_when_the_name_has_parentheses},
+}
+
+@misc{fence-frozen-missing-or-short-stat-has-no-start-time,
+  section = {frozen},
+  title  = {A gone process, a truncated file and a non-numeric field are all None, never a raise},
+  claim  = {A gone process, a truncated file and a non-numeric field are all None, never a raise.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_missing_or_short_stat_has_no_start_time},
+}
+
+@misc{fence-frozen-reused-pid-is-not-the-recorded-process,
+  section = {frozen},
+  title  = {Same pid, other start time: alive is False, so the janitor would never signal it},
+  claim  = {Same pid, other start time: alive is False, so the janitor would never signal it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_reused_pid_is_not_the_recorded_process},
+}
+
+@misc{fence-frozen-record-round-trips-and-leaves-no-temp-file,
+  section = {frozen},
+  title  = {Write then read gives the same record, and only the record file is left},
+  claim  = {Write then read gives the same record, and only the record file is left.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_record_round_trips_and_leaves_no_temp_file},
+}
+
+@misc{fence-frozen-torn-or-foreign-file-is-no-record-and-is-never-deleted,
+  section = {frozen},
+  title  = {records() skips what it cannot read and the janitor leaves it alone},
+  claim  = {records() skips what it cannot read and the janitor leaves it alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_torn_or_foreign_file_is_no_record_and_is_never_deleted},
+}
+
+@misc{fence-frozen-janitor-resumes-a-dead-owners-matching-pids-and-removes-the-record,
+  section = {frozen},
+  title  = {The owner is gone; A still matches; B's pid was reused: only A gets SIGCONT},
+  claim  = {The owner is gone; A still matches; B's pid was reused: only A gets SIGCONT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_the_janitor_resumes_a_dead_owners_matching_pids_and_removes_the_record},
+}
+
+@misc{fence-frozen-janitor-leaves-a-live-owners-record-and-signals-nothing,
+  section = {frozen},
+  title  = {A record whose owner is still that process is in use: nothing is resumed or removed},
+  claim  = {A record whose owner is still that process is in use: nothing is resumed or removed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_the_janitor_leaves_a_live_owners_record_and_signals_nothing},
+}
+
+@misc{fence-frozen-pid-that-vanishes-between-the-check-and-the-signal-is-skipped,
+  section = {frozen},
+  title  = {ProcessLookupError from kill is not an error; the record is still removed},
+  claim  = {ProcessLookupError from kill is not an error; the record is still removed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_pid_that_vanishes_between_the_check_and_the_signal_is_skipped},
+}
+
+@misc{fence-frozen-named-leaves-out-a-pid-that-cannot-be-read,
+  section = {frozen},
+  title  = {Only readable processes are recorded, with their real start times},
+  claim  = {Only readable processes are recorded, with their real start times.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_named_leaves_out_a_pid_that_cannot_be_read},
+}
+
+@misc{fence-frozen-real-stopped-child-is-continued-by-the-janitor,
+  section = {frozen},
+  title  = {The real-process arm: a child stopped under a dead owner's record reads T, then not T},
+  claim  = {The real-process arm: a child stopped under a dead owner's record reads T, then not T.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_real_stopped_child_is_continued_by_the_janitor},
+}
+
+@misc{fence-freeze-resume-that-raises-on-the-first-pid-still-continues-every-other-one,
+  section = {freeze},
+  title  = {W2370, github-14 R1: 12 is resumed first and raises; 11 and 10 still get SIGCONT},
+  claim  = {W2370, github-14 R1: 12 is resumed first and raises; 11 and 10 still get SIGCONT.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_freeze.py -k test_a_resume_that_raises_on_the_first_pid_still_continues_every_other_one},
+}
+
+@misc{fence-guard-cli-guard-thread-that-raises-is-said-and-recorded-not-read-as-quiet,
+  section = {guard_cli},
+  title  = {W2371: a reading that raises kills the guard thread; the failure is named and recorded},
+  claim  = {W2371: a reading that raises kills the guard thread; the failure is named and recorded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_guard_thread_that_raises_is_said_and_recorded_not_read_as_quiet},
+}
+
+@misc{fence-triprecord-guard-name-holding-a-quote-a-backslash-and-a-newline-is-escaped,
+  section = {triprecord},
+  title  = {b65: an unescaped label corrupts the .prom file, and the collector drops all of it},
+  claim  = {b65: an unescaped label corrupts the .prom file, and the collector drops all of it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_triprecord.py -k test_a_guard_name_holding_a_quote_a_backslash_and_a_newline_is_escaped},
+}
+
+@misc{fence-frozen-pid-that-may-not-be-signalled-does-not-strand-the-rest-or-the-next-record,
+  section = {frozen},
+  title  = {b65, the D1 rule: a denied pid ahead of a resumable one, and a second dead owner's record},
+  claim  = {b65, the D1 rule: a denied pid ahead of a resumable one, and a second dead owner's
+            record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_pid_that_may_not_be_signalled_does_not_strand_the_rest_or_the_next_record},
+}
+
+@misc{fence-guard-cli-freeze-that-happened-before-the-thread-raised-is-still-recorded,
+  section = {guard_cli},
+  title  = {b65 (F): the events gathered before a reading raised are in the record beside the error},
+  claim  = {b65 (F): the events gathered before a reading raised are in the record beside the error.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_guard_cli.py -k test_a_freeze_that_happened_before_the_thread_raised_is_still_recorded},
+}
+
+@misc{fence-admit-json-ledger-lines-read-as-the-records-they-stand-for,
+  section = {admit},
+  title  = {W1267: total, lease and wait in JSON parse to the same snapshot as the old lines},
+  claim  = {W1267: total, lease and wait in JSON parse to the same snapshot as the old lines.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_json_ledger_lines_read_as_the_records_they_stand_for},
+}
+
+@misc{fence-admit-mixed-file-parses-and-a-torn-or-unknown-json-line-is-not-fatal,
+  section = {admit},
+  title  = {Old and JSON lines side by side; a JSON lease missing a field is skipped; others ride on},
+  claim  = {Old and JSON lines side by side; a JSON lease missing a field is skipped; others ride
+            on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_mixed_file_parses_and_a_torn_or_unknown_json_line_is_not_fatal},
+}
+
+@misc{fence-admit-json-total-that-is-not-a-number-still-counts-as-a-claim-on-the-pool,
+  section = {admit},
+  title  = {As a malformed old total does: counted, so two claims stay ambiguous, never resolved},
+  claim  = {As a malformed old total does: counted, so two claims stay ambiguous, never resolved.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit.py -k test_a_json_total_that_is_not_a_number_still_counts_as_a_claim_on_the_pool},
+}
+
+@misc{fence-admit-holder-plain-run-held-beside-a-plain-run-gets-no-note,
+  section = {admit_holder},
+  title  = {Two requests with no claim share the key None; that holds no claim, so no holder is named},
+  claim  = {Two requests with no claim share the key None; that holds no claim, so no holder is
+            named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_holder.py -k test_a_plain_run_held_beside_a_plain_run_gets_no_note},
+}

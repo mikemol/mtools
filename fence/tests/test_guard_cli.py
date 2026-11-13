@@ -11,11 +11,12 @@ from __future__ import annotations
 
 import shutil
 import signal
+import threading
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from mikemol.fence import guard_cli
+from mikemol.fence import guard_cli, triprecord
 from mikemol.fence.policy import Spec
 from mikemol.fence.watcher import Row
 
@@ -41,6 +42,10 @@ def _over(_name: str, _query: str, _environ: Mapping[str, str]) -> Callable[[], 
 
     """
     return lambda: _OVER
+
+
+def _quiet(_args: threading.ExceptHookArgs) -> None:
+    """Swallow a guard thread's traceback, which a test raises on purpose."""
 
 
 def test_the_commands_exit_status_passes_through_unguarded() -> None:
@@ -114,3 +119,150 @@ def test_a_trip_interrupts_the_named_descendant_and_says_so(
     assert time.monotonic() - started < _WAIT_S
     assert code == 0
     assert "guard t: TRIPPED" in capsys.readouterr().err
+
+
+def test_a_freeze_row_reports_each_freeze_and_resume_and_not_a_signal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2358: a reading that never clears freezes the tree, hits the cap and resumes it, saying so.
+
+    ⚑ THE SIGNAL LINE IS NOT PRINTED FOR A FREEZE: it would read "signalled nothing" for a row that
+    stopped and resumed real processes.
+    """
+    monkeypatch.setattr(guard_cli, "reader", _over)
+    row = Row(
+        "t",
+        above=1.0,
+        hold=1,
+        interval_s=0.01,
+        signal=int(signal.SIGTERM),
+        target="sleep",
+        action="freeze",
+        resume_hold=2,
+        max_frozen=3,
+        on_cap="resume",
+    )
+    marker = tmp_path / "child.pid"
+    script = f"sleep 1 & echo $! > {marker}; wait"
+    code = guard_cli.run([_SH, "-c", script], [Spec(row, "ep", "q")], {})
+    err = capsys.readouterr().err
+    assert code == 0
+    assert "guard t: freeze [" in err
+    assert "guard t: cap:resume [" in err
+    assert "TRIPPED" not in err
+
+
+def test_a_trip_is_recorded_as_one_line_and_counted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2359: a signalling guard's trip leaves a `trip` line in the record and a counter."""
+    monkeypatch.setattr(guard_cli, "reader", _over)
+    row = Row("t", above=1.0, hold=2, interval_s=0.01, signal=int(signal.SIGTERM), target="sleep")
+    record = tmp_path / "state" / "events.jsonl"
+    script = "sleep 30 & wait"
+    environ = {triprecord.ENV: str(record)}
+    assert guard_cli.run([_SH, "-c", script], [Spec(row, "ep", "q")], environ) == 0
+    assert triprecord.counts(record) == {("t", "trip"): 1}
+    counter = triprecord.counter_path(record).read_text(encoding="utf-8")
+    assert 'guard="t",event="trip"} 1' in counter
+
+
+def test_a_freeze_is_recorded_with_its_resume(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2359: a freeze row records the freeze and the cap's resume, and no `trip` of its own."""
+    monkeypatch.setattr(guard_cli, "reader", _over)
+    row = Row(
+        "t",
+        above=1.0,
+        hold=1,
+        interval_s=0.01,
+        signal=int(signal.SIGTERM),
+        target="sleep",
+        action="freeze",
+        resume_hold=2,
+        max_frozen=3,
+        on_cap="resume",
+    )
+    record = tmp_path / "events.jsonl"
+    environ = {triprecord.ENV: str(record)}
+    assert guard_cli.run([_SH, "-c", "sleep 1 & wait"], [Spec(row, "ep", "q")], environ) == 0
+    kinds = {event for _, event in triprecord.counts(record)}
+    assert {"freeze", "cap:resume"} <= kinds
+    assert "trip" not in kinds
+
+
+def test_a_record_that_cannot_be_written_is_said_and_the_status_is_unchanged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2359: a record path under a regular file fails; the command's own status still passes."""
+    monkeypatch.setattr(guard_cli, "reader", _over)
+    row = Row("t", above=1.0, hold=2, interval_s=0.01, signal=int(signal.SIGTERM), target="sleep")
+    blocker = tmp_path / "file"
+    blocker.write_text("x", encoding="utf-8")
+    environ = {triprecord.ENV: str(blocker / "events.jsonl")}
+    script = f"sleep 30 & wait; exit {_EXIT_THREE}"
+    code = guard_cli.run([_SH, "-c", script], [Spec(row, "ep", "q")], environ)
+    assert code == _EXIT_THREE
+    assert "the trip record" in capsys.readouterr().err
+
+
+def test_a_freeze_that_happened_before_the_thread_raised_is_still_recorded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """b65 (F): the events gathered before a reading raised are in the record beside the error."""
+    calls: list[int] = []
+    patience = 5
+
+    def raising(_name: str, _query: str, _environ: Mapping[str, str]) -> Callable[[], Sample]:
+        def read() -> Sample:
+            calls.append(1)
+            if len(calls) > patience:
+                message = "boom"
+                raise RuntimeError(message)
+            return _OVER
+
+        return read
+
+    monkeypatch.setattr(guard_cli, "reader", raising)
+    monkeypatch.setattr(threading, "excepthook", _quiet)
+    row = Row(
+        "t",
+        above=1.0,
+        hold=1,
+        interval_s=0.01,
+        signal=int(signal.SIGTERM),
+        target="sleep",
+        action="freeze",
+        resume_hold=2,
+        max_frozen=100,
+        on_cap="resume",
+    )
+    record = tmp_path / "events.jsonl"
+    environ = {triprecord.ENV: str(record)}
+    assert guard_cli.run([_SH, "-c", "sleep 1 & wait"], [Spec(row, "ep", "q")], environ) == 0
+    kinds = {event for _, event in triprecord.counts(record)}
+    assert {"freeze", "error"} <= kinds
+
+
+def test_a_guard_thread_that_raises_is_said_and_recorded_not_read_as_quiet(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2371: a reading that raises kills the guard thread; the failure is named and recorded."""
+
+    def broken(_name: str, _query: str, _environ: Mapping[str, str]) -> Callable[[], Sample]:
+        def read() -> Sample:
+            message = "boom"
+            raise RuntimeError(message)
+
+        return read
+
+    monkeypatch.setattr(guard_cli, "reader", broken)
+    monkeypatch.setattr(threading, "excepthook", _quiet)
+    row = Row("t", above=1.0, hold=2, interval_s=0.01, signal=int(signal.SIGTERM), target="sleep")
+    record = tmp_path / "events.jsonl"
+    environ = {triprecord.ENV: str(record)}
+    code = guard_cli.run([_SH, "-c", f"exit {_EXIT_THREE}"], [Spec(row, "ep", "q")], environ)
+    assert code == _EXIT_THREE
+    assert "guard t: FAILED RuntimeError: boom" in capsys.readouterr().err
+    assert triprecord.counts(record) == {("t", "error"): 1}
