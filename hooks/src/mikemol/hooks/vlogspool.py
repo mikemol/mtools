@@ -41,16 +41,15 @@ class Drained:
 
 
 @contextmanager
-def _held(lock: Path, wait: bool = True) -> Iterator[bool]:
-    """Hold an flock on `lock`.
+def _flocked(lock: Path, flags: int) -> Iterator[bool]:
+    """Hold an flock on `lock` taken with `flags`.
 
     Yields:
-        True once the lock is held; False when `wait` is off and another holder has it.
+        True once the lock is held; False when `flags` forbids waiting and another holder has it.
 
     """
     lock.parent.mkdir(parents=True, exist_ok=True)
     with lock.open("a", encoding="utf-8") as handle:
-        flags = fcntl.LOCK_EX if wait else fcntl.LOCK_EX | fcntl.LOCK_NB
         try:
             fcntl.flock(handle, flags)
         except BlockingIOError:
@@ -60,6 +59,30 @@ def _held(lock: Path, wait: bool = True) -> Iterator[bool]:
             yield True
         finally:
             fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+@contextmanager
+def _held(lock: Path) -> Iterator[bool]:
+    """Hold an flock on `lock`, waiting for it.
+
+    Yields:
+        True once the lock is held.
+
+    """
+    with _flocked(lock, fcntl.LOCK_EX) as taken:
+        yield taken
+
+
+@contextmanager
+def _held_nowait(lock: Path) -> Iterator[bool]:
+    """Hold an flock on `lock` without waiting.
+
+    Yields:
+        True once held, False when another holder has the lock.
+
+    """
+    with _flocked(lock, fcntl.LOCK_EX | fcntl.LOCK_NB) as taken:
+        yield taken
 
 
 class Spool:
@@ -186,7 +209,7 @@ class Spool:
 
         """
         sent = 0
-        with _held(self._drain_lock, wait=False) as taken:
+        with _held_nowait(self._drain_lock) as taken:
             if not taken:
                 return Drained(0, self.count(), busy=True)
             while True:
