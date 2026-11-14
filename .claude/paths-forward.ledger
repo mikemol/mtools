@@ -7075,3 +7075,180 @@
 2026-11-14T18:00:09Z  status W2421 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-14T18:12:20Z  status W2422 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-14T18:29:11Z  status W2423 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T19:02:07Z  status W2424 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T19:19:14Z  status W2425 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T19:24:10Z  interrupt W2506 minted    -         "Census every requires-python, toolchain and dependency constraint that pins a .z or ==/caps a minor, to loosen to >=x.y or name its critical fix"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2424
+2026-11-14T19:42:59Z  status W2426 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T20:00:46Z  status W2427 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T20:18:13Z  status W2428 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T20:39:00Z  status W2429 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T20:57:23Z  interrupt W2507 minted    -         "pycodemod verb rewrites an absolute intra-package import (from mikemol.pkg.mod import X, inside mikemol.pkg) to a single-dot relative import"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2431
+2026-11-14T20:57:23Z  interrupt W2508 minted    -         "websubset census counts the absolute intra-package import as a Codon idiom, so the W1319 burn-down sees it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2431
+2026-11-14T20:57:30Z  status W2431 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:14:43Z  status W2432 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:32:26Z  status W2433 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:33:22Z  interrupt W2509 minted    -         "operator: decide how Codon's Optional[X] coexists with the house lint's X | None rule (options: rewrite in the staged copy, a Codon rule set, a lint exemption, wait for Codon)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2434
+2026-11-14T21:33:29Z  status W2509 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:33:30Z  status W2434 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:34:48Z  status W2434 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:34:48Z  status W2509 blocked>done writer    "blocked -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:34:55Z  interrupt W2510 minted    -         "A witness that the staged Codon tree compiles under the pinned Codon and that every union-none site was rewritten"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2509
+2026-11-14T21:34:56Z  interrupt W2511 minted    -         "A watch for the pinned Codon supporting PEP 604 unions, so the staged X | None rewrite can be retired"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2509
+2026-11-14T21:44:25Z  interrupt W2512 minted    -         "Measure what the pinned Codon accepts for an explicit two-variant result type, before it becomes the house form"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2434
+2026-11-14T21:44:26Z  interrupt W2513 minted    -         "A ratchet counts the Optional and None-union sites per dist, may only fall, baselined from the census (489 modules, 1811 sites)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2434
+2026-11-14T21:44:27Z  interrupt W2514 minted    -         "Machine-detect the union-none sites and order the elimination by module along the import graph, leaves first, not by hand"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2434
+2026-11-14T21:48:21Z  status W2512 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:48:28Z  interrupt W2515 minted    -         "Run the V8c result form under the pinned Codon's runtime to check that polymorphic dispatch gives the right values"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2512
+2026-11-14T21:51:53Z  status W2515 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:52:06Z  interrupt W2516 minted    -         "codon_probe reports a type check as a pass: give it an execution mode, or word its result as type-checks, so a probe cannot call code that aborts Codon's code generator clean"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2515
+2026-11-14T21:52:10Z  status W2516 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:53:29Z  interrupt W2517 minted    -         "Census the existing witnesses and cards that cite codon_probe as proof of a run, and re-label each as a type-check or re-prove it by execution"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2515
+2026-11-14T21:53:30Z  interrupt W2518 minted    -         "Codon defect: a base-class method whose body only raises aborts the code generator (exit 134, llvisitor.cpp:3252), with a minimal repro in the repo"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2515
+2026-11-14T21:53:35Z  interrupt W2519 minted    -         "Codon defect: a user subclass of LookupError cannot be raised with a message (__init__ missing func), with a minimal repro in the repo"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2515
+2026-11-14T21:53:39Z  interrupt W2520 minted    -         "Upstream Codon issues for the two defects, filed by the operator from the repos' minimal repros"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2515
+2026-11-14T21:53:45Z  status W2520 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:53:46Z  status W2518 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:53:46Z  status W2519 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:56:37Z  status W2434 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:58:38Z  interrupt W2521 minted    -         "A Codon-compatible dataclasses: one decorator that works under CPython, mypy strict, ruff select-ALL and codon run"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:operator-2026-11-14
+2026-11-14T21:58:43Z  interrupt W2522 minted    -         "Probe by execution what the pinned Codon synthesizes natively for an annotated class: init, eq, repr, ordering, hash, a frozen equivalent, and its own decorators such as tuple"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2521
+2026-11-14T21:58:43Z  interrupt W2523 minted    -         "Design a single-source mikemol dist whose dataclass decorator works under CPython, mypy strict, ruff select-ALL and codon run, scoped to frozen, eq, order, default, default_factory and field order"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2521
+2026-11-14T21:58:43Z  interrupt W2524 minted    -         "A shared test suite that runs under both CPython and codon run for the Codon-compatible dataclass, with mutants that drop a field from eq and mutate frozen"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2521
+2026-11-14T21:58:43Z  interrupt W2525 minted    -         "Re-probe a Found and Missing two-variant result on top of the Codon-compatible dataclass, by execution"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2521
+2026-11-14T21:58:47Z  status W2523 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:58:49Z  status W2524 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:58:50Z  status W2525 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T21:58:51Z  status W2522 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:01:51Z  status W2522 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:01:51Z  status W2523 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:06:10Z  status W2435 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:09:54Z  status W2525 blocked>done writer    "blocked -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:09:55Z  interrupt W2526 minted    -         "A frozen result class with a found flag beside a value, as a house form for a two-state result"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2525
+2026-11-14T22:12:12Z  status W1802 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2109 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2115 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2127 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2128 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2129 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2131 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2132 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2134 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2141 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2142 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2146 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2149 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2150 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2151 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2152 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2153 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2158 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2166 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2172 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2174 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2175 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2181 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2185 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2186 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2187 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2188 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2191 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2196 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2202 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2203 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2204 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2205 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2206 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2243 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2246 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2248 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2252 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2256 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2257 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2261 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2263 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2266 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2273 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2275 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2283 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2284 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2285 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2286 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2289 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2290 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2295 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2299 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2302 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2303 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2304 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2305 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2308 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2314 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2320 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2336 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2348 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2349 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2351 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2364 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2365 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2369 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2373 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2376 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2378 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2379 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2381 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2383 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2384 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2386 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2388 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2390 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2391 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2392 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2403 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2406 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2407 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2416 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2417 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2418 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2419 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2421 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2426 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2432 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2435 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2451 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2457 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2463 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2464 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2465 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2466 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2467 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2468 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2469 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2470 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2471 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2472 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2473 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2474 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2475 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2476 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2477 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2478 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2481 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2482 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2483 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2484 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2485 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2516 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2518 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:12:12Z  status W2519 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:15:32Z  interrupt W2527 minted    -         "INCIDENT: b66 landed without check_mutants/mutate_check.sh (the reviewed blob 14f27d6b), so PYTHONUNBUFFERED=1 is not on main and --write-baseline can undercount again"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2340
+2026-11-14T22:15:33Z  interrupt W2528 minted    -         "A submit refuses a staged blob that differs from the review manifest, and a stack whose subject or manifest names a file its paths omit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2340
+2026-11-14T22:20:22Z  interrupt W2529 minted    -         "isolated.stale_tree has the same filter and link blindness that _leftover had, and was not changed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2353
+2026-11-14T22:20:23Z  status W2002 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:20:23Z  status W2061 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:20:23Z  status W2096 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:20:23Z  status W2097 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:20:23Z  status W2105 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:20:23Z  status W2106 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:20:23Z  status W2353 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-14T22:20:24Z  interrupt W2530 minted    -         "Decide how the hooks mutants grid clears the shard guard: shards 215 to 394 as a stopgap, or decompose first"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2355
+2026-11-14T22:20:33Z  status W2355 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

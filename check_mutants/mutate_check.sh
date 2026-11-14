@@ -96,6 +96,14 @@ fi
 # ⚑ AND `-x` IS NECESSARY, NOT SUFFICIENT. A dangling symlink is mode 775 and `-x`-true right up
 # until `execve` refuses it — measured on 2026-09-16 when a whole interpreter root was removed. The
 # grid below RUNS the interpreter, and its verdict is what settles whether the venv is real.
+# ⚑⚑ THE TWO STREAMS ARE MERGED HERE, SO STDOUT MUST NOT BE BLOCK-BUFFERED (W2340, MEASURED
+# 2026-11-14 on //corpus:mutants): the runner's `mutate:` lines go to stderr at once while its report
+# goes to a PIPE'S stdout buffer, so a stderr line landed in the middle of the REGEX section and the
+# 12 declared-defect lines after it printed below it. `--write-baseline` reads a section until the
+# first line that is not indented, so it silently dropped 8 errored cells (59 recorded, 67 real) and
+# the baselines written that way failed the next faithful run with RISE lines. Unbuffered keeps the
+# report in the order the runner wrote it.
+export PYTHONUNBUFFERED=1
 out="$("$py" "$runner" "$py" "$config" 2>&1)"
 rc=$?
 printf '%s\n' "$out"
