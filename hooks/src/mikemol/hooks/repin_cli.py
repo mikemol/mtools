@@ -169,9 +169,11 @@ def apply(
     target: str,
     dists: frozenset[str] | None,
     runner: Runner,
-    sync: bool,
+    sync_cmd: Sequence[str] | None,
 ) -> list[tuple[str, str]]:
     """Move every repo's selected pins to `target`, syncing each one that changed.
+
+    `sync_cmd` is the command that syncs a repo, or None to leave it unsynced (`--no-sync`).
 
     Returns:
         (repo, result) per repo that has a selected git pin; result is one of `current`,
@@ -182,8 +184,8 @@ def apply(
     results: list[tuple[str, str]] = []
     for repo in (r for r in repos(root) if r.name in selected):
         result = _repin_one(repo, target, dists, runner)
-        if result == "written" and sync:
-            result = "synced" if runner(SYNC, repo)[0] == 0 else "sync-failed"
+        if result == "written" and sync_cmd is not None:
+            result = "synced" if runner(sync_cmd, repo)[0] == 0 else "sync-failed"
         results.append((repo.name, result))
     return results
 
@@ -209,15 +211,27 @@ def _parse(args: Sequence[str]) -> tuple[dict[str, list[str]], set[str]] | None:
     return valued, flags
 
 
-def _refusal(target: str | None, write: bool) -> str | None:
-    """Say why the target and the write flag cannot be used together, if they cannot.
+def _refusal_write(target: str | None) -> str | None:
+    """Say why `--write` cannot be used with this target, if it cannot.
 
     Returns:
         the reason, or None when the arguments are usable.
 
     """
     if target is None:
-        return "--write needs --sha, the full commit to move every pin to" if write else None
+        return "--write needs --sha, the full commit to move every pin to"
+    return _refusal(target)
+
+
+def _refusal(target: str | None) -> str | None:
+    """Say why the target cannot be used, if it cannot.
+
+    Returns:
+        the reason, or None when the arguments are usable.
+
+    """
+    if target is None:
+        return None
     try:
         repin.check_sha(target)
     except ValueError as fault:
@@ -326,8 +340,8 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
     metrics = valued.get("--metrics", [None])[-1]
     par = target if target is not None or metrics is None else (_ENV.get(PAR_ENV) or None)
     refusal = (
-        _refusal(target, write="--write" in flags)
-        or _refusal(par, write=False)
+        (_refusal_write(target) if "--write" in flags else _refusal(target))
+        or _refusal(par)
         or _scope_refusal(root, flags)
     )
     if refusal is not None:
@@ -342,6 +356,6 @@ def main(argv: Sequence[str] | None = None, runner: Runner = run_process) -> int
         _PUBLISH(Path(metrics), _RENDER(rows, str(root), par, int(_NOW())))
     if "--write" not in flags or target is None:
         return 0
-    results = apply(root, target, dists, runner, sync="--no-sync" not in flags)
+    results = apply(root, target, dists, runner, None if "--no-sync" in flags else SYNC)
     sys.stdout.write("".join(f"RESULT {repo} {result}\n" for repo, result in results))
     return EXIT_FAILED if any(result == "sync-failed" for _repo, result in results) else 0

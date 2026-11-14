@@ -186,6 +186,32 @@ mutant_site(
 )
 
 mutant_site(
+    name = "_refusal_write",
+    dist = "hooks",
+    site = "src/mikemol/hooks/repin_cli.py::_refusal_write",
+    tests = "tests/test_musthave.py tests/test_repin_cli.py tests/test_repin_measure.py tests/test_repin_metrics.py tests/test_revendor_cli.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/musthave.py",
+        "//hooks:src/mikemol/hooks/musthave_cli.py",
+        "//hooks:src/mikemol/hooks/repin.py",
+        "//hooks:src/mikemol/hooks/repin_cli.py",
+        "//hooks:src/mikemol/hooks/repin_metrics.py",
+        "//hooks:src/mikemol/hooks/repin_row.py",
+        "//hooks:src/mikemol/hooks/revendor.py",
+        "//hooks:src/mikemol/hooks/revendor_apply.py",
+        "//hooks:src/mikemol/hooks/revendor_cli.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:src/mikemol/hooks/wheel.py",
+        "//hooks:tests/test_musthave.py",
+        "//hooks:tests/test_repin_cli.py",
+        "//hooks:tests/test_repin_measure.py",
+        "//hooks:tests/test_repin_metrics.py",
+        "//hooks:tests/test_revendor_cli.py",
+    ],
+)
+
+mutant_site(
     name = "_refusal",
     dist = "hooks",
     site = "src/mikemol/hooks/repin_cli.py::_refusal",
@@ -728,6 +754,7 @@ test_suite(
         ":_repin_one",
         ":apply",
         ":_parse",
+        ":_refusal_write",
         ":_refusal",
         ":_root_of",
         ":_scope_refusal",
