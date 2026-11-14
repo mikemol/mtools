@@ -7,6 +7,7 @@ fail the count below; and the UNTRACKED FILE is the case `git stash create` lose
 file the dirty worktree's saved commit must contain.
 """
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -30,14 +31,37 @@ def _refs(root: Path) -> list[str]:
     return _git(root, "for-each-ref", "--format=%(refname)", "refs/stash-reap").splitlines()
 
 
-def _prepared(tmp_path: Path) -> tuple[Path, Path]:
-    # A repo with a clean, a dirty (modified plus untracked) and an ahead worktree, seen once.
-    root = tmp_path / "repo"
-    root.mkdir()
+@pytest.fixture(scope="module")
+def template(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Build one repository with one commit, once per module, for every case to copy (W2355).
+
+    Init, add and commit are three git processes a case no longer starts. It holds no worktree,
+    so its .git carries no absolute path that a copy would leave pointing at the template.
+
+    Args:
+        tmp_path_factory: pytest's factory for a directory that outlives one case.
+
+    Returns:
+        The repository's root.
+
+    """
+    root = tmp_path_factory.mktemp("template")
     _git(root, "init", "-b", "main")
     (root / "f.txt").write_text("one\n", encoding="utf-8")
     _git(root, "add", "f.txt")
     _git(root, "commit", "-m", "one")
+    return root
+
+
+def _copied(source: Path, tmp_path: Path) -> Path:
+    root = tmp_path / "repo"
+    shutil.copytree(source, root)
+    return root
+
+
+def _prepared(source: Path, tmp_path: Path) -> tuple[Path, Path]:
+    # A repo with a clean, a dirty (modified plus untracked) and an ahead worktree, seen once.
+    root = _copied(source, tmp_path)
     wts = tmp_path / "wts"
     for name in ("clean", "dirty", "ahead"):
         _git(root, "worktree", "add", "-b", f"scratch/{name}", str(wts / name))
@@ -51,10 +75,10 @@ def _prepared(tmp_path: Path) -> tuple[Path, Path]:
 
 
 def test_a_dirty_worktrees_saved_commit_holds_its_tracked_and_untracked_work(
-    tmp_path: Path,
+    template: Path, tmp_path: Path
 ) -> None:
     """The ref's tree has the modified file and the untracked one; the worktree is unchanged."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(template, tmp_path)
     before = _git(wts / "dirty", "status", "--porcelain")
     lines = reap.report(root, saving=True)
     ref = next(line.split("\t")[3] for line in lines if line.startswith(reap.DIRTY))
@@ -68,18 +92,20 @@ def test_a_dirty_worktrees_saved_commit_holds_its_tracked_and_untracked_work(
     assert (wts / "dirty" / "new.txt").read_text(encoding="utf-8") == "untracked work\n"
 
 
-def test_an_unmerged_worktrees_ref_is_its_branch_tip(tmp_path: Path) -> None:
+def test_an_unmerged_worktrees_ref_is_its_branch_tip(template: Path, tmp_path: Path) -> None:
     """The ahead worktree's commits are kept by a ref at the branch tip."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(template, tmp_path)
     lines = reap.report(root, saving=True)
     ref = next(line.split("\t")[3] for line in lines if line.startswith(reap.UNMERGED))
     assert ref.startswith("refs/stash-reap/scratch-ahead-")
     assert _git(root, "rev-parse", ref) == _git(wts / "ahead", "rev-parse", "HEAD")
 
 
-def test_a_clean_worktree_gets_no_ref_and_nothing_is_removed(tmp_path: Path) -> None:
+def test_a_clean_worktree_gets_no_ref_and_nothing_is_removed(
+    template: Path, tmp_path: Path
+) -> None:
     """The control: two refs for two at-risk worktrees, none for the clean one, no worktree gone."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(template, tmp_path)
     before = _git(root, "worktree", "list", "--porcelain")
     lines = reap.report(root, saving=True)
     clean = next(line for line in lines if line.startswith(reap.CLEAN))
@@ -90,10 +116,10 @@ def test_a_clean_worktree_gets_no_ref_and_nothing_is_removed(tmp_path: Path) -> 
 
 
 def test_saving_the_same_work_twice_is_the_same_ref_and_new_work_is_a_new_one(
-    tmp_path: Path,
+    template: Path, tmp_path: Path
 ) -> None:
     """The sha is in the name: a repeat adds nothing, a changed worktree adds one beside it."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(template, tmp_path)
     reap.report(root, saving=True)
     first = _refs(root)
     reap.report(root, saving=True)
@@ -103,14 +129,9 @@ def test_saving_the_same_work_twice_is_the_same_ref_and_new_work_is_a_new_one(
     assert len(_refs(root)) == len(first) + 1
 
 
-def test_a_worktree_still_new_is_not_saved(tmp_path: Path) -> None:
+def test_a_worktree_still_new_is_not_saved(template: Path, tmp_path: Path) -> None:
     """A first-run worktree is not classified, so saving writes no ref for it."""
-    root = tmp_path / "repo"
-    root.mkdir()
-    _git(root, "init", "-b", "main")
-    (root / "f.txt").write_text("one\n", encoding="utf-8")
-    _git(root, "add", "f.txt")
-    _git(root, "commit", "-m", "one")
+    root = _copied(template, tmp_path)
     _git(root, "worktree", "add", "-b", "scratch/a", str(tmp_path / "wts" / "a"))
     (tmp_path / "wts" / "a" / "f.txt").write_text("changed\n", encoding="utf-8")
     lines = reap.report(root, saving=True)
@@ -118,9 +139,11 @@ def test_a_worktree_still_new_is_not_saved(tmp_path: Path) -> None:
     assert _refs(root) == []
 
 
-def test_a_gone_worktree_with_unmerged_commits_is_kept_by_its_branch_tip(tmp_path: Path) -> None:
+def test_a_gone_worktree_with_unmerged_commits_is_kept_by_its_branch_tip(
+    template: Path, tmp_path: Path
+) -> None:
     """The record is prunable but the branch holds work main lacks: a ref keeps it."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(template, tmp_path)
     folder = wts / "ahead"
     for child in sorted(folder.rglob("*"), reverse=True):
         if child.is_file():
@@ -135,10 +158,10 @@ def test_a_gone_worktree_with_unmerged_commits_is_kept_by_its_branch_tip(tmp_pat
 
 
 def test_the_command_takes_save_and_prints_the_ref_as_a_fourth_field(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    template: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """`--save REPO` saves; the ref's name is the branch and the commit's sha seven characters."""
-    root, _ = _prepared(tmp_path)
+    root, _ = _prepared(template, tmp_path)
     assert reap.main(["--save", str(root)]) == reap.EXIT_OK
     out = capsys.readouterr().out.splitlines()
     saved = [line.split("\t")[3] for line in out if line.count("\t") == _FOUR_FIELDS]

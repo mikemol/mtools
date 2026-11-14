@@ -6,6 +6,7 @@
 listed with its directory intact after a `--remove` run, or the removal would be a sweep.
 """
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -26,16 +27,39 @@ def _git(root: Path, *argv: str) -> str:
 _ALL = ("clean", "dirty", "ahead", "gone")
 
 
-def _prepared(tmp_path: Path, names: tuple[str, ...] = _ALL) -> tuple[Path, Path]:
-    # the named worktrees (default: clean, dirty, ahead and gone), seen once so the next run
-    # classifies them. A case that needs only one class asks for only that one: every worktree is
-    # a handful of git processes, and the suite's cost is those processes (W2355).
-    root = tmp_path / "repo"
-    root.mkdir()
+@pytest.fixture(scope="module")
+def template(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Build one repository with one commit, once per module, for every case to copy (W2355).
+
+    Init, add and commit are three git processes a case no longer starts. It holds no worktree,
+    so its .git carries no absolute path that a copy would leave pointing at the template.
+
+    Args:
+        tmp_path_factory: pytest's factory for a directory that outlives one case.
+
+    Returns:
+        The repository's root.
+
+    """
+    root = tmp_path_factory.mktemp("template")
     _git(root, "init", "-b", "main")
     (root / "f.txt").write_text("one\n", encoding="utf-8")
     _git(root, "add", "f.txt")
     _git(root, "commit", "-m", "one")
+    return root
+
+
+def _copied(source: Path, tmp_path: Path) -> Path:
+    root = tmp_path / "repo"
+    shutil.copytree(source, root)
+    return root
+
+
+def _prepared(source: Path, tmp_path: Path, names: tuple[str, ...] = _ALL) -> tuple[Path, Path]:
+    # the named worktrees (default: clean, dirty, ahead and gone), seen once so the next run
+    # classifies them. A case that needs only one class asks for only that one: every worktree is
+    # a handful of git processes, and the suite's cost is those processes (W2355).
+    root = _copied(source, tmp_path)
     wts = tmp_path / "wts"
     for name in names:
         _git(root, "worktree", "add", "-b", f"scratch/{name}", str(wts / name))
@@ -62,10 +86,10 @@ def _listed(root: Path) -> list[str]:
 
 
 def test_a_gone_and_a_clean_worktree_are_removed_and_every_other_class_stays(
-    tmp_path: Path,
+    template: Path, tmp_path: Path
 ) -> None:
     """Two removed by exact path; the dirty and the ahead worktree keep their record and files."""
-    root, wts = _prepared(tmp_path)
+    root, wts = _prepared(template, tmp_path)
     lines = reap.report(root, removing=True)
     removed = [line.split("\t")[2] for line in lines if line.endswith("\tremoved")]
     assert sorted(removed) == ["scratch/clean", "scratch/gone"]
@@ -78,23 +102,20 @@ def test_a_gone_and_a_clean_worktree_are_removed_and_every_other_class_stays(
     assert not (wts / "clean").exists()
 
 
-def test_the_branches_are_left_alone(tmp_path: Path) -> None:
+def test_the_branches_are_left_alone(template: Path, tmp_path: Path) -> None:
     """The card is the worktree: the removed ones' branches are still there."""
-    root, _ = _prepared(tmp_path)
+    root, _ = _prepared(template, tmp_path)
     reap.report(root, removing=True)
     branches = _git(root, "branch", "--format=%(refname:short)").splitlines()
     assert "scratch/clean" in branches
     assert "scratch/gone" in branches
 
 
-def test_a_first_run_removes_nothing_because_every_worktree_is_new(tmp_path: Path) -> None:
+def test_a_first_run_removes_nothing_because_every_worktree_is_new(
+    template: Path, tmp_path: Path
+) -> None:
     """Removal needs the second read: nothing is removed the first time a worktree is seen."""
-    root = tmp_path / "repo"
-    root.mkdir()
-    _git(root, "init", "-b", "main")
-    (root / "f.txt").write_text("one\n", encoding="utf-8")
-    _git(root, "add", "f.txt")
-    _git(root, "commit", "-m", "one")
+    root = _copied(template, tmp_path)
     _git(root, "worktree", "add", "-b", "scratch/a", str(tmp_path / "wts" / "a"))
     lines = reap.report(root, removing=True)
     assert lines[0].startswith(reap.NEW)
@@ -102,9 +123,11 @@ def test_a_first_run_removes_nothing_because_every_worktree_is_new(tmp_path: Pat
     assert (tmp_path / "wts" / "a").is_dir()
 
 
-def test_a_held_clean_worktree_is_kept(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_a_held_clean_worktree_is_kept(
+    template: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """A process inside the directory holds it: the class is held and nothing is removed."""
-    root, wts = _prepared(tmp_path, ("clean",))
+    root, wts = _prepared(template, tmp_path, ("clean",))
     monkeypatch.chdir(wts / "clean")
     lines = reap.report(root, removing=True)
     held = next(line for line in lines if "scratch/clean" in line)
@@ -112,9 +135,11 @@ def test_a_held_clean_worktree_is_kept(tmp_path: Path, monkeypatch: pytest.Monke
     assert (wts / "clean").is_dir()
 
 
-def test_git_refuses_a_worktree_that_turned_dirty_after_the_classification(tmp_path: Path) -> None:
+def test_git_refuses_a_worktree_that_turned_dirty_after_the_classification(
+    template: Path, tmp_path: Path
+) -> None:
     """Without --force git is the last gate: a file written since keeps the worktree."""
-    root, wts = _prepared(tmp_path, ("clean",))
+    root, wts = _prepared(template, tmp_path, ("clean",))
     (wts / "clean" / "late.txt").write_text("written after the read\n", encoding="utf-8")
     wt = reap.Worktree(str(wts / "clean"), "scratch/clean", prunable=False)
     assert not reap.remove(root, wt, reap.CLEAN)
@@ -122,9 +147,11 @@ def test_git_refuses_a_worktree_that_turned_dirty_after_the_classification(tmp_p
     assert str(wts / "clean") in _listed(root)
 
 
-def test_only_gone_and_clean_are_ever_removable_and_a_held_one_is_not(tmp_path: Path) -> None:
+def test_only_gone_and_clean_are_ever_removable_and_a_held_one_is_not(
+    template: Path, tmp_path: Path
+) -> None:
     """The classes the function refuses are refused before git is asked."""
-    root, wts = _prepared(tmp_path, ("clean",))
+    root, wts = _prepared(template, tmp_path, ("clean",))
     wt = reap.Worktree(str(wts / "clean"), "scratch/clean", prunable=False)
     for kind in (reap.DIRTY, reap.UNMERGED, reap.NEW, reap.HELD):
         assert not reap.remove(root, wt, kind)
@@ -132,10 +159,10 @@ def test_only_gone_and_clean_are_ever_removable_and_a_held_one_is_not(tmp_path: 
 
 
 def test_a_process_that_entered_the_directory_since_the_classification_keeps_it(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    template: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Held is read again just before removal, so a late entrant is a reason to leave it."""
-    root, wts = _prepared(tmp_path, ("clean",))
+    root, wts = _prepared(template, tmp_path, ("clean",))
     wt = reap.Worktree(str(wts / "clean"), "scratch/clean", prunable=False)
     monkeypatch.chdir(wts / "clean")
     assert not reap.remove(root, wt, reap.CLEAN)
@@ -143,10 +170,10 @@ def test_a_process_that_entered_the_directory_since_the_classification_keeps_it(
 
 
 def test_the_command_takes_remove_in_any_position(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    template: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """`--remove REPO` removes the same two and says so on their lines."""
-    root, _ = _prepared(tmp_path)
+    root, _ = _prepared(template, tmp_path)
     assert reap.main(["--remove", str(root)]) == reap.EXIT_OK
     out = capsys.readouterr().out.splitlines()
     assert len([line for line in out if line.endswith("\tremoved")]) == _REMOVED
