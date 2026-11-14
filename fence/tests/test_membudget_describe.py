@@ -23,8 +23,14 @@ def _rows(capsys: pytest.CaptureFixture[str]) -> list[str]:
     return capsys.readouterr().out.splitlines()
 
 
-def test_describe_prints_the_defaults_and_every_verb(capsys: pytest.CaptureFixture[str]) -> None:
+def test_describe_prints_the_defaults_and_every_verb(
+    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
     """The control: the two numbers are the code's, and each dispatch verb has a row."""
+    # ⚑ A CEILING THAT DIFFERS FROM THE RETYPED ONE: with the real 384 a describe that printed the
+    # literal "max_mb 384" passes this test too, and `describe-ceiling-retyped` survives (W2340).
+    monkeypatch.setattr(membudget_cli, "CEILING_MB", membudget_cli.CEILING_MB + 1)
+    monkeypatch.setattr(membudget_cli, "DEFAULT_MB", membudget_cli.DEFAULT_MB + 1)
     rows = _rows(capsys)
     assert f"default_mb {membudget_cli.DEFAULT_MB}" in rows
     assert f"max_mb {membudget_cli.CEILING_MB}" in rows

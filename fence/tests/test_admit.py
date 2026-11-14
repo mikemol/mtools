@@ -170,7 +170,11 @@ def test_a_claim_needs_no_capacity() -> None:
 def test_a_held_claim_excludes_only_its_own_tag() -> None:
     """`claim:x` held: another `claim:x` is CLAIMED, `claim:y` is admitted."""
     snap = _ledger(_lease("a", 0, label="claim:x"))
-    assert admit.decide(admit.Request(0, label="claim:x"), snap) is admit.Verdict.CLAIMED
+    held = admit.decide(admit.Request(0, label="claim:x"), snap)
+    assert held is admit.Verdict.CLAIMED
+    # ⚑ A HELD CLAIM IS A DEFERRAL, NOT A REFUSAL: `a-held-claim-is-a-refusal` swaps the codes and
+    # the verdict above does not notice (W2340).
+    assert admit.exit_code(held) == admit.EXIT_DEFERRED
     assert admit.decide(admit.Request(0, label="claim:y"), snap) is admit.Verdict.ADMIT
 
 

@@ -1069,3 +1069,438 @@ def test_claim_cores_stops_at_the_wanted_count_and_takes_labels_in_order() -> No
     got = mutate_runner.claim_cores(2, _CPUS, ledger.take)
     assert got == [f"{mutate_runner.CORE_LABEL}:0", f"{mutate_runner.CORE_LABEL}:1"]
     assert ledger.held == set(got)
+
+
+_NAMED_FAILURE = "FAILED tests/test_env.py::test_the_checker - AssertionError\n1 failed in 0.01s\n"
+_TWO = "src/mod.py|returns-two|return 1|return 2|\nsrc/mod.py|returns-three|return 1|return 3|\n"
+
+
+def _controlled(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    clean_fails: bool,
+    named: str = _NAMED_FAILURE,
+    no_tests: bool = False,
+    times_out: bool = False,
+) -> list[tuple[str, str]]:
+    """Replace `launch` with a suite that fails on every mutant, naming a failing test.
+
+    The UNMUTATED module passes unless `clean_fails`, as a test broken by the environment would not.
+
+    Returns:
+        each run's (module text, last argument), the last argument being what was run.
+
+    """
+    monkeypatch.setattr(mutate_runner, "_CONTROLS", {})
+    runs: list[tuple[str, str]] = []
+
+    def suite(
+        argv: list[str], cwd: pathlib.Path, _env: dict[str, str]
+    ) -> subprocess.CompletedProcess[str]:
+        text = (cwd / "src" / "mod.py").read_text(encoding="utf-8")
+        runs.append((text, [a for a in argv if not a.startswith("-")][-1]))
+        if text == _SITE_SOURCE and times_out:
+            raise subprocess.TimeoutExpired(argv, 1)
+        if text == _SITE_SOURCE and no_tests:
+            return subprocess.CompletedProcess(argv, 5, "no tests ran\n", "")
+        if text == _SITE_SOURCE and not clean_fails:
+            return subprocess.CompletedProcess(argv, 0, _PASSED, "")
+        return subprocess.CompletedProcess(argv, 1, named, "")
+
+    monkeypatch.setattr(mutate_runner, "launch", suite)
+    return runs
+
+
+def test_a_kill_by_a_test_that_also_fails_on_the_clean_module_is_errored(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2340: the named failing test is put against the original module; failing there, no kill."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    runs = _controlled(monkeypatch, clean_fails=True)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "errored"
+    assert runs == [
+        ("def f():\n    return 2\n", "tests"),
+        (_SITE_SOURCE, "tests/test_env.py::test_the_checker"),
+    ]
+
+
+def test_a_kill_by_a_test_that_passes_on_the_clean_module_stays_a_kill(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2340: the control is no veto; a test that holds on the original module killed it."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _controlled(monkeypatch, clean_fails=False)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "killed"
+
+
+def test_the_suite_is_launched_without_the_callers_pythonhome(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2340: bazel's launcher exports PYTHONHOME; a host python3 a suite starts dies under it.
+
+    fence's payload is the host interpreter (3.14) and exited 1 at startup under the hermetic 3.13
+    home, so a cap test never allocated and its control read as a failure of the clean module.
+    """
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    monkeypatch.setenv("PYTHONHOME", "/not/the/hosts/python")
+    seen: list[dict[str, str]] = []
+
+    def suite(
+        argv: list[str], _cwd: pathlib.Path, env: dict[str, str]
+    ) -> subprocess.CompletedProcess[str]:
+        seen.append(dict(env))
+        return subprocess.CompletedProcess(argv, 0, _PASSED, "")
+
+    monkeypatch.setattr(mutate_runner, "launch", suite)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    mutate_runner.run_declared(grid, declared)
+    assert seen
+    assert all("PYTHONHOME" not in env for env in seen)
+
+
+def test_the_control_is_asked_once_per_failing_test_across_mutants(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2340: two mutants killed by one test cost one control run, not two."""
+    grid = _declared_grid(tmp_path, _TWO)
+    runs = _controlled(monkeypatch, clean_fails=False)
+    verdicts = [mutate_runner.run_declared(grid, d) for d in mutate_runner.read_declared(grid.dist)]
+    assert verdicts == ["killed", "killed"]
+    assert sum(1 for text, _ in runs if text == _SITE_SOURCE) == 1
+
+
+def test_a_parametrized_id_with_spaces_is_run_whole_by_the_control(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2340: the id ends at ' - ', not at its first space; the whole id reaches pytest."""
+    spaced = "tests/test_w.py::test_cp[cp -r a b]"
+    named = f"FAILED {spaced} - AssertionError\n1 failed in 0.01s\n"
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    runs = _controlled(monkeypatch, clean_fails=False, named=named)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "killed"
+    assert runs[1] == (_SITE_SOURCE, spaced)
+
+
+def test_a_control_that_collects_no_test_cannot_vouch_so_the_cell_is_errored(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """B2 (github-cb): exit code 5 proves nothing about the baseline, so no kill is vouched for."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _controlled(monkeypatch, clean_fails=False, no_tests=True)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "errored"
+
+
+def test_a_control_that_times_out_errors_the_cell_and_is_asked_again_for_the_next_mutant(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """B2: a control that cannot run is not a pass and is not cached, so each mutant asks again."""
+    grid = _declared_grid(tmp_path, _TWO)
+    runs = _controlled(monkeypatch, clean_fails=False, times_out=True)
+    verdicts = [mutate_runner.run_declared(grid, d) for d in mutate_runner.read_declared(grid.dist)]
+    assert verdicts == ["errored", "errored"]
+    assert sum(1 for text, _ in runs if text == _SITE_SOURCE) == len(verdicts)
+
+
+def _fake_venv(root: pathlib.Path, home: str) -> pathlib.Path:
+    # A venv shaped like bazel's: a pyvenv.cfg, a bin/python3 entry and one package of its own.
+    (root / "bin").mkdir(parents=True)
+    interpreter = root / "bin" / "python3"
+    interpreter.write_text("#!/bin/sh\n", encoding="utf-8")
+    (root / "pyvenv.cfg").write_text(f"home = {home}\nversion = 3.13.0\n", encoding="utf-8")
+    site = root / "lib" / "python3.13" / "site-packages"
+    site.mkdir(parents=True)
+    (site / "zz_marker.py").write_text("VALUE = 'from the venv'\n", encoding="utf-8")
+    return interpreter
+
+
+def test_a_relative_home_venv_runs_through_a_private_venv_whose_children_find_the_packages(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2340: a child started from another directory with NO environment still imports the venv."""
+    interpreter = _fake_venv(tmp_path / "venv", "bin")
+    chosen, extra = mutate_runner.portable_python(interpreter)
+    assert not extra
+    assert chosen != str(interpreter)
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    code = "import zz_marker; print(zz_marker.VALUE)"
+    done = subprocess.run(
+        [chosen, "-c", code], cwd=elsewhere, env={}, capture_output=True, text=True, check=False
+    )
+    assert (done.returncode, done.stdout.strip()) == (0, "from the venv")
+
+
+def test_an_absolute_home_or_no_config_keeps_the_interpreter_as_given(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2340: only a relative home needs the private venv; the rest run as they always did."""
+    absolute = _fake_venv(tmp_path / "absolute", str(tmp_path))
+    assert mutate_runner.portable_python(absolute) == (str(absolute), "")
+    bare = tmp_path / "bare" / "bin" / "python3"
+    bare.parent.mkdir(parents=True)
+    assert mutate_runner.portable_python(bare) == (str(bare), "")
+
+
+def test_an_env_value_naming_a_file_under_the_base_is_made_absolute_and_nothing_else_is(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2340: a relative path to a staged file points at the real file; prose and gaps stay."""
+    (tmp_path / "tool").mkdir()
+    (tmp_path / "tool" / "ruff").write_text("", encoding="utf-8")
+    huge = "a" * 5000
+    env = {
+        "RUFF_BIN": "tool/ruff",
+        "CONTROL_RUFF": "tool/ruff",
+        "NOTE": "two words",
+        "GONE": "tool/missing",
+        "DIR": "tool",
+        "ABS": "/usr/bin/env",
+        "LONG": huge,
+    }
+    mutate_runner.absolute_tools(env, tmp_path)
+    real = str((tmp_path / "tool" / "ruff").resolve())
+    assert (env["RUFF_BIN"], env["CONTROL_RUFF"]) == (real, real)
+    assert (env["NOTE"], env["GONE"], env["DIR"], env["ABS"], env["LONG"]) == (
+        "two words",
+        "tool/missing",
+        "tool",
+        "/usr/bin/env",
+        huge,
+    )
+
+
+def _runfiles_root(tmp_path: pathlib.Path) -> pathlib.Path:
+    # A runfiles root: the dist under test, a sibling dist with a file, and a root script.
+    root = tmp_path / "runfiles"
+    (root / "dist").mkdir(parents=True)
+    (root / "sibling").mkdir()
+    (root / "sibling" / "BUILD.bazel").write_text("one\n", encoding="utf-8")
+    (root / "tool.sh").write_text("#!/bin/sh\n", encoding="utf-8")
+    return root
+
+
+def test_the_siblings_are_copied_once_per_process_and_hard_linked_into_each_tree(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """B3 (github-cb): two mutants cost one copy and share its bytes, not two copies."""
+    root = _runfiles_root(tmp_path)
+    monkeypatch.setenv("TEST_SRCDIR", str(root))
+    monkeypatch.setattr(mutate_runner, "_MIRRORS", {})
+    first, second = tmp_path / "one", tmp_path / "two"
+    first.mkdir()
+    second.mkdir()
+    mutate_runner.mirror_siblings(root / "dist", first)
+    (root / "sibling" / "BUILD.bazel").write_text("changed after the copy\n", encoding="utf-8")
+    mutate_runner.mirror_siblings(root / "dist", second)
+    assert (first / "sibling" / "BUILD.bazel").read_text(encoding="utf-8") == "one\n"
+    assert (second / "sibling" / "BUILD.bazel").read_text(encoding="utf-8") == "one\n"
+    assert (second / "tool.sh").is_file()
+    assert not (second / "dist").exists()
+    ino = (first / "sibling" / "BUILD.bazel").stat().st_ino
+    assert ino == (second / "sibling" / "BUILD.bazel").stat().st_ino
+
+
+def test_a_link_that_cannot_be_made_falls_back_to_a_copy_and_no_symlink_is_made(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """B3: os.link refused (another device) leaves a real copy, and no symlink is ever made."""
+    root = _runfiles_root(tmp_path)
+    monkeypatch.setenv("TEST_SRCDIR", str(root))
+    monkeypatch.setattr(mutate_runner, "_MIRRORS", {})
+
+    def refuse(_src: str, _dst: str) -> None:
+        raise OSError
+
+    monkeypatch.setattr(os, "link", refuse)
+    into = tmp_path / "into"
+    into.mkdir()
+    mutate_runner.mirror_siblings(root / "dist", into)
+    copied = into / "sibling" / "BUILD.bazel"
+    assert copied.read_text(encoding="utf-8") == "one\n"
+    assert not copied.is_symlink()
+
+
+def test_outside_bazel_nothing_is_mirrored(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The parent of a dist in a whole checkout already holds its siblings, so none are copied."""
+    root = _runfiles_root(tmp_path)
+    monkeypatch.delenv("TEST_SRCDIR", raising=False)
+    monkeypatch.setattr(mutate_runner, "_MIRRORS", {})
+    into = tmp_path / "into"
+    into.mkdir()
+    mutate_runner.mirror_siblings(root / "dist", into)
+    assert list(into.iterdir()) == []
+
+
+def test_the_private_interpreter_is_built_before_the_first_worker_runs(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The copy of the interpreter is made on one thread, so no fork can hold it open (W2340).
+
+    ⚑ THE ORDER IS THE WITNESS: a worker that built it lazily would record `run` first, and two
+    workers forking around the copy gave `Text file busy` on //bibparse:mutants.
+    """
+    order: list[str] = []
+
+    def prime(py: pathlib.Path) -> tuple[str, str]:
+        order.append("prime")
+        return str(py), ""
+
+    def worker(_grid: mutate_runner.Grid, _mutant: mutate_runner.Mutant, *, debug: bool) -> str:
+        assert not debug
+        order.append("run")
+        return "killed"
+
+    monkeypatch.setattr(mutate_runner, "portable_python", prime)
+    monkeypatch.setattr(mutate_runner, "run", worker)
+    grid = mutate_runner.Grid(pathlib.Path(sys.executable), tmp_path, tmp_path / "pyproject.toml")
+    mutant = mutate_runner.Mutant(pathlib.Path("mod.py"), "", "mod")
+    verdicts, _regex = mutate_runner.run_all(grid, [mutant], [], debug=False)
+    assert verdicts == ["killed"]
+    assert order == ["prime", "run"]
+
+
+_CELL = "src/mod.py::returns-two"
+
+
+def _baselined(grid: mutate_runner.Grid, text: str) -> None:
+    (grid.dist / mutate_runner.BASELINE_FILE).write_text(text, encoding="utf-8")
+
+
+def test_a_baselined_survivor_passes_and_the_same_cell_killed_is_a_stale_entry(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2340: debt on record passes, and a recorded cell that is now killed fails as STALE."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _baselined(grid, f"survived {_CELL}\n")
+    _seam(monkeypatch, 0, _PASSED)
+    assert _run_main(grid) == 0
+    assert "0 rise(s), 0 stale" in capsys.readouterr().out
+    _seam(monkeypatch, 1, _FAILED)
+    assert _run_main(grid) == 1
+    assert f"STALE survived {_CELL}" in capsys.readouterr().out
+
+
+def test_a_survivor_the_baseline_does_not_list_is_a_rise_and_fails(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2340: a cell in debt that the baseline lacks, or lists under another verdict, is a RISE."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _seam(monkeypatch, 0, _PASSED)
+    assert _run_main(grid) == 1
+    assert f"RISE survived {_CELL}" in capsys.readouterr().out
+    _baselined(grid, f"errored {_CELL}\n")
+    assert _run_main(grid) == 1
+    assert f"RISE survived {_CELL}" in capsys.readouterr().out
+
+
+def test_a_baseline_entry_for_a_cell_this_shard_did_not_run_is_not_judged(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2340: only the cells a run ran are judged, so a shard never refuses another shard's debt."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _baselined(grid, "errored src/other.py::elsewhere\n")
+    assert mutate_runner.baseline_gate(grid.dist, {}, {_CELL}) == 0
+
+
+def test_a_baseline_is_read_sorted_and_a_hand_edit_that_breaks_it_is_named(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2340: comments and blanks are skipped, and an unknown verdict or a disorder is a problem."""
+    grid = _declared_grid(tmp_path)
+    assert mutate_runner.read_baseline(grid.dist) == ({}, "")
+    _baselined(grid, "# note\n\nerrored a::x\nsurvived b::y\n")
+    assert mutate_runner.read_baseline(grid.dist) == ({"a::x": "errored", "b::y": "survived"}, "")
+    _baselined(grid, "errored b::y\nerrored a::x\n")
+    assert "out of order" in mutate_runner.read_baseline(grid.dist)[1]
+    _baselined(grid, "ignored a::x\n")
+    assert "not '<verdict> <cell>'" in mutate_runner.read_baseline(grid.dist)[1]
+
+
+_REPORT = """fence shard 1/2: ATTEMPTED 3 def-site(s) in 1 module(s)
+
+KILLED (1) — the suite RAN and a test FAILED:
+    src/m.py::a
+
+SURVIVED (1) — the suite ran and noticed nothing:
+    src/m.py::b
+
+ERRORED (0) — the suite did NOT run, so it noticed nothing:
+
+UNREACHABLE (1) — constructed at IMPORT time:
+    src/m.py::Enum
+
+REGEX (2) — defects the distribution DECLARED:
+    src/m.py::planted -> killed
+    src/m.py::blind -> survived
+"""
+
+
+def test_a_shard_report_gives_the_cells_it_ran_and_the_ones_in_debt() -> None:
+    """W2340: KILLED, SURVIVED, ERRORED and REGEX cells ran, UNREACHABLE ones did not."""
+    ran, debt = mutate_runner.cells_from_log(_REPORT)
+    assert ran == {"src/m.py::a", "src/m.py::b", "src/m.py::planted", "src/m.py::blind"}
+    assert debt == {"src/m.py::b": "survived", "src/m.py::blind": "survived"}
+    assert mutate_runner.cells_from_log("Traceback (most recent call last):\n") == (set(), {})
+
+
+def test_writing_a_baseline_replaces_only_the_cells_the_reports_ran_and_refuses_a_crash(
+    tmp_path: pathlib.Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2340: a report updates its own cells, keeps the others, and an empty report is refused."""
+    grid = _declared_grid(tmp_path)
+    _baselined(grid, "errored src/m.py::a\nerrored src/z.py::kept\n")
+    report = tmp_path / "shard.log"
+    report.write_text(_REPORT, encoding="utf-8")
+    assert mutate_runner.write_baseline(grid.dist, [report]) == 0
+    text = (grid.dist / mutate_runner.BASELINE_FILE).read_text(encoding="utf-8")
+    entries = [line for line in text.splitlines() if not line.startswith("#")]
+    assert entries == [
+        "survived src/m.py::b",
+        "survived src/m.py::blind",
+        "errored src/z.py::kept",
+    ]
+    crashed = tmp_path / "crashed.log"
+    crashed.write_text("Traceback (most recent call last):\n", encoding="utf-8")
+    assert mutate_runner.write_baseline(grid.dist, [crashed]) == 1
+    assert "holds no shard report" in capsys.readouterr().err
+    assert mutate_runner.cli(["r", "--check-baseline", str(grid.dist)]) == 0
+    _baselined(grid, "errored b::y\nerrored a::x\n")
+    assert mutate_runner.cli(["r", "--check-baseline", str(grid.dist)]) == 1
+
+
+def test_a_phase_report_prints_its_cpu_only_when_phases_are_asked_for(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2458: `MUTATE_PHASES` makes a phase print its CPU delta, and unset it prints nothing."""
+    monkeypatch.delenv("MUTATE_PHASES", raising=False)
+    mutate_runner.report_phase("copy", mutate_runner.cpu_mark())
+    assert not capsys.readouterr().out
+    monkeypatch.setenv("MUTATE_PHASES", "1")
+    mutate_runner.report_phase("copy", mutate_runner.cpu_mark() - 1.0)
+    printed = capsys.readouterr().out
+    assert printed.startswith("      phase copy: ")
+    assert printed.endswith("s cpu\n")
+    assert float(printed.split(": ")[1].split("s")[0]) >= 1.0

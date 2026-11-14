@@ -263,8 +263,13 @@ say() { printf '  %s\n' "$*"; }
 # ⚑⚑ AND IT IS NOT `rc == 38 ? ok : red`, DELIBERATELY. Keying on the number would make the next
 # infrastructure code a false red, and this witness cannot enumerate bazel's exit codes any more
 # than it could enumerate a census's state vocabulary. The artifact is the population.
+# ⚑⚑ EVERY `bazel` HERE RUNS WITH FD 9 CLOSED (`9>&-`, W2367). The victim lock is held on fd 9, and
+# the first `bazel` this witness starts may START THE SERVER, a daemon that outlives the witness:
+# it inherited fd 9, held the flock for its whole life, and every later witness on the victim
+# waited on it with no CPU and no output (MEASURED 2026-11-08: pid of a `bazel(mtools)` server in
+# `fuser` on the lock file, two gates refused at the 120-look stall detector).
 _bazel_green() {
-    _bg_out="$(git_scrubbed bazel test "$1" 2>&1)"
+    _bg_out="$(git_scrubbed bazel test "$1" 9>&- 2>&1)"
     _bg_rc=$?
     if [ "$_bg_rc" -eq 0 ]; then
         return 0
@@ -341,7 +346,7 @@ printf '\n# transient domain probe %s\n' "$(date +%s%N)" >> "$victim"
 # arms of this witness reported FAILED against a tree that had passed the same probes by hand
 # minutes earlier. That is this repository's Rule 14 defect (the reporter's status standing in for
 # the subject's) reappearing inside the witness written to enforce the rule it belongs to.
-out="$(git_scrubbed bazel test "$target" 2>&1)"
+out="$(git_scrubbed bazel test "$target" 9>&- 2>&1)"
 # ⚑⚑ AND `printf "$out" | grep -q` IS THE SAME DEFECT ONE PIPE LATER: the capture fixed bazel's
 # SIGPIPE, then re-piped the capture into `grep -q`, so `printf` took the SIGPIPE instead once the
 # output exceeded the pipe buffer — measured as `printf: write error: Broken pipe` and a FAILED

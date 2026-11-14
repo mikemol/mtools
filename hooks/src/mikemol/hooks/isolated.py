@@ -147,17 +147,26 @@ def _leftover(root: Path, path: str, start: str, run: EnvRunner) -> str | None:
     copy is untracked and the diff exits 0, which `refresh_tree` read as "already equal" and
     moved on from, leaving a tree a gate would read as holding a file HEAD no longer has.
 
+    ⚑ THE BYTES ARE HASHED RAW AND A LINK IS NEVER READ THROUGH (github-14's cold BLOCK of
+    42b23583). `hash-object` applies the repository's eol and clean filters unless told not to, so
+    under `text eol=crlf` a leftover with a carriage return hashed equal to the deleted file and
+    was unlinked; and `is_file()` follows a link, so a link to a file with those bytes was
+    deleted. Neither is byte-identical to what the landing removed, so neither is ours to delete.
+
     Returns:
         None when the path is at HEAD or is no file in the working tree (the ordinary judgement
-        applies); "same" when HEAD lacks it and the working file holds the bytes of `start`
-        (nobody edited it: remove it); "differs" when the bytes are anything else.
+        applies); "same" when HEAD lacks it and the working file is a regular file holding the
+        raw bytes of `start` (nobody edited it: remove it); "differs" for anything else, a link
+        included.
 
     """
     if run(["cat-file", "-e", f"HEAD:{path}"], {}, root).returncode == 0:
         return None
+    if (root / path).is_symlink():
+        return "differs"
     if not (root / path).is_file():
         return None
-    mine = run(["hash-object", "--", path], {}, root)
+    mine = run(["hash-object", "--no-filters", "--", path], {}, root)
     then = run(["rev-parse", "--verify", "--quiet", f"{start}:{path}"], {}, root)
     same = mine.returncode == 0 and then.returncode == 0 and mine.stdout == then.stdout
     return "same" if same else "differs"

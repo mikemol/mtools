@@ -17,6 +17,7 @@ refusal. Without the lock the run would have exited at once and never been seen 
 """
 
 import fcntl
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -25,6 +26,11 @@ _SCRIPT = Path(__file__).absolute().parents[2] / "domain_witness.sh"
 _VICTIM = "victim.py"
 _RESIDUE = "x = 1\n# transient domain probe 1\n"
 _REFUSED = 2
+_FAKE_BAZEL = """#!/bin/sh
+ls -l /proc/$$/fd > "$FD_REPORT"
+echo "ERROR: fixture bazel"
+exit 1
+"""
 
 
 def _git(repo: Path, *args: str, text: str | None = None) -> str:
@@ -40,6 +46,39 @@ def _blocked_on(inode: int) -> bool:
         if "->" in line and f":{inode} " in line + " ":
             return True
     return False
+
+
+def test_the_bazel_the_witness_starts_does_not_inherit_the_lock(tmp_path: Path) -> None:
+    """W2367: a daemon that inherits fd 9 holds the victim's lock for life and wedges the next.
+
+    ⚑ THE FIXTURE BAZEL IS A SCRIPT THAT LISTS ITS OWN OPEN FILES and fails; the witness stops at
+    its control run, the first bazel it starts. The report must not name the lock file.
+    """
+    _git(tmp_path, "init", "-q")
+    (tmp_path / _VICTIM).write_text("x = 1\n", encoding="utf-8")
+    for name in (_SCRIPT.name, "git_env.sh"):
+        shutil.copy(_SCRIPT.parent / name, tmp_path / name)
+    _git(tmp_path, "add", _VICTIM)
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    fake = bin_dir / "bazel"
+    fake.write_text(_FAKE_BAZEL, encoding="utf-8")
+    fake.chmod(0o755)
+    report = tmp_path / "fds.txt"
+    env = {**os.environ, "PATH": f"{bin_dir}:{os.environ['PATH']}", "FD_REPORT": str(report)}
+    subprocess.run(
+        ["bash", _SCRIPT.name, "dist", "//dist:t", _VICTIM],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    listing = report.read_text(encoding="utf-8")
+    # ⚑ A POSITIVE CONTROL (github-cb, n1): the fixture bazel really listed its open files, so an
+    # absent lock name is a finding about the lock and not a blank or an unreadable listing.
+    assert " -> " in listing
+    assert "domain-witness" not in listing
 
 
 def test_a_second_witness_waits_on_the_first_and_then_runs(tmp_path: Path) -> None:

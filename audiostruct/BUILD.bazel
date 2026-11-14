@@ -234,7 +234,9 @@ sh_test(
 
 mutants_sharded(
     name = "mutants",
-    shards = 24,
+    # W2340: 24 to 34, as the submit guard prescribed (W1602): //audiostruct:mutants_8 read 167 CPU s of
+    # 300 under the faithful runner's first gate attempt, past half the budget.
+    shards = 34,
     cpu_budget = 300,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],

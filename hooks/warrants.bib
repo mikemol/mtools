@@ -19062,3 +19062,79 @@
             `held` and waits on `release`.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_toy_harness.py -k test_a_stack_built_on_a_held_stacks_bytes_waits_and_lands_in_order},
 }
+
+@misc{hooks-isolated-leftover-leftover-that-only-a-filter-makes-equal-is-not-removed,
+  section = {isolated_commit},
+  title  = {github-14's cold BLOCK of 42b23583: under `text eol=crlf` a CRLF copy is not the old bytes},
+  claim  = {github-14's cold BLOCK of 42b23583: under `text eol=crlf` a CRLF copy is not the old
+            bytes. WITHOUT `--no-filters` the clean filter folds the carriage returns
+            away and the hash matches the deleted LF blob, so the leftover would be
+            unlinked though its bytes are not the landing's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_leftover.py -k test_a_leftover_that_only_a_filter_makes_equal_is_not_removed},
+}
+
+@misc{hooks-isolated-leftover-leftover-that-is-a-link-is-never-removed-even-with-the-old-bytes,
+  section = {isolated_commit},
+  title  = {github-14's cold BLOCK of 42b23583: `is_file()` follows a link, so a link was unlinked},
+  claim  = {github-14's cold BLOCK of 42b23583: `is_file()` follows a link, so a link was unlinked.
+            NO LINK IS CREATED HERE (the no-symlinks ruling): the path holds the old
+            bytes as a plain file and `Path.is_symlink` is made to answer yes for it,
+            which is the only fact the judgement reads. The file must survive and be
+            named, never followed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_isolated_leftover.py -k test_a_leftover_that_is_a_link_is_never_removed_even_with_the_old_bytes},
+}
+
+@misc{hooks-commit-withdraw-withdrawn-in-flight-entry-blocks-until-it-resolves-and-says-withdrawn,
+  section = {commit_withdraw},
+  title  = {W2378: no commit appeared, so the one verdict is WITHDRAWN, after the entry left the map},
+  claim  = {W2378: no commit appeared, so the one verdict is WITHDRAWN, after the entry left the
+            map.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_withdrawn_in_flight_entry_blocks_until_it_resolves_and_says_withdrawn},
+}
+
+@misc{hooks-commit-withdraw-in-flight-entry-that-lands-during-the-withdraw-says-landed-with-the-sha,
+  section = {commit_withdraw},
+  title  = {W2378, three incidents: the gate was past its last boundary, so the verdict names the sha},
+  claim  = {W2378, three incidents: the gate was past its last boundary, so the verdict names the
+            sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_an_in_flight_entry_that_lands_during_the_withdraw_says_landed_with_the_sha},
+}
+
+@misc{hooks-commit-withdraw-queued-entry-or-a-leader-with-followers-is-not-waited-for,
+  section = {commit_withdraw},
+  title  = {A queued entry is ended at once and a leader with followers is refused},
+  claim  = {A queued entry is ended at once and a leader with followers is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_queued_entry_or_a_leader_with_followers_is_not_waited_for},
+}
+
+@misc{hooks-commit-withdraw-landed-withdraw-releases-the-trees-and-prints-one-line-and-a-refusal-does-not,
+  section = {commit_withdraw},
+  title  = {W2378: the entry's pinned trees are released on exit 0 and exit 5, never on a refusal},
+  claim  = {W2378: the entry's pinned trees are released on exit 0 and exit 5, never on a refusal.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_landed_withdraw_releases_the_trees_and_prints_one_line_and_a_refusal_does_not},
+}
+
+@misc{hooks-domain-witness-concurrency-bazel-the-witness-starts-does-not-inherit-the-lock,
+  section = {domain_witness},
+  title  = {W2367: a daemon that inherits fd 9 holds the victim's lock for life and wedges the next},
+  claim  = {W2367: a daemon that inherits fd 9 holds the victim's lock for life and wedges the next.
+            THE FIXTURE BAZEL IS A SCRIPT THAT LISTS ITS OWN OPEN FILES and fails; the
+            witness stops at its control run, the first bazel it starts. The report must
+            not name the lock file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_domain_witness_concurrency.py -k test_the_bazel_the_witness_starts_does_not_inherit_the_lock},
+}
+
+@misc{hooks-commit-withdraw-commit-of-another-submission-is-not-this-one-landing,
+  section = {commit_withdraw},
+  title  = {Only a subject starting with this entry's first waypoint counts},
+  claim  = {Only a subject starting with this entry's first waypoint counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_commit_of_another_submission_is_not_this_one_landing},
+}
+
+@misc{hooks-commit-withdraw-outcome-that-could-not-be-read-is-unknown-with-exit-seven-never-withdrawn,
+  section = {commit_withdraw},
+  title  = {B1 (github-cb): HEAD unreadable, or a log that failed, is UNKNOWN, the cannot-judge exit},
+  claim  = {B1 (github-cb): HEAD unreadable, or a log that failed, is UNKNOWN, the cannot-judge
+            exit.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_an_outcome_that_could_not_be_read_is_unknown_with_exit_seven_never_withdrawn},
+}

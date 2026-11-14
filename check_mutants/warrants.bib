@@ -449,3 +449,163 @@
   claim  = {A pool never hoards: it takes `wanted` labels, lowest first.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_claim_cores_stops_at_the_wanted_count_and_takes_labels_in_order},
 }
+
+@misc{root-mutate-runner-kill-by-a-test-that-also-fails-on-the-clean-module-is-errored,
+  section = {mutate_runner},
+  title  = {W2340: the named failing test is put against the original module; failing there, no kill},
+  claim  = {W2340: the named failing test is put against the original module; failing there, no
+            kill.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_kill_by_a_test_that_also_fails_on_the_clean_module_is_errored},
+}
+
+@misc{root-mutate-runner-kill-by-a-test-that-passes-on-the-clean-module-stays-a-kill,
+  section = {mutate_runner},
+  title  = {W2340: the control is no veto; a test that holds on the original module killed it},
+  claim  = {W2340: the control is no veto; a test that holds on the original module killed it.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_kill_by_a_test_that_passes_on_the_clean_module_stays_a_kill},
+}
+
+@misc{root-mutate-runner-control-is-asked-once-per-failing-test-across-mutants,
+  section = {mutate_runner},
+  title  = {W2340: two mutants killed by one test cost one control run, not two},
+  claim  = {W2340: two mutants killed by one test cost one control run, not two.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_control_is_asked_once_per_failing_test_across_mutants},
+}
+
+@misc{root-mutate-runner-suite-is-launched-without-the-callers-pythonhome,
+  section = {mutate_runner},
+  title  = {W2340: bazel's launcher exports PYTHONHOME; a host python3 a suite starts dies under it},
+  claim  = {W2340: bazel's launcher exports PYTHONHOME; a host python3 a suite starts dies under it.
+            fence's payload is the host interpreter (3.14) and exited 1 at startup under
+            the hermetic 3.13 home, so a cap test never allocated and its control read
+            as a failure of the clean module.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_suite_is_launched_without_the_callers_pythonhome},
+}
+
+@misc{root-mutate-runner-parametrized-id-with-spaces-is-run-whole-by-the-control,
+  section = {mutate_runner},
+  title  = {W2340: the id ends at ' - ', not at its first space; the whole id reaches pytest},
+  claim  = {W2340: the id ends at ' - ', not at its first space; the whole id reaches pytest.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_parametrized_id_with_spaces_is_run_whole_by_the_control},
+}
+
+@misc{root-mutate-runner-relative-home-venv-runs-through-a-private-venv-whose-children-find-the-packages,
+  section = {mutate_runner},
+  title  = {W2340: a child started from another directory with NO environment still imports the venv},
+  claim  = {W2340: a child started from another directory with NO environment still imports the
+            venv.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_relative_home_venv_runs_through_a_private_venv_whose_children_find_the_packages},
+}
+
+@misc{root-mutate-runner-absolute-home-or-no-config-keeps-the-interpreter-as-given,
+  section = {mutate_runner},
+  title  = {W2340: only a relative home needs the private venv; the rest run as they always did},
+  claim  = {W2340: only a relative home needs the private venv; the rest run as they always did.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_absolute_home_or_no_config_keeps_the_interpreter_as_given},
+}
+
+@misc{root-mutate-runner-env-value-naming-a-file-under-the-base-is-made-absolute-and-nothing-else-is,
+  section = {mutate_runner},
+  title  = {W2340: a relative path to a staged file points at the real file; prose and gaps stay},
+  claim  = {W2340: a relative path to a staged file points at the real file; prose and gaps stay.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_env_value_naming_a_file_under_the_base_is_made_absolute_and_nothing_else_is},
+}
+
+@misc{root-mutate-runner-control-that-collects-no-test-cannot-vouch-so-the-cell-is-errored,
+  section = {mutate_runner},
+  title  = {B2 (github-cb): exit code 5 proves nothing about the baseline, so no kill is vouched for},
+  claim  = {B2 (github-cb): exit code 5 proves nothing about the baseline, so no kill is vouched
+            for.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_control_that_collects_no_test_cannot_vouch_so_the_cell_is_errored},
+}
+
+@misc{root-mutate-runner-control-that-times-out-errors-the-cell-and-is-asked-again-for-the-next-mutant,
+  section = {mutate_runner},
+  title  = {B2: a control that cannot run is not a pass and is not cached, so each mutant asks again},
+  claim  = {B2: a control that cannot run is not a pass and is not cached, so each mutant asks
+            again.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_control_that_times_out_errors_the_cell_and_is_asked_again_for_the_next_mutant},
+}
+
+@misc{root-mutate-runner-siblings-are-copied-once-per-process-and-hard-linked-into-each-tree,
+  section = {mutate_runner},
+  title  = {B3 (github-cb): two mutants cost one copy and share its bytes, not two copies},
+  claim  = {B3 (github-cb): two mutants cost one copy and share its bytes, not two copies.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_siblings_are_copied_once_per_process_and_hard_linked_into_each_tree},
+}
+
+@misc{root-mutate-runner-link-that-cannot-be-made-falls-back-to-a-copy-and-no-symlink-is-made,
+  section = {mutate_runner},
+  title  = {B3: os.link refused (another device) leaves a real copy, and no symlink is ever made},
+  claim  = {B3: os.link refused (another device) leaves a real copy, and no symlink is ever made.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_link_that_cannot_be_made_falls_back_to_a_copy_and_no_symlink_is_made},
+}
+
+@misc{root-mutate-runner-outside-bazel-nothing-is-mirrored,
+  section = {mutate_runner},
+  title  = {The parent of a dist in a whole checkout already holds its siblings, so none are copied},
+  claim  = {The parent of a dist in a whole checkout already holds its siblings, so none are copied.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_outside_bazel_nothing_is_mirrored},
+}
+
+@misc{root-mutate-runner-private-interpreter-is-built-before-the-first-worker-runs,
+  section = {mutate_runner},
+  title  = {The copy of the interpreter is made on one thread, so no fork can hold it open (W2340)},
+  claim  = {The copy of the interpreter is made on one thread, so no fork can hold it open (W2340).
+            THE ORDER IS THE WITNESS: a worker that built it lazily would record `run`
+            first, and two workers forking around the copy gave `Text file busy` on
+            //bibparse:mutants.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_private_interpreter_is_built_before_the_first_worker_runs},
+}
+
+@misc{root-mutate-runner-baselined-survivor-passes-and-the-same-cell-killed-is-a-stale-entry,
+  section = {mutate_runner},
+  title  = {W2340: debt on record passes, and a recorded cell that is now killed fails as STALE},
+  claim  = {W2340: debt on record passes, and a recorded cell that is now killed fails as STALE.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_baselined_survivor_passes_and_the_same_cell_killed_is_a_stale_entry},
+}
+
+@misc{root-mutate-runner-survivor-the-baseline-does-not-list-is-a-rise-and-fails,
+  section = {mutate_runner},
+  title  = {W2340: a cell in debt that the baseline lacks, or lists under another verdict, is a RISE},
+  claim  = {W2340: a cell in debt that the baseline lacks, or lists under another verdict, is a
+            RISE.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_survivor_the_baseline_does_not_list_is_a_rise_and_fails},
+}
+
+@misc{root-mutate-runner-baseline-entry-for-a-cell-this-shard-did-not-run-is-not-judged,
+  section = {mutate_runner},
+  title  = {W2340: only the cells a run ran are judged, so a shard never refuses another shard's debt},
+  claim  = {W2340: only the cells a run ran are judged, so a shard never refuses another shard's
+            debt.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_baseline_entry_for_a_cell_this_shard_did_not_run_is_not_judged},
+}
+
+@misc{root-mutate-runner-baseline-is-read-sorted-and-a-hand-edit-that-breaks-it-is-named,
+  section = {mutate_runner},
+  title  = {W2340: comments and blanks are skipped, and an unknown verdict or a disorder is a problem},
+  claim  = {W2340: comments and blanks are skipped, and an unknown verdict or a disorder is a
+            problem.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_baseline_is_read_sorted_and_a_hand_edit_that_breaks_it_is_named},
+}
+
+@misc{root-mutate-runner-shard-report-gives-the-cells-it-ran-and-the-ones-in-debt,
+  section = {mutate_runner},
+  title  = {W2340: KILLED, SURVIVED, ERRORED and REGEX cells ran, UNREACHABLE ones did not},
+  claim  = {W2340: KILLED, SURVIVED, ERRORED and REGEX cells ran, UNREACHABLE ones did not.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_shard_report_gives_the_cells_it_ran_and_the_ones_in_debt},
+}
+
+@misc{root-mutate-runner-writing-a-baseline-replaces-only-the-cells-the-reports-ran-and-refuses-a-crash,
+  section = {mutate_runner},
+  title  = {W2340: a report updates its own cells, keeps the others, and an empty report is refused},
+  claim  = {W2340: a report updates its own cells, keeps the others, and an empty report is refused.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_writing_a_baseline_replaces_only_the_cells_the_reports_ran_and_refuses_a_crash},
+}
+
+@misc{root-mutate-runner-phase-report-prints-its-cpu-only-when-phases-are-asked-for,
+  section = {mutate_runner},
+  title  = {W2458: `MUTATE_PHASES` makes a phase print its CPU delta, and unset it prints nothing},
+  claim  = {W2458: `MUTATE_PHASES` makes a phase print its CPU delta, and unset it prints nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_phase_report_prints_its_cpu_only_when_phases_are_asked_for},
+}

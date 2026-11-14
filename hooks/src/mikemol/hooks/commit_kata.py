@@ -54,9 +54,10 @@ from mikemol.hooks.commit_span import emit as _emit_spans
 from mikemol.hooks.commit_span import emit_stack as _emit_stack
 from mikemol.hooks.commit_turn import wait_turn as _wait_turn
 from mikemol.hooks.commit_verdict import emit as _emit_verdict
+from mikemol.hooks.commit_withdraw import EXIT_LANDED, Witness
 from mikemol.hooks.commit_withdraw import clear_marker as _clear_marker
 from mikemol.hooks.commit_withdraw import marker_path as _marker_path
-from mikemol.hooks.commit_withdraw import withdraw as _withdraw
+from mikemol.hooks.commit_withdraw import withdraw_settled as _withdraw_settled
 from mikemol.hooks.commitprogress import Probes as _Probes
 from mikemol.hooks.commitprogress import gate_roots as _gate_roots
 from mikemol.hooks.commitprogress import gate_servers as _gate_servers
@@ -1126,6 +1127,28 @@ def in_gate(args: Sequence[str], env: Mapping[str, str], out: TextIO) -> int:
     return 0
 
 
+def _witness(root: Path) -> Witness:
+    """Read HEAD and the commits since a sha from the repository, for a withdraw (W2378).
+
+    Returns:
+        the witness a withdraw uses to say whether the entry landed.
+
+    """
+
+    def head() -> str | None:
+        done = run_git_in(["rev-parse", "HEAD"], {}, root)
+        return done.stdout.strip() if done.returncode == 0 else None
+
+    def since(before: str) -> list[tuple[str, str]] | None:
+        done = run_git_in(["log", "--format=%H %s", f"{before}..HEAD"], {}, root)
+        if done.returncode != 0:
+            return None
+        parts = (line.partition(" ") for line in done.stdout.splitlines())
+        return [(sha, subject) for sha, _, subject in parts]
+
+    return Witness(root.name, head, since)
+
+
 def withdraw_cmd(args: Sequence[str], env: Mapping[str, str], out: TextIO) -> int:
     """Take a queued submission out of the queue and release the trees it pinned (W1703).
 
@@ -1148,9 +1171,9 @@ def withdraw_cmd(args: Sequence[str], env: Mapping[str, str], out: TextIO) -> in
     if ledger is None:
         sys.stderr.write(f"mikemol-commit: {named[0]}: git cannot name its directory\n")
         return EXIT_NOT_COMMITTED
-    code, text = _withdraw(ledger / "commit.counts", key)
+    code, text = _withdraw_settled(ledger / "commit.counts", key, _witness(root))
     out.write(text + "\n")
-    if code == 0:
+    if code in {0, EXIT_LANDED}:
         release_trees(root, ledger, key, run_git_in)
     return code
 

@@ -40,6 +40,11 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, **kw
     """
     if shards < 1:
         fail("mutants_sharded: shards must be at least 1, got %d" % shards)
+
+    # ⚑ THE DISTRIBUTION'S RECORDED DEBT IS STAGED WITH EVERY SHARD (W2340, github-cb 2026-11-13): a
+    # dist with a mutants-baseline.txt has the runner judge its ERRORED and SURVIVED cells against
+    # it (a rise or a stale entry fails), and a dist without one is judged as before.
+    kwargs["data"] = list(kwargs.get("data", [])) + native.glob(["mutants-baseline.txt"], allow_empty = True)
     own = dict(kwargs.pop("env", {}))
     for key in ("MUTATE_SHARD", "MUTATE_JOBS"):
         if key in own:

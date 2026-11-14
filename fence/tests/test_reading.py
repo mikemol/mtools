@@ -106,6 +106,9 @@ def test_a_failed_query_or_an_empty_or_odd_answer_is_blind() -> None:
         None,
         "text",
         {"status": "error", "data": {}},
+        # ⚑ AN ERROR ANSWER THAT CARRIES A READABLE VECTOR: only the status check refuses it, so
+        # `error-answer-read` (the check dropped) survives the cases above (W2340).
+        {"status": "error", "data": {"result": [{"value": [1.0, "0.25"]}]}},
         {"status": "success", "data": {"result": []}},
         {"status": "success", "data": {"result": [{"value": [1.0]}]}},
         {"status": "success", "data": {"result": [{"value": [1.0, "NaN"]}]}},

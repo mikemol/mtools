@@ -125,6 +125,207 @@ _TEST_ENV = {
     "OPA_BIN": "$(location @opa//file)",
 }
 
+# ⚑⚑⚑ THE DATA EVERY TEST TARGET STAGES, DECLARED ONCE (W2340). The mutation shards ran the whole
+# suite in a temp copy that held only `src/**/*.py` and `tests/**/*.py`, so a test that EXECUTES a
+# staged file (`adopt/tools-hook`, the launchers, the gate) failed on the UNMUTATED module and
+# 'killed' every mutant at its position in the file order: measured by the runner's control as 47
+# of 47 cells of four sampled shards. The shards now stage what the test targets stage.
+_SUITE_DATA = [
+    "pyproject.toml",
+    "requirements.txt",
+    # ⚑⚑⚑ AND THE RATCHET BASELINE, WHICH IS THE SAME LESSON A THIRD TIME IN THIS LIST.
+    # An arm asserting that every baseline key names a rule the checker still recognises
+    # read `ratchet-preview.txt` and found nothing in the sandbox: it is a data dependency
+    # of the `ratchet` target, not of this one. Its positive control refused to pass
+    # vacuously — a missing baseline reported as "no keys" would have read as "no bad
+    # keys" — so the arm failed honestly rather than going quiet.
+    # ⚑⚑ THE COMMENT BELOW ALREADY SAYS A RECORDED LESSON IS NOT AN APPLIED ONE, about
+    # `_GATE`, in this same data list. This is the next arm reading a path nothing staged.
+    "ratchet-preview.txt",
+    # ⚑⚑⚑ THE RATCHET CLI, AND THIS IS THE FIRST ENTRY IN THIS LIST ADDED *BEFORE* THE
+    # HERMETIC RUN CAUGHT IT RATHER THAN AFTER. `test_a_key_absent_from_the_baseline_is_
+    # refused_when_its_finding_returns` stopped describing the refusal and started RUNNING
+    # it — planting a finding in a copy of this distribution and requiring the ratchet to
+    # exit nonzero and name it — which makes the ratchet a real input to this target.
+    # ⚑⚑ THE FIRST DRAFT OF THAT ARM REACHED FOR `ratchet/.venv/bin/mikemol-ratchet`, a
+    # HOST path present on one workstation and in no sandbox — ⟐UNDECLARED-HOST-INPUTS
+    # written fresh into a new arm while its symbol sits in the poll. Caught by reading
+    # this list's own four warnings, which is the first time they were consulted while
+    # writing rather than quoted afterwards.
+    # ⚑ `//ratchet:ratchet_cli` WAS ALREADY IN THE GRAPH for `//hooks:ratchet` below; it
+    # needed naming here, not building. An instrument staged for a sibling target is not
+    # an input to this one.
+    "//ratchet:ratchet_cli",
+    # ⚑⚑⚑ THE LAUNCHERS, AND THIS IS THE SAME LESSON A FOURTH TIME IN THIS LIST. An arm
+    # asserting that `hooks/bin/mikemol-hook-*` carries both a refusal AND a bootstrap
+    # exemption passed locally and failed hermetically with `FileNotFoundError` — the
+    # sandbox stages only declared inputs, and a launcher tracked in the repository is
+    # still not an input to this target until it is named here.
+    # ⚑⚑ THE LIST ITSELF SAYS "A RECORDED LESSON IS NOT AN APPLIED ONE" TWICE ALREADY,
+    # about `ratchet-preview.txt` and about `_GATE`. Writing a new arm that reads a new
+    # path did not prompt me to consult either. The instrument that caught it was the
+    # hermetic run, not the reasoning sitting in the file being edited.
+    "bin/mikemol-hook-structural-query",
+    "bin/mikemol-hook-no-chaining",
+    "bin/mikemol-hook-no-verify",
+    # ⚑ THE FIFTH TIME, AND THIS ONE PASSED PLAIN PYTEST: `test_bin_launchers_argv` (W635)
+    # EXECUTES every launcher that forwards its arguments, and the four not named above
+    # failed hermetically with `FileNotFoundError` (12 of its 21 cases) while the same file
+    # passed from the working tree. The instrument that caught it was the commit gate.
+    "bin/mikemol-hook-inbound-asks",
+    "bin/mikemol-hook-nemik-check",
+    "bin/mikemol-hook-pycheck",
+    "bin/mikemol-hook-shellcheck",
+    # W824: the compound kata, READ and EXECUTED by test_hooks_preflight.
+    "bin/mikemol-hooks-preflight",
+    # W796: the stable launcher for `mikemol-commit`, EXECUTED by test_commit_launcher.
+    "bin/mikemol-commit",
+    # W1620: nemik's shared queue fixture, vendored and pinned by blob hash, READ by
+    # test_queue_fixture_pin and by each reader's test against it (W1618).
+    "tests/fixtures/queue/alpha/paths-forward.json",
+    "tests/fixtures/queue/alpha/paths-forward.ledger",
+    # ⚑ W1032: THE OTHER EIGHT LAUNCHERS THAT RUN THE bazel-bin VENV, READ by
+    # test_bin_launchers_argv's glob so none can escape the no-bytecode rule. Named one by
+    # one (a gate never globs its inputs); the test's floor counts them.
+    "bin/mikemol-hook-after-compaction",
+    "bin/mikemol-hook-precompact",
+    "bin/mikemol-hook-build-failure",
+    "bin/mikemol-hook-pycheck-advise",
+    "bin/mikemol-hook-read-guard",
+    "bin/mikemol-hook-tick-gate",
+    "bin/mikemol-hook-tick-release",
+    "bin/mikemol-hook-tick-stop",
+    "bin/mikemol-hook-work-claims",
+    # ⚑ W238: the standing launcher and its policy, EXECUTED by test_standing_facts with
+    # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
+    "bin/mikemol-hook-standing",
+    "policy/standing.rego",
+    # W1192: the privacy audit's judge, READ by opa in test_privacy_audit.
+    "policy/publish_privacy.rego",
+    # W513: the rule-8 Stop launcher, EXECUTED by test_standing_stop_launcher, and the
+    # transcript reader it runs (as a subprocess on PYTHONPATH, never imported here).
+    "bin/mikemol-hook-standing-stop",
+    "//transcriptstruct",
+    "@opa//file",
+    # ⚑ THE CONSUMER LAUNCHER, EXECUTED rather than read by `test_adopt_launcher.py` —
+    # the same lesson as the three above: tracked is not staged until named here.
+    "adopt/tools-hook",
+    # ⚑⚑⚑ THE GATE ITSELF IS DATA, AND ITS ABSENCE MADE 56 ARMS FAIL HERMETICALLY WHILE
+    # THE PREFLIGHT READ THEM ALL GREEN. `_GATE` is read by 22 call sites here; in the
+    # sandbox the path did not exist, so every one raised FileNotFoundError. The preflight
+    # runs from the working tree where `.githooks/pre-commit` is simply there.
+    # ⚑⚑ THE LESSON WAS ALREADY IN THIS FILE. The comment below records that a
+    # `.githooks/` read "taught this here two ticks ago, where a test passed locally and
+    # failed hermetically" — and the fix that lesson describes was never applied to this
+    # target. A RECORDED LESSON IS NOT AN APPLIED ONE: the reasoning existed, in the same
+    # data list, and nothing consulted it when the next arm reading that path was written.
+    # ⚑ NAMED BY LABEL, not by glob. The root package exports it (`//:` at BUILD.bazel:62)
+    # so the dependency is declared where a reader looking for it will find it, and a glob
+    # would stage whatever else lands in `.githooks/` without anyone deciding to.
+    "//:.githooks/pre-commit",
+    # ⚑⚑ AND THE OTHER EIGHT, DERIVED FROM THE FAILURES RATHER THAN GUESSED AT. Staging
+    # the gate took 56 hermetic failures to 39; the remainder named nine distinct paths,
+    # and this list is that enumeration. A hand-written guess at "what a test module
+    # probably reads" is the reified population this repository has measured nine times.
+    # ⚑ EVERY ONE IS A SUBJECT THIS SUITE ASSERTS ABOUT — the poll, the preflight that
+    # predicts the gate, the refusal recorder, both commit hooks, the shell gate, the
+    # warrant ledger, the census brief, and the settings that arm the hooks. They are
+    # data because the arms read them, not because they happen to be nearby.
+    # ⚑⚑⚑ THE ROOT SCRIPTS, GLOBBED FROM THE PACKAGE THAT OWNS THEM. This was NINE
+    # transcribed labels and the tree holds sixteen scripts, so seven were unreachable.
+    # The arm `test_no_gate_asserts_a_figure_it_cannot_reach` globs `*.sh` and counted
+    # eleven (nine plus the two hooks), which is how the gap was measured, not noticed.
+    # ⚑ THE FIGURE IN AN EARLIER DRAFT OF THIS COMMENT WAS TWELVE, taken from `grep -o`,
+    # which counts MATCHES — three more labels exist in this file as `srcs` of separate
+    # targets and are correctly individual. Reading the lines gives nine. A count
+    # characterised from an instrument's output rather than its subject, written into the
+    # comment repairing exactly that defect.
+    # ⚑⚑ AN ARM WHOSE POPULATION IS A GLOB, FED BY A DATA LIST THAT IS A TRANSCRIPTION,
+    # IS GREEN OVER WHATEVER THE LIST HAPPENED TO NAME. The arm was right and its
+    # environment was short — the same shape as every mis-named population this suite
+    # exists to refuse, with the truncation living in the build file rather than the test.
+    # ⚑ `//:all_root_scripts` is a filegroup so the population is declared ONCE, in the
+    # package that owns those files, and every consumer inherits additions for free.
+    "//:all_root_scripts",
+    # ⚑ THE PAIRING CHECK IS STAGED BECAUSE A WITNESS RUNS IT — the gate's own call, over
+    # this distribution's staged ledger and suite, with one orphan planted in a copy.
+    "//:count_test_functions.py",
+    # ⚑⚑ THE LIVE ROUTING TABLE, THE SAME LESSON A FIFTH TIME IN THIS LIST. An arm
+    # asserting the parts of this repo's own claim set read `{}` hermetically: the table
+    # was not an input, and its non-empty control refused to pass vacuously (2026-09-22).
+    "//:.claude/skills/struct-tools/SKILL.md",
+    "//:.githooks/commit-msg",
+    # W661, W662: `.githooks/post-commit` EXECUTED by test_post_commit_hook in a decoy repo.
+    "//:.githooks/post-commit",
+    # W588: `.githooks/pre-push` EXECUTED by test_githook_pre_push against a stand-in launcher.
+    "//:.githooks/pre-push",
+    "warrants.bib",
+    "//:.claude/settings.json",
+    "//:findings/CENSUS-BRIEF.md",
+    # ⚑ THE BUILD FILES ARE DATA BECAUSE TWO WITNESSES READ THEM — the one asserting
+    # every py_test names the pytest entry point, and the one asserting the gate's own
+    # shell is checked. They passed before only by resolving OUT of the sandbox into the
+    # live tree; with that escape closed they must be staged, which is the honest form.
+    # ⚑ `.bazelrc` IS DATA because a witness asserts the hermetic-sandbox flags are
+    # unconditional. It reads the file rather than trusting the flags to be in effect,
+    # since they are NOT in the action key — an action cannot observe its own sandbox
+    # regime, so the config text is the only evidence available to it.
+    # ⚑⚑ THE CITATION GATE IS STAGED BECAUSE A WITNESS RUNS IT. It is a repo-root script
+    # and the sandbox holds only declared inputs — the same lesson a `.githooks/` read
+    # taught here two ticks ago, where a test passed locally and failed hermetically. Its
+    # CORPUS IS NOT STAGED, DELIBERATELY: the gate takes it as an argument, so the
+    # witness supplies a fixture it controls. Staging the real rules document would make
+    # every arm depend on a file that changes every tick — an arm asserting "Rule 99 is
+    # absent" would break the day someone writes Rule 99.
+    # ⚑ THE ORPHAN GATE IS STAGED AND ITS ARMS ARE HERMETIC, unlike the citation gate's.
+    # It is pure shell over a filesystem the witness builds, with no reader to route
+    # through — so there is no venv to reach for and no reason to skip.
+    # ⚑ THE FRESHNESS GATE IS STAGED AS A SOURCE THE WITNESS REWRITES, not run in place:
+    # its arms substitute a fixture corpus for the real one, so the sandbox never needs
+    # the 1,500-line rules document. `kubectl` and `curl` are absent there, which is
+    # exactly the UNVERIFIABLE path the gate declares — the arms exercise the corpus
+    # branch, which is the half that does not need a cluster.
+    # ⚑ THE WITNESS IS STAGED FOR ITS PRE-BAZEL ARMS ONLY. Its later arms invoke bazel and
+    # cannot run here; what the sandbox exercises is argument validation and the probe-kind
+    # guard, both of which refuse before the first side effect and need only the script.
+    "//:.bazelrc",
+    # ⚑⚑⚑ AND THIS LIST WENT STALE EXACTLY AS THE COMMENT BELOW PREDICTS OF LISTS.
+    # `fence` landed at cc3d301 and was named here nowhere, so the arm asserting every
+    # BUILD file wires `pytest_main.py` iterated a population the SANDBOX had truncated
+    # to three — passing over a set that omitted the newest distribution, which is the
+    # `confidently over a population its ENVIRONMENT truncated` defect recorded below,
+    # reproduced in the data list that records it.
+    # ⚑⚑ THE `pyproject.toml` FILES ARE STAGED BECAUSE THE POPULATION IS NOW DERIVED FROM
+    # THEM. `_distributions()` globs `*/pyproject.toml`, matching `blockers.sh`'s
+    # structural criterion — so in the sandbox that glob sees only what is declared here,
+    # and an undeclared distribution is invisible rather than merely unchecked.
+    # ⚑ MEASURED: with only hooks' own pyproject staged, the derivation returned
+    # `['hooks']` and the arm's POSITIVE CONTROL refused. Had that control been `>= 1`,
+    # or absent, the arm would have passed green over a one-distribution view of a
+    # four-distribution repository.
+    # ⚑ STILL A LIST, NOT A GLOB, because bazel labels cannot glob across packages — the
+    # residue is stated rather than hidden, and the arm's control is what catches it.
+    "//:BUILD.bazel",
+    "//fence:BUILD.bazel",
+    "//fence:pyproject.toml",
+    "//hooks:BUILD.bazel",
+    "//mdstruct:BUILD.bazel",
+    "//mdstruct:pyproject.toml",
+    "//ratchet:BUILD.bazel",
+    "//ratchet:pyproject.toml",
+    "@mikemol_check_ruff//:bin",
+    # ⚑⚑⚑ THE SIBLING TEST MODULES, because three arms sweep the whole SUITE rather
+    # than this file: the warrant ledger's 1:1 against every test NAME, the
+    # module-consumer check, and the harness-wide figure arm. In the sandbox they saw
+    # only this module and reported 130 warrant selectors as naming no test.
+    # ⚑⚑ THE ARMS WERE RIGHT AND THE POPULATION WAS SHORT — a checker reporting
+    # confidently over a population its ENVIRONMENT truncated. The preflight could not
+    # see it because the working tree holds every file; only the sandbox is short.
+    # ⚑ GLOBBED, because the population is *every test module in this distribution*
+    # and a list would go stale the next time one is added — the reified population
+    # this suite exists to refuse.
+] + list(GRAPH["tests"])
+
 # ⚑⚑⚑ ONE TARGET PER TEST MODULE, AND EACH IS A WITNESS. The thesis in MODULE.bazel is that a
 # pytest case and a paperkit witness are the same object; this is where that stops being prose. A
 # failing module names itself rather than collapsing into one red suite target.
@@ -144,201 +345,7 @@ _TEST_ENV = {
         # ⚑⚑ ruff IS STAGED AND NAMED, because `test_bar_fires` runs the checker to prove each
         # rule fires. Reading `.venv/bin/ruff` made those arms pass only where a developer venv
         # existed — measured from a fresh clone, that target was the one failure in 25.
-        data = _TEST_DATA.get(src, []) + [
-            "pyproject.toml",
-            "requirements.txt",
-            # ⚑⚑⚑ AND THE RATCHET BASELINE, WHICH IS THE SAME LESSON A THIRD TIME IN THIS LIST.
-            # An arm asserting that every baseline key names a rule the checker still recognises
-            # read `ratchet-preview.txt` and found nothing in the sandbox: it is a data dependency
-            # of the `ratchet` target, not of this one. Its positive control refused to pass
-            # vacuously — a missing baseline reported as "no keys" would have read as "no bad
-            # keys" — so the arm failed honestly rather than going quiet.
-            # ⚑⚑ THE COMMENT BELOW ALREADY SAYS A RECORDED LESSON IS NOT AN APPLIED ONE, about
-            # `_GATE`, in this same data list. This is the next arm reading a path nothing staged.
-            "ratchet-preview.txt",
-            # ⚑⚑⚑ THE RATCHET CLI, AND THIS IS THE FIRST ENTRY IN THIS LIST ADDED *BEFORE* THE
-            # HERMETIC RUN CAUGHT IT RATHER THAN AFTER. `test_a_key_absent_from_the_baseline_is_
-            # refused_when_its_finding_returns` stopped describing the refusal and started RUNNING
-            # it — planting a finding in a copy of this distribution and requiring the ratchet to
-            # exit nonzero and name it — which makes the ratchet a real input to this target.
-            # ⚑⚑ THE FIRST DRAFT OF THAT ARM REACHED FOR `ratchet/.venv/bin/mikemol-ratchet`, a
-            # HOST path present on one workstation and in no sandbox — ⟐UNDECLARED-HOST-INPUTS
-            # written fresh into a new arm while its symbol sits in the poll. Caught by reading
-            # this list's own four warnings, which is the first time they were consulted while
-            # writing rather than quoted afterwards.
-            # ⚑ `//ratchet:ratchet_cli` WAS ALREADY IN THE GRAPH for `//hooks:ratchet` below; it
-            # needed naming here, not building. An instrument staged for a sibling target is not
-            # an input to this one.
-            "//ratchet:ratchet_cli",
-            # ⚑⚑⚑ THE LAUNCHERS, AND THIS IS THE SAME LESSON A FOURTH TIME IN THIS LIST. An arm
-            # asserting that `hooks/bin/mikemol-hook-*` carries both a refusal AND a bootstrap
-            # exemption passed locally and failed hermetically with `FileNotFoundError` — the
-            # sandbox stages only declared inputs, and a launcher tracked in the repository is
-            # still not an input to this target until it is named here.
-            # ⚑⚑ THE LIST ITSELF SAYS "A RECORDED LESSON IS NOT AN APPLIED ONE" TWICE ALREADY,
-            # about `ratchet-preview.txt` and about `_GATE`. Writing a new arm that reads a new
-            # path did not prompt me to consult either. The instrument that caught it was the
-            # hermetic run, not the reasoning sitting in the file being edited.
-            "bin/mikemol-hook-structural-query",
-            "bin/mikemol-hook-no-chaining",
-            "bin/mikemol-hook-no-verify",
-            # ⚑ THE FIFTH TIME, AND THIS ONE PASSED PLAIN PYTEST: `test_bin_launchers_argv` (W635)
-            # EXECUTES every launcher that forwards its arguments, and the four not named above
-            # failed hermetically with `FileNotFoundError` (12 of its 21 cases) while the same file
-            # passed from the working tree. The instrument that caught it was the commit gate.
-            "bin/mikemol-hook-inbound-asks",
-            "bin/mikemol-hook-nemik-check",
-            "bin/mikemol-hook-pycheck",
-            "bin/mikemol-hook-shellcheck",
-            # W824: the compound kata, READ and EXECUTED by test_hooks_preflight.
-            "bin/mikemol-hooks-preflight",
-            # W796: the stable launcher for `mikemol-commit`, EXECUTED by test_commit_launcher.
-            "bin/mikemol-commit",
-            # W1620: nemik's shared queue fixture, vendored and pinned by blob hash, READ by
-            # test_queue_fixture_pin and by each reader's test against it (W1618).
-            "tests/fixtures/queue/alpha/paths-forward.json",
-            "tests/fixtures/queue/alpha/paths-forward.ledger",
-            # ⚑ W1032: THE OTHER EIGHT LAUNCHERS THAT RUN THE bazel-bin VENV, READ by
-            # test_bin_launchers_argv's glob so none can escape the no-bytecode rule. Named one by
-            # one (a gate never globs its inputs); the test's floor counts them.
-            "bin/mikemol-hook-after-compaction",
-            "bin/mikemol-hook-precompact",
-            "bin/mikemol-hook-build-failure",
-            "bin/mikemol-hook-pycheck-advise",
-            "bin/mikemol-hook-read-guard",
-            "bin/mikemol-hook-tick-gate",
-            "bin/mikemol-hook-tick-release",
-            "bin/mikemol-hook-tick-stop",
-            "bin/mikemol-hook-work-claims",
-            # ⚑ W238: the standing launcher and its policy, EXECUTED by test_standing_facts with
-            # the pinned opa (OPA_BIN below), so a gathered fact is proven to reach the policy.
-            "bin/mikemol-hook-standing",
-            "policy/standing.rego",
-            # W1192: the privacy audit's judge, READ by opa in test_privacy_audit.
-            "policy/publish_privacy.rego",
-            # W513: the rule-8 Stop launcher, EXECUTED by test_standing_stop_launcher, and the
-            # transcript reader it runs (as a subprocess on PYTHONPATH, never imported here).
-            "bin/mikemol-hook-standing-stop",
-            "//transcriptstruct",
-            "@opa//file",
-            # ⚑ THE CONSUMER LAUNCHER, EXECUTED rather than read by `test_adopt_launcher.py` —
-            # the same lesson as the three above: tracked is not staged until named here.
-            "adopt/tools-hook",
-            # ⚑⚑⚑ THE GATE ITSELF IS DATA, AND ITS ABSENCE MADE 56 ARMS FAIL HERMETICALLY WHILE
-            # THE PREFLIGHT READ THEM ALL GREEN. `_GATE` is read by 22 call sites here; in the
-            # sandbox the path did not exist, so every one raised FileNotFoundError. The preflight
-            # runs from the working tree where `.githooks/pre-commit` is simply there.
-            # ⚑⚑ THE LESSON WAS ALREADY IN THIS FILE. The comment below records that a
-            # `.githooks/` read "taught this here two ticks ago, where a test passed locally and
-            # failed hermetically" — and the fix that lesson describes was never applied to this
-            # target. A RECORDED LESSON IS NOT AN APPLIED ONE: the reasoning existed, in the same
-            # data list, and nothing consulted it when the next arm reading that path was written.
-            # ⚑ NAMED BY LABEL, not by glob. The root package exports it (`//:` at BUILD.bazel:62)
-            # so the dependency is declared where a reader looking for it will find it, and a glob
-            # would stage whatever else lands in `.githooks/` without anyone deciding to.
-            "//:.githooks/pre-commit",
-            # ⚑⚑ AND THE OTHER EIGHT, DERIVED FROM THE FAILURES RATHER THAN GUESSED AT. Staging
-            # the gate took 56 hermetic failures to 39; the remainder named nine distinct paths,
-            # and this list is that enumeration. A hand-written guess at "what a test module
-            # probably reads" is the reified population this repository has measured nine times.
-            # ⚑ EVERY ONE IS A SUBJECT THIS SUITE ASSERTS ABOUT — the poll, the preflight that
-            # predicts the gate, the refusal recorder, both commit hooks, the shell gate, the
-            # warrant ledger, the census brief, and the settings that arm the hooks. They are
-            # data because the arms read them, not because they happen to be nearby.
-            # ⚑⚑⚑ THE ROOT SCRIPTS, GLOBBED FROM THE PACKAGE THAT OWNS THEM. This was NINE
-            # transcribed labels and the tree holds sixteen scripts, so seven were unreachable.
-            # The arm `test_no_gate_asserts_a_figure_it_cannot_reach` globs `*.sh` and counted
-            # eleven (nine plus the two hooks), which is how the gap was measured, not noticed.
-            # ⚑ THE FIGURE IN AN EARLIER DRAFT OF THIS COMMENT WAS TWELVE, taken from `grep -o`,
-            # which counts MATCHES — three more labels exist in this file as `srcs` of separate
-            # targets and are correctly individual. Reading the lines gives nine. A count
-            # characterised from an instrument's output rather than its subject, written into the
-            # comment repairing exactly that defect.
-            # ⚑⚑ AN ARM WHOSE POPULATION IS A GLOB, FED BY A DATA LIST THAT IS A TRANSCRIPTION,
-            # IS GREEN OVER WHATEVER THE LIST HAPPENED TO NAME. The arm was right and its
-            # environment was short — the same shape as every mis-named population this suite
-            # exists to refuse, with the truncation living in the build file rather than the test.
-            # ⚑ `//:all_root_scripts` is a filegroup so the population is declared ONCE, in the
-            # package that owns those files, and every consumer inherits additions for free.
-            "//:all_root_scripts",
-            # ⚑ THE PAIRING CHECK IS STAGED BECAUSE A WITNESS RUNS IT — the gate's own call, over
-            # this distribution's staged ledger and suite, with one orphan planted in a copy.
-            "//:count_test_functions.py",
-            # ⚑⚑ THE LIVE ROUTING TABLE, THE SAME LESSON A FIFTH TIME IN THIS LIST. An arm
-            # asserting the parts of this repo's own claim set read `{}` hermetically: the table
-            # was not an input, and its non-empty control refused to pass vacuously (2026-09-22).
-            "//:.claude/skills/struct-tools/SKILL.md",
-            "//:.githooks/commit-msg",
-            # W661, W662: `.githooks/post-commit` EXECUTED by test_post_commit_hook in a decoy repo.
-            "//:.githooks/post-commit",
-            # W588: `.githooks/pre-push` EXECUTED by test_githook_pre_push against a stand-in launcher.
-            "//:.githooks/pre-push",
-            "warrants.bib",
-            "//:.claude/settings.json",
-            "//:findings/CENSUS-BRIEF.md",
-            # ⚑ THE BUILD FILES ARE DATA BECAUSE TWO WITNESSES READ THEM — the one asserting
-            # every py_test names the pytest entry point, and the one asserting the gate's own
-            # shell is checked. They passed before only by resolving OUT of the sandbox into the
-            # live tree; with that escape closed they must be staged, which is the honest form.
-            # ⚑ `.bazelrc` IS DATA because a witness asserts the hermetic-sandbox flags are
-            # unconditional. It reads the file rather than trusting the flags to be in effect,
-            # since they are NOT in the action key — an action cannot observe its own sandbox
-            # regime, so the config text is the only evidence available to it.
-            # ⚑⚑ THE CITATION GATE IS STAGED BECAUSE A WITNESS RUNS IT. It is a repo-root script
-            # and the sandbox holds only declared inputs — the same lesson a `.githooks/` read
-            # taught here two ticks ago, where a test passed locally and failed hermetically. Its
-            # CORPUS IS NOT STAGED, DELIBERATELY: the gate takes it as an argument, so the
-            # witness supplies a fixture it controls. Staging the real rules document would make
-            # every arm depend on a file that changes every tick — an arm asserting "Rule 99 is
-            # absent" would break the day someone writes Rule 99.
-            # ⚑ THE ORPHAN GATE IS STAGED AND ITS ARMS ARE HERMETIC, unlike the citation gate's.
-            # It is pure shell over a filesystem the witness builds, with no reader to route
-            # through — so there is no venv to reach for and no reason to skip.
-            # ⚑ THE FRESHNESS GATE IS STAGED AS A SOURCE THE WITNESS REWRITES, not run in place:
-            # its arms substitute a fixture corpus for the real one, so the sandbox never needs
-            # the 1,500-line rules document. `kubectl` and `curl` are absent there, which is
-            # exactly the UNVERIFIABLE path the gate declares — the arms exercise the corpus
-            # branch, which is the half that does not need a cluster.
-            # ⚑ THE WITNESS IS STAGED FOR ITS PRE-BAZEL ARMS ONLY. Its later arms invoke bazel and
-            # cannot run here; what the sandbox exercises is argument validation and the probe-kind
-            # guard, both of which refuse before the first side effect and need only the script.
-            "//:.bazelrc",
-            # ⚑⚑⚑ AND THIS LIST WENT STALE EXACTLY AS THE COMMENT BELOW PREDICTS OF LISTS.
-            # `fence` landed at cc3d301 and was named here nowhere, so the arm asserting every
-            # BUILD file wires `pytest_main.py` iterated a population the SANDBOX had truncated
-            # to three — passing over a set that omitted the newest distribution, which is the
-            # `confidently over a population its ENVIRONMENT truncated` defect recorded below,
-            # reproduced in the data list that records it.
-            # ⚑⚑ THE `pyproject.toml` FILES ARE STAGED BECAUSE THE POPULATION IS NOW DERIVED FROM
-            # THEM. `_distributions()` globs `*/pyproject.toml`, matching `blockers.sh`'s
-            # structural criterion — so in the sandbox that glob sees only what is declared here,
-            # and an undeclared distribution is invisible rather than merely unchecked.
-            # ⚑ MEASURED: with only hooks' own pyproject staged, the derivation returned
-            # `['hooks']` and the arm's POSITIVE CONTROL refused. Had that control been `>= 1`,
-            # or absent, the arm would have passed green over a one-distribution view of a
-            # four-distribution repository.
-            # ⚑ STILL A LIST, NOT A GLOB, because bazel labels cannot glob across packages — the
-            # residue is stated rather than hidden, and the arm's control is what catches it.
-            "//:BUILD.bazel",
-            "//fence:BUILD.bazel",
-            "//fence:pyproject.toml",
-            "//hooks:BUILD.bazel",
-            "//mdstruct:BUILD.bazel",
-            "//mdstruct:pyproject.toml",
-            "//ratchet:BUILD.bazel",
-            "//ratchet:pyproject.toml",
-            "@mikemol_check_ruff//:bin",
-            # ⚑⚑⚑ THE SIBLING TEST MODULES, because three arms sweep the whole SUITE rather
-            # than this file: the warrant ledger's 1:1 against every test NAME, the
-            # module-consumer check, and the harness-wide figure arm. In the sandbox they saw
-            # only this module and reported 130 warrant selectors as naming no test.
-            # ⚑⚑ THE ARMS WERE RIGHT AND THE POPULATION WAS SHORT — a checker reporting
-            # confidently over a population its ENVIRONMENT truncated. The preflight could not
-            # see it because the working tree holds every file; only the sandbox is short.
-            # ⚑ GLOBBED, because the population is *every test module in this distribution*
-            # and a list would go stale the next time one is added — the reified population
-            # this suite exists to refuse.
-        ] + list(GRAPH["tests"]),
+        data = _TEST_DATA.get(src, []) + _SUITE_DATA,
         env = dict(_TEST_ENV, MIKEMOL_TEST_CPU_S = str(_CPU_BUDGET_S[src])) if src in _CPU_BUDGET_S else _TEST_ENV,
 
         # ⚑ SMALL IS A DECLARATION, NOT A GUESS: bazel's default of `medium` reserves a timeout
@@ -492,7 +499,8 @@ mutants_sharded(
         "$(location :pyproject.toml)",
         "$(location @mikemol_check_mutants//:mutate_runner.py)",
     ],
-    data = [
+    # W2340: the suite's own data is staged too (a dict dedupes the labels both lists name).
+    data = list({label: None for label in [
         "pyproject.toml",
         # W629: the defect classes this distribution declares, planted one at a time by the runner.
         "mutants.regex",
@@ -500,7 +508,14 @@ mutants_sharded(
         "//fence:fence",
         "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
-    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+        # W2458: THE IMPORT GRAPH, so the runner picks the tests that reach the module it mutates
+        # (selected_tests) instead of running the whole `tests` directory for every mutant. MEASURED
+        # on shard 205: with no graph every mutant reported `0 chosen` and the shard used 699.7 s.
+        "graph.json",
+    ] + glob(["src/**/*.py", "tests/**/*.py"]) + _SUITE_DATA}),
+    # W2340: the tools the test targets get (RUFF_BIN, OPA_BIN), so a test that runs them can
+    # run in the mutation copy too; the runner makes the relative paths absolute.
+    env = _TEST_ENV,
     size = "medium",
     # ⚑⚑ THIS TARGET WAS THE LOAD, AND EVERY OTHER TARGET'S TIMEOUT WAS ITS VICTIM (W942). It plants
     # 390 defects and re-runs a 1,100-test suite for each. It was tagged `exclusive` to run it alone;

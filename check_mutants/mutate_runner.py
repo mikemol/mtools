@@ -30,6 +30,7 @@ cost the build-graph surgery paperkit named as its price.
 from __future__ import annotations
 
 import ast
+import atexit
 import concurrent.futures
 import contextlib
 import dataclasses
@@ -37,6 +38,7 @@ import fnmatch
 import json
 import os
 import pathlib
+import re
 import resource
 import shutil
 import signal
@@ -76,6 +78,15 @@ CORE_LABEL = "mutants-core"
 _FNV_OFFSET = 2166136261
 _FNV_PRIME = 16777619
 _FNV_MASK = 0xFFFFFFFF
+
+_NO_TESTS_COLLECTED = 5
+"""pytest's exit code for a run that collected nothing: the control could not name its test."""
+
+_CONTROLS: dict[str, bool] = {}
+"""Whether a test fails on the UNMUTATED module, by test id (W2340): asked once per test."""
+
+_PRIVATE_PYTHON: dict[str, str] = {}
+"""The private venv interpreter built for a real site-packages directory, per process."""
 
 
 def shard_spec(raw: str) -> tuple[int, int] | None:
@@ -791,6 +802,29 @@ def run(grid: Grid, mutant: Mutant, *, debug: bool = False) -> str:
     return _run_text(grid, mutant.rel, mutate(mutant.source, mutant.name), debug=debug)
 
 
+def cpu_mark() -> float:
+    """Read the CPU seconds this process and the children it has reaped have used so far.
+
+    Returns:
+        user plus system CPU of this process and its reaped children.
+
+    """
+    spent = os.times()
+    return spent.user + spent.system + spent.children_user + spent.children_system
+
+
+def report_phase(label: str, since: float) -> None:
+    """Print the CPU a phase of one mutant used, when `MUTATE_PHASES` is set (W2458).
+
+    ⚑ A MEASUREMENT BEFORE A DESIGN: the hooks shards use 1.5x to 2.5x the CPU they did, and a
+    per-module prepare target is only worth building if the cost is per shard. With one worker per
+    shard (`children=1`) the delta since `cpu_mark` is the phase's own cost. Unset, it prints
+    nothing.
+    """
+    if os.environ.get("MUTATE_PHASES"):
+        sys.stdout.write(f"      phase {label}: {cpu_mark() - since:.2f}s cpu\n")
+
+
 def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) -> str:
     """Write `text` over module `rel` in a temp copy of the distribution and run its suite there.
 
@@ -803,9 +837,12 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
 
     """
     with tempfile.TemporaryDirectory() as tmp:
-        work = pathlib.Path(tmp) / "dist"
+        work = pathlib.Path(tmp) / grid.dist.name
+        mark = cpu_mark()
         shutil.copytree(grid.dist, work, ignore=_not_source)
+        mirror_siblings(grid.dist, pathlib.Path(tmp))
         (work / rel).write_text(text, encoding="utf-8")
+        report_phase("copy", mark)
         # ⚑ THE SYNTHESIZED PACKAGE MARKERS GO, for the reason `mypy_check.sh` records: rules_python
         # writes an empty `__init__.py` at every runfiles level, including the `src/mikemol/` one
         # PEP 420 forbids here. Only the EMPTY ones — a hand-written package `__init__.py` has
@@ -846,6 +883,15 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         src = str(work / "src")
         env["PYTHONPATH"] = f"{src}{os.pathsep}{existing}" if existing else src
         env["HOME"] = tmp
+        # ⚑ NO `PYTHONHOME` (W2340, MEASURED): bazel's launcher exports one naming its hermetic
+        # 3.13, and every OTHER interpreter a suite starts (fence's payload is the host `python3`,
+        # 3.14) then fails at startup with "Python path configuration" and exit 1. The suite's own
+        # interpreter is a venv that finds its home from pyvenv.cfg, so it needs none.
+        env.pop("PYTHONHOME", None)
+        absolute_tools(env, grid.dist.parent)
+        site = portable_python(grid.py)[1]
+        if site:
+            env["PYTHONPATH"] = os.pathsep.join([env["PYTHONPATH"], site])
         # ⚑ THE CONFIG IS THE TEMP TREE'S OWN COPY. Passing the REAL `pyproject.toml` sets pytest's
         # rootdir to the real distribution while `cwd` is the temp copy, so reported paths climb
         # out of the tree under measurement. Naming the copy keeps rootdir and cwd agreeing.
@@ -859,16 +905,242 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         # rather than adding a file: the fix is which path is passed, not what exists.
         # ⚑⚑ A SUITE THAT OUTLIVES THE LIMIT IS A KILL: it did not pass, and the only code that
         # differs from a clean run is the mutant, so the mutant is what it noticed.
+        mark = cpu_mark()
         try:
             tests = chosen_tests(work, rel, os.environ.get("MUTATE_TESTS", ""))
             proc = _launch_suite(grid, work, env, tests)
+            report_phase(f"suite ({len(tests)} chosen)", mark)
         except subprocess.TimeoutExpired:
+            report_phase("suite (ended)", mark)
             if debug:
                 sys.stdout.write("      ended with no progress or over its CPU limit\n")
             return "killed"
         if debug:
             _report_debug(proc)
-        return verdict(proc.returncode, proc.stdout)
+        result = verdict(proc.returncode, proc.stdout)
+        if result == "killed" and _baseline_fails(grid, (work, rel), env, proc.stdout):
+            return "errored"
+        return result
+
+
+def _baseline_fails(
+    grid: Grid, tree: tuple[pathlib.Path, pathlib.Path], env: dict[str, str], output: str
+) -> bool:
+    """Say whether the test that killed a mutant also fails on the UNMUTATED module (W2340).
+
+    ⚑⚑ A KILL IS ONLY AS GOOD AS ITS BASELINE. The runner had no control run, so a test that
+    fails on the clean tree for a reason of the environment (a tool version that differs from
+    the lock's, a copy that cannot be made in the temp tree) killed EVERY mutant it ran
+    before, and each read as a kill (measured 2026-11-07: two such tests in a local
+    whole-suite run). The failing test named in the output is put back against the original
+    module and run alone; one that still fails proves nothing about the mutant, so the cell is
+    ERRORED, never killed. The answer is kept per test id, so a run asks it once per test.
+
+    ⚑ A CONTROL THAT PROVES NOTHING DOES NOT VOUCH FOR THE KILL (B2): one that times out, or
+    that collects no test (exit 5), is read as a baseline that could not be checked, never as
+    a baseline that passes.
+
+    Returns:
+        True when the named test fails on the unmutated module, or the control timed out or
+        collected nothing; False when it passes there or when the output names no failing test.
+
+    """
+    found = re.search(r"^FAILED (\S.*?)(?: - |$)", output, re.MULTILINE)
+    if found is None:
+        return False
+    test = found.group(1)
+    if test not in _CONTROLS:
+        work, rel = tree
+        (work / rel).write_text((grid.dist / rel).read_text(encoding="utf-8"), encoding="utf-8")
+        for cache in work.rglob("__pycache__"):
+            shutil.rmtree(cache, ignore_errors=True)
+        try:
+            control = _launch_suite(grid, work, env, [test, "-vvv"])
+        except subprocess.TimeoutExpired:
+            # ⚑ A CONTROL THAT CANNOT RUN PROVES NOTHING (github-cb, B2 of the b66 review): the
+            # kill is not vouched for, so the cell is ERRORED. NOT CACHED: the next mutant killed
+            # by this test may get an answer.
+            sys.stdout.write(f"      control: {test} timed out on the UNMUTATED module\n")
+            return True
+        _CONTROLS[test] = control.returncode != 0
+        if _CONTROLS[test]:
+            said = (
+                "collected no test" if control.returncode == _NO_TESTS_COLLECTED else "also fails"
+            )
+            sys.stdout.write(f"      control: {test} {said} on the UNMUTATED module\n")
+            sys.stdout.write(f"        | interpreter {portable_python(grid.py)} from {grid.py}\n")
+            payload = shutil.which("python3", path=env.get("PATH"))
+            sys.stdout.write(f"        | python3 on the suite's PATH: {payload}\n")
+            sys.stdout.write(f"        | cgroup: {_own_cgroup()}\n")
+            if payload:
+                start = subprocess.run(
+                    [payload, "-c", "pass"], env=env, capture_output=True, text=True, check=False
+                )
+                said = start.stderr.strip()[:300]
+                sys.stdout.write(f"        | python3 -c pass: rc={start.returncode} {said}\n")
+            lines = [ln for ln in control.stdout.splitlines() if ln.strip()]
+            for line in ([ln for ln in lines if ln.lstrip().startswith("E ")] or lines)[:40]:
+                sys.stdout.write(f"        | {line.strip()[:480]}\n")
+    return _CONTROLS[test]
+
+
+def _own_cgroup() -> str:
+    """Read this process's cgroup line, so a failed control names the host it ran on.
+
+    Returns:
+        The `/proc/self/cgroup` text, or the reason it could not be read.
+
+    """
+    try:
+        return pathlib.Path("/proc/self/cgroup").read_text(encoding="utf-8").strip()
+    except OSError as error:
+        return f"unreadable: {error}"
+
+
+_MIRRORS: dict[str, pathlib.Path] = {}
+"""The one copy of a runfiles root's siblings, per process and root (W2340, B3)."""
+
+
+def _link_or_copy(src: str, dst: str) -> str:
+    """Hard-link `src` as `dst`, or copy it when the two cannot share an inode.
+
+    Returns:
+        `dst`, as `shutil.copytree`'s copy function must.
+
+    """
+    try:
+        os.link(src, dst)
+    except OSError:
+        shutil.copy2(src, dst)
+    return dst
+
+
+def _sibling_mirror(dist: pathlib.Path) -> pathlib.Path | None:
+    """Copy what sits beside `dist` in the runfiles root ONCE and name the copy.
+
+    Returns:
+        the directory holding the one copy, or None outside bazel (no `TEST_SRCDIR`, or `dist` not
+        inside it), where the parent is a whole checkout and nothing needs mirroring.
+
+    """
+    runfiles = os.environ.get("TEST_SRCDIR", "")
+    if not runfiles or not dist.resolve().is_relative_to(pathlib.Path(runfiles).resolve()):
+        return None
+    key = str(dist.parent)
+    if key not in _MIRRORS:
+        root = pathlib.Path(tempfile.mkdtemp(prefix="mutate-siblings-"))
+        atexit.register(shutil.rmtree, root, ignore_errors=True)
+        for entry in dist.parent.iterdir():
+            if entry.name == dist.name or entry.name in _NOT_SOURCE_PATTERNS:
+                continue
+            if entry.is_dir():
+                shutil.copytree(entry, root / entry.name, ignore=_not_source)
+            else:
+                shutil.copy2(entry, root / entry.name)
+        _MIRRORS[key] = root
+    return _MIRRORS[key]
+
+
+def mirror_siblings(dist: pathlib.Path, into: pathlib.Path) -> None:
+    """Put what sits beside `dist` in the runfiles root beside a mutant's temp tree.
+
+    ⚑ A suite resolves the repository root as its tree's PARENT (`_DIST.parent`) and reads the
+    sibling distributions' build files and the root's scripts from it. The mutation copy was a
+    lone `dist` directory, so those tests failed on the UNMUTATED module (W2340). Under bazel
+    (`TEST_SRCDIR` set, `dist` inside it) the other entries of the runfiles root are copied ONCE
+    per process (`_sibling_mirror`) and HARD-LINKED into each mutant's tree, a copy only where a
+    link cannot be made, so a shard's I/O is not the size of the runfiles root times its mutants
+    (github-cb, B3 of the b66 review).
+    ⚑ A HARD LINK, NOT A SYMLINK: this repository does not create links (operator 2026-10-02), and
+    a hard link is a name for the same bytes, not a pointer that a test can read through to the
+    wrong place. COST NAMED: a hard link shares the inode, so a test that WROTE INTO a sibling file
+    in place would change the shared copy for later mutants; the siblings are read, never mutated.
+    """
+    root = _sibling_mirror(dist)
+    if root is None:
+        return
+    for entry in root.iterdir():
+        target = into / entry.name
+        if entry.is_dir():
+            shutil.copytree(entry, target, copy_function=_link_or_copy)
+        else:
+            _link_or_copy(str(entry), str(target))
+
+
+def absolute_tools(env: dict[str, str], base: pathlib.Path) -> None:
+    """Make the tool paths a suite is given point at the real files, not at a path under `base`.
+
+    ⚑ A target hands its tests `RUFF_BIN` and `OPA_BIN` as paths relative to the runfiles root
+    (`$(location ...)`), and a test resolves them against ITS OWN tree's parent. The mutation
+    copy is a temp tree, whose parent is not that root, so the relative path found nothing and
+    the test failed on the UNMUTATED module (W2340). Every value that is a relative path to a
+    FILE under `base` is made absolute here (`RUFF_BIN`, `OPA_BIN`, `CONTROL_RUFF`, ...); the
+    copy sees the same file the target staged.
+    """
+    for key, value in list(env.items()):
+        if not value or " " in value or pathlib.Path(value).is_absolute():
+            continue
+        try:
+            found = (base / value).resolve()
+            is_file = found.is_file()
+        except OSError:
+            continue
+        if is_file:
+            env[key] = str(found)
+
+
+def _private_venv(base: pathlib.Path, real_site: pathlib.Path) -> str:
+    """Build, once per process, a venv whose `home` is ABSOLUTE over the real packages.
+
+    Returns:
+        the private venv's interpreter: a copy of `base`, an absolute-home pyvenv.cfg beside it,
+        and a `.pth` file that adds `real_site` to the path.
+
+    """
+    key = str(real_site)
+    if key not in _PRIVATE_PYTHON:
+        root = pathlib.Path(tempfile.mkdtemp(prefix="mutate-venv-"))
+        atexit.register(shutil.rmtree, root, ignore_errors=True)
+        (root / "bin").mkdir()
+        shutil.copy2(base, root / "bin" / base.name)
+        config = f"home = {base.parent}\ninclude-system-site-packages = false\n"
+        (root / "pyvenv.cfg").write_text(config, encoding="utf-8")
+        version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+        site = root / "lib" / version / "site-packages"
+        site.mkdir(parents=True)
+        (site / "real.pth").write_text(f"{real_site}\n", encoding="utf-8")
+        _PRIVATE_PYTHON[key] = str(root / "bin" / base.name)
+    return _PRIVATE_PYTHON[key]
+
+
+def portable_python(py: pathlib.Path) -> tuple[str, str]:
+    """Pick the interpreter that runs a suite, and the venv site-packages it then needs.
+
+    ⚑ A bazel-built venv writes `home = bin` in its pyvenv.cfg: RELATIVE, so the venv can move.
+    A relative home resolves against the CURRENT directory, so any test that spawns
+    `sys.executable` from another directory got `Could not find platform independent
+    libraries` and failed on the UNMUTATED module (W2340, measured by the control on
+    test_runproc). Passing the real interpreter with `PYTHONPATH` was not enough: a child the
+    test starts with its OWN environment (test_stub_authority) then lost the venv's packages.
+    For such a venv the suite runs through a PRIVATE venv (`_private_venv`), whose home is
+    absolute and whose `.pth` reaches the real packages, so every child works from any directory
+    and with any environment; a venv with an absolute home, or none, runs as before.
+
+    Returns:
+        (the interpreter to run, a site-packages directory to add to PYTHONPATH or '').
+
+    """
+    config = py.parent.parent / "pyvenv.cfg"
+    try:
+        lines = config.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return str(py), ""
+    homes = [ln.partition("=")[2].strip() for ln in lines if ln.startswith("home")]
+    sites = sorted(py.parent.parent.glob("lib/python*/site-packages"))
+    base = pathlib.Path(sys.base_prefix) / "bin" / "python3"
+    if not homes or pathlib.Path(homes[0]).is_absolute() or not sites or not base.is_file():
+        return str(py), ""
+    return _private_venv(base, sites[0].resolve()), ""
 
 
 def _launch_suite(
@@ -880,9 +1152,10 @@ def _launch_suite(
         the completed suite process.
 
     """
-    return launch(
+    mark = cpu_mark()
+    done = launch(
         [
-            str(grid.py),
+            portable_python(grid.py)[0],
             "-m",
             "pytest",
             "-x",
@@ -897,6 +1170,8 @@ def _launch_suite(
         work,
         env,
     )
+    report_phase("control launch" if "-vvv" in tests else "suite launch", mark)
+    return done
 
 
 def _plan(
@@ -1020,7 +1295,7 @@ def main(argv: list[str]) -> int:
         return 0
     if os.environ.get("MUTATE_LINT"):
         return lint_declared(grid.dist, declared)
-    verdicts, regex = _run_all(
+    verdicts, regex = run_all(
         grid,
         [m for _site, m in jobs],
         declared,
@@ -1033,10 +1308,13 @@ def main(argv: list[str]) -> int:
         groups[got].append(site)
     name = chosen.label(grid.dist.name)
     code = _account(name, len(modules), attempted, unreachable, groups)
-    # ⚑ BOTH ARE COMPUTED BEFORE EITHER DECIDES THE EXIT: `code or _regex_section(...)` would skip
-    # printing the declared-defect section whenever the def-site grid had already failed.
-    regex_code = _regex_section(regex)
-    return 1 if any((code, regex_code, _budget_section())) else 0
+    # ⚑ EVERY SECTION IS PRINTED BEFORE ANY DECIDES THE EXIT: `code or _regex_section(...)` would
+    # skip printing the declared-defect section whenever the def-site grid had already failed.
+    # ⚑ SURVIVED AND ERRORED CELLS ARE JUDGED AGAINST THE DISTRIBUTION'S BASELINE (W2340, github-cb
+    # 2026-11-13): none recorded is the old rule, any such cell fails; a recorded one may only fall.
+    _regex_section(regex)
+    gated = judge_debt(grid.dist, (attempted, unreachable), declared, (groups, regex))
+    return 1 if any((code, gated, _budget_section())) else 0
 
 
 def site_keys(dist: pathlib.Path) -> list[str]:
@@ -1203,7 +1481,7 @@ def free_cores(cpus: int, load1: float) -> int:
     return max(1, round(cpus - load1))
 
 
-def _run_all(
+def run_all(
     grid: Grid, mutants: list[Mutant], declared: list[Declared], *, debug: bool, share: int = 1
 ) -> tuple[list[str], list[tuple[str, str]]]:
     """Run every def-site mutant and every declared defect in one pool, results in input order.
@@ -1223,6 +1501,12 @@ def _run_all(
     # results are gathered in SITE ORDER, so the report is the serial report, byte for byte.
     # `MUTATE_JOBS` bounds the pool; `1` restores the serial run; a shard takes its share (above).
     workers = pool_size(os.environ.get("MUTATE_JOBS", ""), os.cpu_count() or 1, share, load_one())
+    # ⚑⚑ THE PRIVATE INTERPRETER IS BUILT BEFORE ANY WORKER EXISTS (W2340, measured 2026-11-13 on
+    # //bibparse:mutants and //corpus:mutants: `OSError: [Errno 26] Text file busy`). Its first call
+    # COPIES the interpreter, and a worker that forks while another worker has that copy open for
+    # writing hands the child the write descriptor; the next exec of the copy then fails (ETXTBSY).
+    # Built here, on the one thread, the copy is closed before the first fork.
+    portable_python(grid.py)
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(run, grid, mutant, debug=debug) for mutant in mutants]
         planted = [pool.submit(run_declared, grid, d, debug=debug) for d in declared]
@@ -1233,18 +1517,15 @@ def _run_all(
     return verdicts, regex
 
 
-def _regex_section(results: list[tuple[str, str]]) -> int:
+def _regex_section(results: list[tuple[str, str]]) -> None:
     """Print the declared-defect section and say what a declared defect that was not killed means.
 
     ⚑ AN EMPTY SECTION IS NAMED, as the four before it are: `none declared` is a measurement and an
     absent heading is a silence that cannot be told from a section that never ran.
 
-    ⚑⚑ ONLY `killed` PASSES. `survived` is a suite blind to a defect the distribution named,
-    `unapplied` a declaration the code has moved away from, and `errored` one that was never run.
-
-    Returns:
-        0 when every declared defect was killed (vacuously, when none are declared), else 1.
-
+    ⚑⚑ ONLY `killed` IS NOT DEBT. `survived` is a suite blind to a defect the distribution named,
+    `unapplied` a declaration the code has moved away from, and `errored` one that was never run;
+    `baseline_gate` judges them against the distribution's recorded debt.
     """
     sys.stdout.write(
         f"\nREGEX ({len(results)}) — defects the distribution DECLARED in {DECLARATION_FILE}, "
@@ -1260,7 +1541,230 @@ def _regex_section(results: list[tuple[str, str]]) -> int:
             f"\nmutate: {len(bad)} declared defect(s) NOT killed: a suite blind to a named defect "
             f"(survived), a stale declaration (unapplied) or one never run (errored)\n"
         )
-    return 1 if bad else 0
+
+
+BASELINE_FILE = "mutants-baseline.txt"
+"""A distribution's recorded mutation debt: the cells its grid may leave ERRORED or SURVIVED.
+
+⚑ A RATCHET BASELINE, NOT A WAIVER (github-cb's ruling on b66, 2026-11-13). The name matches the
+ratchet classifier's `baseline` pattern, so census_repo counts its entries and nemik's pace and the
+paydown rate see it. One entry per line, `<verdict> <cell>`, cells sorted and unique, `#` comments.
+"""
+
+_BASELINE_VERDICTS = ("survived", "errored", "unapplied")
+
+
+def read_baseline(dist: pathlib.Path) -> tuple[dict[str, str], str]:
+    """Read the cells a distribution's grid is recorded as leaving ERRORED, SURVIVED or unapplied.
+
+    Returns:
+        (cell -> verdict, a problem). The cells are empty when the distribution has no baseline
+        file. The problem is empty when the file is well formed, else it names the first bad line:
+        not `<verdict> <cell>`, an unknown verdict, or a cell repeated or out of order (the file
+        is generated sorted, so a hand edit shows).
+
+    """
+    path = dist / BASELINE_FILE
+    if not path.is_file():
+        return {}, ""
+    cells: dict[str, str] = {}
+    previous = ""
+    for number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        verdict, _space, cell = line.partition(" ")
+        if verdict not in _BASELINE_VERDICTS or not cell:
+            return {}, f"{path.name}:{number}: not '<verdict> <cell>': {line!r}"
+        if cell <= previous:
+            return {}, f"{path.name}:{number}: {cell!r} is repeated or out of order"
+        cells[cell] = verdict
+        previous = cell
+    return cells, ""
+
+
+def debt_of(groups: dict[str, list[str]], regex: list[tuple[str, str]]) -> dict[str, str]:
+    """Collect the cells a run left SURVIVED or ERRORED, and the declared defects not killed.
+
+    Returns:
+        cell -> verdict, for every def-site that survived or errored and every declared defect
+        whose outcome was not `killed`.
+
+    """
+    debt = {site: verdict for verdict in ("survived", "errored") for site in groups[verdict]}
+    debt.update({label: got for label, got in regex if got != "killed"})
+    return debt
+
+
+def baseline_gate(dist: pathlib.Path, debt: dict[str, str], ran: set[str]) -> int:
+    """Judge this run's debt against the distribution's recorded debt: it may only fall.
+
+    ⚑ A RISE AND A STALE ENTRY ARE BOTH REFUSED. A cell ERRORED or SURVIVED that the baseline does
+    not list with that verdict is a rise. A baselined cell this run ran that is no longer in that
+    state is stale: the baseline only falls when its file is edited down, so a paid-down cell
+    cannot be left listed and later re-broken unseen. Only the cells this run RAN are judged, so a
+    shard never refuses another shard's entry.
+
+    Returns:
+        0 when every debt cell is baselined with its verdict and every baselined cell this run ran
+        is still in debt; 1 otherwise, or when the baseline file is malformed.
+
+    """
+    known, problem = read_baseline(dist)
+    if problem:
+        sys.stderr.write(f"mutate: {problem}\n")
+        return 1
+    rises = sorted(cell for cell, verdict in debt.items() if known.get(cell) != verdict)
+    stale = sorted(
+        cell for cell, verdict in known.items() if cell in ran and debt.get(cell) != verdict
+    )
+    sys.stdout.write(
+        f"\nBASELINE ({len(known)} recorded in {BASELINE_FILE}): "
+        f"{len(rises)} rise(s), {len(stale)} stale\n"
+    )
+    for cell in rises:
+        sys.stdout.write(f"    RISE {debt[cell]} {cell}\n")
+    for cell in stale:
+        sys.stdout.write(f"    STALE {known[cell]} {cell}\n")
+    if rises:
+        sys.stderr.write(
+            f"\nmutate: {len(rises)} cell(s) ERRORED or SURVIVED that {BASELINE_FILE} does not "
+            f"list: the debt may only fall\n"
+        )
+    if stale:
+        sys.stderr.write(
+            f"\nmutate: {len(stale)} cell(s) listed in {BASELINE_FILE} are no longer in that "
+            f"state: remove them, the baseline only falls\n"
+        )
+    return 1 if rises or stale else 0
+
+
+def judge_debt(
+    dist: pathlib.Path,
+    cells: tuple[list[str], list[str]],
+    declared: list[Declared],
+    outcomes: tuple[dict[str, list[str]], list[tuple[str, str]]],
+) -> int:
+    """Judge one run's ERRORED and SURVIVED cells against the distribution's baseline.
+
+    Args:
+        dist: the distribution's directory, where its baseline file lives.
+        cells: this run's attempted def-sites and its unreachable ones.
+        declared: the declared defects this run planted.
+        outcomes: the def-site groups by verdict and each declared defect's `(label, outcome)`.
+
+    Returns:
+        `baseline_gate`'s verdict over the cells this run ran.
+
+    """
+    attempted, unreachable = cells
+    groups, regex = outcomes
+    ran = (set(attempted) - set(unreachable)) | {d.label for d in declared}
+    return baseline_gate(dist, debt_of(groups, regex), ran)
+
+
+_LOG_SECTIONS = ("KILLED", "SURVIVED", "ERRORED", "UNREACHABLE", "REGEX")
+_BAD_SECTIONS = {"SURVIVED": "survived", "ERRORED": "errored"}
+_MIN_ARGV = 3  # the program, the flag, the distribution
+
+
+def cells_from_log(text: str) -> tuple[set[str], dict[str, str]]:
+    """Read the cells one shard's report ran and the ones it left in debt.
+
+    ⚑ THE BASELINE IS GENERATED FROM A REPORT, NEVER TYPED (github-cb, 2026-11-13). A shard prints
+    every category by name even when empty, so the sections are the whole account of what it ran.
+
+    Returns:
+        (every cell the report ran, cell -> verdict for each one SURVIVED, ERRORED or a declared
+        defect not killed). Empty when the text has no section heading: a shard that crashed
+        prints none, and the caller refuses it.
+
+    """
+    ran: set[str] = set()
+    debt: dict[str, str] = {}
+    section = ""
+    for line in text.splitlines():
+        head = line.split(" ", 1)[0]
+        if head in _LOG_SECTIONS and line[len(head) :].startswith(" ("):
+            section = head
+        elif not line.startswith("    "):
+            section = ""
+        elif section == "REGEX" and " -> " in line:
+            label, _arrow, got = line.strip().partition(" -> ")
+            ran.add(label)
+            if got != "killed":
+                debt[label] = got
+        elif section and section != "UNREACHABLE":
+            cell = line.strip()
+            ran.add(cell)
+            if section in _BAD_SECTIONS:
+                debt[cell] = _BAD_SECTIONS[section]
+    return ran, debt
+
+
+def render_baseline(cells: dict[str, str]) -> str:
+    """Render a baseline file: a header, then `<verdict> <cell>` per line, cells sorted.
+
+    Returns:
+        the file's text.
+
+    """
+    header = (
+        "# mutation debt: cells the grid leaves ERRORED, SURVIVED or unapplied.\n"
+        "# A RATCHET: it only falls. GENERATED by\n"
+        "# `mutate_runner.py --write-baseline DIST LOG...`, never hand-written.\n"
+    )
+    return header + "".join(f"{cells[cell]} {cell}\n" for cell in sorted(cells))
+
+
+def write_baseline(dist: pathlib.Path, logs: list[pathlib.Path]) -> int:
+    """Rewrite a distribution's baseline from shard reports, keeping cells they did not run.
+
+    ⚑ A REPORT REPLACES ONLY THE CELLS IT RAN, so one shard's log updates that shard's cells and
+    leaves every other shard's entries as they were; the union of all the shards' logs is the whole
+    distribution. A report with no section heading is refused (a crashed shard ran nothing).
+
+    Returns:
+        0 on success, 1 when the existing baseline is malformed or a log has no sections.
+
+    """
+    known, problem = read_baseline(dist)
+    if problem:
+        sys.stderr.write(f"mutate: {problem}\n")
+        return 1
+    ran: set[str] = set()
+    debt: dict[str, str] = {}
+    for log in logs:
+        seen, owed = cells_from_log(log.read_text(encoding="utf-8"))
+        if not seen:
+            sys.stderr.write(f"mutate: {log} holds no shard report (a crashed shard?)\n")
+            return 1
+        ran |= seen
+        debt.update(owed)
+    merged = {cell: verdict for cell, verdict in known.items() if cell not in ran} | debt
+    (dist / BASELINE_FILE).write_text(render_baseline(merged), encoding="utf-8")
+    sys.stdout.write(f"{BASELINE_FILE}: {len(merged)} cell(s) from {len(logs)} report(s)\n")
+    return 0
+
+
+def cli(argv: list[str]) -> int:
+    """Run the baseline commands, or the grid when argv names neither.
+
+    ⚑ `--write-baseline DIST LOG...` GENERATES the file, `--check-baseline DIST` says whether it is
+    well formed (every shard also checks it, so the gate runs it on every mutation target).
+
+    Returns:
+        the command's exit status.
+
+    """
+    if len(argv) >= _MIN_ARGV and argv[1] == "--write-baseline":
+        return write_baseline(pathlib.Path(argv[2]), [pathlib.Path(p) for p in argv[_MIN_ARGV:]])
+    if len(argv) == _MIN_ARGV and argv[1] == "--check-baseline":
+        problem = read_baseline(pathlib.Path(argv[2]))[1]
+        if problem:
+            sys.stderr.write(f"mutate: {problem}\n")
+        return 1 if problem else 0
+    return main(argv)
 
 
 def _account(
@@ -1272,8 +1776,11 @@ def _account(
 ) -> int:
     """Check that every site landed in exactly one category, then report all four by name.
 
+    ⚑ SURVIVED AND ERRORED ARE REPORTED HERE AND JUDGED BY `baseline_gate`, which compares them to
+    the distribution's recorded debt; this returns 1 only for a site that fell in no category.
+
     Returns:
-        0 when every site was accounted for and none survived, 1 otherwise.
+        0 when every site was accounted for, 1 when one was not.
 
     """
     killed, survived, errored = groups["killed"], groups["survived"], groups["errored"]
@@ -1321,15 +1828,13 @@ def _account(
             f"\nmutate: {len(errored)} mutant(s) could not be RUN — the grid is incomplete and "
             f"a clean SURVIVED list would be a claim over a population that was never measured\n"
         )
-        return 1
     if survived:
         sys.stderr.write(
             f"\nmutate: {len(survived)} def-site(s) SURVIVED — mutating them changed no verdict, "
             f"so nothing in this distribution's suite exercises them\n"
         )
-        return 1
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(cli(sys.argv))

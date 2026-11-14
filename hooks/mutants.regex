@@ -230,9 +230,9 @@ src/mikemol/hooks/repin_cli.py|dirty-repo-written|if code != 0 or out\.strip\(\)
 src/mikemol/hooks/repin_cli.py|mtools-itself-repinned|and name != SELF and|and True and|def=_scannable
 src/mikemol/hooks/repin_cli.py|hidden-directory-read|name\.startswith\(\(".", "bazel-"\)\)|name.startswith("bazel-")|def=_scannable
 src/mikemol/hooks/repin_cli.py|wheel-repo-written|if row\.form != repin\.WHEEL|if True|def=apply
-src/mikemol/hooks/repin_cli.py|sync-ignores-no-sync|if result == "written" and sync:|if result == "written":|def=apply
+src/mikemol/hooks/repin_cli.py|sync-ignores-no-sync|if result == "written" and sync_cmd is not None:|if result == "written":|def=apply
 src/mikemol/hooks/repin_cli.py|failed-sync-reported-synced|== 0 else "sync-failed"|== 0 or True else "sync-failed"|def=apply
-src/mikemol/hooks/repin_cli.py|write-without-sha-admitted|return "--write needs --sha, the full commit to move every pin to" if write else None|return None|def=_refusal
+src/mikemol/hooks/repin_cli.py|write-without-sha-admitted|        return "--write needs --sha, the full commit to move every pin to"|        return None|def=_refusal_write
 
 # W962: a root that is a repo is that repo; a link or bazel output is never a repo to read.
 src/mikemol/hooks/repin_cli.py|root-repo-ignored|if \(root / "pyproject\.toml"\)\.is_file\(\):|if False:|def=repos
@@ -647,8 +647,16 @@ src/mikemol/hooks/nemik_check.py|a-delta-is-deduped-like-a-whole-emission|    if
 src/mikemol/hooks/presubmit.py|missing-snapshot-runs-anyway|        return EXIT_REFUSED|        return 0|def=main
 src/mikemol/hooks/presubmit.py|dot-dir-is-a-dist|if not top\.startswith\("\."\)|if True|def=dists_of
 src/mikemol/hooks/presubmit.py|root-file-is-a-dist|for path in paths if "/" in path|for path in paths if "/" not in path|def=dists_of
-src/mikemol/hooks/commit_withdraw.py|in-flight-withdrawn|    if row\.state == INFLIGHT:|    if False:|def=withdraw
-src/mikemol/hooks/commit_withdraw.py|killed-not-terminated|    kill\(pid, signal\.SIGTERM\)|    kill(pid, signal.SIGKILL)|def=withdraw
+src/mikemol/hooks/commit_withdraw.py|in-flight-withdrawn|    if row\.state == INFLIGHT:|    if False:|def=_run
+src/mikemol/hooks/commit_withdraw.py|killed-not-terminated|    kill\(pid, signal\.SIGTERM\)|    kill(pid, signal.SIGKILL)|def=_run
+src/mikemol/hooks/commit_withdraw.py|a-settled-withdraw-does-not-wait-for-the-entry|    while any\(each\.key == row\.key for each in live\(path, witness\.probe\)\):|    while False:|def=_settle
+src/mikemol/hooks/commit_withdraw.py|a-landed-commit-is-said-withdrawn|    if sha is not None:|    if False:|def=_settle
+src/mikemol/hooks/commit_withdraw.py|a-landing-keeps-the-withdrawn-exit-code|    return EXIT_LANDED, |    return EXIT_WITHDRAWN, |def=_settle
+src/mikemol/hooks/commit_withdraw.py|any-commit-counts-as-this-entry-landing|    lead = row\.waypoints\[0\] \+ " "|    lead = ""|def=_landed
+src/mikemol/hooks/commit_withdraw.py|an-unreadable-head-is-trusted|    if before is None:|    if False:|def=_settle
+src/mikemol/hooks/commit_withdraw.py|a-failed-log-reads-as-no-commits|    if commits is None:|    if False:|def=_settle
+src/mikemol/hooks/commit_withdraw.py|an-unknown-outcome-is-said-withdrawn|    return EXIT_UNKNOWN, |    return EXIT_WITHDRAWN, |def=_unknown
+src/mikemol/hooks/commit_withdraw.py|an-in-flight-withdraw-is-never-settled|    if code != EXIT_WITHDRAWN or witness is None:|    if True:|def=_inflight
 src/mikemol/hooks/gatetrend.py|even-median-takes-the-upper-middle|\(ordered\[middle - 1\] \+ ordered\[middle\]\) / 2|ordered[middle]|def=median
 src/mikemol/hooks/gatetrend.py|spread-is-the-mean-deviation|    return median\(\[abs\(v - centre\) for v in values\]\)|    return sum(abs(v - centre) for v in values) / max(len(values), 1)|def=spread
 src/mikemol/hooks/gatetrend.py|slope-is-the-mean-of-pairs|    return median\(pairs\)|    return sum(pairs) / len(pairs)|def=slope
@@ -1160,6 +1168,8 @@ src/mikemol/hooks/stackempty.py|a-queue-only-entry-is-empty|        if files and
 src/mikemol/hooks/isolated.py|a-deleted-leftover-is-ignored|        if leftover == "same":|        if False:|def=refresh_tree
 src/mikemol/hooks/isolated.py|an-edited-leftover-is-removed|        if leftover == "differs":|        if False:|def=refresh_tree
 src/mikemol/hooks/isolated.py|a-leftover-is-judged-equal-unread|    same = mine\.returncode == 0 and then\.returncode == 0 and mine\.stdout == then\.stdout|    same = True|def=_leftover
+src/mikemol/hooks/isolated.py|a-leftover-is-hashed-through-the-filters|"hash-object", "--no-filters", "--", path|"hash-object", "--", path|def=_leftover
+src/mikemol/hooks/isolated.py|a-leftover-link-is-followed|    if \(root / path\)\.is_symlink\(\):|    if False:|def=_leftover
 src/mikemol/hooks/stackempty.py|the-mode-is-ignored|\(f\.mode, f\.blob\) == head_entry\(f\.path\)|f.blob == head_entry(f.path)[1]|def=empty_entries
 src/mikemol/hooks/stackempty.py|one-equal-file-makes-an-entry-empty|        if files and all\(|        if files and any(|def=empty_entries
 src/mikemol/hooks/commit_kata.py|empty-entry-not-asked-at-submit|        or _empty_refusal\(root, stack_file, snap, run_git_in\)|        or None|def=submit_problem
