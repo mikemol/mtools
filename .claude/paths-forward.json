@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2530,
+  "counter": 2533,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -39203,17 +39203,19 @@
     {
       "symbol": "W1802",
       "title": "mikemol-commit refuses a bazel-bin launcher for any repo but mtools, once each fleet repo has the hooks pin",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After W2378 lands: read which of the 16 queue-less repos commit through mikemol-commit, then land the launcher.py refusal in the next W2219 batch's stack with a test in test_launcher.py.",
-      "evidence": "2026-10-22: 2026-10-22: the operator answered the ask through AskUserQuestion: notice only for now, the refusal waits until each fleet repo has the pin. The block stays for the operator to lift; this session may not. | 2026-11-06T20:53:43Z: 2026-11-06: OPERATOR (host transcript line 145121, uuid 853a05f6-fd85-4fc1-8094-0ad30ff75831, verified human, warrant attached): 'Is this even still relevant?'. CHECKED launcher.py: today it only prints the W1743 NOTICE for a bazel-bin launcher; the refusal this card asks for is not built. LIVE REASON: it is still relevant but it was never an operator choice: the 2026-10-22 ruling was 'notice only until each fleet repo has the pin', and that is a MEASURABLE condition. So the operator block is lifted and the card waits on the measurement, W2315 (count the repos lacking the pin), an agent card. | 2026-11-13T19:46:35Z: 2026-11-13: W2356 has landed (b65), so that precondition is met. It now waits on W2378 for two reasons: both change hooks/src/mikemol/hooks/commit_kata.py, which holds W2378's uncommitted edit (so a second hooks change over the same file would land on bytes the first has not), and W1802's own precondition is still open: the 16 queue-less repos with a venv and no hooks pin are unjudged (W2315), so whether they commit through mikemol-commit is unread. Nothing built here.",
+      "evidence": "2026-10-22: 2026-10-22: the operator answered the ask through AskUserQuestion: notice only for now, the refusal waits until each fleet repo has the pin. The block stays for the operator to lift; this session may not. | 2026-11-06T20:53:43Z: 2026-11-06: OPERATOR (host transcript line 145121, uuid 853a05f6-fd85-4fc1-8094-0ad30ff75831, verified human, warrant attached): 'Is this even still relevant?'. CHECKED launcher.py: today it only prints the W1743 NOTICE for a bazel-bin launcher; the refusal this card asks for is not built. LIVE REASON: it is still relevant but it was never an operator choice: the 2026-10-22 ruling was 'notice only until each fleet repo has the pin', and that is a MEASURABLE condition. So the operator block is lifted and the card waits on the measurement, W2315 (count the repos lacking the pin), an agent card. | 2026-11-13T19:46:35Z: 2026-11-13: W2356 has landed (b65), so that precondition is met. It now waits on W2378 for two reasons: both change hooks/src/mikemol/hooks/commit_kata.py, which holds W2378's uncommitted edit (so a second hooks change over the same file would land on bytes the first has not), and W1802's own precondition is still open: the 16 queue-less repos with a venv and no hooks pin are unjudged (W2315), so whether they commit through mikemol-commit is unread. Nothing built here. | 2026-11-14T22:41:34Z: 2026-11-14 READ the unjudged 16 (the queue-less repos with a venv and no pin: asn1, cstz, ctheory, earley, lg_kernel, metacatagory, rca, restsync, sixfiveohtwo, skills, symmetry, ubnf-py-parser, sdr-gpu, gabion-bak, gabion-bak2, mikemol.github.io): grep -rls mikemol-commit over each repo's .githooks and .git/hooks returns NOTHING for all 16 (all 16 directories exist; a missing subdirectory only gave exit 2). POSITIVE CONTROL: the same grep finds it in mtools/.githooks/pre-commit and nemik/.githooks/commit-msg and pre-commit. So none of the 16 is WIRED to commit through mikemol-commit by a git hook. NOT READ, so not claimed: a core.hooksPath pointing elsewhere, and a person or session running mikemol-commit by hand from one of them (not detectable from the hook directories). With W2315 (no queue-carrying repo lacks the pin) the refusal looks safe for every repo this reads. THE BLOCK: the refusal is a hooks change (launcher.py and commit_kata.py, a test in test_launcher.py), and every hooks stack is refused by the shard guard until the hooks grid is decomposed (W2531, github-cb's ruling 2026-11-14), so it waits there.",
       "issued_at": "2026-10-22T02:36:49Z",
       "minted_during": "interrupt",
       "caused_by": "W1743",
-      "last_worked": "2026-11-13T19:46:35Z",
+      "last_worked": "2026-11-14T22:41:34Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -45140,17 +45142,19 @@
     {
       "symbol": "W2002",
       "title": "Reconcile pass moves a dead submission's stale items.json aside with a tombstone (key, pid, why judged dead)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "github-8f 2026-10-25: items.json files from 2026-10-17..20 remain in .git/mtools from runs that aborted before stackfreeze.forget. A dead key (no live entry in commit_counts.live) has its items.json moved aside with a tombstone line, not deleted, so each gets a recorded end.",
-      "evidence": "2026-10-29: 2026-10-29: BLOCKED on hooks-e (W2117, queued key 1793285182688164268). The reconcile pass is a hooks-lane change (commit_counts and reconcile code, tests, mutants, warrants) and those registries freeze whole behind hooks-e. Build in a clean scratch tree on the HEAD after it lands (W2158: never generate registries in the dirty main tree). | 2026-11-06T08:48:40Z: 2026-11-06: taken at the Stop hook's ask; batch 29 landed (195a49df), gate empty; starting W2219 batch 30 (build_failure and tick_release onto runproc). | 2026-11-07T22:12:54Z: 2026-11-07: blocked on W2322 (stack b57 holds the gate; this card touches the reconcile/stack path it re-lands). | 2026-11-07T23:55:29Z: 2026-11-07: blocked on W2346 (stack b58 holds the gate and touches the submit path this reconcile card reads); a ratchet shard run is in flight for W2340. | 2026-11-08T00:27:06Z: 2026-11-07: blocked on W2346 (stack b59, the empty-entry rule fix, holds the gate); the reconcile pass would be judged by the same submit path. | 2026-11-08T01:17:55Z: 2026-11-07: blocked on W2353, which waits on github-14's round ruling (b60 refused: W2353 outside the round while W2294 and W1667 are ready in it); the reconcile pass would meet the same round check.",
+      "evidence": "2026-10-29: 2026-10-29: BLOCKED on hooks-e (W2117, queued key 1793285182688164268). The reconcile pass is a hooks-lane change (commit_counts and reconcile code, tests, mutants, warrants) and those registries freeze whole behind hooks-e. Build in a clean scratch tree on the HEAD after it lands (W2158: never generate registries in the dirty main tree). | 2026-11-06T08:48:40Z: 2026-11-06: taken at the Stop hook's ask; batch 29 landed (195a49df), gate empty; starting W2219 batch 30 (build_failure and tick_release onto runproc). | 2026-11-07T22:12:54Z: 2026-11-07: blocked on W2322 (stack b57 holds the gate; this card touches the reconcile/stack path it re-lands). | 2026-11-07T23:55:29Z: 2026-11-07: blocked on W2346 (stack b58 holds the gate and touches the submit path this reconcile card reads); a ratchet shard run is in flight for W2340. | 2026-11-08T00:27:06Z: 2026-11-07: blocked on W2346 (stack b59, the empty-entry rule fix, holds the gate); the reconcile pass would be judged by the same submit path. | 2026-11-08T01:17:55Z: 2026-11-07: blocked on W2353, which waits on github-14's round ruling (b60 refused: W2353 outside the round while W2294 and W1667 are ready in it); the reconcile pass would meet the same round check. | 2026-11-14T22:59:15Z: 2026-11-14: a hooks-lane change (reconcile and commit_counts code, tests, mutants, warrants) in registries b66 has now released; but every hooks stack is refused by the shard guard until the hooks grid is decomposed (github-cb 2026-11-14, W2531), so it waits there, and b66b (W2527) is in the gate beside it.",
       "issued_at": "2026-10-25T18:10:06Z",
       "minted_during": "interrupt",
       "caused_by": "W2000",
-      "last_worked": "2026-11-08T01:17:55Z",
+      "last_worked": "2026-11-14T22:59:15Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -46541,17 +46545,19 @@
     {
       "symbol": "W2061",
       "title": "An isolated commit heals its snapshot to the index's tree before the hook runs: a file whose bytes drifted from the tree (paperkit's MODULE.bazel.lock) is restored from the tree and named in the output",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "At the train's verdict: if 39 is refused, submit W2067 alone (scratch tree w2067) and W2061 corrected (scratch tree w2061) in the same tick; if the bisect lands 39 anyway, nothing: it cannot, its shard is red. Do not mark W2061 done until its mutants run clean in a gate.",
-      "evidence": "2026-10-28: 2026-10-28 W2061-ALONE PREPARED (github-8f pass 45: build now, submit only on a red verdict for stack 36): a scratch worktree of HEAD 754dcf97 holds only W2061's three source and test files, its mutants.regex lines (4 new, 2 re-pointed), two warrants and the regenerated sites for isolated and snapshot; git status there lists exactly seven files, no graph.json or dag.bzl change (no module, test file or import added). Stack file stack-w2061-alone.json written in the stacks directory, NOT submitted. TO SUBMIT: the freeze reads the working tree, which also holds stack 36's and others' changes in the shared files (mutants.regex, warrants.bib), so swap the scratch worktree's seven files into the main tree after saving the combined versions, submit, then restore the combined versions. | 2026-10-28: 2026-10-28 CAUSE of stack 36's red, read from its test log (bazel testlogs/hooks/graph_fresh/test.log in the staged output base): 'graph --check: hooks/graph.json is STALE: run --write' and 'graph --check: hooks/dag.bzl is STALE: run --write'. Those two shared files froze whole with W1746's rows (stackimports imports stackahead, test_stackimports) and W1746 had been withdrawn, so at HEAD+36 the regenerated graph differs: the stale-registry class, exactly the cascade W2078 and W2067 part 2 are about. 36's whole BEP: 589 PASSED, 1 FAILED (graph_fresh), 0 TIMEOUT. The rebuilt W2061 carries no graph.json or dag.bzl change (no module, test file or import added) and its registries were regenerated on HEAD in a scratch worktree, so this cause does not recur in the resubmit. Resubmitted with W2067 as stack-next-39 behind stack 38. | 2026-10-28: 2026-10-28 CAUSE OF THE RED in the train gate (//hooks:mutants_100, isolated.py::refresh-not-run errored; github-8f asked whether the red follows W2061): YES, a defect in W2061's declared mutants, mine. The replacement field of refresh-not-run was {said}\\n and regexop applies it as an re.sub template (mutation/src/mikemol/mutation/regexop.py line 45, re.subn at 191), where \\n is a real newline, so the mutated line broke an f-string across lines: SyntaxError, the module cannot import, the suite does not run, ERRORED, and the grid refuses an errored site. restored-files-not-named has the same ending. MUTATE_LINT proves a pattern APPLIES, not that the result PARSES, so my local checks passed. FIXED to \\n in both mutants.regex copies (the scratch tree of the combined W2061+W2067 and the main tree), sites regenerated. Stack 39 (key 1793191664065529872) carries the frozen bug and will be refused by the bisect; the corrected pair is prepared and unsubmitted. | 2026-10-31: reconciled STALE | 2026-11-06T09:12:24Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn. | 2026-11-08T03:41:16Z: 2026-11-08: blocked on W2353. Both edit hooks isolated.py (refresh_tree vs the snapshot heal) and its mutants.regex lines and sites; W2353 is in the refused b60 and lands first. Rebuild W2061 on the HEAD after it, and re-read whether the snapshot heal still applies (the paperkit MODULE.bazel.lock cause was the stale-tree class W2353's leftover rule narrows).",
+      "evidence": "2026-10-28: 2026-10-28 W2061-ALONE PREPARED (github-8f pass 45: build now, submit only on a red verdict for stack 36): a scratch worktree of HEAD 754dcf97 holds only W2061's three source and test files, its mutants.regex lines (4 new, 2 re-pointed), two warrants and the regenerated sites for isolated and snapshot; git status there lists exactly seven files, no graph.json or dag.bzl change (no module, test file or import added). Stack file stack-w2061-alone.json written in the stacks directory, NOT submitted. TO SUBMIT: the freeze reads the working tree, which also holds stack 36's and others' changes in the shared files (mutants.regex, warrants.bib), so swap the scratch worktree's seven files into the main tree after saving the combined versions, submit, then restore the combined versions. | 2026-10-28: 2026-10-28 CAUSE of stack 36's red, read from its test log (bazel testlogs/hooks/graph_fresh/test.log in the staged output base): 'graph --check: hooks/graph.json is STALE: run --write' and 'graph --check: hooks/dag.bzl is STALE: run --write'. Those two shared files froze whole with W1746's rows (stackimports imports stackahead, test_stackimports) and W1746 had been withdrawn, so at HEAD+36 the regenerated graph differs: the stale-registry class, exactly the cascade W2078 and W2067 part 2 are about. 36's whole BEP: 589 PASSED, 1 FAILED (graph_fresh), 0 TIMEOUT. The rebuilt W2061 carries no graph.json or dag.bzl change (no module, test file or import added) and its registries were regenerated on HEAD in a scratch worktree, so this cause does not recur in the resubmit. Resubmitted with W2067 as stack-next-39 behind stack 38. | 2026-10-28: 2026-10-28 CAUSE OF THE RED in the train gate (//hooks:mutants_100, isolated.py::refresh-not-run errored; github-8f asked whether the red follows W2061): YES, a defect in W2061's declared mutants, mine. The replacement field of refresh-not-run was {said}\\n and regexop applies it as an re.sub template (mutation/src/mikemol/mutation/regexop.py line 45, re.subn at 191), where \\n is a real newline, so the mutated line broke an f-string across lines: SyntaxError, the module cannot import, the suite does not run, ERRORED, and the grid refuses an errored site. restored-files-not-named has the same ending. MUTATE_LINT proves a pattern APPLIES, not that the result PARSES, so my local checks passed. FIXED to \\n in both mutants.regex copies (the scratch tree of the combined W2061+W2067 and the main tree), sites regenerated. Stack 39 (key 1793191664065529872) carries the frozen bug and will be refused by the bisect; the corrected pair is prepared and unsubmitted. | 2026-10-31: reconciled STALE | 2026-11-06T09:12:24Z: 2026-11-06: taken at the Stop hook's ask while W2219 batch 30 holds the gate; no code this turn. | 2026-11-08T03:41:16Z: 2026-11-08: blocked on W2353. Both edit hooks isolated.py (refresh_tree vs the snapshot heal) and its mutants.regex lines and sites; W2353 is in the refused b60 and lands first. Rebuild W2061 on the HEAD after it, and re-read whether the snapshot heal still applies (the paperkit MODULE.bazel.lock cause was the stale-tree class W2353's leftover rule narrows). | 2026-11-14T23:34:07Z: 2026-11-14: its blocker W2353 has LANDED (42b23583 and the b66 follow-up c44e91f4), so the rebuild on HEAD is unblocked in principle. It edits hooks isolated.py, its mutants.regex lines and sites, a hooks-lane stack, and every hooks stack is refused by the shard guard until the hooks grid is decomposed (github-cb 2026-11-14, W2531). Before rebuilding: re-read whether the snapshot heal still applies, since the paperkit MODULE.bazel.lock cause was the stale-tree class that W2353's leftover rule narrows (the stale_tree sibling is W2529). Also note the lesson in the card: MUTATE_LINT proves a pattern applies, not that the mutated text parses, so run the declared mutants alone before staging.",
       "issued_at": "2026-10-28T00:24:43Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit:W426",
-      "last_worked": "2026-11-08T03:41:16Z",
+      "last_worked": "2026-11-14T23:34:07Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -47293,26 +47299,28 @@
     {
       "symbol": "W2096",
       "title": "--tick-close does not print advanced or ATOMIZE advice for an evidence-only change to a card whose gate is in flight, and marks a block naming a card the tick touched",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2433"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Remaining half: --tick-close marking a block that names a card the tick touched",
-      "evidence": "2026-10-30: 2026-10-30: taken. Same rule as W2170 (nemik's umbrella exemption from 'ATOMIZE X (advanced N times without landing)'): both change when closegate/atomize count an advance, so ONE change to that reader should serve both, an exemption for a card with a stack landed since its last advance (W2170) and for evidence-only closes while a live stack names the card (this card). Registries are pathsforward's (mutants.regex, warrants.bib) which W2169's gate (pathsforward-l) holds, so it builds after that lands. | 2026-10-31T04:17:20Z: stack-pathsforward-t SUBMITTED (behind hooks-aa): inflight.cards_of/read and atomize silent for a top card with a queued or in-flight stack; 1401 tests; 3 mutants. NOT DONE: marking a block naming a card the tick touched; the same exemption for closegate.advanced. | 2026-10-31T04:47:34Z: LANDED efe80dc5 (stack t): atomize silent for a top card whose stack is queued or in flight (inflight.cards_of/read). | 2026-10-31T05:17:20Z: stack-pathsforward-u SUBMITTED (behind hooks-ab): the close's 'more touched, named by no landed commit' skips cards with a live stack (closegate._live); 1402 tests; 2 mutants. | 2026-10-31T05:45:21Z: LANDED 1e84a7bf (stack u): the close's 'more touched, named by no landed commit' skips cards with a live stack. | 2026-10-31: reconciled LANDED 1e84a7bf4a6d291bef78abfc15fe03e7f9383b84 | 2026-11-06T11:10:24Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A sits in main's working tree awaiting github-14's cold review, so no hooks batch can ship until it clears; no code for this card this turn. | 2026-11-08T10:57:54Z: 2026-11-08: blocked on W2353 (b62). The remaining half edits the pathsforward tick-close reader and its registries (mutants.regex, warrants.bib), which would be a second unlanded pathsforward stack beside W1935's retros change; b62 is refused/unlanded and the gate is the serial resource. Resume after b62 lands.",
+      "evidence": "2026-10-30: 2026-10-30: taken. Same rule as W2170 (nemik's umbrella exemption from 'ATOMIZE X (advanced N times without landing)'): both change when closegate/atomize count an advance, so ONE change to that reader should serve both, an exemption for a card with a stack landed since its last advance (W2170) and for evidence-only closes while a live stack names the card (this card). Registries are pathsforward's (mutants.regex, warrants.bib) which W2169's gate (pathsforward-l) holds, so it builds after that lands. | 2026-10-31T04:17:20Z: stack-pathsforward-t SUBMITTED (behind hooks-aa): inflight.cards_of/read and atomize silent for a top card with a queued or in-flight stack; 1401 tests; 3 mutants. NOT DONE: marking a block naming a card the tick touched; the same exemption for closegate.advanced. | 2026-10-31T04:47:34Z: LANDED efe80dc5 (stack t): atomize silent for a top card whose stack is queued or in flight (inflight.cards_of/read). | 2026-10-31T05:17:20Z: stack-pathsforward-u SUBMITTED (behind hooks-ab): the close's 'more touched, named by no landed commit' skips cards with a live stack (closegate._live); 1402 tests; 2 mutants. | 2026-10-31T05:45:21Z: LANDED 1e84a7bf (stack u): the close's 'more touched, named by no landed commit' skips cards with a live stack. | 2026-10-31: reconciled LANDED 1e84a7bf4a6d291bef78abfc15fe03e7f9383b84 | 2026-11-06T11:10:24Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A sits in main's working tree awaiting github-14's cold review, so no hooks batch can ship until it clears; no code for this card this turn. | 2026-11-08T10:57:54Z: 2026-11-08: blocked on W2353 (b62). The remaining half edits the pathsforward tick-close reader and its registries (mutants.regex, warrants.bib), which would be a second unlanded pathsforward stack beside W1935's retros change; b62 is refused/unlanded and the gate is the serial resource. Resume after b62 lands. | 2026-11-14T23:51:13Z: 2026-11-14: the remaining half (--tick-close marking a block that names a card the tick touched) is an edit to the pathsforward tick-close reader and its registries, a second change to the pathsforward dist beside the built work already waiting there (W2380, W2393, W2307, W2264, W2268, W2382). It rides the pathsforward stack (W2433), and I make no tracked-file edit while b66b (W2527) is in the gate. Its blocker W2353 has landed.",
       "issued_at": "2026-10-28T14:33:55Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit:R2",
-      "last_worked": "2026-11-08T10:57:54Z",
+      "last_worked": "2026-11-14T23:51:13Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2097",
       "title": "A stack submit refuses or resolves a landed card still marked working, instead of failing later at the round check",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "nemik:W1219"
       ],
@@ -47320,14 +47328,16 @@
         "hooks",
         "pathsforward"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Read commit_kata.submit_problem and the round refusal (the message 'the working set includes W<n> which is not'), and reconcilecmd.run's plan; build the check as a pure function over (working cards, landed trailers); one stack, hooks dist",
       "evidence": "2026-10-30: 2026-10-30: taken. Note on this very session: tick-open prints 'W<n> LANDED <sha>: WOULD SET ready' for cards the reconciler would resolve (for example W2164, W2171 today), so the resolve half already has a dry-run reader (--reconcile, W1640); the refusal at submit would call its plan. commit_kata.submit_problem is a LIVE hook and main is at its complexity limits (W2116 put its new check in admin_mode), so the check is a new function in a new or small module called from submit_problem, with hooks registries. | 2026-10-31: reconciled STALE | 2026-11-06T11:13:35Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A awaits github-14's cold review in main's working tree; no code for this card this turn. | 2026-11-08T11:10:52Z: 2026-11-08: blocked on W2353 (b62, submitted, running its gate). The check is a new hooks module called from the live commit_kata.submit_problem, with hooks graph/dag/sites/warrants/mutants registries; a second hooks stack cannot be built beside b62's frozen registries (they freeze whole). Resume after b62 lands.",
       "issued_at": "2026-10-28T16:35:55Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1219",
-      "last_worked": "2026-11-08T11:10:52Z",
+      "last_worked": "2026-11-15T00:12:52Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -47477,59 +47487,65 @@
     {
       "symbol": "W2105",
       "title": "gatecpu.sample: a running gate's process-tree CPU (user+sys) emitted as mikemol.gate.cpu_seconds{repo,stack} while it runs",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2068"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Tick emit mikemol.gate.cpu_seconds{repo,stack} (find the gate root pid from the bazel client), then W2106 hung reader over a window",
       "evidence": "2026-10-30: 2026-10-30: taken. A new hooks module (hooks registries, so after hooks-r's verdict). It is the CPU witness this session kept lacking: W2175's 30 CPU-second budget was a judgement because nothing read a test's or a gate's CPU; github-42's HUNG question (W2141, 'is the gate moving?') also wants CPU accrual across two reads. Shape: a pure sample(proc_tree_text) summing utime+stime ticks over a process tree from /proc stat lines passed in as text, plus a thin reader of /proc; emission as mikemol.gate.cpu_seconds goes through mikemol-otlp like ratchet_emit. | 2026-10-31T00:18:15Z: stack-hooks-x SUBMITTED: gatecpu.sample/parse_stat/tree_ticks pure over a /proc dir; 5 mutants; cheap checks clean pre-submit. | 2026-10-31T00:49:10Z: LANDED 8c5a0678 (stack x): gatecpu sampler, no caller. | 2026-10-31: reconciled LANDED 8c5a06785751c344b4e083bd6de4a35efe370ab9 | 2026-11-06T11:54:24Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A (revised) awaits github-14's short re-review in main's working tree, so no hooks batch can ship; no code for this card this turn. | 2026-11-08T11:30:22Z: 2026-11-08: blocked on W2353 (reopened by github-14's cold BLOCK of 42b23583; its fix stack is the next hooks stack and the hooks registries freeze whole). This card adds a caller to the hooks gatecpu sampler: another hooks registry change, so it queues behind that stack. Not touched this turn.",
       "issued_at": "2026-10-28T19:33:38Z",
       "minted_during": "interrupt",
       "caused_by": "W2068",
-      "last_worked": "2026-11-08T11:30:22Z",
+      "last_worked": "2026-11-15T00:47:58Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2106",
       "title": "gatecpu.hung: a learned-window reader that says a gate whose CPU stopped advancing reads hung, and prints CPU +N s since last tick per long gate",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2068"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Learned window from past gates' CPU series; the tick emit feeding gatecpu samples to verdict and printing the CPU line per long gate",
       "evidence": "2026-10-30: 2026-10-30 read: no code yet (card had no next step); blocked on W2103 only for the hooks registry ordering, not for design. | 2026-10-31T01:13:58Z: stack-hooks-y SUBMITTED: gatehung.verdict (moving/hung/unknown over a window) and delta_line; pure, no caller; 5 mutants; cheap checks clean. | 2026-10-31T01:54:44Z: LANDED 74f364bb (stack y): gatehung.verdict and delta_line, pure, no caller. | 2026-10-31: reconciled LANDED 74f364bb8ab2c545f4ebf71be80abea143635973 | 2026-11-06T11:55:06Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A awaits github-14's re-review in main's working tree; no code for this card this turn. | 2026-11-08T11:35:32Z: 2026-11-08: blocked on W2353 (reopened by the cold BLOCK of 42b23583; its fix is the next hooks stack and the hooks registries freeze whole, so a hooks reader module cannot be built beside it). Same reason as W2105.",
       "issued_at": "2026-10-28T19:33:38Z",
       "minted_during": "interrupt",
       "caused_by": "W2068",
-      "last_worked": "2026-11-08T11:35:32Z",
+      "last_worked": "2026-11-15T01:07:17Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2107",
       "title": "gatefirst.failure: the first FAILED or TIMEOUT test summary of a gate read from its build event file, emitted as mikemol.gate.first_failure with its time",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W2068"
       ],
       "touches": [
         "gate-repair"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Read lines 1010-1100 for what else sits between note_failure and the stages, then move the summary into a function and call it after the suite's failure branch; test with the existing hook tests (hooks/tests on pre-commit) and a failing-bazel fixture asserting the post-bazel stages do not run and a refusal row is recorded. Land as its own small hooks stack after W2378, or with it if the bundle names it.",
       "evidence": "2026-10-28: 2026-10-28 LIVE FIXTURES from this session: the readings I took by hand from /var/tmp/mtools-staged/.bep.json are the reader's whole spec. A pure first_failure(bep_text) takes the build event JSON lines, finds the first testSummary whose overallStatus is FAILED or TIMEOUT (the id carries the label, the summary the status and lastStopTime), and returns (label, status, time) or None. Real cases: stack 36's BEP (589 PASSED, ONE FAILED //hooks:graph_fresh), W1746's BEP (1188 PASSED, ONE TIMEOUT //hooks:test_worktreereap_save at 02:19Z, attemptCount 1). The timeout's time-to-known-red was about 4 h before the gate ended: the event is the reading github-8f's host law needs. | 2026-10-28: 2026-10-28 github-8f (R80 item 3): a FIRST-FAILURE STOP for a train tip. The bisect probes prefix trees itself, so running a known-red tip to completion buys nothing; second long red run today after stack 36. Memory: fail-fast-order-by-failure-rate-over-cost. READ from source whether it is safe in traindrive: traindrive's contract (hooks/src/mikemol/hooks/traindrive.py lines 3, 13, 118-119, 163) is that ANY non-zero tip gate is a red tip and is bisected (trainbisect.first_bad, about log2(n) gates), so a tip gate stopped at its first FAILED/TIMEOUT summary reads exactly as a red tip: the same path, earlier, and I observed it by accident on stack 36 (a SIGINT to the bazel client without the marker made the leader start a bisect gate at once). RISK STATED: a flaky first failure stops the tip early and the bisect re-gates the prefixes, which pass if it was a flake, so green prefixes land and nothing is lost but the tip's remaining coverage, which the bisect re-covers prefix by prefix. The marker path (rc 75) is NOT the right release here, it ends the drive instead of bisecting. LIVE FACT 2026-10-28 21:33Z (reading for github-8f item 1): stack 38's tip gate (mtools-gate-3458880.sh, begun 18:11Z) had NOT ended: 456 of 1533 tests, console 'failed 2', BEP 1 FAILED (//hooks:mutants_100 at 387 summaries about 20:33Z); no bisect had started. WITNESS: a replay of stack 38 stops the tip gate at the 387-summary failure and starts the bisect there. | 2026-10-28: 2026-10-28 github-8f note: the tail is the same class one layer up. After I interrupted stack 38's bazel client (about 21:35Z) the gate SCRIPT (mtools-gate-3458880.sh) kept running its post-bazel stages (a domain witness: domain_witness.sh ratchet //ratchet:mypy ..., 216 s old at 21:49Z) although the bazel phase had already failed. ADD: on a red bazel phase the gate script SKIPS its remaining stages and exits non-zero at once, so the leader bisects without the tail. Which script stage reads a failed bazel as 'carry on' is the pre-commit hook's own structure (.githooks/pre-commit), unread. | 2026-10-29: github-8f 01:3xZ 2026-10-29: the train bisect re-discovers a known-bad group at full gate cost (probe at 27 of 1533 summaries after 3 h). traindrive.drive has no known-refusing input: wanted is 'mark group KEY refusing with its cause card, skip its probe, land the green groups'. Source: traindrive.py 199-257, first_bad 108-119. | 2026-10-29: 2026-10-29 02:0xZ reading: withdrawing the train LEADER (marker + SIGINT to the bazel client) stops ONE probe and the drive goes straight into the next boundary-tree gate; the marker is consumed once. After the five followers were withdrawn the next probe ran at jobs=11 (863 summaries in about 19 min) against 27 in 3 h at jobs=2 under six contending stacks. So the missing modes: (a) a withdraw that ends the DRIVE not one probe, (b) known-refusing group skip. | 2026-10-29: 2026-10-29 probe verdict: 3 failed of 1533 in 3408 s at jobs=11: hooks:mutants_100 and mutants_54 (isolated.py refresh-not-run and restored-files-not-named, errored: group 39's mutants.regex backslash-n bug, W2061) and pathsforward:test_admission TIMEOUT 63.2 s (unattributed). The drive began a next gate (mtools-gate-393389) at once: it keeps bisecting groups whose submitting processes were withdrawn. | 2026-10-30: 2026-10-30 read: still no code. Today's second fixture: stack n's BEP, one TIMEOUT //debtplan:test_mint at 60.1 s, found only after the whole suite (the first-failure stop would have named it at once). | 2026-10-30T23:19:32Z: stack-hooks-w SUBMITTED: gatefirst.first_failure pure reader, 3 mutants, mutants_gen/graph --check clean pre-submit. | 2026-10-30T23:52:50Z: LANDED 0d2ea6cf (stack w): gatefirst.first_failure pure reader, no caller. | 2026-10-31: reconciled LANDED 0d2ea6cf98ca0cd76cadd069e472e194d03d951f | 2026-11-06T11:57:21Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A awaits github-14's re-review in main's working tree; no code for this card this turn. | 2026-11-08T11:57:12Z: 2026-11-08: blocked on W2353 (b63, its fix stack, is gated or being re-gated; the hooks registries freeze whole, and this card adds an emitter and a traindrive stop, which are hooks module and registry changes, one of them in a live hook). Not touched this turn. | 2026-11-08T14:50:59Z: 2026-11-08: github-14 ruled W2107 (skip the post-bazel stages after a failed bazel phase) GATE REPAIR, next after W2356. MEASURED reason: after the kine guard interrupted the suite at 14:39:50Z, the gate script ran about 30 more bazel commands to 14:45:28Z (witness and check targets), adding writes to a datastore already over the trip while the NVMe wrote 385-444 MB/s. Tagged gate-repair; blocked on W2356 only (replaces the W2353 block). The edit is in .githooks/pre-commit's stage sequencing (a live hook: deps first, live file last, tool first), read before building. | 2026-11-13T20:05:29Z: 2026-11-13 READ .githooks/pre-commit (live hook), no edit yet. (1) THE FIRST-FAILURE STOP IS ALREADY IN: lines 884-889 run bazel test with --nokeep_going --notest_keep_going, with a comment naming it the first-failure stop of W2107 by bazel's own flag, so the traindrive-side stop is done for the bazel phase. (2) THE REMAINING GAP IS THE TAIL: after the verdict (suite rc read at 892-932) a red suite does NOT stop the script. It goes on to the gate-targets metrics send (938-946), the ratchet-emit send (954-959), bazel info server_pid and the core-limit report (966-971), and only inside if _suite_rc is nonzero (972) does it name the failed targets, run build_failure_cause (986), set fail=1 (987) and note_failure (1009); everything after that (the witness and shell-check stages through about 1330, including domain_witness.sh, stubtest and the ratchet stage) still runs, and the REFUSED summary and exit 1 come only at 1355-1367. This is the tail github-14 measured: about 30 more bazel commands for 5.5 minutes after the guard interrupted the suite. DESIGN: put the refusal summary (record_refusal, the REFUSED line, the replayed detail, exit 1: lines 1355-1367) in a function defined above the suite and call it right after note_failure at 1009 and its reproduce-command block, so a red suite exits at once with its own account and skips the post-bazel stages. COST NAMED: a red suite then does not also report an unrelated later failure (shellcheck, stubtest) in the same refusal. RISK: this is a LIVE HOOK, so tool first, deps first, the live file last, never --3way (standing rule); the exit path must still call record_refusal so a refusal row is written. NOT BUILT.",
       "issued_at": "2026-10-28T19:33:38Z",
       "minted_during": "interrupt",
       "caused_by": "W2068",
-      "last_worked": "2026-11-13T20:05:29Z",
+      "last_worked": "2026-11-15T02:09:44Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -47556,20 +47572,22 @@
     {
       "symbol": "W2109",
       "title": "mikemol-buildlog gains a live mode: each test target of a RUNNING invocation as pending, running or done, flagging zero running actions across two readings",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "buildtel",
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "The shim script and the gateenv.child_env PATH wiring (after the hooks venv rebuild with the gate empty); then Part B",
       "evidence": "2026-10-28: 2026-10-28 paperkit, MEASURED (ls of both gate dirs): paperkit's gate directory /var/tmp/mikemol/gate/paperkit holds only .lock, .tree and tree, NO .bep.json, while /var/tmp/mtools-staged has a live 52,789,063-byte .bep.json; paperkit's running gate command line (optionsParsed.explicitCmdLine) is --config=mutant --config=remote --local_resources=memory=16000 with no --build_event_json_file. So the mode's FIRST source (a local BEP file) does not exist for a paperkit gate today. paperkit will NOT add it to its .bazelrc (shared build config, no evidence it is safe). REQUIRED ON THIS CARD: the commit gate writes a BEP file for EVERY repo's gate, as mtools' staged gate does, i.e. mikemol-commit passes --build_event_json_file=<gate dir>/.bep.json to the bazel test of the repository's gate (not .bazelrc), the repository's own pre-commit untouched. Without it the live mode falls back to bazel query plus a claim-to-target map. NOT READ: where mikemol-commit or the mtools .githooks/pre-commit builds the bazel test line (mtools' own pre-commit adds the flag; paperkit's pre-commit is paperkit's). | 2026-10-31T06:09:14Z: PART A READ: mtools' own .githooks/pre-commit adds the flag itself on the bazel test line (--build_event_json_file under the staged tree's .bep.json, next to the --nokeep_going and jobs flags); mikemol-commit passes the repository's gate nothing for it. No environment variable of bazel's makes it write a BEP file, and the repository's own hook is not ours to edit. SEAM CHOSEN: a bazel shim. mikemol-commit already builds the gate child's environment (hooks/src/mikemol/hooks/gateenv.child_env); it can put a one-file shim named bazel first on that PATH which, for a first word of test or build, appends --build_event_json_file=<gate dir>/.bep.json (unless the command already has one) and execs the real bazel. A repository whose hook runs bare bazel then writes a BEP file with no edit to its hook or .bazelrc. Needs: the real bazel found before the shim, a refusal to loop through the shim, and a test over the argv it builds. | 2026-10-31T06:43:16Z: stack-hooks-ad SUBMITTED: bazelshim.with_bep and real_bazel (pure, no caller); 81 related tests; 4 mutants; cheap checks clean. | 2026-10-31T07:15:20Z: LANDED 96f71766 (stack ad): bazelshim.with_bep and real_bazel, pure, no caller. | 2026-10-31: reconciled LANDED 96f71766d25489c6d17d8ea7025c843f90db3477 | 2026-11-06T11:58:01Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A awaits github-14's re-review in main's working tree; no code for this card this turn. | 2026-11-08T12:09:55Z: 2026-11-08: blocked on W2356. The next step wires a bazel shim into the gate child's environment (gateenv.child_env, a live hook) and needs a hooks venv rebuild with the gate empty. The gate is being killed by the legacy kine guard (two consecutive kills of b63), so no gate can verify a live-hook change until the freeze lands. | 2026-11-13T21:20:41Z: 2026-11-13: W2356 landed, so that block is gone. It now waits on the hooks gate-repair stack (W2378 first in W2433's order): the next step edits gateenv.child_env, a live hook in the hooks dist, and needs a hooks venv rebuild with the gate empty, and the hooks registries (mutants.regex, warrants.bib, sites, BUILD) already hold W2378, W2367, W2353 and W2340's uncommitted lines and freeze whole, so a further hooks change would stack unreviewed bytes. Nothing built here.",
       "issued_at": "2026-10-28T21:29:13Z",
       "minted_during": "interrupt",
       "caused_by": "paperkit:W547",
-      "last_worked": "2026-11-13T21:20:41Z",
+      "last_worked": "2026-11-15T01:24:06Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -47677,20 +47695,22 @@
     {
       "symbol": "W2115",
       "title": "Publish each repo's queue and its forecast to Victoria: stacks, train membership, forecast land times, bisect progress and a learned baseline",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks",
         "buildtel"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After b66 lands: atomize into landable units, first the durable per-probe verdict record (a finished probe appends tree id, verdict and failed labels before the log is removed, github-8f's sensor defect), then mikemol.queue.stacks and train_member from the live map, then landed_ts, then the learned gate duration and forecast_land_ts, then the bisect forecasts and the error series.",
       "evidence": "2026-10-28: 2026-10-28 luthen (via github-8f), who holds its panels on luthen:W1722 waiting for the series names: ALSO publish each stack's ACTUAL landed time, so forecast against actual can be drawn: mikemol.queue.landed_ts{repo,stack} (epoch seconds, sent once when the stack's land is observed, by the leader at COMMITTED); mikemol.queue.land_error_seconds{repo,stack} may be derived by the consumer or sent as landed_ts minus the last forecast_land_ts. | 2026-10-29: github-8f 2026-10-29: forecast model input: contention, not test count, set tonight's bisect cost: 27 summaries in 3 h at jobs=2 with six stacks contending vs 863 in 19 min at jobs=11 alone. Also on W2107. | 2026-10-29: github-8f 2026-10-29, sensor defect: a bisect probe's verdict and failed labels live only in /var/tmp/mtools-staged/.suite.log, which the gate deletes; gate-verdicts.jsonl takes no line per probe. Probe 2 (mtools-gate-393389) verdict was unreadable after the fact. Wanted: each probe appends tree id, verdict and failed labels to a durable record (or the bisect.probed series) when it ends, before the log is removed. Witness: a finished probe's verdict is readable afterwards. | 2026-11-06T12:40:35Z: 2026-11-06: taken at the Stop hook's ask; W2301 part A v3 awaits github-14's limited re-review in main's working tree; no code for this card this turn. | 2026-11-08T13:26:03Z: 2026-11-08: blocked on W2356. The series are new hooks emitters with hooks registries (graph, dag, sites, warrants, mutants) and a producer in the commit path, and the gate queue is W2356 (in re-review after D1, waiting on luthen's W2387 gate) then W2353. Its trip record is also the sensor W2359 shares (a kine trip spans a gate: the series that would show forecast error against kills). Not touched this turn. | 2026-11-13T21:30:53Z: 2026-11-13: W2356 landed, so that block is gone. It waits on the hooks gate-repair stack (b66, W2378 first in W2433's order, with github-cb reviewing): these series are new hooks emitters plus a producer in the commit path with hooks registries that freeze whole, and b66 already holds the hooks registries' uncommitted lines. Also too coarse for one landing: it is six series (stacks, train_member, forecast_land_ts, bisect probed and forecasts, landed_ts, forecast error) plus a durable per-probe verdict record. Nothing built here.",
       "issued_at": "2026-10-28T23:19:56Z",
       "minted_during": "interrupt",
       "caused_by": "github-8f",
-      "last_worked": "2026-11-13T21:30:53Z",
+      "last_worked": "2026-11-15T01:41:03Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -47968,19 +47988,21 @@
     {
       "symbol": "W2127",
       "title": "A single commit (the non-stack path) writes the landing record through that builder on every call, with no --ship needed",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1969"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "commit_kata.after_of on the single-commit path calls the W2126 builder and emit_landings on every call (path=direct); test: a single commit with no --ship produces the record.",
       "evidence": "2026-11-05T19:15:25Z: 2026-11-05: blocked on W2219: edits commit_kata.py and its tests (hooks lane, one registry-carrying change per HEAD); stack 19 holds the hooks registries. | 2026-11-06T00:50:57Z: 2026-11-06 CO-LANDING, not blocking (github-14 for the operator, who flagged nonconvergence): I had blocked this card on W2219, a ROLLING paydown card with about 45 entries left, so anything behind it waited indefinitely; that was lane order, not a dependency. The block is lifted. A hooks-lane change lands in the SAME stack as the next W2219 batch, which is the honest fall the stack needs anyway (the pace guard), so it costs no gate time beyond the stack; hooks/graph.json and dag.bzl are the same regeneration a batch already does. Order for the guard changes: rule (c) with the W2287 fix, then W2301 once its cold review clears. | 2026-11-06T13:20:15Z: 2026-11-06: taken at the Stop hook's ask while the W2301 part A plus W2219 batch 32 stack holds the gate; no code for this card this turn. | 2026-11-08T14:07:32Z: 2026-11-08: blocked on W2356 (b64 in its gate). The step edits commit_kata.after_of, a LIVE hook module at its complexity limits, plus hooks registries, which freeze whole while the gate runs; it follows the gate queue (W2356, then the W2353 fix). | 2026-11-13T22:01:05Z: 2026-11-13: blocked on W2378 (b66, staged, unsubmitted): the step edits commit_kata.after_of, and b66 already holds commit_kata.py and the hooks registries whole; editing it now would fork the staged bytes. Resumes after b66 lands.",
       "issued_at": "2026-10-29T05:32:54Z",
       "minted_during": "interrupt",
       "caused_by": "W1969",
-      "last_worked": "2026-11-13T22:01:05Z",
+      "last_worked": "2026-11-15T01:46:36Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -47993,19 +48015,21 @@
     {
       "symbol": "W2128",
       "title": "The refusal and withdrawal paths write a refused or withdrawn record through the same builder, and the train path writes path=train",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1969"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "In a clean scratch tree on d71e12a... or later: landing_records gains the non-COMMITTED verdicts; commit_kata calls the emit from the submit-time refusal; tests: a REFUSED output yields a record with its rc and reason, a submit refusal emits one, a COMMITTED stays unchanged; mutants; warrants.",
       "evidence": "2026-10-30: 2026-10-29 (github-42, cold8 finding 7, due 2026-11-02): VictoriaLogs holds mikemol-commit landing rows (event landing, verdict COMMITTED, with stack_key) but NO non-COMMITTED row in 72 h, though nemik's stack 680 was refused at submit at 22:45Z and 681 at its gate. ASK: ship every verdict, REFUSED (submit-time and gate) and NOT COMMITTED, to the same service, with repo, stack_key, waypoints, the refusal reason line and the time, so the host's stall classifier reads a repo's last verdict by query. Witness: a forced submit-time refusal appears as a row with verdict REFUSED and its reason. This is this card's scope (W2126's landing_records builder is committed-only today: it yields a record per COMMITTED line and none for a refusal). Not built; hooks-lane, behind the train. | 2026-10-30: 2026-10-30 READ commit_kata.py (the qualifier I owed github-42). (1) GATE PATH: after the run, commit_kata line ~922 calls _emit_stack(tee.getvalue(), moments, waypoints, env) for EVERY outcome; emit_stack sends the stack's span (stack_event folds all verdict lines, so a REFUSED stack has a span with its verdict) and calls emit_landings, whose landing_records yields a record only per COMMITTED line. So the log table has landing rows for COMMITTED only by construction, while refusals exist only as trace spans. (2) SUBMIT-TIME PATH: commit_kata.unordered() (line ~1204) prints 'NOT COMMITTED <repo>: this stack is refused at submit, before it waits:' plus the finding, takes the submission out of the counts and RETURNS EXIT_NOT_COMMITTED; it never calls _emit_stack, so a submit-time refusal emits NOTHING at all (neither span nor log). That confirms my inference to github-42. (3) The verdict words are different: 'NOT COMMITTED' at submit, 'REFUSED' at the gate. BUILD: a landing-style record for every verdict with verdict, repo, stack_key, waypoints and the reason line (the first finding line); gate path via landing_records (drop the COMMITTED-only filter, keep sha empty for non-landings), submit path via a new emit call in unordered() and its sibling submit refusals (grep 'NOT COMMITTED' in the submit section). | 2026-10-30: 2026-10-30: BUILT in a clean scratch tree on d71e12a9 and SUBMITTED as stack hooks-k: refusal_records and emit_refusals in commit_span (non-landing verdicts as log rows), emit_stack calls it, unordered() emits a NOT COMMITTED verdict line at submit; 5 tests, 4 declared mutants, 5 warrants, sites regenerated; pytest 31 passed on the two test files, MUTATE_LINT clean, not run under bazel. Left: the withdrawn event (W2126), the single-commit path (W2127), and a VictoriaLogs query showing the rows. | 2026-10-30: 2026-10-30: LANDED 56a13d3 (stack hooks-k). Non-landing verdicts ship as log rows and the submit-time refusal emits. Open: the withdrawn event, W2127 (single-commit path), and one VictoriaLogs query showing the rows. | 2026-10-31: reconciled LANDED 56a13d324019d627fbbd12194c28d6f60cd7c154 | 2026-11-06T13:22:24Z: 2026-11-06: taken at the Stop hook's ask while the W2301 part A plus W2219 batch 32 stack holds the gate; no code for this card this turn. | 2026-11-08T14:13:00Z: 2026-11-08: blocked on W2356 (b64 resubmitted, in its gate). The step changes landing_records and the commit_kata submit-time refusal, a live hook module, with hooks registries that freeze whole while the gate runs. Related records to read first and extend as one: W2153 (departure tombstone) and W2134 (gate-verdicts.jsonl). | 2026-11-13T22:10:49Z: 2026-11-13: blocked on W2378 (b66, staged, refused at submit until the published round lists W2378): the step edits commit_kata.py and the hooks registries, which b66 holds whole. Resumes after b66 lands.",
       "issued_at": "2026-10-29T05:32:54Z",
       "minted_during": "interrupt",
       "caused_by": "W1969",
-      "last_worked": "2026-11-13T22:10:49Z",
+      "last_worked": "2026-11-15T01:47:58Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -48018,19 +48042,21 @@
     {
       "symbol": "W2129",
       "title": "Pre-step NOTE lines (key=value) are collected into the record's notes list",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1969"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Lines a declared pre-step prints beginning NOTE (key=value) are collected into the record's notes list, so host_rows rides as 'host_rows=2' with no repo-specific field; a test with two NOTE lines and a non-NOTE line.",
       "evidence": "2026-11-06T13:22:57Z: 2026-11-06: taken at the Stop hook's ask while the W2301 part A plus W2219 batch 32 stack holds the gate; no code for this card this turn. | 2026-11-08T14:47:34Z: 2026-11-08: blocked on W2356. The step reads NOTE lines from a declared pre-step into the landing record (hooks module, hooks registries that freeze whole), and every hooks stack is held while the kine guard kills the gate (four refusals of b62-b64 on it; further submits wait for a quiet kine series and a named cause). | 2026-11-13T22:13:40Z: 2026-11-13: blocked on W2378 (b66, in its gate now, task b0pols0aj): the step adds a hooks module change with its mutant, warrant and sites entries, and hooks/mutants.regex and hooks/warrants.bib freeze whole while b66 gates. Resumes after b66 lands.",
       "issued_at": "2026-10-29T05:32:54Z",
       "minted_during": "interrupt",
       "caused_by": "W1969",
-      "last_worked": "2026-11-13T22:13:40Z",
+      "last_worked": "2026-11-15T02:04:57Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -48065,19 +48091,21 @@
     {
       "symbol": "W2131",
       "title": "mikemol-commit uses the declaration's default paths when a commit or stack entry names none",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1970"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "In commit_kata.main, a plain commit or a stack entry with no paths takes commitdecl.read(root).paths; test: a declaration's paths are used and an explicit path wins.",
       "evidence": "2026-11-06T13:38:16Z: 2026-11-06: taken at the Stop hook's ask while the W2301 part A plus W2219 batch 32 stack holds the gate; no code for this card this turn. | 2026-11-08T14:50:21Z: 2026-11-08: blocked on W2356. The step edits commit_kata.main (a live hook module at its limits) with hooks registries that freeze whole, and every hooks stack is held: the kine guard has killed the last gates, and submits wait for kine under 4 s for 15 minutes and a named cause (github-14 is putting the output-base placement to the operator). | 2026-11-13T22:18:34Z: 2026-11-13: blocked on W2378 (b66, in its gate, task b0pols0aj): the step edits commit_kata.main, and b66 already holds commit_kata.py and the hooks registries whole. Resumes after b66 lands.",
       "issued_at": "2026-10-29T05:52:11Z",
       "minted_during": "interrupt",
       "caused_by": "W1970",
-      "last_worked": "2026-11-13T22:18:34Z",
+      "last_worked": "2026-11-15T02:06:59Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -48089,19 +48117,21 @@
     {
       "symbol": "W2132",
       "title": "mikemol-commit runs each declared pre-step before the gate and refuses the submission, naming the step and its exit code, when one does not exit 0",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W1970"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Before the gate, run each commitdecl pre_step in the repository root; a non-zero exit refuses the submission naming the step argv and its code (its NOTE lines feed W2129); test with a passing and a failing step.",
       "evidence": "2026-11-06T13:39:06Z: 2026-11-06: taken at the Stop hook's ask while the W2301 part A plus W2219 batch 32 stack holds the gate; no code for this card this turn. | 2026-11-08T15:29:07Z: 2026-11-08: blocked on W2356. The step runs each commitdecl pre_step before the gate (commit_kata, a live hook module) with hooks registries that freeze whole; every hooks stack waits for kine to hold under 4 s and for luthen's W2397 gate (began 15:27Z) to end, then b64 (W2356) and W2107. | 2026-11-13T22:19:54Z: 2026-11-13: blocked on W2378 (b66, in its gate, task b0pols0aj): the step runs pre-steps from commit_kata, which b66 holds whole with the hooks registries. Resumes after b66 lands.",
       "issued_at": "2026-10-29T05:52:11Z",
       "minted_during": "interrupt",
       "caused_by": "W1970",
-      "last_worked": "2026-11-13T22:19:54Z",
+      "last_worked": "2026-11-15T02:09:31Z",
       "ticks_blocked": 0,
       "completed": null,
       "manifest": [
@@ -52774,15 +52804,16 @@
         "gate-repair"
       ],
       "blocked_on": [
-        "W2530"
+        "W2531",
+        "W2533"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Ask github-cb whether to land hooks/BUILD.bazel shards 215 to 394 as the guard prescribes (a stopgap, as audiostruct was) with this stable cut as the hooks entry, or decompose first (W2480).",
-      "evidence": "2026-11-08T03:09:45Z: MEASURED alone under bazel (invocation f010995f): suite 2.08 s, test log shard cpu=2.4s idle_wall=3.1s; 8 cases 0.05-0.67 s each in the dev venv 2.4 s total. No sleep, poll or subprocess wait in the test; its cost is ~50 git subprocess calls (four worktree adds per case in _prepared, three reports) plus a /proc cwd scan per classification (worktreereap.holders). The 60.1 s TIMEOUT in the b60 gate was therefore a ~20x wall stretch of 2.4 s CPU under a 13-action-parallel, 4307 s gate: a wall-time dependency on load, as ruled. NOT reproduced yet under load. Next: reproduce by running it beside a CPU hog, then cut the CPU (fewer git calls: share one prepared repo per module, drop redundant report calls) rather than raise the timeout. | 2026-11-08T03:11:28Z: Timing, from the b60 output: test_worktreereap_remove timed out at 2026-11-08 02:47:52 UTC inside a gate that ran 4306.98 s (so it began about 01:36Z); luthen's window of NVMe 41-89% busy and kine p99 saturated is 01:55Z to 02:45Z, load average 40. The overlap fits a load stretch but excuses nothing: still make it load-agnostic. The mdstruct witness arm 1 needs a probe that cannot be fooled by timing or cached bytes (nonce already named in its own message; check it is applied before arm 1 reads). | 2026-11-08T03:22:30Z: 2026-11-08 FIRST CUT (uncommitted, hooks/tests/test_worktreereap_remove.py): _prepared takes the worktree names a case needs; the four cases that use only the clean worktree stop adding dirty, ahead and gone (about 3 worktree adds, a commit and a teardown fewer each). Dev venv: 8 cases 2.41 s -> 1.51 s wall. ruff check and format clean. This lowers CPU ~37%; it does NOT yet show the test passes beside a CPU hog, which is the claim W2355 owes. Next: run it beside a hog under bazel, compare, and decide whether a further cut (one shared template repo copied per case) is needed. Then stack with b60. | 2026-11-08T09:34:39Z: 2026-11-08 FAMILY NOTE from W2094: test_worktreereap_save also TIMED OUT at 60.1 s in W1746's gate (2026-10-28) and passed alone in about 117 s with a 600 s limit. Same directory of tests (test_worktreereap_*: remove, save, stable, plain) built with the same _prepared pattern of many git processes; the same cut (build only the worktrees a case needs, share the setup) is the candidate for the siblings, to be measured one by one, not assumed. | 2026-11-13T21:47:00Z: 2026-11-13 MEASURED the owed claim, dev venv, the 8-case file hooks/tests/test_worktreereap_remove.py, a CPU hog = a busy-loop python pinned with taskset to the SAME core as the test (so a contended core, not a loaded host): unpinned beside no hog of mine (the host itself was loaded by another repo's land): 4.66 s total, slowest case 1.30 s. Pinned beside ONE hog: 5.53 s, slowest 1.38 s. Pinned beside FOUR hogs: 14.02 s, slowest 3.19 s. All 8 pass in each arm. HEADROOM against the 60 s target timeout: about 4.3x over the four-hog arm. READING: the wall stretch tracks the number of contenders (about 3x at four) and the file stays far under 60 s, but this does NOT prove load-agnosticism: the b60 TIMEOUT was a 20 to 25x stretch under a loaded host with 13 parallel actions, which this point measurement did not reproduce. The cheap further cut stands as the real fix (a shared template repo copied per case: three git worktree adds and a commit per case are the CPU), not a longer timeout. | 2026-11-13T22:38:07Z: 2026-11-13 SECOND CUT BUILT (uncommitted, hooks/tests/test_worktreereap_remove.py, written in one gated Write, pycheck admitted): a module-scoped template fixture builds one repository with one commit and every case copies it (shutil.copytree) instead of init, add and commit; the template holds no worktree so its .git carries no absolute path. MEASURED, dev venv, same method as before (hogs = busy-loop pythons taskset to core 6, the test pinned to core 6): unpinned 8 passed in 1.25 s (slowest 0.29 s); pinned beside FOUR hogs 8 passed in 6.71 s, slowest case 1.56 s, against 14.02 s and 3.19 s for the same arm before this cut: about 2.1x less wall under that contention, about 9x headroom against 60 s. Still NOT proven load-agnostic (the b60 stretch was 20 to 25x on a loaded host). NOT DONE: the same cut for the siblings test_worktreereap_save, _stable and _plain, measured one by one; the stack that lands it (hooks lane, after b66; the file touches no registry, so it needs no sites or warrants change). | 2026-11-14T00:03:43Z: 2026-11-13 SIBLING 1 OF 3 DONE (uncommitted, hooks/tests/test_worktreereap_save.py, one gated Write, pycheck admitted): the same module-scoped template fixture and copytree per case; 7 cases pass in 2.13 s unpinned (slowest 0.55 s). Not measured beside hogs. NOT DONE: test_worktreereap_stable (it has the same init, add, commit setup at line 28) and any third sibling; the contended-core measurement for the family; the stack entry (W2355 is rank 2 in the published round, so it may ride b66 as its own entry). | 2026-11-14T22:12:30Z: 2026-11-14 LANDED as 34556ad6 (pushed with b66). Still open on this card: test_worktreereap_stable has the same setup and is not cut, and the family is not measured beside CPU hogs together. | 2026-11-14T22:18:18Z: 2026-11-14: BUILT in the tree, uncommitted: hooks/tests/test_worktreereap_stable.py cut the same way (module-scoped template repository copied per case; 6 cases in 0.48 s, no new test function; ruff, pairing and mutants_gen clean; blob 606c24d0 stored). NOT in a stack yet: the shard guard refuses ANY stack touching the hooks dist while //hooks:mutants_124 reads 220 CPU-s of 300 (73%) and prescribes hooks shards 394 (now 215); a stack that carries hooks/BUILD.bazel is the repair. That reshard is a hooks-wide decision (and the operator's W2480 says decompose, not shard) so it goes to github-cb before it is staged. | 2026-11-14T22:20:33Z: 2026-11-14: blocked on W2530 (the hooks shard-guard decision): the built stable cut touches the hooks dist, and the guard refuses any hooks stack until hooks/BUILD.bazel is carried with the reshard or the grid is decomposed. A working mark does not help at submit (it reads as ready); a real block does.",
+      "evidence": "2026-11-08T03:09:45Z: MEASURED alone under bazel (invocation f010995f): suite 2.08 s, test log shard cpu=2.4s idle_wall=3.1s; 8 cases 0.05-0.67 s each in the dev venv 2.4 s total. No sleep, poll or subprocess wait in the test; its cost is ~50 git subprocess calls (four worktree adds per case in _prepared, three reports) plus a /proc cwd scan per classification (worktreereap.holders). The 60.1 s TIMEOUT in the b60 gate was therefore a ~20x wall stretch of 2.4 s CPU under a 13-action-parallel, 4307 s gate: a wall-time dependency on load, as ruled. NOT reproduced yet under load. Next: reproduce by running it beside a CPU hog, then cut the CPU (fewer git calls: share one prepared repo per module, drop redundant report calls) rather than raise the timeout. | 2026-11-08T03:11:28Z: Timing, from the b60 output: test_worktreereap_remove timed out at 2026-11-08 02:47:52 UTC inside a gate that ran 4306.98 s (so it began about 01:36Z); luthen's window of NVMe 41-89% busy and kine p99 saturated is 01:55Z to 02:45Z, load average 40. The overlap fits a load stretch but excuses nothing: still make it load-agnostic. The mdstruct witness arm 1 needs a probe that cannot be fooled by timing or cached bytes (nonce already named in its own message; check it is applied before arm 1 reads). | 2026-11-08T03:22:30Z: 2026-11-08 FIRST CUT (uncommitted, hooks/tests/test_worktreereap_remove.py): _prepared takes the worktree names a case needs; the four cases that use only the clean worktree stop adding dirty, ahead and gone (about 3 worktree adds, a commit and a teardown fewer each). Dev venv: 8 cases 2.41 s -> 1.51 s wall. ruff check and format clean. This lowers CPU ~37%; it does NOT yet show the test passes beside a CPU hog, which is the claim W2355 owes. Next: run it beside a hog under bazel, compare, and decide whether a further cut (one shared template repo copied per case) is needed. Then stack with b60. | 2026-11-08T09:34:39Z: 2026-11-08 FAMILY NOTE from W2094: test_worktreereap_save also TIMED OUT at 60.1 s in W1746's gate (2026-10-28) and passed alone in about 117 s with a 600 s limit. Same directory of tests (test_worktreereap_*: remove, save, stable, plain) built with the same _prepared pattern of many git processes; the same cut (build only the worktrees a case needs, share the setup) is the candidate for the siblings, to be measured one by one, not assumed. | 2026-11-13T21:47:00Z: 2026-11-13 MEASURED the owed claim, dev venv, the 8-case file hooks/tests/test_worktreereap_remove.py, a CPU hog = a busy-loop python pinned with taskset to the SAME core as the test (so a contended core, not a loaded host): unpinned beside no hog of mine (the host itself was loaded by another repo's land): 4.66 s total, slowest case 1.30 s. Pinned beside ONE hog: 5.53 s, slowest 1.38 s. Pinned beside FOUR hogs: 14.02 s, slowest 3.19 s. All 8 pass in each arm. HEADROOM against the 60 s target timeout: about 4.3x over the four-hog arm. READING: the wall stretch tracks the number of contenders (about 3x at four) and the file stays far under 60 s, but this does NOT prove load-agnosticism: the b60 TIMEOUT was a 20 to 25x stretch under a loaded host with 13 parallel actions, which this point measurement did not reproduce. The cheap further cut stands as the real fix (a shared template repo copied per case: three git worktree adds and a commit per case are the CPU), not a longer timeout. | 2026-11-13T22:38:07Z: 2026-11-13 SECOND CUT BUILT (uncommitted, hooks/tests/test_worktreereap_remove.py, written in one gated Write, pycheck admitted): a module-scoped template fixture builds one repository with one commit and every case copies it (shutil.copytree) instead of init, add and commit; the template holds no worktree so its .git carries no absolute path. MEASURED, dev venv, same method as before (hogs = busy-loop pythons taskset to core 6, the test pinned to core 6): unpinned 8 passed in 1.25 s (slowest 0.29 s); pinned beside FOUR hogs 8 passed in 6.71 s, slowest case 1.56 s, against 14.02 s and 3.19 s for the same arm before this cut: about 2.1x less wall under that contention, about 9x headroom against 60 s. Still NOT proven load-agnostic (the b60 stretch was 20 to 25x on a loaded host). NOT DONE: the same cut for the siblings test_worktreereap_save, _stable and _plain, measured one by one; the stack that lands it (hooks lane, after b66; the file touches no registry, so it needs no sites or warrants change). | 2026-11-14T00:03:43Z: 2026-11-13 SIBLING 1 OF 3 DONE (uncommitted, hooks/tests/test_worktreereap_save.py, one gated Write, pycheck admitted): the same module-scoped template fixture and copytree per case; 7 cases pass in 2.13 s unpinned (slowest 0.55 s). Not measured beside hogs. NOT DONE: test_worktreereap_stable (it has the same init, add, commit setup at line 28) and any third sibling; the contended-core measurement for the family; the stack entry (W2355 is rank 2 in the published round, so it may ride b66 as its own entry). | 2026-11-14T22:12:30Z: 2026-11-14 LANDED as 34556ad6 (pushed with b66). Still open on this card: test_worktreereap_stable has the same setup and is not cut, and the family is not measured beside CPU hogs together. | 2026-11-14T22:18:18Z: 2026-11-14: BUILT in the tree, uncommitted: hooks/tests/test_worktreereap_stable.py cut the same way (module-scoped template repository copied per case; 6 cases in 0.48 s, no new test function; ruff, pairing and mutants_gen clean; blob 606c24d0 stored). NOT in a stack yet: the shard guard refuses ANY stack touching the hooks dist while //hooks:mutants_124 reads 220 CPU-s of 300 (73%) and prescribes hooks shards 394 (now 215); a stack that carries hooks/BUILD.bazel is the repair. That reshard is a hooks-wide decision (and the operator's W2480 says decompose, not shard) so it goes to github-cb before it is staged. | 2026-11-14T22:20:33Z: 2026-11-14: blocked on W2530 (the hooks shard-guard decision): the built stable cut touches the hooks dist, and the guard refuses any hooks stack until hooks/BUILD.bazel is carried with the reshard or the grid is decomposed. A working mark does not help at submit (it reads as ready); a real block does. | 2026-11-14T22:22:03Z: 2026-11-14: github-cb ruled on W2530: decompose first, no stopgap to 394. Re-pointed from W2530 to W2531 (the hooks slice of W2480) so the demand flows to the decomposition by rank. W2532 (the shard guard judging only the targets whose cone a stack's paths enter) may let this stable cut land before the full decomposition.",
       "issued_at": "2026-11-08T03:00:29Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-11-14T22:20:33Z",
+      "last_worked": "2026-11-14T22:24:15Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -52811,7 +52842,7 @@
     {
       "symbol": "W2357",
       "title": "W2356 unit 1: fence policy keys action, resume_samples, max_frozen_samples, on_cap (required, no defaults) with their parse problems",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "fence",
@@ -52819,19 +52850,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-11-08T03:40:35Z: 2026-11-08 BUILT, uncommitted: fence policy.py (ACTIONS, CAP_ACTIONS, _freeze_problems, _count; Row gains action/resume_hold/max_frozen/on_cap with defaults) and fence/tests/test_policy_freeze.py (legacy row stays action signal; freeze row carries its four keys; each missing key, wrong value and a freeze key on a signal row named). DECISION to review: an absent action is the legacy one-shot signal (key optional) so the host's existing guards.toml does not go UNGUARDED the moment this lands; a freeze row must name every key, no defaults. Witnesses: 48 fence policy/watcher/guard_cli tests pass; ruff check and format clean. NOT DONE: declared mutants, warrants, whole-tree mypy, the stack. | 2026-11-08T04:23:58Z: 2026-11-08 WITNESSES (uncommitted): six declared mutants in fence/mutants.regex (5 new: an-absent-action-is-a-freeze, a-signal-row-may-carry-a-freeze-key, any-cap-action-is-admitted, zero-is-a-count, resume-hold-reads-the-cap; the existing unknown-key-ignored re-pointed from _KEYS to _KNOWN), each run alone against test_policy.py and test_policy_freeze.py, ALL KILLED; MUTATE_LINT clean for fence (the 5 not-applicable lines elsewhere are other dists, not mine); 5 warrants written (gen-warrants --write --prune fence policy_freeze=policy); bazel test //fence:mypy //fence:ruff pass (invocation 2f8556d7). NOT DONE: fence/warrants.bib and admit.py/test_admit*.py also carry W2340's uncommitted fence changes, so the stack must carry both (one fence entry sequence); a W2219 companion; the stack b61 with W2355 and b60's contents.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-08T03:40:35Z: 2026-11-08 BUILT, uncommitted: fence policy.py (ACTIONS, CAP_ACTIONS, _freeze_problems, _count; Row gains action/resume_hold/max_frozen/on_cap with defaults) and fence/tests/test_policy_freeze.py (legacy row stays action signal; freeze row carries its four keys; each missing key, wrong value and a freeze key on a signal row named). DECISION to review: an absent action is the legacy one-shot signal (key optional) so the host's existing guards.toml does not go UNGUARDED the moment this lands; a freeze row must name every key, no defaults. Witnesses: 48 fence policy/watcher/guard_cli tests pass; ruff check and format clean. NOT DONE: declared mutants, warrants, whole-tree mypy, the stack. | 2026-11-08T04:23:58Z: 2026-11-08 WITNESSES (uncommitted): six declared mutants in fence/mutants.regex (5 new: an-absent-action-is-a-freeze, a-signal-row-may-carry-a-freeze-key, any-cap-action-is-admitted, zero-is-a-count, resume-hold-reads-the-cap; the existing unknown-key-ignored re-pointed from _KEYS to _KNOWN), each run alone against test_policy.py and test_policy_freeze.py, ALL KILLED; MUTATE_LINT clean for fence (the 5 not-applicable lines elsewhere are other dists, not mine); 5 warrants written (gen-warrants --write --prune fence policy_freeze=policy); bazel test //fence:mypy //fence:ruff pass (invocation 2f8556d7). NOT DONE: fence/warrants.bib and admit.py/test_admit*.py also carry W2340's uncommitted fence changes, so the stack must carry both (one fence entry sequence); a W2219 companion; the stack b61 with W2355 and b60's contents. | 2026-11-15T02:09:43Z: 2026-11-14: LANDED in fb5899d3 (W2356 + W2340 + W2370 + W2371 + W2359 + W2407 part 1: fence policy keys action, resume_samples, max_frozen_samples, on_cap).",
       "issued_at": "2026-11-08T03:21:19Z",
       "minted_during": "interrupt",
       "caused_by": "W2356",
-      "last_worked": "2026-11-08T04:23:58Z",
+      "last_worked": "2026-11-15T02:09:43Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261115T020943Z"
     },
     {
       "symbol": "W2358",
       "title": "W2356 unit 2: watcher freeze state machine with the descendant fork loop, resume on N clear samples, and the cap action (resume or kill) recorded",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "fence",
@@ -52839,14 +52870,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-11-08T05:56:10Z: 2026-11-08 PURE CORE BUILT, uncommitted: fence/src/mikemol/fence/freeze.py (State, Plan, Hands, Event; stop_tree loops until a pass finds no new running descendant, bounded by PASSES=8; advance() is the per-sample state machine: trip stops the tree, clear samples count to resume_hold, an unclear or unreadable sample resets, max_frozen applies on_cap with the event naming cap:resume or cap:kill, kill resumes first then sends the row's signal; a resume touches only the pids stopped, last stopped first, skipping an exited one) and fence/tests/test_freeze.py (8 tests incl. the forced fork between two scans); 8 pass; pycheck clean on write. NOT DONE: wiring advance() into watcher.watch (tree = all running descendants of the fenced pid, which descendants_named does not return), the shared-server rule (W2359), declared mutants, warrants, mypy under bazel, the stack. Not in b62; needs a round slot (W2356 holds it). | 2026-11-08T06:33:13Z: 2026-11-08 WIRED, uncommitted: watcher.watch_freeze (public; Guard._run dispatches a freeze row to it, a signal row still to watch, whose signature is unchanged because a sixth argument broke the arity rule), watcher.descendants_all (every descendant, via the shared _descendants walk that descendants_named now calls), Outcome.events, freeze.finish (the watch ending while frozen resumes the set: event resume:exit). Tests: fence/tests/test_watch_freeze.py, 4 incl. a REAL forked command with a forked child under a Guard whose read blocks on a queue the test feeds: the child reads state T while frozen and not T after the clear run (no timer). 32 fence tests (freeze, watch_freeze, watcher, guard_cli) pass; ruff check and format clean over fence. NOT DONE: the trip record and counter (W2359), the shared-server rule (W2359), guard_cli reporting the events, declared mutants and warrants for freeze.py and watch_freeze, //fence:mypy under bazel, the stack.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-08T05:56:10Z: 2026-11-08 PURE CORE BUILT, uncommitted: fence/src/mikemol/fence/freeze.py (State, Plan, Hands, Event; stop_tree loops until a pass finds no new running descendant, bounded by PASSES=8; advance() is the per-sample state machine: trip stops the tree, clear samples count to resume_hold, an unclear or unreadable sample resets, max_frozen applies on_cap with the event naming cap:resume or cap:kill, kill resumes first then sends the row's signal; a resume touches only the pids stopped, last stopped first, skipping an exited one) and fence/tests/test_freeze.py (8 tests incl. the forced fork between two scans); 8 pass; pycheck clean on write. NOT DONE: wiring advance() into watcher.watch (tree = all running descendants of the fenced pid, which descendants_named does not return), the shared-server rule (W2359), declared mutants, warrants, mypy under bazel, the stack. Not in b62; needs a round slot (W2356 holds it). | 2026-11-08T06:33:13Z: 2026-11-08 WIRED, uncommitted: watcher.watch_freeze (public; Guard._run dispatches a freeze row to it, a signal row still to watch, whose signature is unchanged because a sixth argument broke the arity rule), watcher.descendants_all (every descendant, via the shared _descendants walk that descendants_named now calls), Outcome.events, freeze.finish (the watch ending while frozen resumes the set: event resume:exit). Tests: fence/tests/test_watch_freeze.py, 4 incl. a REAL forked command with a forked child under a Guard whose read blocks on a queue the test feeds: the child reads state T while frozen and not T after the clear run (no timer). 32 fence tests (freeze, watch_freeze, watcher, guard_cli) pass; ruff check and format clean over fence. NOT DONE: the trip record and counter (W2359), the shared-server rule (W2359), guard_cli reporting the events, declared mutants and warrants for freeze.py and watch_freeze, //fence:mypy under bazel, the stack. | 2026-11-15T02:09:44Z: 2026-11-14: LANDED in fb5899d3 (freeze.py, watcher.watch_freeze and descendants_all, guard_cli events; fence suite 413 passed).",
       "issued_at": "2026-11-08T03:21:20Z",
       "minted_during": "interrupt",
       "caused_by": "W2356",
-      "last_worked": "2026-11-08T06:33:13Z",
+      "last_worked": "2026-11-15T02:09:44Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261115T020944Z"
     },
     {
       "symbol": "W2359",
@@ -52939,29 +52970,7 @@
     {
       "symbol": "W2363",
       "title": "The mdstruct mypy-domain witness fails or hangs inside the gate: b60 arm 1 failed, b62 stalled at its first phase",
-      "status": "blocked",
-      "enables": [],
-      "touches": [
-        "hooks",
-        "gate-repair"
-      ],
-      "blocked_on": [
-        "W2367"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "",
-      "evidence": "2026-11-08T07:31:11Z: 2026-11-08 READ domain_witness.sh: the witness runs bazel test //mdstruct:mypy through _bazel_green (line 267), whose output is CAPTURED with $(...) and printed only when the call returns. So the EMPTY witness log in b62 does not say it hung before arm 1: it says the first bazel call (the control, line 320) had not returned when the stall detector killed the gate (no CPU in the process tree, no new output, 120 looks 30 s apart). A bazel client with no CPU and no output is waiting on something remote (cache/executor/BES) or a server lock. b60's failure was the arm 1 probe. Both gates ran in luthen's saturation window (kine p99 over 4 s, NVMe 41-89% busy, load 40), so the working hypothesis is the same infrastructure episode W2356 addresses, NOT yet shown. Measure: the bazel invocation id of the stuck control in BuildBuddy (mikemol-buildlog) and whether it ever reached the executor; rerun the gate when kine is quiet and see whether the witness passes. If it recurs with kine quiet, it is a real witness defect (a captured-output wait with no stall witness of its own). | 2026-11-08T07:31:30Z: 2026-11-08 MEASURED from vmsingle: kine p99 (the guard's own query) is 0.0024 s now; its maximum over the last 8 h is 8.19 s. So the store is quiet at this moment and was saturated inside the window. Resubmitting b62 now with no bazel of mine beside it, as the test of the hypothesis: pass while quiet = the stall was the episode. | 2026-11-08T07:34:18Z: 2026-11-08 github-14's lead (a bazel client idle on another command's output-base lock) checked as far as it can be now: the witness and the gate's bazel share ONE output base, the staged tree's (/var/cache/bazel-mikemol/8eaf9072..., workspace /var/tmp/mtools-staged), distinct from the main tree's (5788f614...). Right now one server holds 8eaf9072 and NO client is attached to it; its java.log (server up since 05:35Z) shows no 'Another command' line and ends at a clean ratchet:mypy command. The server that served the stalled witness is gone (the log of the earlier server is not the b62 window), so the lock holder DURING the stall is not shown and not ruled out. The 120-look hour is carded as the second half (stall detector naming the waited-on lock). Fix candidates, if a holder is confirmed on recurrence: a dedicated output base for the witness, or running the witness as a bazel action. | 2026-11-08T08:43:51Z: 2026-11-08 ROOT CAUSE FOUND (measured, not inferred). b62 attempt 2 stalled at the same phase with kine quiet at submit, so not the episode. Two domain_witness.sh processes for the mdstruct victim (pids 1708192, first b62 gate; 2054770, second) sit in state S with children 'flock 9' in locks_lock_inode_wait, forever. domain_witness.sh lines 87-92 take an advisory lock keyed by the victim path on fd 9 (exec 9> the repository's .git/mtools/domain-witness-<hash>.lock; flock 9) and say the kernel releases it on exit. fuser on that lock file lists, besides the two waiters and their flocks, a JAVA process, pid 723271: the MAIN-tree bazel server (output base 5788f614, started Nov 7 22:01 local, up 20492 s, idle timeout 10800 s). It INHERITED fd 9 when a witness's bazel call started it, so it holds the lock for the server's life and every later witness for that victim waits on a daemon that never exits. That is also why it passes alone, with no server up. b60's arm 1 failure is the same family (a witness overlapping a daemon), not shown. FIX (W2367): close fd 9 for every bazel call in domain_witness.sh. UNBLOCK needs two actions I attempted and the auto-mode classifier DENIED (Interfere With Workloads): kill the two orphaned waiters and shut the main-tree bazel server down; I did not work around it. Needs the operator or a granted permission. | 2026-11-08T09:33:53Z: 2026-11-08 github-14: the 24-31 minute shutdowns I measured were on the staged base (8eaf9072); this main-tree server runs with --max_idle_secs=10800, so its own exit is about 05:33 local; github-14 offers the operator a 'bazel shutdown' in the meantime and said I must not run it. A witness-started server living 3 hours with an inherited lock is the class W2367's fd fix removes. TEMPORARY EXCEPTION to routing through bazel: pytest in the dev venvs while this server is kept idle, agreed with github-14, ends when the server is gone. | 2026-11-08T14:25:33Z: 2026-11-08 LATER: the main-tree server idled out by itself (fuser on the witness lock showed no holder, no 5788f614 server in pgrep), b62 then gated and LANDED (42b23583, dd5b8d5d, ed818b68) with no mdstruct stall, which is the predicted pass-alone behaviour. b63 and b64 gates since reached the suite or cheap checks without a witness stall. The fix W2367 (9>&- on both bazel calls in domain_witness.sh, test_the_bazel_the_witness_starts_does_not_inherit_the_lock, F-arm verified) is BUILT and UNCOMMITTED in the working tree; github-14 ruled it gate repair, to land on its own once the round redraw draws it in (not carried in another card), then its own cold review. Until it lands a witness-started server can again hold the lock for 3 h: check fuser on the lock first on any stall.",
-      "issued_at": "2026-11-08T07:30:55Z",
-      "minted_during": "interrupt",
-      "caused_by": "W2355",
-      "last_worked": "2026-11-08T14:25:33Z",
-      "ticks_blocked": 0,
-      "completed": null
-    },
-    {
-      "symbol": "W2364",
-      "title": "Stall detector names the lock a process-tree waits on, so a gate stalled on a bazel output-base lock refuses in seconds, not after 120 looks",
-      "status": "ready",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -52969,12 +52978,34 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-11-08T07:31:11Z: 2026-11-08 READ domain_witness.sh: the witness runs bazel test //mdstruct:mypy through _bazel_green (line 267), whose output is CAPTURED with $(...) and printed only when the call returns. So the EMPTY witness log in b62 does not say it hung before arm 1: it says the first bazel call (the control, line 320) had not returned when the stall detector killed the gate (no CPU in the process tree, no new output, 120 looks 30 s apart). A bazel client with no CPU and no output is waiting on something remote (cache/executor/BES) or a server lock. b60's failure was the arm 1 probe. Both gates ran in luthen's saturation window (kine p99 over 4 s, NVMe 41-89% busy, load 40), so the working hypothesis is the same infrastructure episode W2356 addresses, NOT yet shown. Measure: the bazel invocation id of the stuck control in BuildBuddy (mikemol-buildlog) and whether it ever reached the executor; rerun the gate when kine is quiet and see whether the witness passes. If it recurs with kine quiet, it is a real witness defect (a captured-output wait with no stall witness of its own). | 2026-11-08T07:31:30Z: 2026-11-08 MEASURED from vmsingle: kine p99 (the guard's own query) is 0.0024 s now; its maximum over the last 8 h is 8.19 s. So the store is quiet at this moment and was saturated inside the window. Resubmitting b62 now with no bazel of mine beside it, as the test of the hypothesis: pass while quiet = the stall was the episode. | 2026-11-08T07:34:18Z: 2026-11-08 github-14's lead (a bazel client idle on another command's output-base lock) checked as far as it can be now: the witness and the gate's bazel share ONE output base, the staged tree's (/var/cache/bazel-mikemol/8eaf9072..., workspace /var/tmp/mtools-staged), distinct from the main tree's (5788f614...). Right now one server holds 8eaf9072 and NO client is attached to it; its java.log (server up since 05:35Z) shows no 'Another command' line and ends at a clean ratchet:mypy command. The server that served the stalled witness is gone (the log of the earlier server is not the b62 window), so the lock holder DURING the stall is not shown and not ruled out. The 120-look hour is carded as the second half (stall detector naming the waited-on lock). Fix candidates, if a holder is confirmed on recurrence: a dedicated output base for the witness, or running the witness as a bazel action. | 2026-11-08T08:43:51Z: 2026-11-08 ROOT CAUSE FOUND (measured, not inferred). b62 attempt 2 stalled at the same phase with kine quiet at submit, so not the episode. Two domain_witness.sh processes for the mdstruct victim (pids 1708192, first b62 gate; 2054770, second) sit in state S with children 'flock 9' in locks_lock_inode_wait, forever. domain_witness.sh lines 87-92 take an advisory lock keyed by the victim path on fd 9 (exec 9> the repository's .git/mtools/domain-witness-<hash>.lock; flock 9) and say the kernel releases it on exit. fuser on that lock file lists, besides the two waiters and their flocks, a JAVA process, pid 723271: the MAIN-tree bazel server (output base 5788f614, started Nov 7 22:01 local, up 20492 s, idle timeout 10800 s). It INHERITED fd 9 when a witness's bazel call started it, so it holds the lock for the server's life and every later witness for that victim waits on a daemon that never exits. That is also why it passes alone, with no server up. b60's arm 1 failure is the same family (a witness overlapping a daemon), not shown. FIX (W2367): close fd 9 for every bazel call in domain_witness.sh. UNBLOCK needs two actions I attempted and the auto-mode classifier DENIED (Interfere With Workloads): kill the two orphaned waiters and shut the main-tree bazel server down; I did not work around it. Needs the operator or a granted permission. | 2026-11-08T09:33:53Z: 2026-11-08 github-14: the 24-31 minute shutdowns I measured were on the staged base (8eaf9072); this main-tree server runs with --max_idle_secs=10800, so its own exit is about 05:33 local; github-14 offers the operator a 'bazel shutdown' in the meantime and said I must not run it. A witness-started server living 3 hours with an inherited lock is the class W2367's fd fix removes. TEMPORARY EXCEPTION to routing through bazel: pytest in the dev venvs while this server is kept idle, agreed with github-14, ends when the server is gone. | 2026-11-08T14:25:33Z: 2026-11-08 LATER: the main-tree server idled out by itself (fuser on the witness lock showed no holder, no 5788f614 server in pgrep), b62 then gated and LANDED (42b23583, dd5b8d5d, ed818b68) with no mdstruct stall, which is the predicted pass-alone behaviour. b63 and b64 gates since reached the suite or cheap checks without a witness stall. The fix W2367 (9>&- on both bazel calls in domain_witness.sh, test_the_bazel_the_witness_starts_does_not_inherit_the_lock, F-arm verified) is BUILT and UNCOMMITTED in the working tree; github-14 ruled it gate repair, to land on its own once the round redraw draws it in (not carried in another card), then its own cold review. Until it lands a witness-started server can again hold the lock for 3 h: check fuser on the lock first on any stall. | 2026-11-15T00:30:16Z: 2026-11-14: root cause (witness-started bazel server inheriting fd 9 and holding the victim lock) fixed by W2367, landed in c44e91f4 (domain_witness.sh runs both bazel calls with 9>&-; test in hooks/tests/test_domain_witness_concurrency.py). No mdstruct witness stall seen in gates since b62.",
+      "issued_at": "2026-11-08T07:30:55Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2355",
+      "last_worked": "2026-11-15T00:30:16Z",
+      "ticks_blocked": 0,
+      "completed": "20261115T003016Z"
+    },
+    {
+      "symbol": "W2364",
+      "title": "Stall detector names the lock a process-tree waits on, so a gate stalled on a bazel output-base lock refuses in seconds, not after 120 looks",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "gate-repair"
+      ],
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "After W2356 lands, in the next W2219 batch's stack (hooks): read the stall detector (hangwatch; katas hangwatch is the child-hang witness) and how a gate stalled on the bazel output-base lock looks in /proc (wchan, the lock file the process-tree holds or waits on); make the detector NAME the lock a stalled tree waits on and refuse in seconds when a tree is waiting on a lock another live process holds, instead of after 120 polls with no log or CPU change; no wall-clock timer (a count of observations); test with a planted held lock and a waiting child; declared mutants; warrants. Read W2363 (the incident this came from) first.",
       "evidence": "2026-11-14T12:42:39Z: 2026-11-14: the detector change (name the lock a stalled process tree waits on, refuse after a count of observations, never a wall timer) is a hooks hangwatch edit with planted-lock tests, declared mutants and warrants in whole-frozen hooks registries that b66 (W2378) holds; it co-lands in the next W2219 batch's stack after b66, after reading W2363 (the incident). Reading /proc for the lock a bazel client waits on is read-only but needs a stalled gate to observe, and none runs while I hold the one-bazel-run-at-a-time line.",
       "issued_at": "2026-11-08T07:34:17Z",
       "minted_during": "interrupt",
       "caused_by": "W2363",
-      "last_worked": "2026-11-14T12:42:39Z",
+      "last_worked": "2026-11-15T02:16:56Z",
       "ticks_blocked": 0,
       "completed": null,
       "weight": 29
@@ -52982,51 +53013,31 @@
     {
       "symbol": "W2365",
       "title": "Commit-path fault class: the commit path imports venvs built from the working tree, so uncommitted code runs live in it",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks",
         "fence",
         "gate-repair"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Read the pre-commit prebuild at L549 and any variable-built bazel-bin paths to complete the measurement, then write the HEAD-venv design for github-cb after b66 lands.",
-      "evidence": "2026-11-08T07:35:59Z: 2026-11-08 MEASURED (from tracebacks, not assumed): the commit path of THIS repository imports bazel-bin/hooks/.venv (the error 'the hooks venv cannot start mikemol-commit; run bazel build //hooks:.venv', ModuleNotFoundError for a landed module stackempty) and bazel-bin/fence/.venv (guard_cli.py traceback path), both bazel-bin of the main working tree, so edits there are live once the venv is rebuilt; the pre-commit prebuild (line 549) builds every //<dist>:.venv too. NOT measured: which other dists' venvs the commit path imports (ratchet, pathsforward, mdstruct are candidates). Other repos run the vendored pin (hooks 636e39b); only this repository is exposed. What ran of W2356 through it: after my 'bazel build //fence:.venv' the live guard imports uncommitted fence code (policy.py with the new keys, watcher.py with watch_freeze/descendants_all, freeze.py). The host guards.toml row has no 'action', so the row is action=signal and Guard._run took the unchanged watch() branch; freeze.advance never ran in a real gate. Before the rebuild, the first bounce was an ImportError (watcher.py imported freeze before the venv had it). Rule until fixed: do not rebuild //fence:.venv or //hooks:.venv from uncommitted edits to their src. Fix direction: the commit path runs a venv built from HEAD (a worktree of HEAD or the pinned wheel), never the working tree. | 2026-11-14T12:45:18Z: 2026-11-14 MEASURED by grep of the hook text for literal bazel-bin venv paths (read-only): .githooks/pre-commit names bazel-bin/hooks/.venv/bin tools at L171 (mikemol-build-failure), L842 (mikemol-gate-jobs), L938 (mikemol-gate-targets), L954 (mikemol-ratchet-emit), L965 (mikemol-core-limit) and bazel-bin/buildtel/.venv/bin/mikemol-buildlog at L177; .githooks/post-commit names bazel-bin/hooks/.venv/bin at L104 (mikemol-ratchet-emit) and L120 (mikemol-pycheck). So besides hooks and the guard's fence venv, the commit path also imports the BUILDTEL venv from the working tree. NOT FOUND by this grep, and NOT claimed absent: venvs reached through a variable or loop (the pre-commit prebuild at the card's L549 builds every //<dist>:.venv), which a literal grep cannot see; ratchet, pathsforward and mdstruct stay candidates until that is read. The design (a venv built from HEAD, never the working tree) goes to github-cb after b66; b66 itself edits hooks sources, so it adds uncommitted hooks code to the live path until it lands.",
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Write the HEAD-venv design for github-cb (build every dist venv and ratchet_cli from a HEAD worktree, never the working tree); read the variable-built bazel-bin paths in the dist loop from L573 to see which venvs the commit path runs.",
+      "evidence": "2026-11-08T07:35:59Z: 2026-11-08 MEASURED (from tracebacks, not assumed): the commit path of THIS repository imports bazel-bin/hooks/.venv (the error 'the hooks venv cannot start mikemol-commit; run bazel build //hooks:.venv', ModuleNotFoundError for a landed module stackempty) and bazel-bin/fence/.venv (guard_cli.py traceback path), both bazel-bin of the main working tree, so edits there are live once the venv is rebuilt; the pre-commit prebuild (line 549) builds every //<dist>:.venv too. NOT measured: which other dists' venvs the commit path imports (ratchet, pathsforward, mdstruct are candidates). Other repos run the vendored pin (hooks 636e39b); only this repository is exposed. What ran of W2356 through it: after my 'bazel build //fence:.venv' the live guard imports uncommitted fence code (policy.py with the new keys, watcher.py with watch_freeze/descendants_all, freeze.py). The host guards.toml row has no 'action', so the row is action=signal and Guard._run took the unchanged watch() branch; freeze.advance never ran in a real gate. Before the rebuild, the first bounce was an ImportError (watcher.py imported freeze before the venv had it). Rule until fixed: do not rebuild //fence:.venv or //hooks:.venv from uncommitted edits to their src. Fix direction: the commit path runs a venv built from HEAD (a worktree of HEAD or the pinned wheel), never the working tree. | 2026-11-14T12:45:18Z: 2026-11-14 MEASURED by grep of the hook text for literal bazel-bin venv paths (read-only): .githooks/pre-commit names bazel-bin/hooks/.venv/bin tools at L171 (mikemol-build-failure), L842 (mikemol-gate-jobs), L938 (mikemol-gate-targets), L954 (mikemol-ratchet-emit), L965 (mikemol-core-limit) and bazel-bin/buildtel/.venv/bin/mikemol-buildlog at L177; .githooks/post-commit names bazel-bin/hooks/.venv/bin at L104 (mikemol-ratchet-emit) and L120 (mikemol-pycheck). So besides hooks and the guard's fence venv, the commit path also imports the BUILDTEL venv from the working tree. NOT FOUND by this grep, and NOT claimed absent: venvs reached through a variable or loop (the pre-commit prebuild at the card's L549 builds every //<dist>:.venv), which a literal grep cannot see; ratchet, pathsforward and mdstruct stay candidates until that is read. The design (a venv built from HEAD, never the working tree) goes to github-cb after b66; b66 itself edits hooks sources, so it adds uncommitted hooks code to the live path until it lands. | 2026-11-15T02:17:15Z: 2026-11-14 READ .githooks/pre-commit L535-571 (the prebuild the card asked for): it builds //ratchet:ratchet_cli plus //<dist>:.venv for EVERY dist in $_dists, in $root (the main working tree, git_scrubbed bazel build), and then requires bazel-bin/ratchet/ratchet_cli.runfiles. So the exposure is not three venvs: every dist's venv and the ratchet CLI are built from the working tree's uncommitted source, which closes the 'ratchet, pathsforward and mdstruct are candidates' question for the build side (the NEXT question, which of them the commit path then RUNS, still needs the variable-built path read). NEXT: write the HEAD-venv design (a worktree of HEAD or the pinned wheel) for github-cb; b66 has landed. | 2026-11-15T02:18:21Z: 2026-11-14: blocked, not worked: the submit reads a working card outside the stack as ready, so the mark meant nothing. The fix is a hooks-dist change (pre-commit prebuild and venv paths), so it waits on W2531; the design write-up for github-cb stays the next step.",
       "issued_at": "2026-11-08T07:35:52Z",
       "minted_during": "interrupt",
       "caused_by": "W2356",
-      "last_worked": "2026-11-14T12:45:18Z",
+      "last_worked": "2026-11-15T02:18:21Z",
       "ticks_blocked": 0,
       "completed": null,
       "weight": 29
     },
     {
-      "symbol": "W2366",
-      "title": "Admission row for nemik:W2069 pinned to its three blobs, citing operator line 151414 and github:W99, with its refusal witnesses",
-      "status": "blocked",
-      "enables": [],
-      "touches": [
-        "hooks",
-        "gate-repair"
-      ],
-      "blocked_on": [
-        "W2363"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "",
-      "evidence": "2026-11-08T07:53:55Z: 2026-11-08 WARRANT, read by me: host transcript 695f3e0a line 151414, uuid 7e8d5e1c-fd7c-44bd-992a-963a735f5d87, 2026-11-08T07:51:27Z, origin human: 'may nemik's W2069 fix land ahead of ratchet paydown through a reviewed incident admission row?' yes. Scope: that one stack. MEASURED: git cat-file shows hooks/src/mikemol/hooks/admission.py does NOT exist in 636e39b (nemik's pin); 636e39b's ratchet_pace.py has no rows concept (paydown is judged by the stack's paths touching an owed ratchet, plus operator_held, a stale stamp and no-pace exits). So the pinned guard never reads admission.ROWS. THE ROUTE therefore needs a repin of nemik to a hooks sha that carries admission.py, the pace wiring and the Admission trailer in stackland, and THE REPIN STACK IS ITSELF JUDGED BY 636e39b (which has no clause R), so it must carry a real paydown companion or be admitted otherwise. The row is a Row(repo='nemik', card='W2069', blobs={path: blob} for the files the stack freezes, review=...): admitting() already refuses an extra path, a missing path, a changed blob and another card; the Admission: nemik/W2069 trailer is spent once by stackland. Needed from nemik: the three post-patch blob shas (git hash-object of the files as the stack would freeze them) and whether .claude/stack-W2069.json is a frozen path. | 2026-11-08T08:03:06Z: 2026-11-08 STOOD DOWN by github-14: the operator chose the pinned code's operator_held route instead, host 695f3e0a line 151470, uuid 185ac42f-be2e-42d9-95f3-b6875432860b, 2026-11-08T08:01:33Z, origin human (read by me): nemik marks its Codon paydown cards blocked on the operator's W2077 decision, which lifts the pace in 636e39b so W2069 lands without a row. The row design above stays for the next case, once nemik repins; nothing built. Parked behind W2363 (the red gate), which is mine next.",
-      "issued_at": "2026-11-08T07:53:48Z",
-      "minted_during": "interrupt",
-      "caused_by": "github-14",
-      "last_worked": "2026-11-08T08:03:06Z",
-      "ticks_blocked": 0,
-      "completed": null
-    },
-    {
       "symbol": "W2367",
       "title": "domain_witness.sh closes its lock fd 9 for every bazel it starts, so a bazel server cannot inherit and hold the witness lock",
-      "status": "working",
+      "status": "done",
       "enables": [],
       "touches": [
         "hooks",
@@ -53034,14 +53045,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "2026-11-08T09:33:51Z: 2026-11-08 FIX AND WITNESS BUILT, uncommitted (a live gate script, lands in a stack, not applied by the gate it is part of): domain_witness.sh runs both of its bazel calls (the _bazel_green control and the arm-1 run) with fd 9 closed (9>&-) and a comment naming the measured cause; hooks/tests/test_domain_witness_concurrency.py gains test_the_bazel_the_witness_starts_does_not_inherit_the_lock (a fixture bazel script on PATH lists its own /proc/self/fd; the report must not name the domain-witness lock). F-ARM DONE: with the 9>&- removed from _bazel_green the test FAILS and prints the lock file path in the fixture bazel's fd list; with it restored both tests in the file pass (2 passed, run by pytest in the hooks dev venv, a temporary exception to routing through bazel agreed with github-14 while the main-tree server stays idle). The ratchet and hooks witnesses are the SAME script, so one fix covers all three; other fd-9 holders were not searched beyond this script. NOT DONE: warrant for the new test (hooks registries), a stack, bazel run of the file, and the main-tree server still holds the old lock until its own 3 h idle exit at about 05:33 local. | 2026-11-08T10:59:16Z: 2026-11-08: github-14 ruling (cross-session message): W2367 is gate repair, host ruling, same class as W2353; tagged gate-repair so the next round redraw draws it in. Its files are NOT to ride in another card's entry. b62 resubmitted without it; W2367 lands on its own once drawn, then gets its own cold review. Until it lands, a stalled witness means fuser on the lock first. | 2026-11-08T18:50:02Z: 2026-11-08: the rc=3 'fails locally' of //hooks:mutants_1 in the main tree (probe 2, github-14 asked it be carded) is THIS CARD'S working-tree state, not a defect on HEAD: the shard's clean-ledger check printed 'UNWARRANTED tests/test_domain_witness_concurrency.py::test_the_bazel_the_witness_starts_does_not_inherit_the_lock' (2559 test functions, 1 finding) because W2367's test is in the working tree and its warrant was pruned from hooks/warrants.bib for the b62/b64 stacks (a registry that freezes whole). The six 'errored' def-sites and eight 'errored' declared mutants in that log are the same cause: the suite did not run once the clean ledger was refused. OWED when W2367 is stacked: regenerate the warrant (mikemol-gen-warrants --write --prune hooks domain_witness_concurrency=domain_witness) in the SAME stack as domain_witness.sh and its test.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-08T09:33:51Z: 2026-11-08 FIX AND WITNESS BUILT, uncommitted (a live gate script, lands in a stack, not applied by the gate it is part of): domain_witness.sh runs both of its bazel calls (the _bazel_green control and the arm-1 run) with fd 9 closed (9>&-) and a comment naming the measured cause; hooks/tests/test_domain_witness_concurrency.py gains test_the_bazel_the_witness_starts_does_not_inherit_the_lock (a fixture bazel script on PATH lists its own /proc/self/fd; the report must not name the domain-witness lock). F-ARM DONE: with the 9>&- removed from _bazel_green the test FAILS and prints the lock file path in the fixture bazel's fd list; with it restored both tests in the file pass (2 passed, run by pytest in the hooks dev venv, a temporary exception to routing through bazel agreed with github-14 while the main-tree server stays idle). The ratchet and hooks witnesses are the SAME script, so one fix covers all three; other fd-9 holders were not searched beyond this script. NOT DONE: warrant for the new test (hooks registries), a stack, bazel run of the file, and the main-tree server still holds the old lock until its own 3 h idle exit at about 05:33 local. | 2026-11-08T10:59:16Z: 2026-11-08: github-14 ruling (cross-session message): W2367 is gate repair, host ruling, same class as W2353; tagged gate-repair so the next round redraw draws it in. Its files are NOT to ride in another card's entry. b62 resubmitted without it; W2367 lands on its own once drawn, then gets its own cold review. Until it lands, a stalled witness means fuser on the lock first. | 2026-11-08T18:50:02Z: 2026-11-08: the rc=3 'fails locally' of //hooks:mutants_1 in the main tree (probe 2, github-14 asked it be carded) is THIS CARD'S working-tree state, not a defect on HEAD: the shard's clean-ledger check printed 'UNWARRANTED tests/test_domain_witness_concurrency.py::test_the_bazel_the_witness_starts_does_not_inherit_the_lock' (2559 test functions, 1 finding) because W2367's test is in the working tree and its warrant was pruned from hooks/warrants.bib for the b62/b64 stacks (a registry that freezes whole). The six 'errored' def-sites and eight 'errored' declared mutants in that log are the same cause: the suite did not run once the clean ledger was refused. OWED when W2367 is stacked: regenerate the warrant (mikemol-gen-warrants --write --prune hooks domain_witness_concurrency=domain_witness) in the SAME stack as domain_witness.sh and its test. | 2026-11-14T23:16:14Z: 2026-11-14 LANDED in c44e91f4 (b66): domain_witness.sh runs its two bazel invocations with fd 9 closed so a bazel server the witness starts does not inherit the victim lock; the test is in hooks/tests/test_domain_witness_concurrency.py; the gate passed.",
       "issued_at": "2026-11-08T08:43:45Z",
       "minted_during": "interrupt",
       "caused_by": "W2363",
-      "last_worked": "2026-11-08T18:50:02Z",
+      "last_worked": "2026-11-14T23:16:14Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261114T231614Z"
     },
     {
       "symbol": "W2368",
@@ -54546,7 +54557,7 @@
     {
       "symbol": "W2439",
       "title": "mutate_runner reads a per-dist baseline of ERRORED or SURVIVED cells and refuses a rise or a stale entry",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W2340"
       ],
@@ -54556,19 +54567,19 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "github-cb ruling 2026-11-13: entry 1 of b66 or before it, never after. The runner reads <dist>/mutants.baseline (keyed dist, file, mutant, verdict), refuses a cell not in it (a rise) and a baselined cell now killed (stale). Name the file so census_repo classifies it as a ratchet baseline or declare it in ratchets.json.",
-      "evidence": "2026-11-14T02:40:46Z: 2026-11-13 BUILT (uncommitted, check_mutants/mutate_runner.py, defs.bzl, test_mutate_runner.py, warrants.bib): BASELINE_FILE mutants-baseline.txt (matches ratchet kinds baseline pattern, one entry per line, verdict then cell, sorted, # comments), read_baseline (returns cells and a problem string, no exceptions), debt_of, baseline_gate (a cell in debt that the file does not list with that verdict is a RISE, a listed cell this run ran that is no longer in that state is STALE, only the cells the run ran are judged), judge_debt, wired into main after the sections print. _account and _regex_section no longer decide survivors, the gate does, so a dist with no baseline file is judged exactly as before. defs.bzl stages mutants-baseline.txt into every shard by glob. 6 new tests, 81 pass in check_mutants, 6 warrants appended with gen-warrants. NOT DONE: ruff and mypy were run by the edit gate only, a direct run is owed; the real-bazel arm; the generated baselines (needs the finished census).",
+      "next_bounded_step": null,
+      "evidence": "2026-11-14T02:40:46Z: 2026-11-13 BUILT (uncommitted, check_mutants/mutate_runner.py, defs.bzl, test_mutate_runner.py, warrants.bib): BASELINE_FILE mutants-baseline.txt (matches ratchet kinds baseline pattern, one entry per line, verdict then cell, sorted, # comments), read_baseline (returns cells and a problem string, no exceptions), debt_of, baseline_gate (a cell in debt that the file does not list with that verdict is a RISE, a listed cell this run ran that is no longer in that state is STALE, only the cells the run ran are judged), judge_debt, wired into main after the sections print. _account and _regex_section no longer decide survivors, the gate does, so a dist with no baseline file is judged exactly as before. defs.bzl stages mutants-baseline.txt into every shard by glob. 6 new tests, 81 pass in check_mutants, 6 warrants appended with gen-warrants. NOT DONE: ruff and mypy were run by the edit gate only, a direct run is owed; the real-bazel arm; the generated baselines (needs the finished census). | 2026-11-14T23:16:07Z: 2026-11-14 LANDED in c44e91f4 (b66): mutate_runner reads each dist's mutants-baseline.txt and refuses a rise (a cell in debt the file does not list with that verdict) and a stale entry, judging only the cells the run ran; 13 generated baselines (441 cells); the gate passed. Follow-ups carded: W2504 (vanished-entry check), W2461, W2462, W2505.",
       "issued_at": "2026-11-14T02:35:58Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": "2026-11-14T02:40:46Z",
+      "last_worked": "2026-11-14T23:16:07Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261114T231607Z"
     },
     {
       "symbol": "W2440",
       "title": "mutate_runner --write generates each dist's mutants.baseline from a grid run and --check is run by the gate",
-      "status": "ready",
+      "status": "done",
       "enables": [
         "W2340"
       ],
@@ -54578,13 +54589,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Never hand-written (github-cb). --write reads the cells a shard run reported ERRORED or SURVIVED and writes the dist file sorted, --check recomputes nothing and verifies the file is well formed and sorted. Depends on W2439's file format.",
-      "evidence": "2026-11-14T02:40:47Z: 2026-11-13 BUILT together with W2439 (same file): mutate_runner.py --write-baseline DIST LOG... generates the file from shard reports (cells_from_log reads the KILLED, SURVIVED, ERRORED, UNREACHABLE and REGEX sections, a report replaces only the cells it ran and keeps the rest, a report with no section is refused as a crashed shard) and --check-baseline DIST says whether it is well formed. The gate runs the check on every shard because baseline_gate reads the file first and refuses a malformed one. cli() is the script entry. NOT DONE: the real run against the census logs.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-14T02:40:47Z: 2026-11-13 BUILT together with W2439 (same file): mutate_runner.py --write-baseline DIST LOG... generates the file from shard reports (cells_from_log reads the KILLED, SURVIVED, ERRORED, UNREACHABLE and REGEX sections, a report replaces only the cells it ran and keeps the rest, a report with no section is refused as a crashed shard) and --check-baseline DIST says whether it is well formed. The gate runs the check on every shard because baseline_gate reads the file first and refuses a malformed one. cli() is the script entry. NOT DONE: the real run against the census logs. | 2026-11-14T23:16:12Z: 2026-11-14 LANDED in c44e91f4 (b66): mutate_runner --write-baseline DIST LOG... generates each dist's baseline from shard reports and --check-baseline DIST checks its form; defs.bzl stages the file into every shard. KNOWN GAP, not landed: PYTHONUNBUFFERED=1 in mutate_check.sh (the fix for --write-baseline dropping cells when a stderr line splits a section) was missed by b66 and is landing as b66b (W2527), incident W2527 and covering measure W2528.",
       "issued_at": "2026-11-14T02:36:06Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": "2026-11-14T02:40:47Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-14T23:16:12Z",
+      "ticks_blocked": 0,
+      "completed": "20261114T231612Z"
     },
     {
       "symbol": "W2441",
@@ -56240,6 +56252,49 @@
     {
       "symbol": "W2530",
       "title": "Decide how the hooks mutants grid clears the shard guard: shards 215 to 394 as a stopgap, or decompose first",
+      "status": "done",
+      "enables": [
+        "W2355"
+      ],
+      "touches": [
+        "hooks",
+        "check_mutants"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-11-14T22:22:05Z: 2026-11-14 no commit: a ruling. github-cb RULED: decompose first, NO stopgap to 394. audiostruct 24 to 34 was on a stale reading, but hooks 215 to 394 would nearly double the grid on a reading b66's verification confirmed (205.8 CPU-s at 215), which is the opaque division the operator ruled against, at scale. W2355 is blocked on W2531 (the hooks slice of W2480) and the guard fix is W2532.",
+      "issued_at": "2026-11-14T22:20:24Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2355",
+      "last_worked": "2026-11-14T22:22:05Z",
+      "ticks_blocked": 0,
+      "completed": "20261114T222205Z"
+    },
+    {
+      "symbol": "W2531",
+      "title": "Decompose the hooks sharded mutation grid into targets along the dependency structure (the hooks slice of W2480)",
+      "status": "ready",
+      "enables": [
+        "W2480"
+      ],
+      "touches": [
+        "check_mutants",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "The hooks grid is 215 opaque shards (b66 measured 205.8 CPU-s on the worst) and the shard guard wants 394. github-cb ruling 2026-11-14: decompose first, no stopgap to 394 (that nearly doubles an opaque division at scale). One mutation target per mutated unit with its own cone (the module, the tests that reach it from hooks/graph.json, the graph slice), per W2480 and the operator's cones ruling; when a unit blows the CPU budget, split the SOURCE. Start from what exists: check_mutants/mutants_gen.py and mutant_site (W1883, W1989) already generate per-site targets under hooks/sites/. W2355's stable cut waits on this by rank.",
+      "evidence": "",
+      "issued_at": "2026-11-14T22:21:58Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2480",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2532",
+      "title": "The shard-CPU guard judges only the mutation targets whose input cone a stack's paths enter, not every shard of a dist the stack touches",
       "status": "ready",
       "enables": [
         "W2355"
@@ -56250,12 +56305,33 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "The shard-CPU guard (shardgate, W1602) refuses ANY stack touching the hooks dist while //hooks:mutants_124 reads 220 CPU-s of 300 (73%), and prescribes hooks/BUILD.bazel shards = 394 (now 215); a stack that carries hooks/BUILD.bazel is the repair and is not judged. The same stopgap was approved for audiostruct (24 to 34) under the operator's ruling that sharding flattens a cone (W2480). Hooks is the dist every hooks stack touches, so this blocks the W2355 stable cut (606c24d0) and the whole W2219 hooks batch line until it lands. Options: (a) land hooks/BUILD.bazel shards 394 now with the stable cut as the entry, a stopgap noted against W2480, (b) decompose first (W2480, long), (c) raise nothing (the budget stays 300). github-cb to rule.",
-      "evidence": "",
-      "issued_at": "2026-11-14T22:20:24Z",
+      "next_bounded_step": "Do not build the cone-aware guard over the 215 opaque shards (no relief, measured). Build it with W2531's per-unit targets; meanwhile card moving run_git_in out of commit_kata so tests that need it stop entering commit_kata's cone.",
+      "evidence": "2026-11-14T22:22:43Z: 2026-11-14 PROBE DONE (github-cb: how many hooks mutation targets 606c24d0's cone reaches). Method: the runner's own selected_tests (hooks/graph.json) and its site_keys plus the declared mutants.regex labels, mapped to shards with its in_shard hash over 215 shards (scratchpad cone_probe.py). RESULT for hooks/tests/test_worktreereap_stable.py: it is among the selected tests of 1131 of 2493 cells (45%), in 75 of the 202 mutated modules (37%), no whole-directory fallback; and those cells fall in 215 of 215 shards. SO A CONE-AWARE GUARD OVER TODAY'S SHARDS GIVES NO RELIEF: with cells hashed across shards every shard holds at least one reached cell, so judging 'only the shards whose cone the stack enters' still judges all 215. The relief needs the DECOMPOSITION (W2531): by unit, this test's cone is 75 modules, not 215 shards. WHY THE CONE IS SO WIDE: the test imports run_git_in from mikemol.hooks.commit_kata, and commit_kata's import cone is large. SPLITTING THE SOURCE (the ruling's remedy): move run_git_in to a leaf module (it is a git runner, procrun-shaped) and import it from there, which shrinks the cone of every test that only wants it; measure the cone again after. Guard design stays right in principle, but its value arrives with W2531.",
+      "issued_at": "2026-11-14T22:22:12Z",
       "minted_during": "interrupt",
-      "caused_by": "W2355",
-      "last_worked": null,
+      "caused_by": "W2480",
+      "last_worked": "2026-11-14T22:22:43Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2533",
+      "title": "Move run_git_in out of commit_kata into a leaf module, so tests that only run git stop entering commit_kata's import cone",
+      "status": "ready",
+      "enables": [
+        "W2531",
+        "W2355"
+      ],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Measured 2026-11-14 (W2532): hooks/tests/test_worktreereap_stable.py imports run_git_in from mikemol.hooks.commit_kata and is thereby selected for 1131 of 2493 mutation cells in 75 of 202 modules, in all 215 shards. A leaf module for the git runner (beside runproc, procrun-shaped) imported by commit_kata and by the tests cuts that cone for every test that only wants it. Count the tests importing run_git_in from commit_kata first (grep), move it with a re-export left in commit_kata only if callers outside hooks need it, then re-run cone_probe over the tests and report the new cone sizes. Hooks lane, a source split in the sense of the operator's ruling.",
+      "evidence": "2026-11-14T22:24:14Z: 2026-11-14 (github-cb): this narrows the cone W2531 decomposes and is cheap, so it likely goes FIRST; it enables both W2531 and W2355. BASELINE TO BEAT: before the move, tests/test_worktreereap_stable.py reaches 1131 of 2493 cells in 75 of 202 modules (215 of 215 shards). Re-measure with the same probe (scratchpad cone_probe.py, the runner's selected_tests and in_shard) after it lands and put the number here.",
+      "issued_at": "2026-11-14T22:22:45Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2532",
+      "last_worked": "2026-11-14T22:24:14Z",
       "ticks_blocked": 0
     }
   ],
@@ -56725,6 +56801,13 @@
       "title": "A frozen result class with a found flag beside a value, as a house form for a two-state result",
       "dropped_at": "2026-11-14T22:10:01Z",
       "reason": "Not a house form (github-cb, operator can override): a found flag beside a value re-encodes the maybe-result and adds an invalid state (found=False with value=5), which the operator ruled out. Recoverable if a sum type becomes expressible under both runtimes: probe files are in the scratchpad codon-w2522 (w1_*).",
+      "recoverable": true
+    },
+    {
+      "symbol": "W2366",
+      "title": "Admission row for nemik:W2069 pinned to its three blobs, citing operator line 151414 and github:W99, with its refusal witnesses",
+      "dropped_at": "2026-11-15T02:17:14Z",
+      "reason": "STOOD DOWN 2026-11-08 by github-14 (operator chose nemik's operator_held route, host 695f3e0a line 151470); nothing built. The row design stays in the evidence for the next case.",
       "recoverable": true
     }
   ],

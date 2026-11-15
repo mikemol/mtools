@@ -52,7 +52,6 @@ discard is not rewritten at all.
 """
 
 import json
-import subprocess
 from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import Enum
@@ -61,6 +60,7 @@ from typing import cast
 
 from mikemol.atomicwrite import durable
 from mikemol.atomicwrite.durable import Staged
+from mikemol.procrun.proc import capture
 
 # ⚑ CODON EXCEPTION, SCOPED TO THIS ALIAS (W1431): Codon cannot express a self-referential alias,
 # and `leaf_diffs` diffs two arbitrary JSON documents (any depth, any keys), so there is no closed
@@ -216,12 +216,7 @@ def project_path_only(before: Json, after: Json) -> Json:
 
 def _load_rev(root: Path, rev: str, rel: str) -> Json:
     # ⚑ `--end-of-options`: without it a rev such as `--output=/x` is read by git as an OPTION.
-    result = subprocess.run(
-        ["git", "-C", str(root), "show", "--end-of-options", f"{rev}:{rel}"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    result = capture(["git", "-C", str(root), "show", "--end-of-options", f"{rev}:{rel}"])
     if result.returncode != 0:
         msg = f"unable to load {rev}:{rel}: {result.stderr.strip()}"
         raise ValueError(msg)
@@ -235,12 +230,7 @@ def text_at(root: Path, rev: str, rel: str) -> str | None:
         the file's text, or None when the revision does not hold it or git cannot be asked.
 
     """
-    result = subprocess.run(
-        ["git", "-C", str(root), "show", "--end-of-options", f"{rev}:{rel}"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    result = capture(["git", "-C", str(root), "show", "--end-of-options", f"{rev}:{rel}"])
     return result.stdout if result.returncode == 0 else None
 
 
@@ -251,11 +241,8 @@ def revisions_of(root: Path, rel: str, count: int) -> list[str]:
         full commit ids; empty when git cannot be asked or the file has no history.
 
     """
-    result = subprocess.run(
-        ["git", "-C", str(root), "log", f"-{count}", "--format=%H", "--end-of-options", "--", rel],
-        capture_output=True,
-        text=True,
-        check=False,
+    result = capture(
+        ["git", "-C", str(root), "log", f"-{count}", "--format=%H", "--end-of-options", "--", rel]
     )
     if result.returncode != 0:
         return []

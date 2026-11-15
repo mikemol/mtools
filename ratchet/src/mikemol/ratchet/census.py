@@ -19,9 +19,10 @@ rule", which is the question paydown-only can actually enforce.
 
 import os
 import re
-import subprocess
 from collections.abc import Iterable
 from pathlib import Path
+
+from mikemol.procrun.proc import capture
 
 # ⚑⚑ ruff's concise line is `path:line:col: <rule> message`, and `<rule>` is a RULE NAME
 # (`docstring-missing-returns`) rather than a code (`DOC201`) under this configuration. A first
@@ -159,7 +160,7 @@ def run_ruff(dist: Path, preview: bool) -> frozenset[str]:
     # non-executable binary does the same as `PermissionError`. Both are `OSError`, and the
     # message names the path tried and the two ways to supply one.
     try:
-        proc = subprocess.run(argv, capture_output=True, text=True, check=False, cwd=dist)
+        proc = capture(argv, cwd=dist)
     except OSError as exc:
         msg = (
             f"cannot census {dist}: ruff at {binary} could not be run ({exc.strerror}) — "
