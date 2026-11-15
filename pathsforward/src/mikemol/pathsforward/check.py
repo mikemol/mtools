@@ -21,7 +21,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from mikemol.pathsforward import attach, mirror, outcomes, vector
+from mikemol.pathsforward import attach, mirror, openblock, outcomes, vector
 from mikemol.pathsforward.model import (
     BLOCKED_KINDS,
     STATUSES,
@@ -604,6 +604,7 @@ def check(state: State) -> list[str]:
         *stale_blockers(state),
         *all_landed(state),
         *malformed_blockers(state),
+        *openblock.findings(state),
         *operator_asks(state),
         *titles(state),
         *bundled_titles(state),

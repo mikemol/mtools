@@ -122,3 +122,5 @@ idle_note	The close names working cards idle past the repository's own landing g
 deadenables	An enables edge whose open local target does not wait on its source is dropped, never turned into a block (W1614)
 retroscaffold	A retro scaffold pre-fills G0 and G1 from a verdict row and leaves the findings to the reviewer (W2079)
 mirror	The Mirror Check: a Backlog Baseline Lists Exactly the Open Cards Blocked on Its Card, a Card Missing or a Line Stale Is Named, and a Baseline Without the Header Is Never Judged
+openblock	A ready card may not wait on an open card of its own
+rruleaudit	The RRULE Audit: a Queue's Stored Rules Compared with a Reference Parser

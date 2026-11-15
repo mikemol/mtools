@@ -9,9 +9,10 @@ The input is the verdict row the commit tool ships (W2128): `event` is `verdict`
 - `precommit` (the ritual's G0): the `next_bounded_step` each reviewed card carried, read from the
   queue document the caller passes. The caller passes the HEAD copy, not the working one, because
   the working copy has been moving since the submit.
-- `delta` (G1): the verdict, its exit status and its reason, with the stack key naming the gate
-  record. ⚑ `retros.RETRO_FIELDS` has no `frozen_timeline` (nemik's record form lists one, and
-  `recurring` and `one_off`), so the key rides in `delta` until the two schemas are reconciled.
+- `delta` (G1): the verdict, its exit status and its reason.
+- `frozen_timeline`: the stack key naming the gate record the verdict came from. ⚑ It rode in
+  `delta` until `retros.RETRO_FIELDS` took nemik's `frozen_timeline` (W2268, ruled by nemik-6f, the
+  W982 owner). The writer passes the key through as a string and computes no hash from it.
 
 ⚑ A SCAFFOLD IS NOT A REVIEW. `findings` is `[]` and `enforcement_layer` is unset, so
 `retros.retro_refusals` accepts the record as a scaffold and the reviewer fills the findings; a
@@ -63,9 +64,7 @@ def scaffold(event: Json, queue: Json) -> Json:
         "card": ", ".join(symbols),
         "trigger": f"{verdict}: {reason}" if reason else verdict,
         "precommit": "; ".join(f"{symbol}: {_step_of(queue, symbol)}" for symbol in symbols),
-        "delta": (
-            f"verdict {verdict}, rc {event.get('rc', '')}: {reason} "
-            f"(gate record {event.get('stack_key', '')})"
-        ),
+        "frozen_timeline": str(event.get("stack_key", "")),
+        "delta": f"verdict {verdict}, rc {event.get('rc', '')}: {reason}",
         "findings": [],
     }

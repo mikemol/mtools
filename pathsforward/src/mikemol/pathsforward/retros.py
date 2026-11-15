@@ -59,8 +59,12 @@ def _finding_lines(findings: list[object]) -> list[str]:
     return refused
 
 
+FLAG_FIELDS: tuple[str, ...] = ("recurring", "one_off")
+
+
 def _shape_refusals(retro: Json) -> list[str]:
     # A record with no findings list never ran G7, and a key outside the schema is a misspelling.
+    # `recurring` and `one_off` are booleans (nemik's record form, W2268): a string "false" is true.
     refused: list[str] = []
     if not isinstance(retro.get("findings"), list):
         refused.append("a retro has no findings list (G7 never ran); give [] only if it found none")
@@ -68,6 +72,53 @@ def _shape_refusals(retro: Json) -> list[str]:
     unknown = sorted(key for key in retro if key not in known)
     if unknown:
         refused.append(f"unknown top-level key {', '.join(unknown)}")
+    refused.extend(
+        f"{key} must be true or false, not {retro[key]!r}"
+        for key in FLAG_FIELDS
+        if key in retro and not isinstance(retro[key], bool)
+    )
+    return refused
+
+
+def _cause_refusals(retro: Json) -> list[str]:
+    # A reviewed record (one that names its enforcement layer) carries the spec's trigger and root
+    # (nemik:W982), never the host's old `cause`, and a root that only restates the trigger found
+    # nothing (W1935). A scaffold has no layer yet and is judged by the shape rules alone.
+    refused = [
+        f"a reviewed retro has no {key} (the spec of record, nemik:W982, names trigger and root)"
+        for key in ("trigger", "root")
+        if not _filled(retro, key)
+    ]
+    trigger, root = retro.get("trigger"), retro.get("root")
+    if _filled(retro, "trigger") and _filled(retro, "root") and trigger == root:
+        refused.append("root equals trigger: the root names what made the trigger possible")
+    return refused
+
+
+BLAME_FIELDS: tuple[str, ...] = ("delta", "root")
+BLAME_PHRASES: tuple[str, ...] = (
+    "should have caught",
+    "should have noticed",
+    "should have known",
+    "my mistake",
+    "my fault",
+    "i forgot",
+    "i missed",
+)
+
+
+def _blame_refusals(retro: Json) -> list[str]:
+    # A retro names what the system allowed, never who failed: self-reproach in `delta` or the
+    # cause is the affect the ritual replaces with a gate (W2162), so each hit names field + phrase.
+    refused: list[str] = []
+    for field in BLAME_FIELDS:
+        value = retro.get(field)
+        text = value.lower() if isinstance(value, str) else ""
+        refused.extend(
+            f"{field} blames a person instead of naming what let it happen: {phrase!r}"
+            for phrase in BLAME_PHRASES
+            if phrase in text
+        )
     return refused
 
 
@@ -76,11 +127,15 @@ def retro_refusals(retro: Json) -> list[str]:
 
     Returns:
         the refusals, empty when the record has a findings list and only schema keys, the layer
-        and handoff operator are in their vocabularies and every finding passes `finding_refusals`.
+        and handoff operator are in their vocabularies, a reviewed record (one with a layer) has
+        a trigger and a distinct root, no delta or cause blames a person, and every finding
+        passes `finding_refusals`.
 
     """
-    refused = _shape_refusals(retro)
+    refused = _shape_refusals(retro) + _blame_refusals(retro)
     layer = retro.get("enforcement_layer")
+    if layer is not None:
+        refused.extend(_cause_refusals(retro))
     if layer is not None and layer not in LAYERS:
         refused.append(f"enforcement_layer {layer!r} is not one of {', '.join(LAYERS)}")
     handoff = retro.get("handoff")
@@ -147,9 +202,12 @@ RETRO_FIELDS: tuple[str, ...] = (
     "root",
     "contributing",
     "precommit",
+    "frozen_timeline",
     "delta",
     "sustain",
     "enforcement_layer",
+    "recurring",
+    "one_off",
     "handoff",
 )
 FINDING_FIELDS: tuple[str, ...] = (

@@ -110,6 +110,10 @@ def plan(
     return sends
 
 
+SUPPRESS_ENV = "MIKEMOL_PF_NO_EMIT"
+"""Set and non-empty: no event leaves the writer, so a scratch-queue probe has no side effect."""
+
+
 def emit(
     state: Path,
     events: Sequence[Event],
@@ -119,12 +123,18 @@ def emit(
 ) -> bool:
     """Start the children for a saved mutation's events, when a binary and a store exist.
 
+    ⚑ A PROBE ON A SCRATCH QUEUE MUST NOT REACH THE STORE (W2179, github-42): with the host's
+    endpoints file present every event of a throwaway edit would be sent, so `SUPPRESS_ENV` is
+    read before the binary is looked for.
+
     Returns:
-        whether every child was started; False with no events, no binary or store, or a child that
-        could not be started (never raised).
+        whether every child was started; False with no events, the switch set, no binary or store,
+        or a child that could not be started (never raised).
 
     """
     where = os.environ if env is None else env
+    if where.get(SUPPRESS_ENV):
+        return False
     program = refusal_record.binary(where, foreign.default_root())
     if program is None or not refusal_record.store_named(where) or not events:
         return False

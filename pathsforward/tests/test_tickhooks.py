@@ -75,19 +75,56 @@ def test_a_failing_hook_is_reported_and_the_next_still_runs() -> None:
     run, seen = _runner({"b": 3})
     said = tickhooks.run_all(["a x", "b", "c"], HERE, run)
     assert seen == ["a", "b", "c"]
-    assert said == ["HOOK a x exit 0", "HOOK b exit 3", "HOOK c exit 0"]
+    assert said[:3] == ["HOOK a x exit 0", "HOOK b exit 3", "HOOK c exit 0"]
+    assert len(said) == len(["a x", "b", "c"]) + 1
+    assert said[-1].startswith("slowest: ")
+
+
+def _meter(readings: list[tuple[float, float]]) -> tickhooks.Meter:
+    ticks = iter(readings)
+    return lambda: next(ticks)
 
 
 def test_records_keep_each_hooks_exit_output_and_its_own_read_time() -> None:
-    """W2169: one record per hook with the whole output, stamped when THAT hook finished."""
+    """W2169: one record per hook with the whole output, stamped when THAT hook finished.
+
+    W2260: and the wall and CPU seconds the meter saw across THAT hook, not across the tick.
+    """
     run, _ = _runner({"b": 3}, "one\ntwo\n")
     ticks = iter(["2026-10-30T00:00:01Z", "2026-10-30T00:00:09Z"])
-    found = tickhooks.records(["a x", "b"], HERE, lambda: next(ticks), run)
+    meter = _meter([(0.0, 0.0), (1.5, 0.25), (1.5, 0.25), (4.0, 3.0)])
+    found = tickhooks.records(["a x", "b"], HERE, lambda: next(ticks), run, meter)
     assert found == [
-        {"command": "a x", "exit": 0, "read_at": "2026-10-30T00:00:01Z", "output": "one\ntwo\n"},
-        {"command": "b", "exit": 3, "read_at": "2026-10-30T00:00:09Z", "output": "one\ntwo\n"},
+        {
+            "command": "a x",
+            "exit": 0,
+            "read_at": "2026-10-30T00:00:01Z",
+            "output": "one\ntwo\n",
+            "wall_s": 1.5,
+            "cpu_s": 0.25,
+        },
+        {
+            "command": "b",
+            "exit": 3,
+            "read_at": "2026-10-30T00:00:09Z",
+            "output": "one\ntwo\n",
+            "wall_s": 2.5,
+            "cpu_s": 2.75,
+        },
     ]
     assert tickhooks.records([], HERE, lambda: "unused", run) == []
+
+
+def test_the_slowest_line_names_the_hook_with_the_largest_wall_time() -> None:
+    """W2260: one line, the largest wall (not CPU), and nothing for an uncosted record."""
+    found: list[Doc] = [
+        {"command": "a", "wall_s": 1.0, "cpu_s": 0.5},
+        {"command": "b", "wall_s": 5.0, "cpu_s": 0.1},
+        {"command": "c", "wall_s": 2.0, "cpu_s": 9.0},
+    ]
+    assert tickhooks.slowest(found) == "slowest: b wall 5.0s cpu 0.1s"
+    assert not tickhooks.slowest([{"command": "old", "exit": 0}])
+    assert not tickhooks.slowest([])
 
 
 def test_long_output_is_capped_with_a_count_of_the_rest() -> None:
@@ -95,9 +132,10 @@ def test_long_output_is_capped_with_a_count_of_the_rest() -> None:
     run, _ = _runner({}, "".join(f"line {n}\n" for n in range(OVER)))
     said = tickhooks.run_all(["noisy"], HERE, run)
     assert said[0] == "HOOK noisy exit 0"
-    assert len(said) == 1 + tickhooks.SHOWN + 1
+    assert len(said) == 1 + tickhooks.SHOWN + 1 + 1
     assert said[1] == "  line 0"
-    assert said[-1] == f"  ... {OVER - tickhooks.SHOWN} more line(s)"
+    assert said[-2] == f"  ... {OVER - tickhooks.SHOWN} more line(s)"
+    assert said[-1].startswith("slowest: noisy wall ")
 
 
 def test_the_real_runner_captures_output_and_reports_a_missing_command(tmp_path: Path) -> None:

@@ -5882,20 +5882,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_a_watchdog_on_path_is_used_and_names_the_state_and_the_writer},
 }
 
-@misc{pathsforward-watchdogcmd-installed-script-in-the-checkout-comes-next,
-  section = {watchdogcmd},
-  title  = {No PATH entry, but the mtools checkout has the console script},
-  claim  = {No PATH entry, but the mtools checkout has the console script.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_installed_script_in_the_checkout_comes_next},
-}
-
-@misc{pathsforward-watchdogcmd-checkouts-interpreter-runs-the-module-before-a-venv-is-rebuilt,
-  section = {watchdogcmd},
-  title  = {The form that works while the console script does not exist yet},
-  claim  = {The form that works while the console script does not exist yet.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_checkouts_interpreter_runs_the_module_before_a_venv_is_rebuilt},
-}
-
 @misc{pathsforward-watchdogcmd-no-watchdog-anywhere-prints-no-command,
   section = {watchdogcmd},
   title  = {A command that cannot run is worse than none},
@@ -8136,4 +8122,331 @@
   title  = {`check` runs the mirror, so a stale line fails `--check` and not only this module},
   claim  = {`check` runs the mirror, so a stale line fails `--check` and not only this module.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_mirror.py -k test_the_whole_check_carries_the_mirror_findings},
+}
+
+@misc{pathsforward-tick-close-handoff-close-ends-on-the-handoff-line-carrying-the-ledger-lines-own-time,
+  section = {cli},
+  title  = {The last line names this repo, the card and the timestamp the ledger line begins with},
+  claim  = {The last line names this repo, the card and the timestamp the ledger line begins with.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_handoff.py -k test_a_close_ends_on_the_handoff_line_carrying_the_ledger_lines_own_time},
+}
+
+@misc{pathsforward-tick-close-handoff-refused-close-prints-no-handoff-line,
+  section = {cli},
+  title  = {The negative control: an outcome outside the declared set writes no tick line to name},
+  claim  = {The negative control: an outcome outside the declared set writes no tick line to name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tick_close_handoff.py -k test_a_refused_close_prints_no_handoff_line},
+}
+
+@misc{pathsforward-retros-reviewed-retro-needs-a-trigger-and-a-root-that-differ,
+  section = {retros},
+  title  = {W1935: a layer marks a finished review; it must name trigger and root, and not the same},
+  claim  = {W1935: a layer marks a finished review; it must name trigger and root, and not the same.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_reviewed_retro_needs_a_trigger_and_a_root_that_differ},
+}
+
+@misc{pathsforward-retros-scaffold-with-no-layer-is-not-held-to-trigger-and-root,
+  section = {retros},
+  title  = {The negative control: a scaffold (no enforcement_layer) still passes with neither},
+  claim  = {The negative control: a scaffold (no enforcement_layer) still passes with neither.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_scaffold_with_no_layer_is_not_held_to_trigger_and_root},
+}
+
+@misc{pathsforward-retros-self-reproach-in-delta-or-cause-is-refused-naming-field-and-phrase,
+  section = {retros},
+  title  = {W2162: 'should have caught' and 'my mistake' are affect, not a cause; each hit is named},
+  claim  = {W2162: 'should have caught' and 'my mistake' are affect, not a cause; each hit is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_self_reproach_in_delta_or_cause_is_refused_naming_field_and_phrase},
+}
+
+@misc{pathsforward-retros-causal-statement-without-blame-is-accepted,
+  section = {retros},
+  title  = {The negative control: the same facts stated as what let it happen pass},
+  claim  = {The negative control: the same facts stated as what let it happen pass.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_causal_statement_without_blame_is_accepted},
+}
+
+@misc{pathsforward-mutations-emit-suppress-switch-sends-nothing-though-a-binary-and-a-store-exist,
+  section = {cli},
+  title  = {W2179: the same ENV that starts children in the control above sends none with the switch},
+  claim  = {W2179: the same ENV that starts children in the control above sends none with the
+            switch.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_mutations_emit.py -k test_the_suppress_switch_sends_nothing_though_a_binary_and_a_store_exist},
+}
+
+@misc{pathsforward-gate-refusal-tool-that-ran-and-refused-gives-its-own-line,
+  section = {reconcile},
+  title  = {The first non-empty stderr line, not a guess about PATH},
+  claim  = {The first non-empty stderr line, not a guess about PATH.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_refusal.py -k test_a_tool_that_ran_and_refused_gives_its_own_line},
+}
+
+@misc{pathsforward-gate-refusal-absent-or-agreeable-or-unstartable-tool-gives-no-line,
+  section = {reconcile},
+  title  = {None means the PATH hint stays; exit 0 is not a refusal; a missing file cannot start},
+  claim  = {None means the PATH hint stays; exit 0 is not a refusal; a missing file cannot start.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_refusal.py -k test_an_absent_or_agreeable_or_unstartable_tool_gives_no_line},
+}
+
+@misc{pathsforward-gate-refusal-note-names-the-repo-for-a-refusal-and-keeps-the-hint-otherwise,
+  section = {reconcile},
+  title  = {A refusal reads 'no commit gate for <repo> (<line>)'; no line keeps GATING_NOTE},
+  claim  = {A refusal reads 'no commit gate for <repo> (<line>)'; no line keeps GATING_NOTE.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_refusal.py -k test_the_note_names_the_repo_for_a_refusal_and_keeps_the_hint_otherwise},
+}
+
+@misc{pathsforward-tickhooks-slowest-line-names-the-hook-with-the-largest-wall-time,
+  section = {tickhooks},
+  title  = {W2260: one line, the largest wall (not CPU), and nothing for an uncosted record},
+  claim  = {W2260: one line, the largest wall (not CPU), and nothing for an uncosted record.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_tickhooks.py -k test_the_slowest_line_names_the_hook_with_the_largest_wall_time},
+}
+
+@misc{pathsforward-counter-lag-bound-is-the-tolerated-commits-times-the-median-rise,
+  section = {regressions},
+  title  = {Counters newest first: rises 10, 10, 40 have median 10, so the bound is 2 x 10},
+  claim  = {Counters newest first: rises 10, 10, 40 have median 10, so the bound is 2 x 10.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_counter_lag.py -k test_the_bound_is_the_tolerated_commits_times_the_median_rise},
+}
+
+@misc{pathsforward-counter-lag-history-with-no-rise-gives-the-minimum-not-a-pass,
+  section = {regressions},
+  title  = {No cadence yet means strict: an empty list, one counter or a flat one is MIN_BOUND},
+  claim  = {No cadence yet means strict: an empty list, one counter or a flat one is MIN_BOUND.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_counter_lag.py -k test_a_history_with_no_rise_gives_the_minimum_not_a_pass},
+}
+
+@misc{pathsforward-counter-lag-faster-queue-is-allowed-a-bigger-lag,
+  section = {regressions},
+  title  = {The same lag of 30 warns for a slow queue and not for a fast one},
+  claim  = {The same lag of 30 warns for a slow queue and not for a fast one.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_counter_lag.py -k test_a_faster_queue_is_allowed_a_bigger_lag},
+}
+
+@misc{pathsforward-counter-lag-counters-are-read-from-each-commit-of-the-queue-file,
+  section = {regressions},
+  title  = {Each sha git lists is shown and its counter read; one without a counter is skipped},
+  claim  = {Each sha git lists is shown and its counter read; one without a counter is skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_counter_lag.py -k test_the_counters_are_read_from_each_commit_of_the_queue_file},
+}
+
+@misc{pathsforward-counter-lag-command-warns-about-a-lag-and-still-exits-clean,
+  section = {regressions},
+  title  = {The warning goes to stderr; the exit status is the loss check's alone},
+  claim  = {The warning goes to stderr; the exit status is the loss check's alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_counter_lag.py -k test_the_command_warns_about_a_lag_and_still_exits_clean},
+}
+
+@misc{pathsforward-retros-record-form-fields-frozen-timeline-recurring-and-one-off-are-accepted,
+  section = {retros},
+  title  = {W2268 (nemik-6f, W982 owner): mtools adds the doc's three fields; the flags are booleans},
+  claim  = {W2268 (nemik-6f, W982 owner): mtools adds the doc's three fields; the flags are
+            booleans.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_record_form_fields_frozen_timeline_recurring_and_one_off_are_accepted},
+}
+
+@misc{pathsforward-watchdogcmd-installed-script-in-this-repos-own-venv-comes-next,
+  section = {watchdogcmd},
+  title  = {No PATH entry, but the repository the queue belongs to has the console script},
+  claim  = {No PATH entry, but the repository the queue belongs to has the console script.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_the_installed_script_in_this_repos_own_venv_comes_next},
+}
+
+@misc{pathsforward-watchdogcmd-this-repos-interpreter-runs-the-module-before-a-venv-is-rebuilt,
+  section = {watchdogcmd},
+  title  = {The form that works while the console script does not exist yet},
+  claim  = {The form that works while the console script does not exist yet.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_this_repos_interpreter_runs_the_module_before_a_venv_is_rebuilt},
+}
+
+@misc{pathsforward-watchdogcmd-another-repos-command-never-reaches-into-a-checkout-under-the-home-directory,
+  section = {watchdogcmd},
+  title  = {W2382: HOME holds a working mtools venv, and a repo that is not mtools must not use it},
+  claim  = {W2382: HOME holds a working mtools venv, and a repo that is not mtools must not use it.
+            The old lookup read `~/github/mtools/hooks/.venv`, so a command printed for
+            any repo pointed at mtools' live working tree. The control is the same home
+            with the repo's own venv present, which is used: the venv under the queue's
+            own root is the one that belongs to it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_watchdogcmd.py -k test_another_repos_command_never_reaches_into_a_checkout_under_the_home_directory},
+}
+
+@misc{pathsforward-openblock-ready-card-over-an-open-entry-of-its-own-is-refused-naming-it,
+  section = {openblock},
+  title  = {The refusal: the umbrella set ready while its instance card is still open},
+  claim  = {The refusal: the umbrella set ready while its instance card is still open.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_openblock.py -k test_a_ready_card_over_an_open_entry_of_its_own_is_refused_naming_it},
+}
+
+@misc{pathsforward-openblock-working-card-is-refused-as-well,
+  section = {openblock},
+  title  = {Working is as much a claim that nothing is awaited as ready},
+  claim  = {Working is as much a claim that nothing is awaited as ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_openblock.py -k test_a_working_card_is_refused_as_well},
+}
+
+@misc{pathsforward-openblock-check-warns-on-a-card-already-in-the-queue-over-an-open-entry,
+  section = {openblock},
+  title  = {The warning, from the same list the refusal uses},
+  claim  = {The warning, from the same list the refusal uses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_openblock.py -k test_the_check_warns_on_a_card_already_in_the_queue_over_an_open_entry},
+}
+
+@misc{pathsforward-openblock-ready-blocker-that-other-cards-name-stays-legal,
+  section = {openblock},
+  title  = {The control: W1 is named by W2 and W3, and its own blocked_on is empty},
+  claim  = {The control: W1 is named by W2 and W3, and its own blocked_on is empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_openblock.py -k test_a_ready_blocker_that_other_cards_name_stays_legal},
+}
+
+@misc{pathsforward-openblock-blocked-card-and-a-landed-dropped-or-unknown-entry-are-not-judged,
+  section = {openblock},
+  title  = {Blocked is the right state; done and residue entries have landed; foreign is nemik's},
+  claim  = {Blocked is the right state; done and residue entries have landed; foreign is nemik's.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_openblock.py -k test_a_blocked_card_and_a_landed_dropped_or_unknown_entry_are_not_judged},
+}
+
+@misc{pathsforward-landedblock-update-refuses-ready-over-an-open-own-blocker-and-an-unrelated-edit-passes,
+  section = {landedblock},
+  title  = {W2307: through the CLI a ready card may not name open work of its own; nothing is written},
+  claim  = {W2307: through the CLI a ready card may not name open work of its own; nothing is
+            written.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_update_refuses_ready_over_an_open_own_blocker_and_an_unrelated_edit_passes},
+}
+
+@misc{pathsforward-ops-naming-a-blocker-alone-blocks-a-ready-card-with-the-kind-it-had-or-agent,
+  section = {ops},
+  title  = {W2380 (nemik:W2100): `--blocked-on X` alone left the card `ready`, so it read pickable},
+  claim  = {W2380 (nemik:W2100): `--blocked-on X` alone left the card `ready`, so it read pickable.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_naming_a_blocker_alone_blocks_a_ready_card_with_the_kind_it_had_or_agent},
+}
+
+@misc{pathsforward-ops-stated-status-beats-the-named-blocker-and-no-blocker-changes-nothing,
+  section = {ops},
+  title  = {`--status ready` stays ready beside a blocker, and an empty blocker list does not block},
+  claim  = {`--status ready` stays ready beside a blocker, and an empty blocker list does not block.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_stated_status_beats_the_named_blocker_and_no_blocker_changes_nothing},
+}
+
+@misc{pathsforward-atomize-verb-children-given-a-blocker-are-blocked-on-it-not-left-ready,
+  section = {atomize_verb},
+  title  = {W2380 (nemik:W2100): `--atomize ... --blocked-on X` ignored X and left the children ready},
+  claim  = {W2380 (nemik:W2100): `--atomize ... --blocked-on X` ignored X and left the children
+            ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_children_given_a_blocker_are_blocked_on_it_not_left_ready},
+}
+
+@misc{pathsforward-ops-done-card-lacks-a-commit-unless-it-holds-a-sha-or-says-why,
+  section = {ops},
+  title  = {W2393: a 7 to 40 hex token or `no commit:` is the proof; only a done card can lack it},
+  claim  = {W2393: a 7 to 40 hex token or `no commit:` is the proof; only a done card can lack it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_ops.py -k test_a_done_card_lacks_a_commit_unless_it_holds_a_sha_or_says_why},
+}
+
+@misc{pathsforward-landedblock-marking-done-with-no-commit-warns-and-still-writes,
+  section = {landedblock},
+  title  = {W2393: the warning names the escape; a sha or `no commit:` in the evidence silences it},
+  claim  = {W2393: the warning names the escape; a sha or `no commit:` in the evidence silences it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_marking_done_with_no_commit_warns_and_still_writes},
+}
+
+@misc{pathsforward-landedblock-update-many-refuses-ready-over-an-open-own-blocker-for-all-or-none,
+  section = {landedblock},
+  title  = {W2307: the bulk verb refuses ready over open work of the card's own and writes nothing},
+  claim  = {W2307: the bulk verb refuses ready over open work of the card's own and writes nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_landedblock.py -k test_update_many_refuses_ready_over_an_open_own_blocker_for_all_or_none},
+}
+
+@misc{pathsforward-atomize-verb-verb-given-a-blocker-writes-its-children-blocked-not-ready,
+  section = {atomize_verb},
+  title  = {W2380: `--atomize ... --blocked-on X` reaches the children, which a bare verb left ready},
+  claim  = {W2380: `--atomize ... --blocked-on X` reaches the children, which a bare verb left
+            ready.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_atomize_verb.py -k test_the_verb_given_a_blocker_writes_its_children_blocked_not_ready},
+}
+
+@misc{pathsforward-recurrence-rules-both-readers-accept-or-both-reject-are-no-disagreement,
+  section = {recurrence},
+  title  = {The controls: agreement in both directions reports nothing},
+  claim  = {The controls: agreement in both directions reports nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recurrence.py -k test_rules_both_readers_accept_or_both_reject_are_no_disagreement},
+}
+
+@misc{pathsforward-recurrence-rule-only-we-accept-and-a-rule-only-the-reference-accepts-are-each-named,
+  section = {recurrence},
+  title  = {Each direction of disagreement is one line saying which reader accepts},
+  claim  = {Each direction of disagreement is one line saying which reader accepts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recurrence.py -k test_a_rule_only_we_accept_and_a_rule_only_the_reference_accepts_are_each_named},
+}
+
+@misc{pathsforward-recurrence-stored-rules-of-a-queue-are-read-in-order-and-junk-reads-as-none,
+  section = {recurrence},
+  title  = {Only a waypoint with a string, non-empty `rrule` is listed; a non-queue document is empty},
+  claim  = {Only a waypoint with a string, non-empty `rrule` is listed; a non-queue document is
+            empty.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_recurrence.py -k test_the_stored_rules_of_a_queue_are_read_in_order_and_junk_reads_as_none},
+}
+
+@misc{pathsforward-rrule-audit-agreement-is-silent-and-each-disagreement-is-named-with-its-repo-and-card,
+  section = {rruleaudit},
+  title  = {The control passes; a rule only we accept is one line, repos in name order},
+  claim  = {The control passes; a rule only we accept is one line, repos in name order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rrule_audit.py -k test_agreement_is_silent_and_each_disagreement_is_named_with_its_repo_and_card},
+}
+
+@misc{pathsforward-rrule-audit-missing-or-torn-queue-adds-nothing-and-the-audit-writes-nothing,
+  section = {rruleaudit},
+  title  = {Unreadable is not a finding; a directory with no queue is skipped; the tree is untouched},
+  claim  = {Unreadable is not a finding; a directory with no queue is skipped; the tree is
+            untouched.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rrule_audit.py -k test_a_missing_or_torn_queue_adds_nothing_and_the_audit_writes_nothing},
+}
+
+@misc{pathsforward-gate-refusal-one-run-of-the-tool-gives-the-map-when-it-agrees-and-the-line-when-it-refuses,
+  section = {reconcile},
+  title  = {Exit 0 gives the stdout and no line; exit 1 gives no map and the first stderr line},
+  claim  = {Exit 0 gives the stdout and no line; exit 1 gives no map and the first stderr line.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_refusal.py -k test_one_run_of_the_tool_gives_the_map_when_it_agrees_and_the_line_when_it_refuses},
+}
+
+@misc{pathsforward-gate-refusal-reconcile-starts-the-gate-tool-once-even-when-it-refuses,
+  section = {reconcile},
+  title  = {The refusal line rides the same child as the map: one start, not a second for stderr},
+  claim  = {The refusal line rides the same child as the map: one start, not a second for stderr.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_refusal.py -k test_reconcile_starts_the_gate_tool_once_even_when_it_refuses},
+}
+
+@misc{pathsforward-counter-lag-only-the-top-level-counter-is-read-whatever-the-key-order-or-a-card-field,
+  section = {regressions},
+  title  = {A waypoint field named counter that comes first must not win over the queue's own},
+  claim  = {A waypoint field named counter that comes first must not win over the queue's own.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_counter_lag.py -k test_only_the_top_level_counter_is_read_whatever_the_key_order_or_a_card_field},
+}
+
+@misc{pathsforward-counter-lag-copy-that-is-not-an-object-or-has-no-integer-counter-is-skipped,
+  section = {regressions},
+  title  = {Text that is not JSON, a list, a string counter and a boolean counter all read as none},
+  claim  = {Text that is not JSON, a list, a string counter and a boolean counter all read as none.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_counter_lag.py -k test_a_copy_that_is_not_an_object_or_has_no_integer_counter_is_skipped},
+}
+
+@misc{pathsforward-openblock-refused-update-writes-nothing,
+  section = {openblock},
+  title  = {The refusal comes after the in-memory update and before the save: the file is unchanged},
+  claim  = {The refusal comes after the in-memory update and before the save: the file is unchanged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_openblock.py -k test_a_refused_update_writes_nothing},
+}
+
+@misc{pathsforward-openblock-refused-update-many-writes-nothing,
+  section = {openblock},
+  title  = {The same for the bulk verb under --write: a refusal on the card changes nothing at all},
+  claim  = {The same for the bulk verb under --write: a refusal on the card changes nothing at all.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_openblock.py -k test_a_refused_update_many_writes_nothing},
+}
+
+@misc{pathsforward-gate-refusal-gate-map-is-read-through-the-tool-found-and-a-refusal-reads-as-none,
+  section = {reconcile},
+  title  = {read_gate returns the tool's stdout when it agrees and None when it refuses or is absent},
+  claim  = {read_gate returns the tool's stdout when it agrees and None when it refuses or is
+            absent.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_refusal.py -k test_the_gate_map_is_read_through_the_tool_found_and_a_refusal_reads_as_none},
 }

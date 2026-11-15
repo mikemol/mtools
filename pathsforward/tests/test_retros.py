@@ -58,10 +58,28 @@ def test_a_certify_change_alone_stands_and_a_finding_with_neither_is_refused() -
 
 def test_the_layer_and_the_handoff_operator_are_held_to_their_vocabularies() -> None:
     """The layers run memory to gate; the handoff operator is self or other."""
-    good: Json = {"enforcement_layer": "gate", "handoff": {"operator": "self"}, "findings": []}
+    cause: Json = {"trigger": "a gate stalled", "root": "a leaked descriptor", "findings": []}
+    good: Json = {"enforcement_layer": "gate", "handoff": {"operator": "self"}, **cause}
     assert retros.retro_refusals(good) == []
-    both: Json = {"enforcement_layer": "vibes", "handoff": {"operator": "us"}, "findings": []}
+    both: Json = {"enforcement_layer": "vibes", "handoff": {"operator": "us"}, **cause}
     assert len(retros.retro_refusals(both)) == len(["layer", "operator"])
+
+
+def test_a_reviewed_retro_needs_a_trigger_and_a_root_that_differ() -> None:
+    """W1935: a layer marks a finished review; it must name trigger and root, and not the same."""
+    base: Json = {"enforcement_layer": "gate", "findings": []}
+    assert len(retros.retro_refusals(base)) == len(["trigger", "root"])
+    host: Json = {**base, "cause": "x"}
+    assert len(retros.retro_refusals(host)) == len(["cause is unknown", "trigger", "root"])
+    [blank] = retros.retro_refusals({**base, "trigger": "t", "root": "  "})
+    assert "no root" in blank
+    [same] = retros.retro_refusals({**base, "trigger": "t", "root": "t"})
+    assert "root equals trigger" in same
+
+
+def test_a_scaffold_with_no_layer_is_not_held_to_trigger_and_root() -> None:
+    """The negative control: a scaffold (no enforcement_layer) still passes with neither."""
+    assert retros.retro_refusals({"findings": []}) == []
 
 
 def test_a_retro_with_no_findings_list_or_an_unknown_key_is_refused() -> None:
@@ -71,6 +89,24 @@ def test_a_retro_with_no_findings_list_or_an_unknown_key_is_refused() -> None:
     assert "no findings list" in missing
     [unknown] = retros.retro_refusals({"findings": [], "triger": "t", "extra": 1})
     assert "extra, triger" in unknown
+
+
+def test_the_record_form_fields_frozen_timeline_recurring_and_one_off_are_accepted() -> None:
+    """W2268 (nemik-6f, W982 owner): mtools adds the doc's three fields; the flags are booleans."""
+    doc_form: Json = {
+        "trigger": "t",
+        "frozen_timeline": "sha256:abc",
+        "recurring": True,
+        "one_off": False,
+        "findings": [],
+    }
+    assert retros.retro_refusals(doc_form) == []
+    for key in ("frozen_timeline", "recurring", "one_off"):
+        assert key in retros.RETRO_FIELDS
+    [string] = retros.retro_refusals({"findings": [], "recurring": "false"})
+    assert "recurring must be true or false" in string
+    both = retros.retro_refusals({"findings": [], "recurring": 1, "one_off": "no"})
+    assert len(both) == len(["recurring", "one_off"])
 
 
 def test_adding_a_retro_mints_the_next_id_and_a_refused_one_changes_nothing() -> None:
@@ -159,3 +195,23 @@ def test_migrate_command_dry_run_saves_nothing(tmp_path: Path) -> None:
     [stored] = cast("list[Json]", _saved(queue)["retros"])
     assert stored["root"] == "why"
     assert "cause" not in stored
+
+
+def test_self_reproach_in_delta_or_cause_is_refused_naming_field_and_phrase() -> None:
+    """W2162: 'should have caught' and 'my mistake' are affect, not a cause; each hit is named."""
+    shaped: Json = {"findings": []}
+    [delta] = retros.retro_refusals({**shaped, "delta": "I should have caught the stale lock"})
+    assert "delta" in delta
+    assert "should have caught" in delta
+    [root] = retros.retro_refusals({**shaped, "root": "That was MY MISTAKE, the lock was stale"})
+    assert "root" in root
+    assert "my mistake" in root
+    both = retros.retro_refusals({**shaped, "delta": "my fault", "root": "i forgot to look"})
+    assert len(both) == len(["delta", "root"])
+
+
+def test_a_causal_statement_without_blame_is_accepted() -> None:
+    """The negative control: the same facts stated as what let it happen pass."""
+    cause = "the lock file was left by a process that exited without releasing it"
+    fine: Json = {"findings": [], "delta": "the close now releases the lock", "root": cause}
+    assert retros.retro_refusals(fine) == []

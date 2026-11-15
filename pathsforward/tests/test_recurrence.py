@@ -4,10 +4,15 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
 from mikemol.pathsforward.model import RefusedError
-from mikemol.pathsforward.recurrence import check
+from mikemol.pathsforward.recurrence import check, disagreements, rules_of
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @pytest.mark.parametrize(
@@ -50,3 +55,46 @@ def test_a_rule_no_reader_could_expand_is_refused(rule: str, reason: str) -> Non
     """⚑ No FREQ, UNTIL with COUNT, an out-of-range or unknown part: refused, naming why."""
     with pytest.raises(RefusedError, match=f"is not an RFC 5545 RRULE: .*{reason}"):
         check(rule)
+
+
+_GOOD = "FREQ=MONTHLY;BYMONTHDAY=1"
+_BAD = "FREQ=SOMETIMES"
+_ONLY_OURS = "FREQ=DAILY;BYSECOND=60"
+
+
+def _oracle(accepted: set[str]) -> Callable[[str], bool]:
+    def reference(rule: str) -> bool:
+        return rule in accepted
+
+    return reference
+
+
+def test_rules_both_readers_accept_or_both_reject_are_no_disagreement() -> None:
+    """The controls: agreement in both directions reports nothing."""
+    assert disagreements([_GOOD, _BAD], _oracle({_GOOD})) == []
+
+
+def test_a_rule_only_we_accept_and_a_rule_only_the_reference_accepts_are_each_named() -> None:
+    """Each direction of disagreement is one line saying which reader accepts."""
+    found = disagreements([_ONLY_OURS, _BAD], _oracle({_BAD}))
+    assert found == [
+        f"{_ONLY_OURS!r}: we accept, the reference rejects",
+        f"{_BAD!r}: the reference accepts, we reject",
+    ]
+
+
+def test_the_stored_rules_of_a_queue_are_read_in_order_and_junk_reads_as_none() -> None:
+    """Only a waypoint with a string, non-empty `rrule` is listed; a non-queue document is empty."""
+    document = {
+        "waypoints": [
+            {"symbol": "W1", "rrule": _GOOD},
+            {"symbol": "W2"},
+            {"symbol": "W3", "rrule": ""},
+            {"symbol": "W4", "rrule": 7},
+            "not a waypoint",
+            {"symbol": "W5", "rrule": _BAD},
+        ]
+    }
+    assert rules_of(document) == [("W1", _GOOD), ("W5", _BAD)]
+    assert rules_of([]) == []
+    assert rules_of({"waypoints": "x"}) == []

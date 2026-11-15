@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Mike Mol
-"""The line --tick-open prints to start the idle watchdog: on PATH, in the checkout, or none."""
+"""The line --tick-open prints to start the idle watchdog: beside the writer, own repo, PATH."""
 
 import json
 from pathlib import Path
@@ -17,15 +17,15 @@ def _none(_name: str) -> str | None:
     return None
 
 
-def _checkout_bin(home: Path) -> Path:
-    path = home / "github" / "mtools" / "hooks" / ".venv" / "bin"
+def _own_bin(root: Path) -> Path:
+    path = root / "hooks" / ".venv" / "bin"
     path.mkdir(parents=True)
     return path
 
 
-def test_a_watchdog_on_path_is_used_and_names_the_state_and_the_writer(tmp_path: Path) -> None:
+def test_a_watchdog_on_path_is_used_and_names_the_state_and_the_writer() -> None:
     """The writer that printed the command is the one the watchdog asks."""
-    got = watchdogcmd.command(_STATE, _WRITER, tmp_path, lambda _n: "/usr/bin/mikemol-watchdog")
+    got = watchdogcmd.command(_STATE, _WRITER, lambda _n: "/usr/bin/mikemol-watchdog")
     assert got == f"/usr/bin/mikemol-watchdog --state {_STATE} --writer {_WRITER}"
 
 
@@ -39,40 +39,64 @@ def test_the_watchdog_beside_the_writer_beats_a_sibling_repos_copy_on_path(tmp_p
     bin_dir.mkdir(parents=True)
     writer = str(bin_dir / "mikemol-paths-forward")
     decoy = "/sibling/.venv/bin/mikemol-watchdog"
-    assert watchdogcmd.command(_STATE, writer, tmp_path, lambda _n: decoy) == (
+    assert watchdogcmd.command(_STATE, writer, lambda _n: decoy) == (
         f"{decoy} --state {_STATE} --writer {writer}"
     )
     own = bin_dir / "mikemol-watchdog"
     own.write_text("", encoding="utf-8")
-    assert watchdogcmd.command(_STATE, writer, tmp_path, lambda _n: decoy) == (
+    assert watchdogcmd.command(_STATE, writer, lambda _n: decoy) == (
         f"{own} --state {_STATE} --writer {writer}"
     )
 
 
-def test_the_installed_script_in_the_checkout_comes_next(tmp_path: Path) -> None:
-    """No PATH entry, but the mtools checkout has the console script."""
-    script = _checkout_bin(tmp_path) / "mikemol-watchdog"
+def test_the_installed_script_in_this_repos_own_venv_comes_next(tmp_path: Path) -> None:
+    """No PATH entry, but the repository the queue belongs to has the console script."""
+    state = tmp_path / "repo" / ".claude" / "paths-forward.json"
+    script = _own_bin(tmp_path / "repo") / "mikemol-watchdog"
     script.write_text("", encoding="utf-8")
-    got = watchdogcmd.command(_STATE, _WRITER, tmp_path, _none)
-    assert got == f"{script} --state {_STATE} --writer {_WRITER}"
+    got = watchdogcmd.command(state, _WRITER, _none)
+    assert got == f"{script} --state {state} --writer {_WRITER}"
 
 
-def test_the_checkouts_interpreter_runs_the_module_before_a_venv_is_rebuilt(tmp_path: Path) -> None:
+def test_this_repos_interpreter_runs_the_module_before_a_venv_is_rebuilt(tmp_path: Path) -> None:
     """The form that works while the console script does not exist yet."""
-    python = _checkout_bin(tmp_path) / "python"
+    state = tmp_path / "repo" / ".claude" / "paths-forward.json"
+    python = _own_bin(tmp_path / "repo") / "python"
     python.write_text("", encoding="utf-8")
-    got = watchdogcmd.command(_STATE, _WRITER, tmp_path, _none)
-    assert got == f"{python} -m mikemol.hooks.watchdog --state {_STATE} --writer {_WRITER}"
+    got = watchdogcmd.command(state, _WRITER, _none)
+    assert got == f"{python} -m mikemol.hooks.watchdog --state {state} --writer {_WRITER}"
 
 
-def test_no_watchdog_anywhere_prints_no_command(tmp_path: Path) -> None:
+def test_another_repos_command_never_reaches_into_a_checkout_under_the_home_directory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2382: HOME holds a working mtools venv, and a repo that is not mtools must not use it.
+
+    The old lookup read `~/github/mtools/hooks/.venv`, so a command printed for any repo pointed at
+    mtools' live working tree. The control is the same home with the repo's own venv present, which
+    is used: the venv under the queue's own root is the one that belongs to it.
+    """
+    home = tmp_path / "home"
+    decoy = _own_bin(home / "github" / "mtools")
+    for name in ("python", "mikemol-watchdog"):
+        (decoy / name).write_text("", encoding="utf-8")
+    monkeypatch.setenv("HOME", str(home))
+    state = tmp_path / "other" / ".claude" / "paths-forward.json"
+    assert watchdogcmd.command(state, _WRITER, _none) is None
+    assert str(home) not in watchdogcmd.tick_line(state, _WRITER, _none)
+    own = _own_bin(tmp_path / "other") / "mikemol-watchdog"
+    own.write_text("", encoding="utf-8")
+    assert watchdogcmd.command(state, _WRITER, _none) == f"{own} --state {state} --writer {_WRITER}"
+
+
+def test_no_watchdog_anywhere_prints_no_command() -> None:
     """A command that cannot run is worse than none."""
-    assert watchdogcmd.command(_STATE, _WRITER, tmp_path, _none) is None
+    assert watchdogcmd.command(_STATE, _WRITER, _none) is None
 
 
-def test_the_tick_line_names_the_running_writer_by_the_path_it_was_run_as(tmp_path: Path) -> None:
+def test_the_tick_line_names_the_running_writer_by_the_path_it_was_run_as() -> None:
     """The watchdog asks the copy that printed the line, a relative path made absolute."""
-    line = watchdogcmd.tick_line(_STATE, "relative/writer", tmp_path, lambda _n: "/bin/wd")
+    line = watchdogcmd.tick_line(_STATE, "relative/writer", lambda _n: "/bin/wd")
     assert line.startswith("watchdog: start it in the background: /bin/wd --state ")
     assert f"--writer {Path.cwd() / 'relative' / 'writer'}" in line
 
@@ -90,9 +114,9 @@ def test_a_bare_writer_name_is_looked_up_on_path_and_kept_when_it_is_not_found()
     assert watchdogcmd.writer_named("mikemol-paths-forward", _none) == "mikemol-paths-forward"
 
 
-def test_the_tick_line_says_so_when_no_watchdog_is_found(tmp_path: Path) -> None:
+def test_the_tick_line_says_so_when_no_watchdog_is_found() -> None:
     """A missing watchdog shows up in the opening output instead of hiding."""
-    line = watchdogcmd.tick_line(_STATE, "w", tmp_path, _none)
+    line = watchdogcmd.tick_line(_STATE, "w", _none)
     assert line.startswith("watchdog: none found")
 
 

@@ -46,6 +46,20 @@ def _state(*cards: Json) -> State:
     return State({}, list(cards), residue, len(cards))
 
 
+def test_marking_done_with_no_commit_warns_and_still_writes(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2393: the warning names the escape; a sha or `no commit:` in the evidence silences it."""
+    queue = tmp_path / ".claude" / "paths-forward.json"
+    _write(queue, _card("W1", "ready"), _card("W2", "ready"))
+    argv = ["--state", str(queue), "--root", str(tmp_path), "--update"]
+    assert cli.main([*argv, "W1", "--status", "done"]) == cli.EXIT_OK
+    assert "W1 is done with no commit sha" in capsys.readouterr().err
+    cited = [*argv, "W2", "--status", "done", "--evidence-append", "landed as ed818b68"]
+    assert cli.main(cited) == cli.EXIT_OK
+    assert "no commit sha" not in capsys.readouterr().err
+
+
 def test_a_done_local_blocker_is_refused_and_says_why(tmp_path: Path) -> None:
     """The loud failure: the message names the card, the blocker and that it landed."""
     state = _state(_card("W1", "ready"), _card("W2", "done"))
@@ -102,7 +116,38 @@ def test_update_many_refuses_one_landed_blocker_for_all_or_none(tmp_path: Path) 
     queue = tmp_path / ".claude" / "paths-forward.json"
     _write(queue, _card("W1", "ready"), _card("W3", "ready"), _card("W2", "done"))
     before = queue.read_text(encoding="utf-8")
-    argv = ["--state", str(queue), "--root", str(tmp_path), "--update-many", "W1", "W3"]
+    argv = ["--state", str(queue), "--update-many", "W1", "W3"]
     argv += ["--status", "blocked", "--blocked-on", "W2", "--blocked-kind", "agent", "--write"]
     assert cli.main(argv) == cli.EXIT_REFUSED
     assert queue.read_text(encoding="utf-8") == before
+
+
+def test_update_refuses_ready_over_an_open_own_blocker_and_an_unrelated_edit_passes(
+    tmp_path: Path,
+) -> None:
+    """W2307: through the CLI a ready card may not name open work of its own; nothing is written."""
+    queue = tmp_path / ".claude" / "paths-forward.json"
+    _write(queue, _card("W1", "ready"), _card("W2", "ready"))
+    before = queue.read_text(encoding="utf-8")
+    argv = ["--state", str(queue), "--root", str(tmp_path), "--update", "W1"]
+    assert cli.main([*argv, "--status", "ready", "--blocked-on", "W2"]) == cli.EXIT_REFUSED
+    assert queue.read_text(encoding="utf-8") == before
+    assert cli.main([*argv, "--next", "step"]) == cli.EXIT_OK
+    # W2380: a bare --blocked-on no longer leaves the card ready, so it is blocked, not refused.
+    assert cli.main([*argv, "--blocked-on", "W2"]) == cli.EXIT_OK
+    assert '"status": "blocked"' in queue.read_text(encoding="utf-8")
+
+
+def test_update_many_refuses_ready_over_an_open_own_blocker_for_all_or_none(
+    tmp_path: Path,
+) -> None:
+    """W2307: the bulk verb refuses ready over open work of the card's own and writes nothing."""
+    queue = tmp_path / ".claude" / "paths-forward.json"
+    _write(queue, _card("W1", "ready"), _card("W3", "ready"), _card("W2", "ready"))
+    before = queue.read_text(encoding="utf-8")
+    argv = ["--state", str(queue), "--update-many", "W1", "W3"]
+    refused = [*argv, "--status", "ready", "--blocked-on", "W2", "--blocked-kind", "agent"]
+    assert cli.main([*refused, "--write"]) == cli.EXIT_REFUSED
+    assert queue.read_text(encoding="utf-8") == before
+    blocked = [*argv, "--status", "blocked", "--blocked-on", "W2", "--blocked-kind", "agent"]
+    assert cli.main([*blocked, "--write"]) == cli.EXIT_OK

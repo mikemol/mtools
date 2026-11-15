@@ -12,6 +12,7 @@ count, because a tick that could not look must not report that nothing landed.
 CONSUMED BY: `closegate.judge`.
 """
 
+import json
 import re
 import shutil
 import subprocess
@@ -47,25 +48,16 @@ def read_log(root: Path, since: str) -> str | None:
     git = shutil.which("git")
     if git is None:
         return None
-    try:
-        done = subprocess.run(
-            [git, "-C", str(root), "log", f"--since={since}", "--format=%B"],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=_GIT_TIMEOUT_S,
-        )
-    except Exception as caught:
-        if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
-            raise
-        return None
-    return done.stdout if done.returncode == 0 else None
+    return _run([git, "-C", str(root), "log", f"--since={since}", "--format=%B"])
 
 
-def _run(argv: list[str], env: dict[str, str] | None = None) -> str | None:
-    # The output of a child that exited 0, or None when it is absent, failed or timed out.
+def _run_full(
+    argv: list[str], env: dict[str, str] | None = None
+) -> "subprocess.CompletedProcess[str] | None":
+    # THE ONE PLACE THIS MODULE STARTS A CHILD (github-cb, b69): the finished process, or None when
+    # it is absent or timed out. Callers read the exit code and both streams from this one run.
     try:
-        done = subprocess.run(
+        return subprocess.run(
             argv,
             capture_output=True,
             text=True,
@@ -77,7 +69,12 @@ def _run(argv: list[str], env: dict[str, str] | None = None) -> str | None:
         if not isinstance(caught, (OSError, subprocess.TimeoutExpired)):
             raise
         return None
-    return done.stdout if done.returncode == 0 else None
+
+
+def _run(argv: list[str], env: dict[str, str] | None = None) -> str | None:
+    # The output of a child that exited 0, or None when it is absent, failed or timed out.
+    done = _run_full(argv, env)
+    return done.stdout if done is not None and done.returncode == 0 else None
 
 
 Run = Callable[[list[str]], str | None]
@@ -261,11 +258,91 @@ def read_gate(root: Path) -> str | None:
         the JSON text, or None when the tool is absent or refused.
 
     """
+    return read_tool(find_gate_tool(root), root)[0]
+
+
+def find_gate_tool(root: Path) -> str | None:
+    """Find `mikemol-commit` for `root` the way `read_gate` does.
+
+    Returns:
+        the tool's path, or None when none of the places has it.
+
+    """
     here = (Path(sys.argv[0]).absolute().parent, Path(sys.executable).parent)
-    tool = gate_tool(root, here, shutil.which("mikemol-commit"))
+    return gate_tool(root, here, shutil.which("mikemol-commit"))
+
+
+def read_tool(tool: str | None, root: Path) -> tuple[str | None, str]:
+    """Run `mikemol-commit --in-gate --json` for `root` ONCE and say what it answered and why.
+
+    ⚑ A TOOL THAT RAN AND REFUSED IS NOT A TOOL THAT IS ABSENT (github:W59 R205 F1, W2180): a
+    repository with no commit gate made the tool exit nonzero with 'git cannot name its
+    directory', and the caller blamed PATH. Only a missing tool earns the PATH hint. ⚑ ONE RUN, NOT
+    TWO (github-cb, b69): the JSON and the refusal line come from the same child.
+
+    Returns:
+        the JSON text and the empty string when the tool exited 0; None and the first non-empty
+        stderr line when it exited nonzero; None and the empty string when there is no tool or it
+        could not start.
+
+    """
     if tool is None:
+        return None, ""
+    done = _run_full([tool, root.name, "--in-gate", "--json"])
+    if done is None:
+        return None, ""
+    if done.returncode == 0:
+        return done.stdout, ""
+    return None, next((line.strip() for line in done.stderr.splitlines() if line.strip()), "")
+
+
+def refusal_line(tool: str | None, root: Path) -> str:
+    """Say why `mikemol-commit --in-gate` refused for `root`: the first line the tool itself wrote.
+
+    Returns:
+        the refusal line `read_tool` gives; the empty string when there is none.
+
+    """
+    return read_tool(tool, root)[1]
+
+
+def _counter_of(text: str) -> int | None:
+    # The queue document's TOP-LEVEL counter, or None when the text is not JSON, not an object, or
+    # has no integer counter. Parsed, not searched: a waypoint field of the same name must not win.
+    try:
+        document: object = json.loads(text)
+    except ValueError:
         return None
-    return _run([tool, root.name, "--in-gate", "--json"])
+    if not isinstance(document, dict):
+        return None
+    value = cast("dict[str, object]", document).get("counter")
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def queue_counters(root: Path, rel: str, count: int, run: Run = _run) -> list[int] | None:
+    """Read the queue's `counter` as each of its last `count` commits held it (W2264).
+
+    ⚑ THE CADENCE IS READ FROM GIT, NOT TYPED: the counters of the queue file at successive commits
+    say how fast the queue moves between commits, which is what bounds how far a committed copy may
+    trail the working one. A commit whose copy has no readable counter is skipped.
+
+    Returns:
+        the counters, newest commit first; None when git is absent or refuses the log.
+
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    listing = run([git, "-C", str(root), "log", f"-n{count}", "--format=%H", "--", rel])
+    if listing is None:
+        return None
+    found: list[int] = []
+    for sha in listing.split():
+        text = run([git, "-C", str(root), "show", "--end-of-options", f"{sha}:{rel}"])
+        counter = None if text is None else _counter_of(text)
+        if counter is not None:
+            found.append(counter)
+    return found
 
 
 def landed_since(root: Path, since: str, reader: Reader = read_log) -> set[str] | None:

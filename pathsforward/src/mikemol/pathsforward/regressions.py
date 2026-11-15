@@ -114,6 +114,33 @@ def _counter(doc: Json) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) else None
 
 
+TOLERATED_COMMITS = 2
+MIN_BOUND = 1
+CADENCE_WINDOW = 20
+
+
+def cadence_bound(counters: list[int]) -> int:
+    """Learn how far the committed counter may trail from how it rose between commits (W2264).
+
+    ⚑ A QUEUE THAT MOVES FASTER MAY LAG FURTHER: the bound is the median rise of the counter between
+    consecutive commits of the queue file (the counters are newest first), times the commits' worth
+    of lag tolerated, never below one. A history too short to show a rise gives the minimum, so a
+    queue with no cadence yet is judged strictly rather than waved through.
+
+    Returns:
+        the bound for `counter_lag`: `TOLERATED_COMMITS` times the median rise, or `MIN_BOUND`.
+
+    """
+    rises = sorted(
+        counters[i] - counters[i + 1]
+        for i in range(len(counters) - 1)
+        if counters[i] >= counters[i + 1]
+    )
+    if not rises:
+        return MIN_BOUND
+    return max(MIN_BOUND, TOLERATED_COMMITS * rises[len(rises) // 2])
+
+
 def counter_lag(head: Json, staged: Json, bound: int) -> str | None:
     """Say when HEAD's committed counter trails the working queue's by more than `bound` (W1938).
 

@@ -172,9 +172,10 @@ src/mikemol/pathsforward/cli.py|ready-count-beats|    if mode not in _READINGS:|
 src/mikemol/pathsforward/ledger.py|fraction-of-a-second-dropped|if parsed is None or parsed\.microsecond:|if parsed is None:|def=utc_stamp
 src/mikemol/pathsforward/ledger.py|offset-not-converted-to-utc|return lock\.stamp\(parsed\.astimezone\(UTC\)\)|return lock.stamp(parsed)|def=utc_stamp
 src/mikemol/pathsforward/watchdogcmd.py|path-entry-ignored|    found = installed or which\(SCRIPT\)|    found = installed|def=command
-src/mikemol/pathsforward/watchdogcmd.py|writer-bin-not-looked-in|for c in \(\*beside, venv_bin / SCRIPT\) if|for c in (venv_bin / SCRIPT,) if|def=command
+src/mikemol/pathsforward/watchdogcmd.py|writer-bin-not-looked-in|for c in \(\*beside, own_bin / SCRIPT\) if|for c in (own_bin / SCRIPT,) if|def=command
 src/mikemol/pathsforward/watchdogcmd.py|path-before-the-writers-bin|    found = installed or which\(SCRIPT\)|    found = which(SCRIPT) or installed|def=command
-src/mikemol/pathsforward/watchdogcmd.py|interpreter-fallback-dropped|    elif \(venv_bin / "python"\)\.is_file\(\):|    elif False:|def=command
+src/mikemol/pathsforward/watchdogcmd.py|interpreter-fallback-dropped|    elif \(own_bin / "python"\)\.is_file\(\):|    elif False:|def=command
+src/mikemol/pathsforward/watchdogcmd.py|checkout-under-home-consulted|    own_bin = state\.parent\.parent / "hooks" / "\.venv" / "bin"|    own_bin = Path.home() / "github" / "mtools" / "hooks" / ".venv" / "bin"|def=command
 src/mikemol/pathsforward/watchdogcmd.py|missing-watchdog-prints-a-command|    if found is None:|    if False:|def=tick_line
 src/mikemol/pathsforward/watchdogcmd.py|writer-path-resolved|        return str\(Path\(argv0\)\.absolute\(\)\)|        return str(Path(argv0).resolve())|def=writer_named
 src/mikemol/pathsforward/watchdogcmd.py|bare-writer-name-not-looked-up|    return which\(argv0\) or argv0|    return argv0|def=writer_named
@@ -186,6 +187,12 @@ src/mikemol/pathsforward/ops.py|atomize-rewrites-a-human-hold|    if text\(held,
 src/mikemol/pathsforward/ops.py|atomize-drops-earlier-blockers|    blockers = \(\*strlist\(find\(state, parent\), "blocked_on"\), \*children\)|    blockers = tuple(children)|def=atomize
 src/mikemol/pathsforward/ops.py|atomize-with-no-title|    if not names:|    if False:|def=atomize
 src/mikemol/pathsforward/ops.py|atomized-parent-blocked-on-a-human|blocked_kind="agent", blocked_on=blockers|blocked_kind="human", blocked_on=blockers|def=atomize
+src/mikemol/pathsforward/ops.py|atomized-children-ignore-a-given-blocker|        if given\[0\]:|        if not given[0]:|def=atomize
+src/mikemol/pathsforward/ops.py|a-named-blocker-alone-leaves-the-card-ready|    if upd\.status is None and upd\.blocked_on and|    if upd.status is None and not upd.blocked_on and|def=_named_blocker_blocks
+src/mikemol/pathsforward/ops.py|a-named-blocker-blocks-with-no-kind|            new\["blocked_kind"\] = "agent"|            new["blocked_kind"] = None|def=_named_blocker_blocks
+src/mikemol/pathsforward/ops.py|a-done-card-with-no-sha-passes|        and _COMMIT_TOKEN\.search\(evidence\) is None|        and True|def=lacks_commit
+src/mikemol/pathsforward/ops.py|the-no-commit-escape-is-ignored|        and NO_COMMIT_MARK not in evidence\.lower\(\)|        and True|def=lacks_commit
+src/mikemol/pathsforward/ops.py|a-card-that-is-not-done-lacks-a-commit|        text\(w, "status"\) == "done"|        True|def=lacks_commit
 src/mikemol/pathsforward/closegate.py|untouched-wording-says-none-landed|    edits = f"; \{open_edits\} more touched, named by no landed commit" if open_edits else ""|    edits = f"; {open_edits} touched, none landed" if open_edits else ""|def=judge
 src/mikemol/pathsforward/closegate.py|roll-counts-nothing|    return f"rolled; advanced \{advanced\(state, since, landed\)\}"|    return "rolled; advanced 0"|def=roll_note
 src/mikemol/pathsforward/closegate.py|roll-ignores-landed-commits|    landed = None if ledger is None else landed_since\(ledger\.parent\.parent, since\)|    landed = set()|def=roll_note
@@ -205,7 +212,7 @@ src/mikemol/pathsforward/refusal_record.py|set-variable-not-enough|    if where\
 src/mikemol/pathsforward/landed.py|unreadable-log-read-as-empty|    return None if log is None else trailer_cards\(log\)|    return trailer_cards(log or "")|def=landed_since
 src/mikemol/pathsforward/closegate.py|every-edit-counts-as-advanced|    return len\(stamped if landed is None else stamped & landed\)|    return len(stamped)|def=advanced
 src/mikemol/pathsforward/cli.py|held-lock-skips-the-watchdog-line|        _watchdog_line\(ctx\)|        pass|def=_tick_open
-src/mikemol/pathsforward/cli.py|watchdog-line-mode-prints-nothing|    _say\(watchdogcmd\.tick_line\(ctx\.path, sys\.argv\[0\], Path\.home\(\), shutil\.which\)\)|    pass|def=_watchdog_line
+src/mikemol/pathsforward/cli.py|watchdog-line-mode-prints-nothing|    _say\(watchdogcmd\.tick_line\(ctx\.path, sys\.argv\[0\], shutil\.which\)\)|    pass|def=_watchdog_line
 src/mikemol/pathsforward/suppliers.py|non-citation-supplier-accepted|        if not is_reference\(item\):|        if False:|def=check
 src/mikemol/pathsforward/suppliers.py|empty-list-stored-not-cleared|        out\["acceptable_suppliers"\] = list\(suppliers\) or None|        out["acceptable_suppliers"] = list(suppliers)|def=fields
 src/mikemol/pathsforward/ledger.py|any-environment-value-is-a-session|    return value if _UUID\.fullmatch\(value\) else ""|    return value|def=session_id
@@ -240,6 +247,8 @@ src/mikemol/pathsforward/ledger.py|actor-never-written|    if entry\.actor:|    
 src/mikemol/pathsforward/cli.py|transitions-never-ledgered|            for said in TRANSITION_LINES\(before, state, ctx\.stamp\(\), actor_of\(ctx\.opts\)\):|            for said in []:|def=_mutate
 src/mikemol/pathsforward/homepath.py|rootless-home-refuses-everything|    return bool\(parent\) and f"\{parent\}/" in text|    return f"{parent}/" in text|def=names_home
 src/mikemol/pathsforward/homepath.py|bare-prefix-is-a-path|f"\{parent\}/" in text|parent in text|def=names_home
+src/mikemol/pathsforward/landed.py|agreeable-tool-read-as-refusing|    if done\.returncode == 0:|    if False:|def=read_tool
+src/mikemol/pathsforward/reconcilecmd.py|refusal-always-blamed-on-path|    return f"no commit gate for \{root\.name\} \(\{refused\}\)" if refused else GATING_NOTE|    return GATING_NOTE|def=gating_note
 src/mikemol/pathsforward/reconcilecmd.py|no-map-judged-anyway|    if gating is None:|    if False:|def=run
 src/mikemol/pathsforward/reconcilecmd.py|landed-proposal-applied|        if verdict\.proposal == LANDED_PROPOSAL:|        if False:|def=apply
 src/mikemol/pathsforward/reconcilecmd.py|dry-run-writes|    changed = apply\(state, found, now\) if write else \[\]|    changed = apply(state, found, now)|def=run
@@ -260,6 +269,7 @@ src/mikemol/pathsforward/mutations_emit.py|log-not-chunked|    sends = \[\(log, 
 src/mikemol/pathsforward/mutations_emit.py|sample-value-always-one|        \(metric_argv\(program, repo, field, \(number, meta\.via\)\), ""\)|        (metric_argv(program, repo, field, (1, meta.via)), "")|def=plan
 src/mikemol/pathsforward/mutations_emit.py|sent-without-a-store|    if program is None or not refusal_record\.store_named\(where\) or not events:|    if program is None or not events:|def=emit
 src/mikemol/pathsforward/mutations_emit.py|start-failure-raised|    except OSError:|    except ValueError:|def=emit
+src/mikemol/pathsforward/mutations_emit.py|suppress-switch-ignored|    if where\.get\(SUPPRESS_ENV\):|    if False:|def=emit
 src/mikemol/pathsforward/mutations_ship.py|unattended-mode-not-automation|    if mode in AUTOMATIC:|    if False:|def=actor_of
 src/mikemol/pathsforward/mutations_ship.py|held-lock-not-an-agent|    return "agent" if held else "unattributed"|    return "unattributed"|def=actor_of
 src/mikemol/pathsforward/mutations_ship.py|via-not-the-writer-flag|        via=f"--\{mode\.replace\('_', '-'\)\}",|        via=mode,|def=meta_of
@@ -369,6 +379,14 @@ src/mikemol/pathsforward/retros.py|unknown-retro-key-admitted|    if unknown:|  
 # A hook's record carries its exit and the time it was read, taken per hook (W2169).
 src/mikemol/pathsforward/tickhooks.py|record-read-time-dropped|"read_at": clock\(\)|"read_at": ""|def=records
 src/mikemol/pathsforward/tickhooks.py|record-exit-dropped|"exit": code,|"exit": 0,|def=records
+src/mikemol/pathsforward/regressions.py|cadence-bound-is-the-largest-rise|    return max\(MIN_BOUND, TOLERATED_COMMITS \* rises\[len\(rises\) // 2\]\)|    return max(MIN_BOUND, TOLERATED_COMMITS * rises[-1])|def=cadence_bound
+src/mikemol/pathsforward/landed.py|queue-counter-read-as-zero|            found\.append\(counter\)|            found.append(0)|def=queue_counters
+src/mikemol/pathsforward/cli.py|counter-lag-never-warned|    if lag:|    if False:|def=_regressions
+src/mikemol/pathsforward/retros.py|retro-flag-need-not-be-a-boolean|        if key in retro and not isinstance\(retro\[key\], bool\)|        if False|def=_shape_refusals
+src/mikemol/pathsforward/retroscaffold.py|scaffold-drops-the-stack-key|        "frozen_timeline": str\(event\.get\("stack_key", ""\)\),|        "frozen_timeline": "",|def=scaffold
+src/mikemol/pathsforward/tickhooks.py|slowest-hook-is-the-fastest|    top = max\(found, key=_wall\)|    top = min(found, key=_wall)|def=slowest
+src/mikemol/pathsforward/tickhooks.py|hook-wall-not-differenced|"wall_s": round\(wall_after - wall_before, _PLACES\),|"wall_s": round(wall_after, _PLACES),|def=records
+src/mikemol/pathsforward/tickhooks.py|hook-cpu-not-differenced|"cpu_s": round\(cpu_after - cpu_before, _PLACES\),|"cpu_s": round(cpu_after, _PLACES),|def=records
 # `--tick-open --json` prints one document with the hooks' records and the open's text (W2169).
 src/mikemol/pathsforward/tickjson.py|document-hooks-left-out|    body = \{"holder": holder, "exit": code, "hooks": hooks, "lines": lines\}|    body = {"holder": holder, "exit": code, "hooks": [], "lines": lines}|def=document
 src/mikemol/pathsforward/tickjson.py|document-lines-left-out|    body = \{"holder": holder, "exit": code, "hooks": hooks, "lines": lines\}|    body = {"holder": holder, "exit": code, "hooks": hooks, "lines": []}|def=document
@@ -438,3 +456,10 @@ src/mikemol/pathsforward/mirror.py|parked-card-never-reported-missing|          
 src/mikemol/pathsforward/mirror.py|stale-line-never-reported|            if sym not in blocked|            if False|def=findings
 src/mikemol/pathsforward/mirror.py|a-done-card-still-counts-as-parked|text\(w, "status"\) != _DONE and parked in strlist|parked in strlist|def=findings
 src/mikemol/pathsforward/mirror.py|a-baseline-without-the-header-is-judged|    if parked is None:|    if False:|def=_read
+src/mikemol/pathsforward/cli.py|a-close-prints-no-handoff-line|    _say_handoff\(closing\)|    pass|def=_tick_close
+src/mikemol/pathsforward/retros.py|blame-in-the-delta-is-accepted|for field in BLAME_FIELDS:|for field in ():|def=_blame_refusals
+src/mikemol/pathsforward/retros.py|blame-matches-the-case-it-was-typed-in|value\.lower\(\) if isinstance\(value, str\) else ""|value if isinstance(value, str) else ""|def=_blame_refusals
+src/mikemol/pathsforward/retros.py|blame-is-not-asked-of-a-retro|refused = _shape_refusals\(retro\) \+ _blame_refusals\(retro\)|refused = _shape_refusals(retro)|def=retro_refusals
+src/mikemol/pathsforward/openblock.py|landed-entry-counted-open|and entry in known and entry not in landed|and entry in known|def=open_entries
+src/mikemol/pathsforward/openblock.py|working-card-not-refused|text\(w, "status"\) in _WORKABLE and open_entries\(state, sym\):|text(w, "status") == "ready" and open_entries(state, sym):|def=refuse_open
+src/mikemol/pathsforward/cli.py|open-entry-never-asked-of-an-update|        if upd\.status is not None or _named_blockers\(upd\):|        if False:|def=_update

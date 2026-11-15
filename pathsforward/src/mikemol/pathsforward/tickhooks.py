@@ -14,14 +14,23 @@ after its own steps, and prints `HOOK <line> exit N` with the command's output i
 the exit status `--tick-open` returns are not touched by any hook. Nothing here is bounded by a
 timer: the hooks are the repo's own and run to completion, one after another.
 
+⚑ A HOOK'S COST IS RECORDED, NOT BOUNDED (W2260, W1898's remaining half): each record carries the
+wall and the CPU seconds the hook took (CPU is the children's user plus system time, read from
+`getrusage(RUSAGE_CHILDREN)` before and after), and the tick prints ONE extra line naming the
+slowest by wall, so a repo whose tick takes minutes can see which hook it is without a profiler.
+Measuring costs no timer and stops nothing.
+
 ⚑ WHOEVER CAN WRITE THE QUEUE CAN MAKE `--tick-open` RUN A COMMAND. That is the same trust the
 state file already carries (it is the repo's own, tracked, and written only through this tool).
 
-The process is a seam (`Runner`), so the tests run no command except where they say so.
+The process is a seam (`Runner`), so the tests run no command except where they say so, and the
+meter is a seam (`Meter`), so they read a known cost.
 """
 
+import resource
 import shlex
 import subprocess
+import time
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
@@ -31,6 +40,7 @@ KEY = "tick_hooks"
 NOT_FOUND = 127
 SHOWN = 20
 Runner = Callable[[Sequence[str], Path], tuple[int, str]]
+Meter = Callable[[], tuple[float, float]]
 
 
 def lines_of(text: str) -> list[str]:
@@ -128,11 +138,27 @@ def run_process(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
     return done.returncode, done.stdout + done.stderr
 
 
+def real_meter() -> tuple[float, float]:
+    """Read the wall clock and the CPU the finished children have used so far.
+
+    Returns:
+        (a monotonic wall reading in seconds, the children's user plus system seconds).
+
+    """
+    used = resource.getrusage(resource.RUSAGE_CHILDREN)
+    return time.perf_counter(), used.ru_utime + used.ru_stime
+
+
 Clock = Callable[[], str]
+_PLACES = 2
 
 
 def records(
-    lines: Sequence[str], cwd: Path, clock: Clock, runner: Runner = run_process
+    lines: Sequence[str],
+    cwd: Path,
+    clock: Clock,
+    runner: Runner = run_process,
+    meter: Meter = real_meter,
 ) -> list[dict[str, object]]:
     """Run every command in order and keep each result as a record (W2169).
 
@@ -141,13 +167,25 @@ def records(
     terms (the caller passes UTC), so a local-time stamp elsewhere cannot be mistaken for it.
 
     Returns:
-        one `{command, exit, read_at, output}` record per command, in order, `output` whole.
+        one `{command, exit, read_at, output, wall_s, cpu_s}` record per command, in order,
+        `output` whole and the two costs the meter saw across that hook, in seconds.
 
     """
     found: list[dict[str, object]] = []
     for line in lines:
+        wall_before, cpu_before = meter()
         code, output = runner(shlex.split(line), cwd)
-        found.append({"command": line, "exit": code, "read_at": clock(), "output": output})
+        wall_after, cpu_after = meter()
+        found.append(
+            {
+                "command": line,
+                "exit": code,
+                "read_at": clock(),
+                "output": output,
+                "wall_s": round(wall_after - wall_before, _PLACES),
+                "cpu_s": round(cpu_after - cpu_before, _PLACES),
+            }
+        )
     return found
 
 
@@ -156,17 +194,37 @@ def run_all(lines: Sequence[str], cwd: Path, runner: Runner = run_process) -> li
 
     Returns:
         one `HOOK <line> exit N` line per command, each followed by up to `SHOWN` output lines
-        indented two spaces (with a count of the rest).
+        indented two spaces (with a count of the rest), then the slowest line when it is known.
 
     """
     return describe(records(lines, cwd, lambda: "", runner))
+
+
+def _wall(record: dict[str, object]) -> float:
+    # The wall seconds a record carries; -1 when it carries none, so it is never the slowest.
+    value = record.get("wall_s")
+    return float(value) if isinstance(value, float) else -1.0
+
+
+def slowest(found: Sequence[dict[str, object]]) -> str:
+    """Name the hook that took the longest wall time.
+
+    Returns:
+        `slowest: <command> wall Ns cpu Ns` for the record with the largest `wall_s`; the empty
+        string when no record carries a cost (a record built before the cost was recorded).
+
+    """
+    if not any(_wall(r) >= 0 for r in found):
+        return ""
+    top = max(found, key=_wall)
+    return f"slowest: {top['command']} wall {top['wall_s']}s cpu {top['cpu_s']}s"
 
 
 def describe(found: Sequence[dict[str, object]]) -> list[str]:
     """Format hook records as the lines `--tick-open` prints.
 
     Returns:
-        the same lines `run_all` gives: one `HOOK` line per record and up to `SHOWN` output lines.
+        one `HOOK` line per record with up to `SHOWN` output lines, then one `slowest` line.
 
     """
     said: list[str] = []
@@ -176,4 +234,7 @@ def describe(found: Sequence[dict[str, object]]) -> list[str]:
         said.extend(f"  {row}" for row in body[:SHOWN])
         if len(body) > SHOWN:
             said.append(f"  ... {len(body) - SHOWN} more line(s)")
+    cost = slowest(found)
+    if cost:
+        said.append(cost)
     return said

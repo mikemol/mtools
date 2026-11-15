@@ -36,9 +36,8 @@ def test_a_refused_row_with_two_cards_yields_g0_for_both_and_g1_with_the_reason(
     made = retroscaffold.scaffold(_event(["W1", "W2"]), _queue())
     assert made["card"] == "W1, W2"
     assert made["precommit"] == f"W1: {_STEP_ONE}; W2: {_STEP_TWO}"
-    assert made["delta"] == (
-        "verdict REFUSED, rc 1: ratchet refused a new key (gate record 1793744571101672962)"
-    )
+    assert made["delta"] == "verdict REFUSED, rc 1: ratchet refused a new key"
+    assert made["frozen_timeline"] == "1793744571101672962"
     assert made["trigger"] == "REFUSED: ratchet refused a new key"
 
 

@@ -17,6 +17,7 @@ symbol with a partial record is indistinguishable from an honest one.
 blocks looked like a tick that re-armed.
 """
 
+import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 from enum import StrEnum
@@ -56,6 +57,8 @@ NAMES_HOME = names_home
 NUDGE_TICKS: tuple[int, ...] = (1, 2, 4, 8)
 ESCALATE_TICK = 16
 _UNBLOCKING = ("ready", "done")
+_COMMIT_TOKEN = re.compile(r"\b[0-9a-f]{7,40}\b")
+NO_COMMIT_MARK = "no commit:"
 
 
 def _attached(new: Json, upd: "Update") -> Json:
@@ -634,6 +637,39 @@ def _landed_at(w: Json, status: str, now: str) -> str | None:
     return text(w, "landed_at") or None if status == "done" else None
 
 
+def lacks_commit(w: Json) -> bool:
+    """Report whether a done card's evidence has no commit and does not say why (W2393).
+
+    ⚑ A DONE CARD SHOULD POINT AT A COMMIT, OR SAY WHY ITS PROOF IS NOT ONE (linux-sources
+    W509): the evidence holds a 7 to 40 hex token, or the phrase `no commit:` followed by the
+    reason. Measured 2026-11-13: 596 of this queue's 1856 done cards hold neither, so the writer
+    WARNS and does not refuse, until the report cards carry the escape.
+
+    Returns:
+        whether the card is done and holds neither.
+
+    """
+    evidence = text(w, "evidence")
+    return (
+        text(w, "status") == "done"
+        and _COMMIT_TOKEN.search(evidence) is None
+        and NO_COMMIT_MARK not in evidence.lower()
+    )
+
+
+def _named_blocker_blocks(new: Json, upd: Update) -> None:
+    """Block a ready or working card that an update gave a blocker and no status (W2380).
+
+    ⚑ A CARD THAT NAMES A BLOCKER MUST NOT READ PICKABLE (nemik-6f, nemik:W2100): `--blocked-on X`
+    alone left the status `ready`, three times in a day, caught only by tick-open and triage. The
+    kind stays what the card had, and is `agent` when it had none; `--status` still wins.
+    """
+    if upd.status is None and upd.blocked_on and text(new, "status") in {"ready", "working"}:
+        new["status"] = "blocked"
+        if text(new, "blocked_kind") not in BLOCKED_KINDS:
+            new["blocked_kind"] = "agent"
+
+
 def _applied(w: Json, upd: Update, now: str) -> Json:
     """Compute the waypoint an update produces, without touching the original.
 
@@ -653,6 +689,7 @@ def _applied(w: Json, upd: Update, now: str) -> Json:
         if stamp is not None or "landed_at" in new:
             new["landed_at"] = stamp
     _set_given(new, upd)
+    _named_blocker_blocks(new, upd)
     _held(new, upd, w)
     # A blank --next is no next step: null, not "" (linux-sources' reconcile check refuses ""
     # on a done waypoint, and patched it by hand four times, W64 W69 W70 W71, 2026-09-26).
@@ -1009,13 +1046,21 @@ def add(state: State, draft: Draft, now: str) -> str:
     return sym
 
 
-def atomize(state: State, parent: str, titles: Iterable[str], now: str) -> list[str]:
+def atomize(
+    state: State,
+    parent: str,
+    titles: Iterable[str],
+    now: str,
+    given: tuple[tuple[str, ...], str | None] = ((), None),
+) -> list[str]:
     """Mint one child per title under `parent` and block the parent on them (W1089).
 
     ⚑ THE STANDING REMEDY FOR A CARD TOO COARSE TO LAND, AS ONE VERB: every child is ready, names
     the parent as the card it enables and as its cause, and the parent becomes a blocked umbrella
     whose `blocked_on` is its earlier blockers plus the new children (kind `agent`, since a child is
-    this queue's own card). A parent held on a human is refused: that hold is the operator's to lift
+    this queue's own card). `given` is a blocker list and a kind for the CHILDREN (W2380,
+    nemik:W2100): `--atomize` ignored `--blocked-on` and left them ready; now each child is
+    blocked on it. A parent held on a human is refused: that hold is the operator's to lift
     (standing rule 5), and atomizing must not turn it into an agent block. Nothing is saved when
     any step refuses, so a bundled title leaves no half-minted set.
 
@@ -1043,6 +1088,9 @@ def atomize(state: State, parent: str, titles: Iterable[str], now: str) -> list[
     for title in names:
         sym = add(current, Draft(title, enables=(parent,), caused_by=parent), now)
         children.append(sym)
+        if given[0]:
+            blocker = Update(blocked_on=given[0], blocked_kind=given[1] or "agent")
+            update(current, sym, blocker, now)
         current = State(state.doc, state.waypoints, state.residue, symbol_number(sym) or 0)
     blockers = (*strlist(find(state, parent), "blocked_on"), *children)
     block = Update(status="blocked", blocked_kind="agent", blocked_on=blockers)

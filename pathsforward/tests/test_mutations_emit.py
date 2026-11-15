@@ -78,6 +78,16 @@ def test_emit_starts_every_child_when_a_binary_and_a_store_exist() -> None:
     assert len(spawned) == len(mutations_emit.plan("/bin/otlp", "myrepo", [STATUS], META))
 
 
+def test_the_suppress_switch_sends_nothing_though_a_binary_and_a_store_exist() -> None:
+    """W2179: the same ENV that starts children in the control above sends none with the switch."""
+    spawned: list[Sequence[str]] = []
+    quiet = {**ENV, mutations_emit.SUPPRESS_ENV: "1"}
+    assert not mutations_emit.emit(STATE, [STATUS], META, quiet, lambda a, _s: spawned.append(a))
+    assert not spawned
+    empty = {**ENV, mutations_emit.SUPPRESS_ENV: ""}
+    assert mutations_emit.emit(STATE, [STATUS], META, empty, lambda a, _s: spawned.append(a))
+
+
 def test_no_store_or_a_failed_start_sends_nothing_and_raises_nothing() -> None:
     """The queue is already saved: a missing store or a dead child never fails the write."""
     spawned: list[Sequence[str]] = []

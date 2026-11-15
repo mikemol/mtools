@@ -46,6 +46,7 @@ from mikemol.pathsforward import (
     idle,
     inbound,
     inflight,
+    landed,
     lease,
     lock,
     manifest,
@@ -121,6 +122,7 @@ from mikemol.pathsforward.mutations import snapshot as field_snapshot
 from mikemol.pathsforward.mutations_ship import KINDS as INTERVENTION_KINDS
 from mikemol.pathsforward.mutations_ship import ship as ship_mutation
 from mikemol.pathsforward.mutations_ship import ship_intervention
+from mikemol.pathsforward.openblock import refuse_open
 from mikemol.pathsforward.overlap import overlaps
 from mikemol.pathsforward.payload import PayloadOverBudgetError, Request, build
 from mikemol.pathsforward.pruned import edges_of, ledger_line, removed
@@ -808,6 +810,9 @@ _APPLIES: dict[str, frozenset[str]] = {
     "certify": frozenset({"root", "facts"}),
     "mint_residue": frozenset({"root"}),
     "gate_red": frozenset({"next", "blocked_on", "exclude"}),
+    # W2380: the children are minted blocked when given a blocker; without this entry the flags were
+    # refused here and `ops.atomize`'s blocker path could never be reached from the command line.
+    "atomize": frozenset({"blocked_on", "blocked_kind"}),
 }
 
 
@@ -879,6 +884,15 @@ class Ctx:
 def _say(message: str) -> None:
     """Write one line to stdout."""
     sys.stdout.write(message + "\n")
+
+
+def _warn_no_commit(state: State, sym: str) -> None:
+    """Warn when a card just marked done points at no commit and says why it has none."""
+    if ops.lacks_commit(ops.find(state, sym)):
+        _warn(
+            f"warning: {sym} is done with no commit sha in its evidence; cite the commit, or"
+            f" add evidence saying '{ops.NO_COMMIT_MARK} <why the proof is not a commit>'"
+        )
 
 
 def _warn(message: str) -> None:
@@ -2062,7 +2076,7 @@ def _tick_open(ctx: Ctx) -> int:
         _say(said)
     for said in standing.lines(store.load(ctx.path).doc):
         _say(said)
-    _say(watchdogcmd.tick_line(ctx.path, sys.argv[0], Path.home(), shutil.which))
+    _say(watchdogcmd.tick_line(ctx.path, sys.argv[0], shutil.which))
     seen = root / ".git" / "mtools" / promptwatch.SEEN_NAME
     for said in promptwatch.notice(promptwatch.prompt_of(root), seen):
         _say(said)
@@ -2411,6 +2425,8 @@ def _update_many(ctx: Ctx) -> int:
         for sym in chosen:
             REFUSE_LANDED(state, sym, _named_blockers(upd), _root(ctx))
             ops.update(state, sym, upd, ctx.stamp())
+            if upd.status is not None or _named_blockers(upd):
+                refuse_open(state, sym)
         verb = "UPDATED" if write else "WOULD UPDATE"
         return [(sym, f"update {sym}", f"{verb} {sym}") for sym in chosen]
 
@@ -2451,6 +2467,8 @@ def _update(ctx: Ctx) -> int:
         manifest.check(upd.manifest or (), root)
         REFUSE_LANDED(state, sym, _named_blockers(upd), _root(ctx))
         ops.update(state, sym, pinned, ctx.stamp())
+        if upd.status is not None or _named_blockers(upd):
+            refuse_open(state, sym)
         code = _lease_for_status(ctx, state, sym, upd.status)
         if code == EXIT_OK and upd.status == "done":
             # ⚑ A DONE CARD LEAVES NO STALE BLOCKER (W1215): marking it done prunes it from its
@@ -2458,6 +2476,7 @@ def _update(ctx: Ctx) -> int:
             # on one that has landed.
             for freed in ops.prune_done(state):
                 _say(f"UNBLOCKED {freed} (every local blocker is done)")
+            _warn_no_commit(state, sym)
         if code == EXIT_OK:
             _say(f"{sym} updated; state_hash={v2(state.waypoints)}")
         return code
@@ -2601,7 +2620,8 @@ def _atomize(ctx: Ctx) -> int:
     with store.exclusive(ctx.path):
         state = store.load(ctx.path)
         now = ctx.stamp()
-        children = ops.atomize(state, parent, titles, now)
+        given = (tuple(ctx.many("blocked_on") or ()), ctx.get("blocked_kind"))
+        children = ops.atomize(state, parent, titles, now, given)
         minted = [
             own_line(
                 Entry(text(mint, "minted_during"), sym, "minted", "-", text(mint, "title"), parent),
@@ -3249,7 +3269,7 @@ def _watchdog_line(ctx: Ctx) -> int:
         EXIT_OK.
 
     """
-    _say(watchdogcmd.tick_line(ctx.path, sys.argv[0], Path.home(), shutil.which))
+    _say(watchdogcmd.tick_line(ctx.path, sys.argv[0], shutil.which))
     return EXIT_OK
 
 
@@ -3386,9 +3406,24 @@ def _regressions(ctx: Ctx) -> int:
     if not isinstance(raw, dict):
         _warn("--regressions FILE holds one queue document")
         return EXIT_REFUSED
-    found = regressions.lost(cast("dict[str, object]", raw), store.load(ctx.path).doc)
+    head = cast("dict[str, object]", raw)
+    working = store.load(ctx.path).doc
+    found = regressions.lost(head, working)
     for line in found:
         _warn(line)
+    # ⚑ A LAG IS A WARNING, NOT A REFUSAL (W2264): the bound is learned from how the queue file's
+    # counter rose between its own commits, so a queue that moves fast is allowed to trail more.
+    root = ctx.path.parent.parent
+    counters = landed.queue_counters(
+        root, ctx.path.relative_to(root).as_posix(), regressions.CADENCE_WINDOW
+    )
+    lag = (
+        None
+        if counters is None
+        else regressions.counter_lag(head, working, regressions.cadence_bound(counters))
+    )
+    if lag:
+        _warn(f"warning: {lag}")
     return EXIT_REFUSED if found else EXIT_OK
 
 

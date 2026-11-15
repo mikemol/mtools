@@ -8,10 +8,16 @@ writer does not start it: it prints the command, and the session runs it with `r
 
 ⚑ THE WATCHDOG LIVES IN MTOOLS' HOOKS DIST, and a repo's writer may be installed anywhere, so the
 command is found in this order: the `mikemol-watchdog` BESIDE THE WRITER that is running (its own
-bin directory, W1898), then the installed script in the mtools checkout under the home directory,
-then a `mikemol-watchdog` on PATH, then that checkout's interpreter running the module. The
-last is the form that works before a venv has been rebuilt with the console script. None found:
-no command, and `--tick-open` says so rather than printing one that cannot run.
+bin directory, W1898), then the installed script in THIS repository's own `hooks/.venv`, then a
+`mikemol-watchdog` on PATH, then this repository's own interpreter running the module. The last
+is the form that works before a venv has been rebuilt with the console script. None found: no
+command, and `--tick-open` says so rather than printing one that cannot run.
+
+⚑ THE REPOSITORY IS THE ONE THE QUEUE BELONGS TO, NOT A CHECKOUT UNDER THE HOME DIRECTORY (W2382,
+github-14, found by linux-sources): the lookup was `~/github/mtools/hooks/.venv`, mtools' own
+live working tree, so every other repo's writer could print a command into a venv that is neither
+its own nor pinned. `hooks/.venv` is now read under the queue's own root, which exists only in
+mtools itself; another repo gets its watchdog from beside its writer or from PATH, or none.
 
 ⚑ PATH COMES AFTER THE WRITER'S OWN BIN, NOT BEFORE (the 2026-10-19 no-sibling-paths ruling; the
 host's pinned writer printed another repository's venv because PATH named it first): a tool the
@@ -26,7 +32,6 @@ with it, and a symlinked `.venv` is not followed into a bazel output tree a rebu
 from collections.abc import Callable
 from pathlib import Path
 
-CHECKOUT = ("github", "mtools")
 SCRIPT = "mikemol-watchdog"
 MODULE = "mikemol.hooks.watchdog"
 
@@ -34,7 +39,6 @@ MODULE = "mikemol.hooks.watchdog"
 def command(
     state: Path,
     writer: str,
-    home: Path,
     which: Callable[[str], str | None],
 ) -> str | None:
     """Spell the command that starts the watchdog for this queue.
@@ -43,14 +47,14 @@ def command(
         a shell-ready line, or None when no watchdog can be found.
 
     """
-    venv_bin = home.joinpath(*CHECKOUT, "hooks", ".venv", "bin")
+    own_bin = state.parent.parent / "hooks" / ".venv" / "bin"
     beside = [Path(writer).parent / SCRIPT] if "/" in writer else []
-    installed = next((str(c) for c in (*beside, venv_bin / SCRIPT) if c.is_file()), None)
+    installed = next((str(c) for c in (*beside, own_bin / SCRIPT) if c.is_file()), None)
     found = installed or which(SCRIPT)
     if found is not None:
         runner = found
-    elif (venv_bin / "python").is_file():
-        runner = f"{venv_bin / 'python'} -m {MODULE}"
+    elif (own_bin / "python").is_file():
+        runner = f"{own_bin / 'python'} -m {MODULE}"
     else:
         return None
     return f"{runner} --state {state} --writer {writer}"
@@ -77,7 +81,6 @@ def writer_named(argv0: str, which: Callable[[str], str | None]) -> str:
 def tick_line(
     state: Path,
     argv0: str,
-    home: Path,
     which: Callable[[str], str | None],
 ) -> str:
     """Spell the line `--tick-open` prints about the watchdog.
@@ -92,7 +95,7 @@ def tick_line(
         `watchdog: start it in the background: <command>`, or a line saying none was found.
 
     """
-    found = command(state, writer_named(argv0, which), home, which)
+    found = command(state, writer_named(argv0, which), which)
     if found is None:
-        return "watchdog: none found (no mikemol-watchdog on PATH or in the mtools checkout)"
+        return "watchdog: none found (not beside the writer, on PATH or in this repo)"
     return f"watchdog: start it in the background: {found}"

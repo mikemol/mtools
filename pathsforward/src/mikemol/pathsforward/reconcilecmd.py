@@ -115,14 +115,14 @@ def apply(state: State, verdicts: Sequence[reconcile.Verdict], now: str) -> list
     return changed
 
 
-def real_reads(root: Path) -> tuple[Log, Gate]:
-    """Pair the real git log with the real live-commit map of the repo at `root`.
+def gating_note(refused: str, root: Path) -> str:
+    """Word the refusal for a live-commit map that could not be read (W2180).
 
     Returns:
-        the two reads `run` takes.
+        the tool's own line when it ran and refused, naming the repo; else the PATH hint.
 
     """
-    return landed.read_commits, lambda: landed.read_gate(root)
+    return f"no commit gate for {root.name} ({refused})" if refused else GATING_NOTE
 
 
 def run(
@@ -139,10 +139,16 @@ def run(
         RefusedError: when the gate map or the git log cannot be read.
 
     """
-    log, gate = reads or real_reads(root)
+    if reads:
+        log, gate = reads
+        refused = ""
+    else:
+        # ONE RUN of the gate tool gives both the map and, when it refused, why (github-cb, b69).
+        text, refused = landed.read_tool(landed.find_gate_tool(root), root)
+        log, gate = landed.read_commits, lambda: text
     gating = gate_map(gate())
     if gating is None:
-        raise RefusedError(GATING_NOTE)
+        raise RefusedError(gating_note(refused, root))
     raw = log(root)
     if raw is None:
         msg = "git log could not be read"

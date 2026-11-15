@@ -15,7 +15,9 @@ unknown part, a part given twice, or a value out of its range.
 """
 
 import re
+from collections.abc import Callable, Iterable
 from datetime import datetime
+from typing import cast
 
 from mikemol.pathsforward import timevalue
 from mikemol.pathsforward.model import RefusedError
@@ -151,6 +153,58 @@ def check(rule: str) -> str:
     if reasons:
         raise RefusedError(_why(rule, reasons[0]))
     return rule
+
+
+def rules_of(document: object) -> list[tuple[str, str]]:
+    """Read the RRULEs a queue document stores, for the comparison with a reference (W1259).
+
+    Returns:
+        (symbol, rule) for each waypoint that stores a string `rrule`, in queue order; empty
+        for a document that is not a queue or stores none.
+
+    """
+    if not isinstance(document, dict):
+        return []
+    waypoints = cast("dict[str, object]", document).get("waypoints")
+    if not isinstance(waypoints, list):
+        return []
+    found: list[tuple[str, str]] = []
+    for item in cast("list[object]", waypoints):
+        if not isinstance(item, dict):
+            continue
+        fields = cast("dict[str, object]", item)
+        symbol, rule = fields.get("symbol"), fields.get("rrule")
+        if isinstance(symbol, str) and isinstance(rule, str) and rule:
+            found.append((symbol, rule))
+    return found
+
+
+def disagreements(rules: Iterable[str], reference: Callable[[str], bool]) -> list[str]:
+    """Compare this module's reading of each rule with a reference parser's (W1259).
+
+    ⚑ THE REFERENCE IS A PARAMETER, SO THIS MODULE STAYS STANDARD LIBRARY ONLY: the caller hands
+    in a real parser (python-dateutil's `rrulestr`, a dev-only oracle) as `reference`, which
+    answers whether it accepts a rule. This function only says where the two disagree.
+
+    Args:
+        rules: the stored RRULE values to compare.
+        reference: whether a real parser accepts a rule.
+
+    Returns:
+        one line per rule the two read differently, naming which one accepts, in input order;
+        empty when they agree on every rule.
+
+    """
+    found: list[str] = []
+    for rule in rules:
+        try:
+            ours = bool(check(rule))
+        except RefusedError:
+            ours = False
+        if ours != reference(rule):
+            who = "we accept, the reference rejects" if ours else "the reference accepts, we reject"
+            found.append(f"{rule!r}: {who}")
+    return found
 
 
 def _occurrence_error(rid: str, dtstart: str, rule: str, exdates: list[str]) -> str:

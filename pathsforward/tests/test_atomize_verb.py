@@ -61,6 +61,22 @@ def test_the_parent_becomes_a_blocked_umbrella_on_its_children_keeping_earlier_b
     assert parent["blocked_on"] == ["W9", "W2"]
 
 
+def test_children_given_a_blocker_are_blocked_on_it_not_left_ready() -> None:
+    """W2380 (nemik:W2100): `--atomize ... --blocked-on X` ignored X and left the children ready."""
+    state = _state()
+    ops.atomize(state, "W1", ["a step", "b step"], _NOW, (("W9",), None))
+    for sym in ("W2", "W3"):
+        child = ops.find(state, sym)
+        assert (child["status"], child["blocked_on"], child["blocked_kind"]) == (
+            "blocked",
+            ["W9"],
+            "agent",
+        )
+    human = _state()
+    ops.atomize(human, "W1", ["a step"], _NOW, (("operator: act x",), "human"))
+    assert ops.find(human, "W2")["blocked_kind"] == "human"
+
+
 def test_no_title_mints_nothing() -> None:
     """An atomize with nothing to atomize into is refused, and the counter does not move."""
     state = _state()
@@ -119,3 +135,16 @@ def test_a_bundled_title_leaves_nothing_written(tmp_path: Path) -> None:
     code = cli.main(["--state", str(path), "--atomize", "W1", "fine step", _BUNDLED])
     assert code != 0
     assert path.read_text(encoding="utf-8") == before
+
+
+def test_the_verb_given_a_blocker_writes_its_children_blocked_not_ready(tmp_path: Path) -> None:
+    """W2380: `--atomize ... --blocked-on X` reaches the children, which a bare verb left ready."""
+    path = _file(tmp_path)
+    argv = ["--state", str(path), "--atomize", "W1", "first step", "second step"]
+    argv += ["--blocked-on", "nemik:W5", "--blocked-kind", "agent"]
+    assert cli.main(argv) == 0
+    cards = {w["symbol"]: w for w in store.load(path).waypoints}
+    for child in ("W2", "W3"):
+        assert cards[child]["status"] == "blocked"
+        assert cards[child]["blocked_on"] == ["nemik:W5"]
+        assert cards[child]["blocked_kind"] == "agent"

@@ -7282,3 +7282,70 @@
 2026-11-15T02:16:56Z  status W2364 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-15T02:17:08Z  status W2365 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-15T02:18:21Z  status W2365 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T02:35:32Z  status W2134 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T02:42:40Z  status W2141 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T02:59:48Z  status W2142 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T03:17:44Z  status W2437 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T03:36:20Z  status W2146 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T03:53:45Z  status W2149 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T04:04:03Z  status W2150 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T04:04:56Z  interrupt W2534 minted    -         "Shard guard (W1602): a changed mutation grid with no store reading is judged by the stack's own measured shard CPU, not passed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b67-review-2026-11-14
+2026-11-15T04:05:01Z  status W2534 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T04:10:20Z  status W2151 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T04:27:33Z  status W2152 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T04:44:40Z  status W2153 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T05:01:53Z  status W2158 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T05:18:56Z  status W2166 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T05:35:58Z  status W2172 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T05:37:32Z  status W2174 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T05:54:43Z  status W2175 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T06:13:06Z  status W2181 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T06:30:05Z  status W2185 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T06:47:11Z  status W2186 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T07:04:06Z  status W2187 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T07:21:05Z  status W2188 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T07:37:58Z  status W2191 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T07:54:55Z  status W2196 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T08:13:17Z  status W2202 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T08:31:33Z  status W2203 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T08:36:48Z  interrupt W2535 minted    -         "rrule_audit emits one UNREADABLE (why) line per repo whose queue could not be read, so a broken queue is a tombstone and not silent unknown"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b69-review-2026-11-15
+2026-11-15T08:36:52Z  interrupt W2536 minted    -         "ops._COMMIT_TOKEN matches dates and counts, so a done card reads as having a commit falsely: resolve the token with git"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b69-review-2026-11-15
+2026-11-15T08:40:17Z  status W2204 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T08:41:11Z  interrupt W2537 minted    -         "Writer: --status ready over a card's open local blocked_on entries refuses instead of silently clearing them"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b69-review-2026-11-15
+2026-11-15T08:41:12Z  interrupt W2538 minted    -         "Replace landed.py's 60 s child timeout with an RLIMIT_CPU on the child plus an absence witness, so a hung git is named, not timed out"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b69-review-2026-11-15
+2026-11-15T08:42:32Z  status W1667 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T08:42:32Z  status W2294 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T08:42:32Z  status W2326 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T09:00:02Z  status W2205 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T09:01:23Z  status W2206 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T09:20:07Z  status W2533 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T09:52:21Z  status W2248 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T09:57:20Z  status W2289 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T09:58:53Z  interrupt W2539 minted    -         "PRIORITY: stage tests/golden, @opa//file and the frontier walk.py in //pathsforward:mutants so no cell errors for missing data"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b69-review-2026-11-15
+2026-11-15T09:58:54Z  interrupt W2540 minted    -         "A mutants baseline is written only from gate-environment logs: --write-baseline refuses local runner output"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b69-review-2026-11-15
+2026-11-15T10:01:03Z  status W2243 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T10:01:07Z  interrupt W2541 minted    -         "Resubmit b69 (pathsforward stack) after the gate-environment baseline run, once luthen releases its hold"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-cb:b69-review-2026-11-15
+2026-11-15T10:02:37Z  status W2541 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T10:10:14Z  interrupt W2542 minted    -         "Writer refuses --status done on a card whose landing commit is an image landing and which carries no witness"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1083
+2026-11-15T10:10:14Z  interrupt W2543 minted    -         "Writer offers the landing classification (image or ref) at --update --status landed so the session need not choose"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1083
+2026-11-15T10:10:23Z  status W2543 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T10:12:14Z  status W2539 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T10:14:43Z  status W2246 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T10:23:53Z  status W2252 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T10:40:44Z  status W2256 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T10:57:32Z  status W2257 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T11:14:09Z  status W2261 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T11:15:28Z  status W2541 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T11:16:22Z  status W2263 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T11:32:48Z  status W2266 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T11:49:00Z  status W2273 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:05:12Z  status W2275 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:17:21Z  status W2283 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:18:38Z  status W2541 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:34:49Z  status W2284 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:35:34Z  status W2285 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:44:13Z  status W2286 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:58:58Z  status W2290 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T12:59:13Z  status W2343 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T13:00:15Z  status W2433 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-15T13:00:15Z  status W2539 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

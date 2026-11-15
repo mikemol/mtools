@@ -124,6 +124,21 @@ def test_ready_clears_the_block() -> None:
     assert (w["blocked_on"], w["blocked_kind"], w["ticks_blocked"]) == ([], None, 0)
 
 
+def test_a_done_card_lacks_a_commit_unless_it_holds_a_sha_or_says_why() -> None:
+    """W2393: a 7 to 40 hex token or `no commit:` is the proof; only a done card can lack it."""
+    bare = _wp("W1", "done", evidence="2026-11-13T00:00:00Z: answered the peer")
+    assert ops.lacks_commit(bare)
+    for evidence in (
+        "landed as ed818b68",
+        "landed as ed818b68c0ffee00112233445566778899aabbcc",
+        "No commit: the proof is a message to nemik-b5",
+    ):
+        assert not ops.lacks_commit(_wp("W1", "done", evidence=evidence))
+    assert not ops.lacks_commit(_wp("W1", "ready", evidence="nothing"))
+    too_long = _wp("W1", "done", evidence="word " + "a" * 41)
+    assert ops.lacks_commit(too_long)
+
+
 def test_done_clears_the_next_step() -> None:
     """Moving to done clears the next step to null, the absence a reader can test for."""
     w = ops.update(_state(), "W1", ops.Update(status="done"), _NOW)
@@ -191,6 +206,21 @@ def test_a_new_party_resets_the_count() -> None:
     upd = ops.Update(blocked_on=("agent-9",))
     w = ops.update(_state(_blocked("W1", _OLD_TICKS)), "W1", upd, _NOW)
     assert w["ticks_blocked"] == 0
+
+
+def test_naming_a_blocker_alone_blocks_a_ready_card_with_the_kind_it_had_or_agent() -> None:
+    """W2380 (nemik:W2100): `--blocked-on X` alone left the card `ready`, so it read pickable."""
+    w = ops.update(_state(), "W1", ops.Update(blocked_on=("agent-9",)), _NOW)
+    assert (w["status"], w["blocked_on"], w["blocked_kind"]) == ("blocked", ["agent-9"], "agent")
+    human = ops.Update(blocked_on=("operator: act x",), blocked_kind="human")
+    assert ops.update(_state(), "W1", human, _NOW)["blocked_kind"] == "human"
+
+
+def test_a_stated_status_beats_the_named_blocker_and_no_blocker_changes_nothing() -> None:
+    """`--status ready` stays ready beside a blocker, and an empty blocker list does not block."""
+    stated = ops.update(_state(), "W1", ops.Update(status="ready", blocked_on=("x",)), _NOW)
+    assert stated["status"] == "ready"
+    assert ops.update(_state(), "W1", ops.Update(blocked_on=()), _NOW)["status"] == "ready"
 
 
 def test_an_unrelated_edit_keeps_the_count() -> None:

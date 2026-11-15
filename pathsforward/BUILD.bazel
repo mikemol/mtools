@@ -149,7 +149,20 @@ mutants_sharded(
         "//fence:fence",
         "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
+        # W2539 (github-cb, b69): WHAT THE py_test TARGETS STAGE, STAGED HERE TOO. The mutation tree
+        # had only .py and .rego files, so test_vtodo_golden (tests/golden/queue.ics), test_certify
+        # and the lift tests (the pinned opa, OPA_BIN) and test_frontier_copy (FRONTIER_WALK) ERRORED
+        # for a missing file, not for the mutant: b69's gate refused at //pathsforward:mutants_6 on
+        # the declared cell warrantfind.py::cited-card-called-unresolved.
+        # NAMED, NEVER GLOBBED (github-cb): the one golden file, from `git ls-files tests/golden`.
+        "tests/golden/queue.ics",
+        "@opa//file",
+        "//frontier:src/mikemol/frontier/walk.py",
     ] + glob(["src/**/*.py", "src/**/*.rego", "tests/**/*.py"]),
+    env = {
+        "OPA_BIN": "$(location @opa//file)",
+        "FRONTIER_WALK": "$(location //frontier:src/mikemol/frontier/walk.py)",
+    },
     size = "medium",
     # ⚑ DECLARED, NOT LEFT TO THE SIZE DEFAULT (as //pycodemod:mutants): this grid TIMED OUT at the
     # `medium` 300s default on 2026-10-09 when the whole 686-test suite ran beside the pycodemod
