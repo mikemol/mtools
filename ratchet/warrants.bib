@@ -1299,3 +1299,134 @@
   claim  = {A working file that is not JSON is CANNOT-READ, never read as an empty list.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retired_guard.py -k test_an_unreadable_declaration_is_not_a_clean_pass},
 }
+
+@misc{ratchet-rebaseline-unjudged-names-a-staged-ratchet-that-could-not-be-read,
+  section = {rebaseline},
+  title  = {nemik-6f's B2: a corrupt staged baseline reads as None and must not read as 'no rise'},
+  claim  = {nemik-6f's B2: a corrupt staged baseline reads as None and must not read as 'no rise'.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_unjudged_names_a_staged_ratchet_that_could_not_be_read},
+}
+
+@misc{ratchet-rebaseline-command-exits-seven-when-a-staged-ratchet-could-not-be-read,
+  section = {rebaseline},
+  title  = {A distinct could-not-judge outcome, printed, and it outranks a plain refusal's exit 1},
+  claim  = {A distinct could-not-judge outcome, printed, and it outranks a plain refusal's exit 1.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_the_command_exits_seven_when_a_staged_ratchet_could_not_be_read},
+}
+
+@misc{ratchet-rebaseline-vanished-names-an-unretired-ratchet-gone-after-the-change,
+  section = {rebaseline},
+  title  = {nemik-6f's B1: a measured ratchet absent after is refused unless retired; unread is not},
+  claim  = {nemik-6f's B1: a measured ratchet absent after is refused unless retired; unread is not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_vanished_names_an_unretired_ratchet_gone_after_the_change},
+}
+
+@misc{ratchet-rebaseline-check-refuses-a-deleted-baseline-unless-ratchets-json-retires-it,
+  section = {rebaseline},
+  title  = {The file is gone with its debt: refused, then admitted once a tombstone names it},
+  claim  = {The file is gone with its debt: refused, then admitted once a tombstone names it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_rebaseline.py -k test_check_refuses_a_deleted_baseline_unless_ratchets_json_retires_it},
+}
+
+@misc{ratchet-fleetcensus-uvs-temporary-venv-directories-are-not-the-repositorys-own-sources,
+  section = {fleetcensus},
+  title  = {W2283 (nemik:W1568): a `.venv.uv-*` directory is pruned like `.venv`, so it adds no count},
+  claim  = {W2283 (nemik:W1568): a `.venv.uv-*` directory is pruned like `.venv`, so it adds no
+            count. The control is a source that really is the repository's own, which
+            still counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_uvs_temporary_venv_directories_are_not_the_repositorys_own_sources},
+}
+
+@misc{ratchet-fleetcensus-source-listed-by-the-walk-and-gone-by-the-read-is-skipped-not-fatal,
+  section = {census},
+  title  = {W2290 (nemik:W1108): a worktree removed between listing and reading crashed the census},
+  claim  = {W2290 (nemik:W1108): a worktree removed between listing and reading crashed the census.
+            The walk is made to list a path that does not exist, beside a real source
+            that still counts.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_a_source_listed_by_the_walk_and_gone_by_the_read_is_skipped_not_fatal},
+}
+
+@misc{ratchet-fleetcensus-pyproject-listed-by-the-walk-and-gone-by-the-read-adds-no-exemption-row,
+  section = {census},
+  title  = {W2290: the same vanished-file hazard in the exemption rows, beside a readable pyproject},
+  claim  = {W2290: the same vanished-file hazard in the exemption rows, beside a readable pyproject.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_fleetcensus.py -k test_a_pyproject_listed_by_the_walk_and_gone_by_the_read_adds_no_exemption_row},
+}
+
+@misc{ratchet-kinds-empty-object-baseline-sums-to-zero-so-its-series-keeps-emitting,
+  section = {kinds},
+  title  = {W2295: nemik's mypy baseline went empty and its sum series ended; empty is no debt},
+  claim  = {W2295: nemik's mypy baseline went empty and its sum series ended; empty is no debt.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_kinds.py -k test_an_empty_object_baseline_sums_to_zero_so_its_series_keeps_emitting},
+}
+
+@misc{ratchet-expression-file-rule-count-of-an-empty-baseline-is-zero-and-of-a-broken-one-is-unread,
+  section = {expression},
+  title  = {W2295 (nemik:W2115): an empty baseline is zero debt, and a rise out of it is then judged},
+  claim  = {W2295 (nemik:W2115): an empty baseline is zero debt, and a rise out of it is then
+            judged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_expression.py -k test_file_rule_count_of_an_empty_baseline_is_zero_and_of_a_broken_one_is_unread},
+}
+
+@misc{ratchet-entries-entries-of-every-kind-equal-the-census-value,
+  section = {entries},
+  title  = {The contract: a list that disagreed with the value would pay down debt still counted},
+  claim  = {The contract: a list that disagreed with the value would pay down debt still counted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_entries.py -k test_the_entries_of_every_kind_equal_the_census_value},
+}
+
+@misc{ratchet-entries-file-rule-count-baseline-gives-each-entry-its-file-and-rule,
+  section = {entries},
+  title  = {The first two keys of a `file -> rule -> count` baseline are the file and the rule},
+  claim  = {The first two keys of a `file -> rule -> count` baseline are the file and the rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_entries.py -k test_a_file_rule_count_baseline_gives_each_entry_its_file_and_rule},
+}
+
+@misc{ratchet-entries-text-baseline-lists-its-lines-and-a-table-does-not-list-its-header,
+  section = {entries},
+  title  = {A line is its own key; blank lines, comments and a .tsv header are not entries},
+  claim  = {A line is its own key; blank lines, comments and a .tsv header are not entries.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_entries.py -k test_a_text_baseline_lists_its_lines_and_a_table_does_not_list_its_header},
+}
+
+@misc{ratchet-entries-unreadable-file-has-no-list-never-an-empty-one,
+  section = {entries},
+  title  = {None is the census's UNREAD: an empty list would read as debt paid},
+  claim  = {None is the census's UNREAD: an empty list would read as debt paid.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_entries.py -k test_an_unreadable_file_has_no_list_never_an_empty_one},
+}
+
+@misc{ratchet-entries-census-entries-prints-one-json-line-per-entry-and-only-for-named-kinds,
+  section = {entries},
+  title  = {A pyproject exemption row is not a file of lines, so it is left out, not mis-listed},
+  claim  = {A pyproject exemption row is not a file of lines, so it is left out, not mis-listed.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_entries.py -k test_census_entries_prints_one_json_line_per_entry_and_only_for_named_kinds},
+}
+
+@misc{ratchet-exemptions-collapsing-entries-into-a-glob-does-not-change-the-count,
+  section = {exemptions},
+  title  = {W2387: three files with two rules each is six, and so is one glob matching those three},
+  claim  = {W2387: three files with two rules each is six, and so is one glob matching those three.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_collapsing_entries_into_a_glob_does_not_change_the_count},
+}
+
+@misc{ratchet-exemptions-glob-matching-nothing-is-not-free-and-a-plain-key-counts-once,
+  section = {exemptions},
+  title  = {At least one pair per glob key; a key with no glob character is one pair per rule},
+  claim  = {At least one pair per glob key; a key with no glob character is one pair per rule.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_a_glob_matching_nothing_is_not_free_and_a_plain_key_counts_once},
+}
+
+@misc{ratchet-exemptions-glob-key-head-did-not-have-is-named-and-one-it-had-is-not,
+  section = {exemptions},
+  title  = {The house `tests/*` stays when HEAD already has it; unread on either side is None},
+  claim  = {The house `tests/*` stays when HEAD already has it; unread on either side is None.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_a_glob_key_head_did_not_have_is_named_and_one_it_had_is_not},
+}
+
+@misc{ratchet-exemptions-exemption-entries-are-exactly-the-pairs-the-count-counts,
+  section = {exemptions},
+  title  = {W2306 slice 2: the list is as long as the count, a glob names each file it matches},
+  claim  = {W2306 slice 2: the list is as long as the count, a glob names each file it matches.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_exemptions.py -k test_the_exemption_entries_are_exactly_the_pairs_the_count_counts},
+}

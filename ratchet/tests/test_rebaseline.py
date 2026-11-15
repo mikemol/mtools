@@ -172,3 +172,57 @@ def test_the_command_refuses_an_untrustworthy_file_without_a_traceback(
     argv = ["rebaselines", "--repo", str(after), "--before", str(before)]
     assert cli.main(argv) == 1
     assert "cannot be read as JSON" in capsys.readouterr().err
+
+
+def test_vanished_names_an_unretired_ratchet_gone_after_the_change() -> None:
+    """nemik-6f's B1: a measured ratchet absent after is refused unless retired; unread is not."""
+    [line] = rebaseline.vanished({_PATH: 3}, {}, [])
+    assert line.startswith(f"{_PATH}: was measured before the change and is gone after it")
+    assert rebaseline.vanished({_PATH: 3}, {}, [_PATH]) == []
+    assert rebaseline.vanished({_PATH: 3}, {_PATH: 0}, []) == []
+    assert rebaseline.vanished({_PATH: None}, {}, []) == []
+    assert rebaseline.vanished({}, {_PATH: 3}, []) == []
+
+
+def test_check_refuses_a_deleted_baseline_unless_ratchets_json_retires_it(tmp_path: Path) -> None:
+    """The file is gone with its debt: refused, then admitted once a tombstone names it."""
+    before, after = _tree(tmp_path / "before", 2), tmp_path / "after"
+    after.mkdir()
+    [line] = rebaseline.check(after, before)
+    assert line.startswith(f"{_PATH}: was measured before the change and is gone after it")
+    tomb = {"path": _PATH, "reason": "paid-to-zero-and-removed", "sha": "abc1234"}
+    body: dict[str, object] = {"ratchets": [], "retired": [tomb]}
+    (after / "ratchets.json").write_text(json.dumps(body), encoding="utf-8")
+    assert rebaseline.check(after, before) == []
+
+
+def _corrupt_baseline(root: Path) -> None:
+    (root / "mypy-baseline.json").write_text("{nope", encoding="utf-8")
+
+
+def test_unjudged_names_a_staged_ratchet_that_could_not_be_read(tmp_path: Path) -> None:
+    """nemik-6f's B2: a corrupt staged baseline reads as None and must not read as 'no rise'."""
+    clean = _tree(tmp_path / "clean", 1)
+    assert rebaseline.unjudged(clean) == []
+    broken = _tree(tmp_path / "broken", 1)
+    _corrupt_baseline(broken)
+    [line] = rebaseline.unjudged(broken)
+    assert line.startswith("mypy-baseline.json: could not be read after the change")
+
+
+def test_the_command_exits_seven_when_a_staged_ratchet_could_not_be_read(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A distinct could-not-judge outcome, printed, and it outranks a plain refusal's exit 1."""
+    before, after = _tree(tmp_path / "before", 0), _tree(tmp_path / "after", 0)
+    _corrupt_baseline(after)
+    argv = ["rebaselines", "--repo", str(after), "--before", str(before)]
+    assert cli.main(argv) == rebaseline.EXIT_UNJUDGED
+    assert "mypy-baseline.json: could not be read" in capsys.readouterr().out
+    rising = _tree(tmp_path / "rising", 1)
+    _corrupt_baseline(rising)
+    argv = ["rebaselines", "--repo", str(rising), "--before", str(before)]
+    assert cli.main(argv) == rebaseline.EXIT_UNJUDGED
+    out = capsys.readouterr().out
+    assert "rose 0 to 1" in out
+    assert "could not be read" in out

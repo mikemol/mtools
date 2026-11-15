@@ -100,6 +100,7 @@ def _walk(repo: Path) -> Iterator[Path]:
             d
             for d in dirs
             if d not in _PRUNED
+            and not d.startswith(".venv.")
             and not d.startswith("bazel-")
             and d not in _STAGING
             and not _ARCHIVE.search(d)
@@ -111,6 +112,23 @@ def _walk(repo: Path) -> Iterator[Path]:
 
 def _files(repo: Path) -> Iterator[Path]:
     return (path for path in _walk(repo) if path.suffix in _SUFFIXES)
+
+
+def _read(path: Path) -> str | None:
+    """Read a listed file, treating one that is gone as absent (W2290).
+
+    ⚑ A WALK LISTS BEFORE IT READS, so a worktree another session removes in between leaves a
+    dangling path; that file is not a source of the repository any more, and one vanished file
+    must not crash the whole fleet census.
+
+    Returns:
+        the file's text, or None when it no longer exists.
+
+    """
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")
+    except FileNotFoundError:
+        return None
 
 
 def suppression_rows(repo: Path) -> list[Row]:
@@ -128,8 +146,11 @@ def suppression_rows(repo: Path) -> list[Row]:
     seen = False
     for path in _walk(repo):
         if path.suffix == ".py":
+            text = _read(path)
+            if text is None:
+                continue
             seen = True
-            counted = exemptions.suppressions(path.read_text(encoding="utf-8", errors="replace"))
+            counted = exemptions.suppressions(text)
             if counted is None:
                 return [Row(repo.name, "*.py", "suppression", None, kinds.FLOOR)]
             total += counted
@@ -150,8 +171,9 @@ def exemption_rows(repo: Path) -> list[Row]:
     """
     rows: list[Row] = []
     for path in _walk(repo):
-        if path.name == "pyproject.toml":
-            value = exemptions.count(path.read_text(encoding="utf-8", errors="replace"))
+        text = _read(path) if path.name == "pyproject.toml" else None
+        if text is not None:
+            value = exemptions.count(text)
             relative = path.relative_to(repo).as_posix()
             rows.append(Row(repo.name, relative, "exemption", value, kinds.FLOOR))
     return [*rows, *suppression_rows(repo)]

@@ -172,8 +172,12 @@ sh_test(
 # ⚑ FIRST DECLARED 2026-09-19 (W2). An earlier draft lived only in a scratchpad and died with it;
 # "//ratchet:mutants failed in 0.6s" in the record describes that draft, not this target.
 mutants_sharded(
+    # W2340: TWO SHARDS, NOT A LONGER BUDGET (operator ruling 2026-10-10, bound by CPU). The one
+    # shard measured 433.2 s of CPU against the 300 s budget with every cell honest (99 killed, 0
+    # survived, 0 errored, 87 declared defects killed), so the grid failed on cost alone; two put
+    # about 217 s in each. `//ratchet:mutants` stays the suite name.
     name = "mutants",
-    shards = 1,
+    shards = 2,
     cpu_budget = 300,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],
@@ -189,7 +193,10 @@ mutants_sharded(
         "//fence:fence",
         "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
+        # W2340: the checker the one arm needing a real one runs, as the test targets stage it.
+        "@mikemol_check_ruff//:bin",
     ] + glob(["src/**/*.py", "tests/**/*.py"]),
+    env = {"CONTROL_RUFF": "$(location @mikemol_check_ruff//:bin)"},
     size = "medium",
 )
 

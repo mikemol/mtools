@@ -18,8 +18,14 @@ value it became, the reason, and the operator's record (`<transcript uuid>:<line
 a declared move that can be audited, never a baseline someone edited. It is refused unless it is
 a rise (`new` above `old`) with a reason and a warrant of that shape.
 
-⚑ AN UNREAD VALUE IS NOT A NUMBER: a ratchet that could not be read before or after is skipped
-here (the census already says UNREAD).
+⚑ AN UNREAD VALUE IS NOT A NUMBER, AND NOT A CLEAN ONE: `refusals` skips a ratchet that could not be
+read before or after (the census already says UNREAD), but the command reports one that could not
+be read AFTER the change as a distinct outcome, exit 7, so a corrupt staged file is never taken
+for "no rise" (nemik-6f, nemik:W2088).
+
+⚑ A RATCHET THAT VANISHES IS NOT A PAYDOWN: one measured before the change and absent after it is
+refused unless `ratchets.json`'s `retired` list names it (nemik-6f's B1, W2373; the tombstone is
+W1963's), so deleting a baseline cannot clear its debt unwritten.
 
 ⚑ A BIRTH AT A NONZERO VALUE IS A RISE FROM NOTHING: a ratchet that is new in this change counts
 from zero, so a new baseline file already holding N entries is N units of expansion and needs an
@@ -36,12 +42,12 @@ import argparse
 import json
 import re
 import sys
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
-from mikemol.ratchet import expression, fleetcensus
+from mikemol.ratchet import declaration, expression, fleetcensus
 from mikemol.ratchet.declaration import DeclarationError
 
 NAME = "rebaselines.json"
@@ -151,6 +157,30 @@ def refusals(
     return found
 
 
+def vanished(
+    before: Mapping[str, int | None],
+    after: Mapping[str, int | None],
+    retired: Collection[str],
+) -> list[str]:
+    """Name every ratchet the tree before measured that the tree after no longer has.
+
+    ⚑ A RATCHET THAT VANISHES IS A FALL TO NOTHING, NOT A PAYDOWN (nemik-6f, B1): `refusals` loops
+    only over `after`, so deleting a baseline file or its declaration cleared the debt without
+    anyone writing that it was retired. `ratchets.json`'s `retired` list is the written
+    retirement (W1963); a path it names may go, any other may not.
+
+    Returns:
+        one line per unretired ratchet that was read before and is absent after, in path order.
+
+    """
+    return [
+        f"{path}: was measured before the change and is gone after it, with no `retired` "
+        f"entry in {declaration.NAME} naming it"
+        for path in sorted(before)
+        if before[path] is not None and path not in after and path not in retired
+    ]
+
+
 def lost(before: Sequence[Rebaseline], after: Sequence[Rebaseline]) -> list[str]:
     """Name every declared rise the tree before had that the tree after no longer carries.
 
@@ -171,14 +201,41 @@ def check(repo: Path, before: Path) -> list[str]:
 
     Returns:
         the refusals of `refusals` over the two trees' census rows, judged by the entries in
-        `repo`, then each entry the tree before declared that is gone or changed (`lost`); a
-        declaration or an expression that cannot be trusted raises as `census_repo` does.
+        `repo`, then each unretired ratchet that vanished (`vanished`), then each entry the tree
+        before declared that is gone or changed (`lost`); a declaration or an expression that
+        cannot be trusted raises as `census_repo` does.
 
     """
     now_entries = read(repo)
+    was, now = values(before), values(repo)
+    retired = {r.path for r in declaration.read_retired(repo)}
     return [
-        *refusals(values(before), values(repo), now_entries),
+        *refusals(was, now, now_entries),
+        *vanished(was, now, retired),
         *lost(read(before), now_entries),
+    ]
+
+
+EXIT_UNJUDGED = 7
+"""The exit for a check that could not judge: a staged value could not be read (nemik:W2088)."""
+
+
+def unjudged(repo: Path) -> list[str]:
+    """Name every ratchet whose value in the tree with the change could not be read.
+
+    ⚑ A VALUE THAT CANNOT BE READ IS NOT A CLEAN ONE (nemik-6f, found in github-14's cold review
+    of nemik:W2077): `refusals` skips a row whose value is None, so a corrupt or wrong-shape
+    staged ratchet file was never judged and the gate passed. The skip stays in `refusals`; the
+    caller reports these as a distinct outcome, so "could not judge" is never read as "no rise".
+
+    Returns:
+        one line per unread ratchet, in path order.
+
+    """
+    return [
+        f"{path}: could not be read after the change, so no rise can be judged"
+        for path, value in sorted(values(repo).items())
+        if value is None
     ]
 
 
@@ -187,7 +244,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     Returns:
         0 when every rise is declared; 1 with each unexplained rise printed, or when a file
-        cannot be trusted.
+        cannot be trusted; 7 (`EXIT_UNJUDGED`) when a ratchet in the changed tree could not be
+        read, whether or not a rise was also found.
 
     """
     parser = argparse.ArgumentParser(prog="mikemol-ratchet rebaselines")
@@ -196,9 +254,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     opts: dict[str, object] = vars(parser.parse_args(list(sys.argv[1:] if argv is None else argv)))
     try:
         lines = check(Path(str(opts["repo"])), Path(str(opts["before"])))
+        unread = unjudged(Path(str(opts["repo"])))
     except (DeclarationError, expression.ExpressionError, RebaselineError) as fault:
         sys.stderr.write(f"mikemol-ratchet rebaselines: {fault}\n")
         return 1
-    for line in lines:
+    for line in [*lines, *unread]:
         sys.stdout.write(f"{line}\n")
+    if unread:
+        return EXIT_UNJUDGED
     return 1 if lines else 0

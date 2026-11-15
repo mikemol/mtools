@@ -103,7 +103,9 @@ def value_of(path: Path) -> int | None:
 
 def _counts(node: object) -> list[int] | None:
     # The integers of an object of objects of non-negative integers, or None for any other shape.
-    if not isinstance(node, dict) or not node:
+    # ⚑ AN EMPTY OBJECT IS A BASELINE WITH NO DEBT, NOT AN UNKNOWN SHAPE (W2295, nemik:W1108): the
+    # sum series ended when nemik's mypy baseline reached `{}`, so it has no integers and sums to 0.
+    if not isinstance(node, dict):
         return None
     found: list[int] = []
     for inner in cast("dict[str, object]", node).values():
@@ -126,7 +128,7 @@ def sum_of(path: Path) -> int | None:
 
     Returns:
         the sum; None when the file is a link, is not JSON, or is not an object of non-empty
-        objects of non-negative integers.
+        objects of non-negative integers, or is an empty object not named like a baseline.
 
     """
     if path.suffix != ".json" or path.is_symlink():
@@ -136,4 +138,8 @@ def sum_of(path: Path) -> int | None:
     except (OSError, UnicodeDecodeError, ValueError):
         return None
     counts = _counts(parsed)
+    # ⚑ AN EMPTY OBJECT SUMS TO 0 ONLY FOR A BASELINE-NAMED FILE (github-cb, the b67 review): a
+    # debt ledger's numbers have no sum, and `{}` there would start a sum series from nothing.
+    if counts is not None and not counts and kind_of(path.name) != "baseline":
+        return None
     return None if counts is None else sum(counts)

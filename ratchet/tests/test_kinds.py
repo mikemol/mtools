@@ -109,7 +109,6 @@ def test_only_a_file_rule_count_baseline_has_a_sum(tmp_path: Path) -> None:
         "negative-baseline.json": '{"a.py": {"X": -1}}',
         "boolean-baseline.json": '{"a.py": {"X": true}}',
         "text-baseline.json": '{"a.py": {"X": "3"}}',
-        "empty-baseline.json": "{}",
         "hollow-baseline.json": '{"a.py": {}}',
         "broken-baseline.json": "{nope",
     }
@@ -119,3 +118,17 @@ def test_only_a_file_rule_count_baseline_has_a_sum(tmp_path: Path) -> None:
     plain = tmp_path / "public_ratchet_baseline.txt"
     plain.write_text("a::b\n", encoding="utf-8")
     assert kinds.sum_of(plain) is None
+
+
+def test_an_empty_object_baseline_sums_to_zero_so_its_series_keeps_emitting(
+    tmp_path: Path,
+) -> None:
+    """W2295: nemik's mypy baseline went empty and its sum series ended; empty is no debt."""
+    empty = tmp_path / "mypy-baseline.json"
+    empty.write_text("{}", encoding="utf-8")
+    assert kinds.sum_of(empty) == 0
+    assert kinds.value_of(empty) == 0
+    ledger = tmp_path / "debt-ledger.json"
+    ledger.write_text("{}", encoding="utf-8")
+    assert kinds.sum_of(ledger) is None
+    assert kinds.value_of(ledger) == 0

@@ -78,6 +78,17 @@ def test_a_file_that_is_missing_is_unread_and_file_rule_count_is_the_sum(tmp_pat
     assert expression.evaluate(ruff, expression.FILE_RULE_COUNT) == _TWO_ONES + 1 + 4
 
 
+def test_file_rule_count_of_an_empty_baseline_is_zero_and_of_a_broken_one_is_unread(
+    tmp_path: Path,
+) -> None:
+    """W2295 (nemik:W2115): an empty baseline is zero debt, and a rise out of it is then judged."""
+    baseline = tmp_path / "mypy-baseline.json"
+    baseline.write_text("{}", encoding="utf-8")
+    assert expression.evaluate(baseline, expression.FILE_RULE_COUNT) == 0
+    baseline.write_text("{nope", encoding="utf-8")
+    assert expression.evaluate(baseline, expression.FILE_RULE_COUNT) is None
+
+
 @pytest.mark.parametrize(
     "row",
     [

@@ -19,12 +19,18 @@ import tempfile
 from pathlib import Path
 from typing import cast
 
-from mikemol.ratchet import declaration, starting, trend
+from mikemol.ratchet import declaration, entries, kinds, starting, trend
 from mikemol.ratchet.census import CensusUnavailableError, run_ruff
 from mikemol.ratchet.core import ratchet, read_baseline, write_baseline
 from mikemol.ratchet.declaration import DeclarationError
 from mikemol.ratchet.expression import ExpressionError
-from mikemol.ratchet.fleetcensus import census, census_repo, tombstones, tombstones_under
+from mikemol.ratchet.fleetcensus import (
+    Row,
+    census,
+    census_repo,
+    tombstones,
+    tombstones_under,
+)
 from mikemol.ratchet.keys import RUFF, SCHEMA_NAMES, MalformedKeyError, parse_all, schema_named
 from mikemol.ratchet.rebaseline import main as rebaselines_main
 from mikemol.ratchet.remap import __doc__ as remap_doc
@@ -94,6 +100,27 @@ def _remap_main(argv: list[str]) -> int:
     return code
 
 
+def _entry_lines(rows: list[Row], where: Path, single: bool) -> list[str]:
+    """Spell each name-classified row's entries as JSON lines (W2306).
+
+    ⚑ ONLY THE ROWS WHOSE COUNT THIS READS THE SAME WAY: a declared row counts by its own
+    expression, and a pyproject or suppression row counts something that is not a file of lines, so
+    a list from `entries_of` would disagree with the census value. Those rows are left out, and the
+    caller says how many.
+
+    Returns:
+        one JSON line per entry, in row order; an unreadable file lists nothing.
+
+    """
+    lines: list[str] = []
+    for row in rows:
+        if not row.guessed or row.kind not in kinds.KIND_NAMES:
+            continue
+        found = entries.entries_of((where if single else where / row.repo) / row.ratchet)
+        lines.extend(entries.as_json(row.ratchet, row.kind, entry) for entry in found or [])
+    return lines
+
+
 def _census_main(argv: list[str]) -> int:
     """Run `mikemol-ratchet census ROOT`: list every ratchet file under the root (W1907).
 
@@ -113,6 +140,11 @@ def _census_main(argv: list[str]) -> int:
         metavar="N",
         help="append trend=falling|flat|rising|unknown from each file's last N commits (W1908)",
     )
+    parser.add_argument(
+        "--entries",
+        action="store_true",
+        help="print one JSON line per entry of each name-classified ratchet file (W2306)",
+    )
     opts: dict[str, object] = vars(parser.parse_args(argv))
     where = Path(str(opts["root"]))
     count = int(str(opts["trend"]))
@@ -122,6 +154,10 @@ def _census_main(argv: list[str]) -> int:
     except (DeclarationError, ExpressionError) as fault:
         sys.stderr.write(f"mikemol-ratchet census: {fault}\n")
         return 1
+    if opts["entries"]:
+        listed = _entry_lines(rows, where, bool(opts["repo"]))
+        sys.stdout.write("".join(f"{line}\n" for line in listed))
+        return 0
     for row in rows:
         repo = where if opts["repo"] else where / row.repo
         said = f" trend={_trend_of(repo, row.ratchet, count)}" if count else ""

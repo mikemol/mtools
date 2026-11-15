@@ -95,12 +95,15 @@ src/mikemol/ratchet/declaration.py|changed-tombstone-allowed|        if entry no
 src/mikemol/ratchet/declaration.py|vanished-tombstone-not-named|        if entry not in kept|        if False|def=lost_retired
 src/mikemol/ratchet/kinds.py|tsv-header-counted|if path\.suffix == "\.tsv" and entries else|if False else|def=value_of
 src/mikemol/ratchet/kinds.py|header-dropped-from-every-text-file|path\.suffix == "\.tsv" and entries|bool(entries)|def=value_of
-src/mikemol/ratchet/exemptions.py|absent-table-read-as-unread|            return 0|            return None|def=count
-src/mikemol/ratchet/exemptions.py|one-per-file-not-per-rule|        total \+= len\(cast\("list\[object\]", rules\)\)|        total += 1|def=count
-src/mikemol/ratchet/exemptions.py|unparsed-text-not-caught|    except tomllib\.TOMLDecodeError:|    except ZeroDivisionError:|def=count
-src/mikemol/ratchet/exemptions.py|non-list-rules-accepted|        if not isinstance\(rules, list\):|        if False:|def=count
+src/mikemol/ratchet/exemptions.py|absent-table-read-as-unread|            return \{\}|            return None|def=_table
+src/mikemol/ratchet/exemptions.py|one-per-file-not-per-rule|        len\(cast\("list\[object\]", rules\)\) \* _weight\(key, tracked\)|        _weight(key, tracked)|def=count
+src/mikemol/ratchet/exemptions.py|unparsed-text-not-caught|    except tomllib\.TOMLDecodeError:|    except ZeroDivisionError:|def=_table
+src/mikemol/ratchet/exemptions.py|non-list-rules-accepted|    if table is None or not all\(isinstance\(rules, list\) for rules in table\.values\(\)\):|    if table is None:|def=count
+src/mikemol/ratchet/exemptions.py|a-glob-counts-once|    if tracked is None or not _GLOB\.search\(key\):|    if True:|def=_weight
+src/mikemol/ratchet/exemptions.py|a-glob-matching-nothing-is-free|    return max\(1, sum\(|    return max(0, sum(|def=_weight
+src/mikemol/ratchet/exemptions.py|every-glob-key-called-new|    return \[key for key in work if _GLOB\.search\(key\) and key not in head\]|    return [key for key in work if _GLOB.search(key)]|def=new_globs
 src/mikemol/ratchet/fleetcensus.py|exemptions-left-out-of-the-census|    return \[\*rows, \*exemption_rows\(repo\)\]|    return rows|def=census_repo
-src/mikemol/ratchet/fleetcensus.py|every-file-read-as-a-pyproject|        if path\.name == "pyproject\.toml":|        if True:|def=exemption_rows
+src/mikemol/ratchet/fleetcensus.py|every-file-read-as-a-pyproject|        text = _read\(path\) if path\.name == "pyproject\.toml" else None|        text = _read(path)|def=exemption_rows
 src/mikemol/ratchet/exemptions.py|string-naming-a-suppression-counted|        1 for tok in tokens if tok\.type == tokenize\.COMMENT and _SUPPRESSION\.match\(tok\.string\)|        1 for tok in tokens if _SUPPRESSION.search(tok.string)|def=suppressions
 src/mikemol/ratchet/exemptions.py|untokenizable-source-not-caught|    except \(tokenize\.TokenError, SyntaxError\):|    except ZeroDivisionError:|def=suppressions
 src/mikemol/ratchet/fleetcensus.py|repo-without-python-reports-a-row|    return \[Row\(repo\.name, "\*\.py", "suppression", total, kinds\.FLOOR\)\] if seen else \[\]|    return [Row(repo.name, "*.py", "suppression", total, kinds.FLOOR)]|def=suppression_rows
@@ -114,3 +117,16 @@ src/mikemol/ratchet/cli.py|retired-loss-passes|    return 1 if lost else 0|    r
 src/mikemol/ratchet/cli.py|retired-unreadable-is-a-refusal|        return CANNOT_CENSUS|        return 1|def=_retired_main
 src/mikemol/ratchet/cli.py|retired-head-read-as-empty|        before = \[\] if held is None else declaration\.retired_in\(held\)|        before = []|def=_retired_main
 src/mikemol/ratchet/declaration.py|retired-text-json-error-trusted|        raise DeclarationError\(msg\) from fault|        return []|def=retired_in
+src/mikemol/ratchet/rebaseline.py|unread-staged-value-is-not-reported|        if value is None|        if False|def=unjudged
+src/mikemol/ratchet/rebaseline.py|unread-staged-value-exits-as-a-plain-refusal|    if unread:|    if False:|def=main
+src/mikemol/ratchet/rebaseline.py|unread-is-not-asked-of-the-changed-tree|        unread = unjudged\(Path\(str\(opts\["repo"\]\)\)\)|        unread = []|def=main
+src/mikemol/ratchet/fleetcensus.py|uv-temporary-venv-walked|            and not d\.startswith\("\.venv\."\)|            and True|def=_walk
+src/mikemol/ratchet/fleetcensus.py|vanished-source-fatal|    except FileNotFoundError:|    except ZeroDivisionError:|def=_read
+src/mikemol/ratchet/kinds.py|empty-object-has-no-sum|    if not isinstance\(node, dict\):|    if not isinstance(node, dict) or not node:|def=_counts
+src/mikemol/ratchet/kinds.py|an-empty-debt-ledger-gets-a-sum|    if counts is not None and not counts and kind_of\(path\.name\) != "baseline":|    if False:|def=sum_of
+src/mikemol/ratchet/entries.py|tsv-header-listed|    rows = kept\[1:\] if path\.suffix == "\.tsv" and kept else kept|    rows = kept|def=entries_of
+src/mikemol/ratchet/entries.py|false-leaf-listed|    if node is False or \(isinstance\(node, str\) and not node\):|    if isinstance(node, str) and not node:|def=_leaves
+src/mikemol/ratchet/cli.py|entries-lists-every-row|        if not row\.guessed or row\.kind not in kinds\.KIND_NAMES:|        if False:|def=_entry_lines
+src/mikemol/ratchet/rebaseline.py|retired-ratchet-is-still-refused|and path not in retired$|and True|def=vanished
+src/mikemol/ratchet/rebaseline.py|unread-before-value-is-refused-as-gone|        if before\[path\] is not None and|        if True and|def=vanished
+src/mikemol/ratchet/rebaseline.py|check-never-asks-what-vanished|        \*vanished\(was, now, retired\),|        *[],|def=check

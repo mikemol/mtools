@@ -146,3 +146,55 @@ def test_python_sources_report_one_suppression_row_and_a_broken_one_is_unread(
         "alpha *.py suppression value=1 floor=0",
         "gamma *.py suppression value=UNREAD floor=0",
     ]
+
+
+def test_uvs_temporary_venv_directories_are_not_the_repositorys_own_sources(
+    tmp_path: Path,
+) -> None:
+    """W2283 (nemik:W1568): a `.venv.uv-*` directory is pruned like `.venv`, so it adds no count.
+
+    The control is a source that really is the repository's own, which still counts.
+    """
+    marked = "x = 1  # " + "noqa: E501\n"
+    _put(tmp_path / "alpha" / "own.py", marked)
+    _put(tmp_path / "alpha" / ".venv.uv-abc123" / "lib" / "dep.py", marked)
+    _put(tmp_path / "alpha" / ".venv" / "lib" / "dep.py", marked)
+    [row] = [r for r in fleetcensus.census(tmp_path) if r.kind == "suppression"]
+    assert row.line() == "alpha *.py suppression value=1 floor=0"
+
+
+def test_a_source_listed_by_the_walk_and_gone_by_the_read_is_skipped_not_fatal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2290 (nemik:W1108): a worktree removed between listing and reading crashed the census.
+
+    The walk is made to list a path that does not exist, beside a real source that still counts.
+    """
+    own = tmp_path / "alpha" / "own.py"
+    _put(own, "x = 1  # " + "noqa: E501\n")
+    gone = tmp_path / "alpha" / "gone" / "gate_ledger.py"
+
+    def listing(_repo: Path) -> list[Path]:
+        return [gone, own]
+
+    monkeypatch.setattr("mikemol.ratchet.fleetcensus._walk", listing)
+    [row] = fleetcensus.suppression_rows(tmp_path / "alpha")
+    assert row.line() == "alpha *.py suppression value=1 floor=0"
+
+
+def test_a_pyproject_listed_by_the_walk_and_gone_by_the_read_adds_no_exemption_row(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2290: the same vanished-file hazard in the exemption rows, beside a readable pyproject."""
+    own = tmp_path / "alpha" / "pyproject.toml"
+    _put(own, "[tool.ruff]\n")
+    gone = tmp_path / "alpha" / "gone" / "pyproject.toml"
+
+    def listing(_repo: Path) -> list[Path]:
+        return [gone, own]
+
+    monkeypatch.setattr("mikemol.ratchet.fleetcensus._walk", listing)
+    lines = [r.line() for r in fleetcensus.exemption_rows(tmp_path / "alpha")]
+    assert [line for line in lines if " exemption " in line] == [
+        "alpha pyproject.toml exemption value=0 floor=0"
+    ]
