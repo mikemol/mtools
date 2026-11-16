@@ -135,6 +135,15 @@ sh_test(
         "mutants.regex",
         # W2340: the debt this grid records, judged by the runner (a rise or a stale entry fails).
         "mutants-baseline.txt",
+        # ⚑ W2444: THE EXIT-TABLE GATE'S INPUTS, NAMED because each is one the build fails without
+        # (drop-one, measured in this target's own environment): the control
+        # `test_the_runfiles_hold_enough_constants_to_make_a_pass_mean_something` reads
+        # `exit-table.json` and the hooks sources the census counts, and without either it failed
+        # on the UNMUTATED module so every cell read ERRORED. Dropping `exit-baseline.txt`,
+        # `//katas`, `//pathsforward` or `//waldo` (which `:test_exit_gate` stages) changed no
+        # verdict here, so they are NOT staged: the census minimum is met by the hooks sources.
+        "exit-table.json",
+        "//hooks",
         ":.venv",
         "//fence:fence",
         "//mutation:mutation",

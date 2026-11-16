@@ -7482,3 +7482,28 @@
 2026-11-16T04:44:40Z  status W2442 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-16T04:45:38Z  status W2442 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-16T04:46:17Z  status W2444 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T04:52:38Z  interrupt W2567 minted    -         "Kill the four surviving corpus mutants in codoncensus.py (_by_count, render, run_process, tests-are-sampled)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2444
+2026-11-16T04:52:40Z  status W2444 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T04:53:54Z  status W2441 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T04:54:44Z  status W2441 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T04:56:11Z  interrupt W2568 minted    -         "mutants_sharded and the plain mutants sh_test inherit the data of the dist's py_test targets by construction, so a mutation grid cannot stage less than its tests (instances: pathsforward b69, icsstruct W2442, corpus W2444)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2444
+2026-11-16T05:01:17Z  interrupt W2569 minted    -         "corpus's exit-gate control counts a declared fixture or a named subset of hooks files, not the whole //hooks dist, so a hooks edit does not invalidate corpus's mutation grid (W2444's sibling, W2531's coupling)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2444
+2026-11-16T05:01:59Z  status W2444 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:03:37Z  status W2444 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:07:07Z  status W2444 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:08:19Z  status W2445 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:23:23Z  status W2445 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:24:10Z  status W2445 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:25:33Z  status W2446 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:52:09Z  interrupt W2570 minted    -         "mikemol-ratchet-hook's inserted gate block prints a 'no mikemol-ratchet' message (aeternum:W172): read the full complaint and fix the block"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=aeternum:W172
+2026-11-16T05:52:55Z  status W2447 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T05:53:59Z  status W2448 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:05:59Z  interrupt W2571 minted    -         "gate_stages (mikemol_rules_py) emits its stage-to-script mapping as a generated data file a test can declare as an input (gcalculus:W296)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=gcalculus:W296
+2026-11-16T06:06:54Z  status W2449 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:08:13Z  status W2450 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:11:09Z  status W2451 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:11:34Z  status W2451 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:12:04Z  status W2451 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:14:31Z  status W2451 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:16:19Z  status W2451 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-16T06:16:43Z  status W2451 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

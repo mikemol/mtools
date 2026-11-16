@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2566,
+  "counter": 2571,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -54736,7 +54736,7 @@
     {
       "symbol": "W2441",
       "title": "Re-measure pycodemod's mutation shards at clean HEAD with the new runner before its baseline is generated",
-      "status": "working",
+      "status": "done",
       "enables": [
         "W2340"
       ],
@@ -54745,15 +54745,15 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "When the run ends: list SURVIVED and ERRORED per shard from the testlogs of the scratch worktree's output base, compare with pycodemod/mutants-baseline.txt (12 survivors listed on W2448), record the counts and per-shard CPU on W2441 and W2340, then ask github-cb whether the baseline is regenerated from these logs.",
-      "evidence": "2026-11-16T04:21:59Z: 2026-11-16 STARTED (in flight): bazel test //pycodemod:mutants --keep_going in a CLEAN scratch worktree at HEAD cf416ea5 (branch scratch/W2441, no uncommitted deadnone, annotating or imports edits, which github-cb's ruling 5 named as the earlier reading's contamination), run in the background; the result, per shard SURVIVED and ERRORED, is read from bazel's own test logs (never a local grid) and recorded here when it ends.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-16T04:21:59Z: 2026-11-16 STARTED (in flight): bazel test //pycodemod:mutants --keep_going in a CLEAN scratch worktree at HEAD cf416ea5 (branch scratch/W2441, no uncommitted deadnone, annotating or imports edits, which github-cb's ruling 5 named as the earlier reading's contamination), run in the background; the result, per shard SURVIVED and ERRORED, is read from bazel's own test logs (never a local grid) and recorded here when it ends. | 2026-11-16T04:53:54Z: 2026-11-16 RESULT in the gate's own environment, clean scratch worktree at HEAD cf416ea5 (no uncommitted deadnone, annotating or imports edits): bazel test //pycodemod:mutants --keep_going, invocation 5e9019e1-73bf-4320-b90f-7097a5865b97: Executed 24 of 24 tests, 24 PASS, 1871.5 s elapsed, 2908 processes. 24 of 24 shards passing means every shard reads 0 rises and 0 stale against the committed baseline (12 survivors), so the earlier reading taken on the contaminated working tree is superseded: at clean HEAD the pycodemod baseline matches the grid exactly, no errored cell, no new survivor, no stale cell. The 12 survivors are W2448's paydown. Per-shard CPU not extracted (the log lines were not read here). | 2026-11-16T04:54:44Z: 2026-11-16 CLOSED: the card was a measurement and it is made: 24 of 24 pycodemod shards pass at clean HEAD (5e9019e1-73bf-4320-b90f-7097a5865b97), baseline of 12 survivors exact. No code to land; the result is sent to github-cb.",
       "issued_at": "2026-11-14T02:36:08Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": "2026-11-16T04:21:59Z",
+      "last_worked": "2026-11-16T04:54:44Z",
       "ticks_blocked": 0,
       "weight": 19,
-      "completed": null
+      "completed": "20261116T045444Z"
     },
     {
       "symbol": "W2442",
@@ -54808,16 +54808,17 @@
         "W2340"
       ],
       "touches": [
-        "file:corpus/mutants-baseline.txt"
+        "file:corpus/mutants-baseline.txt",
+        "gate-repair"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Read the test.log control failure; stage the named input; rerun; regenerate the baseline from the logs; stack.",
-      "evidence": "2026-11-16T04:46:28Z: 2026-11-16 STARTED: bazel test //corpus:mutants in a clean scratch worktree at HEAD cf416ea5 (branch scratch/W2444), background; corpus declares a plain sh_test (not mutants_sharded). When it ends read the first failing control from its test.log (the unmutated suite fails in the copy), name the unstaged tool or data file, stage it NAMED (not globbed), rerun, and regenerate corpus/mutants-baseline.txt only from the bazel logs.",
+      "next_bounded_step": "Wait for the published round to name W2444 (Monitor on round.json), then resubmit b73 unchanged and send github-cb the landed sha for blobs e3e818ba and 93393344.",
+      "evidence": "2026-11-16T04:46:28Z: 2026-11-16 STARTED: bazel test //corpus:mutants in a clean scratch worktree at HEAD cf416ea5 (branch scratch/W2444), background; corpus declares a plain sh_test (not mutants_sharded). When it ends read the first failing control from its test.log (the unmutated suite fails in the copy), name the unstaged tool or data file, stage it NAMED (not globbed), rerun, and regenerate corpus/mutants-baseline.txt only from the bazel logs. | 2026-11-16T04:52:40Z: 2026-11-16 CAUSE FOUND AND FIXED (scratch/W2444 at HEAD cf416ea5, gate environment): corpus declares a plain sh_test //corpus:mutants whose data staged only corpus's own sources, so test_exit_gate (which reads the SIBLING dists' sources fence, pathsforward, hooks, katas, waldo plus corpus/exit-table.json and exit-baseline.txt, as its own py_test target stages them) failed its control test_the_runfiles_hold_enough_constants_to_make_a_pass_mean_something on the UNMUTATED module, so every cell read ERRORED (67 baselined). FIX in corpus/BUILD.bazel: the mutants data names exit-table.json, exit-baseline.txt, //hooks, //katas, //pathsforward, //waldo (fence was already staged), the same inputs :test_exit_gate declares; they are the test's own _DISTS and files, so the build fails without each. MEASURED: run 1 after the fix (1eebd333-d9fe-4697-878a-2fe185546bf6): 73 def-sites, 70 KILLED, 0 ERRORED, 3 SURVIVED (codoncensus.py _by_count, render, run_process), 44 declared defects, baseline mismatch as expected (4 rises, 67 stale); baseline REGENERATED by mutate_runner.py --write-baseline from that bazel test.log: 4 cells, all SURVIVED (those three plus the declared defect codoncensus.py::tests-are-sampled); run 2 with the new baseline (a6f3e868-ddc4-4abe-b61b-ec7e608f9151): PASS, 37.6 s. The debt falls from 67 errored to 4 survived. Paydown of the four: new card. NOT DONE: a drop-one run per named input (the sibling libraries are the test's own dists, so I treat them as one set), the stack and its review. | 2026-11-16T04:59:52Z: 2026-11-16 DROP-ONE DONE (github-cb: name each input, drop-one measurement): only exit-table.json and //hooks are needed (without either the control or the target FAILS: 15d6c263, 7345202c); exit-baseline.txt, //katas, //pathsforward and //waldo each dropped alone PASS (f04b536c, 54a529b5, 62def2ea, 7d1be30d), so they are NOT staged. Final BUILD blob e3e818ba, baseline blob 93393344 (4 survived). Landed into the main tree by mikemol-scratch land, stack b73 written (the stacks directory), section and manifest sent to github-cb; NOT submitted until their word. | 2026-11-16T05:03:37Z: 2026-11-16 b73 SUBMIT REFUSED at the round check (github-cb had passed it): the published round (as_of 2026-11-16T04:46:02Z) reads W2406, W2442, W2337 and not W2444, because it was exported before W2444 was tagged gate-repair; the live nemik-rank --round reads W2444 rank 1. Left READY (a working mark would take it out of a round of ready cards, the same lesson as W2442). Nothing committed; no card state edited to pass; a republish of the export is asked of luthen-observability. | 2026-11-16T05:07:07Z: 2026-11-16 b73 RESUBMITTED after the published round (as_of 2026-11-16T05:05:09Z) named W2444; the live stack names this card, so the working mark is a real one. Waiting its turn behind b72 in the commit gate.",
       "issued_at": "2026-11-14T03:58:31Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": "2026-11-16T04:46:28Z",
+      "last_worked": "2026-11-16T05:07:07Z",
       "ticks_blocked": 0,
       "weight": 19,
       "completed": null
@@ -54825,28 +54826,31 @@
     {
       "symbol": "W2445",
       "title": "Pay down pytestspec/mutants-baseline.txt (60 errored cells): find why its suite fails in the mutation tree",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2340"
       ],
       "touches": [
-        "file:pytestspec/mutants-baseline.txt"
+        "file:pytestspec/mutants-baseline.txt",
+        "check_mutants",
+        "gate-repair"
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Cause UNREAD. All 8 shards error their declared defects, so the unmutated suite fails in the copy (likely TYPE A). Read one shard log's first failing test, stage what it needs, regenerate.",
-      "evidence": "",
+      "next_bounded_step": "Read the audit result per dist from test.logs; re-run pytestspec with the final parse; then pathsforward, corpus, icsstruct after; table by dist before/after by kind; section with blobs to github-cb.",
+      "evidence": "2026-11-16T05:08:29Z: 2026-11-16 STARTED: bazel test //pytestspec:mutants --keep_going in a clean scratch worktree at HEAD cf416ea5 (branch scratch/W2445), background, to read the first failing control from the gate's own logs; same class as W2442 and W2444 (a mutants target that stages less than its py_tests), so the plan is: read the control, name each missing input (never glob), drop-one measure each, regenerate the baseline from the bazel logs, tag gate-repair, send github-cb the section before any submit (class card W2568). | 2026-11-16T05:23:23Z: 2026-11-16 W2445's cause is NOT staging (a different shape from W2442 and W2444): the runner's control (mutate_runner._baseline_fails) took the FIRST 'FAILED ...' line of the output as the killing test's id; pytestspec's plugin tests run an INNER pytest session whose captured output prints its own 'FAILED spec.rego::else' lines BEFORE the outer short summary, so the control re-ran the id spec.rego::else, which does not exist in the outer tree ('collected 0 items'), and every cell read ERRORED: 60 cells that measured nothing. FIX (scratch/W2445): take the LAST FAILED line (the run stops at the first failure so the outer summary has one, at the end); test test_the_control_runs_the_outer_sessions_failure_not_an_inner_sessions (inner line first, outer last: the control must run the outer id); check_mutants 83 tests pass; 1 warrant. MEASURED in the gate's own environment: with the fix and the OLD baseline all 8 shards fail on stale cells (18542019-1f6e-4d39-904c-c08252c3e692), the 8 test.logs REGENERATE the baseline to ZERO cells (mutate_runner.py --write-baseline), and with the empty baseline 8 of 8 shards PASS (eded6860-8d69-470f-9c20-2a018bbfe05d): the whole 60-cell debt was the parsing defect, not untested code. Tagged gate-repair (a mutation grid that measured nothing is a broken gate). The patch is saved in the session scratchpad (w2445-runner-fix.patch). | 2026-11-16T05:27:29Z: 2026-11-16 ENTRY 2 ON b71's FROZEN FILES (github-cb: b71 blobs are frozen and passed, manifest in the stacks directory; build W2445 as entry 2, the train submits once): scratch/W2445 now holds b71's check_mutants files (copied from the frozen tree) PLUS the runner fix tightened as ruled: the control reads the output after the LAST 'short test summary info' header, then takes the last FAILED line in it (no header: the whole output, last line), the -x precondition named in the comment; two tests (inner summary then outer summary; no header at all), 92 check_mutants tests pass (b71's 90 plus 2), 2 more warrants, pairing 92 functions 0 findings. The earlier pytestspec measurement (8/8 PASS with the empty baseline, eded6860) was with the first parse; to be repeated with this one. AUDIT of the other dists is RE-STARTED: my copy of the runner into the worktree changed it MID-RUN and bazel refused ('input dependency mutate_runner.py was modified during execution'), so the first audit run is void; the clean run (audiostruct, katas, mdstruct, pkgbuild) is in flight.",
       "issued_at": "2026-11-14T03:58:32Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": null,
+      "last_worked": "2026-11-16T05:27:29Z",
       "ticks_blocked": 0,
-      "weight": 19
+      "weight": 19,
+      "completed": null
     },
     {
       "symbol": "W2446",
       "title": "Pay down pathsforward/mutants-baseline.txt (49 errored cells in 25 of 36 shards)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2340"
       ],
@@ -54860,14 +54864,15 @@
       "issued_at": "2026-11-14T03:58:42Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": "2026-11-15T08:29:40Z",
+      "last_worked": "2026-11-16T05:25:33Z",
       "ticks_blocked": 0,
-      "weight": 19
+      "weight": 19,
+      "completed": null
     },
     {
       "symbol": "W2447",
       "title": "Pay down audiostruct/mutants-baseline.txt (8 errored cells in 8 of 24 shards)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2340"
       ],
@@ -54877,18 +54882,19 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Cause UNREAD. Read one failing shard log's first failing test, stage what it needs, regenerate.",
-      "evidence": "",
+      "evidence": "2026-11-16T05:52:55Z: 2026-11-16 W2447's cause is being read by the W2445 audit run (audiostruct is one of its four dists, bazel test //audiostruct:mutants in scratch/W2445 with the corrected control parse): if the 8 errored cells are the same parse defect the baseline falls to zero; if not, the first failing control in its test.logs names the cause. Result recorded when the run ends.",
       "issued_at": "2026-11-14T03:58:43Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": null,
+      "last_worked": "2026-11-16T05:52:55Z",
       "ticks_blocked": 0,
-      "weight": 19
+      "weight": 19,
+      "completed": null
     },
     {
       "symbol": "W2448",
       "title": "Pay down pycodemod/mutants-baseline.txt (12 survivors: cli handlers, cli_observe, cli_typedargs)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2340"
       ],
@@ -54898,18 +54904,19 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "TYPE B real test gaps, measured at HEAD. Each survivor needs a test that fails when the def-site body is mutated, the earlier working-tree reading named _handle_by_path_runs, _handle_orempty, _handle_docshape, _handle_annotate, run_pytest, run_tool.",
-      "evidence": "",
+      "evidence": "2026-11-16T05:53:59Z: 2026-11-16 measured at clean HEAD (W2441): the pycodemod baseline matches the grid exactly (24 of 24 shards pass, 5e9019e1-73bf-4320-b90f-7097a5865b97), so the 12 survivors are exactly the cells the baseline lists; first test to write: run_tool and run_pytest (the two non-handler def-sites), then the five _handle_* handlers, each run alone through MUTATE_SITE before the shards.",
       "issued_at": "2026-11-14T03:58:44Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": null,
+      "last_worked": "2026-11-16T05:53:59Z",
       "ticks_blocked": 0,
-      "weight": 19
+      "weight": 19,
+      "completed": null
     },
     {
       "symbol": "W2449",
       "title": "Pay down importdag and procrun mutants-baseline.txt (3 survivors each)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2340"
       ],
@@ -54919,19 +54926,20 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "TYPE B. importdag: cost.py a-test-is-its-own-neighbour, costcli.run_query and its inner ask. procrun: read its baseline for the three cells. Each needs a test that fails under the mutation.",
-      "evidence": "",
+      "next_bounded_step": "On the bazel result: regenerate the importdag baseline from the test.logs; then costcli run_query and ask (a fake transport test), then procrun's last survivor; stack importdag alone with a section to github-cb.",
+      "evidence": "2026-11-16T06:07:43Z: 2026-11-16 FIRST SURVIVOR KILLED (scratch/W2449, uncommitted): importdag cost.py a-test-is-its-own-neighbour: the old test of 'a test whose only match is itself' used test_other (two words), which has no cut at all (cuts never go below two words) so it never reached the exclusion; the new test_a_measured_test_is_not_counted_among_its_own_neighbours uses test_ratchet_pace (three words, in the table) and asserts the mean and count WITHOUT itself, ((4.0+100.0)/2, 2). Run alone with MUTATE_SITE the declared defect is KILLED (importdag baseline then reads 1 stale: the cell leaves the baseline). bazel test //importdag:mutants is running in the scratch worktree to regenerate importdag/mutants-baseline.txt from its logs (W2540). REMAINING in W2449: importdag costcli.py run_query and run_query.<locals>.ask (def-sites that survived), procrun proc.py first-line-bound-in-seconds-not-ms (b70 carries procrun's baseline 3 to 1). | 2026-11-16T06:14:32Z: 2026-11-16 importdag BASELINE REGENERATED from bazel's own test.logs of //importdag:mutants in the scratch worktree (3 shards, gate environment): 3 cells to 2 (costcli.py run_query and run_query.<locals>.ask remain SURVIVED), the killed cell a-test-is-its-own-neighbour leaves; warrant for the new test generated (importdag pairing 233 functions, 0 findings). NOT DONE: a second bazel run to confirm 0 rises and 0 stale with the new baseline, the two costcli survivors, procrun's last survivor; the stack waits on the round and a section to github-cb.",
       "issued_at": "2026-11-14T03:58:45Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": null,
+      "last_worked": "2026-11-16T06:14:32Z",
       "ticks_blocked": 0,
-      "weight": 19
+      "weight": 19,
+      "completed": null
     },
     {
       "symbol": "W2450",
       "title": "Pay down katas, mdstruct and pkgbuild mutants-baseline.txt (one errored cell each)",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2340"
       ],
@@ -54943,30 +54951,33 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "One errored cell per dist: read each baseline's cell and its shard log, likely one test that fails the control in the copy.",
-      "evidence": "",
+      "evidence": "2026-11-16T06:08:26Z: 2026-11-16 FIRST READING from the W2445 audit run (scratch/W2445, runner with the corrected control parse, gate environment, bazel test //pkgbuild:mutants_7): the baselined cell pkgbuild environments.py::failed-put-is-success reads STALE errored (the cell is no longer errored under the corrected control), 0 rises: so pkgbuild's one errored cell was the parse defect, not a staging gap, and its baseline falls to zero with W2445's runner fix. katas and mdstruct (one errored cell each) are still running in the same invocation; their result is recorded here when the run ends, then the three baselines are regenerated from the bazel test.logs only, in the same train as W2445.",
       "issued_at": "2026-11-14T03:58:46Z",
       "minted_during": "interrupt",
       "caused_by": "W2340",
-      "last_worked": null,
+      "last_worked": "2026-11-16T06:08:26Z",
       "ticks_blocked": 0,
-      "weight": 19
+      "weight": 19,
+      "completed": null
     },
     {
       "symbol": "W2451",
       "title": "The exit-8 watchdog hook text names venv restart paths while the standing rule is the pinned live mikemol-watchdog with --min-fire-s 2700 --max-fire-s 2700: fix the rendered text",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "Find where the exit-8 wake text is rendered in hooks/src/mikemol/hooks (grep 'WAKE, not a failure'); make it print the pinned live mikemol-watchdog command with both fire flags; test it. Hooks lane: stage after W2378 lands.",
-      "evidence": "2026-11-14T13:01:29Z: 2026-11-14: SAME CLASS as W2382 (beat.restart_command and watchdogcmd.command build the watchdog start line from a ~/github/mtools venv path). W2382's pathsforward half is built; its hooks half would have beat.py ask the writer's --watchdog-line for the command. Check whether this wake text is rendered by that same path before building W2451 separately.",
+      "blocked_on": [
+        "W2531"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After the lane opens: declared mutants (the window flags dropped; min and max swapped for one flag), a local run of restart_line and restart_command alone, regenerate hooks graph, dag and sites with the landed generator, stack; ask github-cb whether the spelling should be the console script (mikemol-watchdog from the pinned venv) instead of python -m.",
+      "evidence": "2026-11-14T13:01:29Z: 2026-11-14: SAME CLASS as W2382 (beat.restart_command and watchdogcmd.command build the watchdog start line from a ~/github/mtools venv path). W2382's pathsforward half is built; its hooks half would have beat.py ask the writer's --watchdog-line for the command. Check whether this wake text is rendered by that same path before building W2451 separately. | 2026-11-16T06:11:34Z: 2026-11-16 READ (no edit): TWO places spell the restart command, and BOTH omit the fire flags the standing rule names: watchdog.py line 597 (restart = '{sys.executable} -m mikemol.hooks.watchdog --state S --writer W', which feeds exit_meaning for exits 7 and 8, the text the Stop hook relays) and beat.py restart_command (line 141, '{hooks venv python} -m mikemol.hooks.watchdog --state S --writer W', which feeds the beat notice and the writer's --watchdog-line). The console script mikemol-watchdog exists (hooks/pyproject.toml line 160). So the card's 'same class as W2382' is confirmed: one spelling shared by both is the fix, with the two flags (--min-fire-s 2700 --max-fire-s 2700) declared once. OPEN: whether the rendered command should name the console script (a venv-relative path) or keep 'python -m' under the pinned interpreter; the standing rule says 'pinned live mikemol-watchdog', which reads as the console script of the repo's own pinned venv. | 2026-11-16T06:14:31Z: 2026-11-16 BUILT (scratch/W2451, uncommitted): hooks watchdog.py gains FIRE_S = 2700 and restart_line(python, state, writer), used by watchdog.main (the text for exits 7 and 8, relayed by the Stop hook) and beat.restart_command (the beat notice and the writer's --watchdog-line): every restart text now ends in '--min-fire-s 2700 --max-fire-s 2700' (before: neither flag, so a session that followed the text ran the defaults). tests/test_watchdog_restart_line.py (4: the exact spelling, beat's command carries the window, the exit-8 text embeds it verbatim, the exit-7 text too); the 92 existing watchdog and beat tests pass; 4 warrants and a rubric row; pairing hooks 2569 functions 0 findings; the edit gate admitted every file. NOT DONE: declared mutants, graph.json, dag.bzl and sites, the stack. | 2026-11-16T06:16:43Z: 2026-11-16 DECLARED MUTANTS DONE (scratch/W2451): restart-line-drops-the-window and the-window-is-a-minimum-only added to hooks/mutants.regex; MUTATE_LINT=1 silent; both declared defects and the new def-site restart_line, run alone against test_watchdog_restart_line.py, are KILLED locally (each 0.6 CPU-s, not the gate's environment); hooks baseline 40 recorded, 0 rises, 0 stale. BLOCKED on W2531 (true, as for the other built hooks changes): what remains is regenerating hooks graph.json, dag.bzl and the generated sites with the landed generator and stacking, which need b71 to land and the hooks lane to open (W2548).",
       "issued_at": "2026-11-14T06:02:55Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W2644",
-      "last_worked": "2026-11-14T13:01:29Z",
+      "last_worked": "2026-11-16T06:16:43Z",
       "ticks_blocked": 0,
       "completed": null,
       "weight": 20
@@ -57224,6 +57235,104 @@
       "minted_during": "interrupt",
       "caused_by": "W2442",
       "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2567",
+      "title": "Kill the four surviving corpus mutants in codoncensus.py (_by_count, render, run_process, tests-are-sampled)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "file:corpus/mutants-baseline.txt",
+        "corpus"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-16T04:52:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2444",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2568",
+      "title": "mutants_sharded and the plain mutants sh_test inherit the data of the dist's py_test targets by construction, so a mutation grid cannot stage less than its tests (instances: pathsforward b69, icsstruct W2442, corpus W2444)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "check_mutants",
+        "gate-repair"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Design: the macro takes the py_test targets' data (the labels each test declares) as an input and derives the mutants target's data from them, named; hooks' mutant_site work (W2531, _SUITE_DATA read by mutants_gen into suite_data.bzl) is the one existing instance. Decide with github-cb whether the macro reads a dist's list of test targets or a new attribute. Failing test first: a dist whose test target stages a file its mutants target lacks is a refusal at analysis.",
+      "evidence": "2026-11-16T04:56:19Z: 2026-11-16 github-cb: three dists, one defect (a mutants target that stages less than its py_tests stage): pathsforward b69 (tests/golden/queue.ics, @opa//file, frontier walk.py named), icsstruct W2442 (stubs/allowlist.txt and the two .pyi files named), corpus W2444 (exit-table.json, exit-baseline.txt and the four sibling dist libraries). The class fix is the macro inheriting its py_tests' data by construction; W2531's mutant_site and the generated suite_data.bzl already do it for hooks. | 2026-11-16T05:24:48Z: 2026-11-16 SECOND CAUSE (github-cb: 'errored' has two sources): staging (instances W2442 icsstruct, W2444 corpus, pathsforward b69) and PARSING (W2445 pytestspec: the control took the first FAILED line, which an inner pytest session had printed, and re-ran an id that did not exist, so all 60 cells read ERRORED and the baseline falls to ZERO with the parse corrected, 8 of 8 shards, eded6860-8d69-470f-9c20-2a018bbfe05d). The class fix therefore has two halves: inherited data, and structured test ids.",
+      "issued_at": "2026-11-16T04:56:11Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2444",
+      "last_worked": "2026-11-16T05:24:48Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2569",
+      "title": "corpus's exit-gate control counts a declared fixture or a named subset of hooks files, not the whole //hooks dist, so a hooks edit does not invalidate corpus's mutation grid (W2444's sibling, W2531's coupling)",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "corpus",
+        "check_mutants"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-16T05:01:17Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2444",
+      "last_worked": null,
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2570",
+      "title": "mikemol-ratchet-hook's inserted gate block prints a 'no mikemol-ratchet' message (aeternum:W172): read the full complaint and fix the block",
+      "status": "ready",
+      "enables": [
+        "aeternum:W172"
+      ],
+      "touches": [
+        "ratchet",
+        "hooks"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Failing test first in hooks tests/test_ratchet_emit.py: with no reader found the message names the missing dependency and the two ways to supply it (declare mikemol-ratchet in the repo's pyproject, or set RATCHET_BIN), exit stays 0 (best-effort doctrine of the module); then a mikemol-ratchet-hook --write check that warns at insertion time when RATCHET_BIN's default path does not exist. Ask github-cb whether a refusal is wanted instead (aeternum asks for non-zero or a hint).",
+      "evidence": "2026-11-16T05:53:58Z: 2026-11-16 aeternum-2b's facts (aeternum:W172): the line 'ratchet emit: no mikemol-ratchet found; nothing sent' printed once, in the gate output of aeternum f698ed5, the commit where mikemol-ratchet-hook --write inserted the block into .githooks/pre-commit; the block sets RATCHET_BIN to the repo's .venv/bin/mikemol-ratchet, which did not exist (aeternum's pyproject declared only buildtel, hooks and pathsforward); mikemol-ratchet-emit itself was present (it ships in hooks); the next commit (29dbfed) pinned mikemol-ratchet and mikemol-atomicwrite at 636e39b and the gate printed 'ratchet emit: 4 ratchet(s), sent=4'. aeternum expected a refusal, or at least a non-zero exit with an install hint: a pin gap that silently passes surfaced only by reading the log. MY READING: the module's doctrine is best effort (a protective emitter must not fail a commit: 'no binary or store, or a failed spawn, changes nothing and the exit is still 0'), so exit 0 stays unless github-cb rules otherwise; the message should name WHAT to install and how, which costs nothing and is what aeternum would have acted on. Not done: any code.",
+      "issued_at": "2026-11-16T05:52:09Z",
+      "minted_during": "interrupt",
+      "caused_by": "aeternum:W172",
+      "last_worked": "2026-11-16T05:53:58Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2571",
+      "title": "gate_stages (mikemol_rules_py) emits its stage-to-script mapping as a generated data file a test can declare as an input (gcalculus:W296)",
+      "status": "ready",
+      "enables": [
+        "gcalculus:W296"
+      ],
+      "touches": [
+        "rules_py"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Failing test first in rules_py (a bazel analysis test or a golden over a toy stages dict): gate_stages also declares a generated data target named <suite>_stages (a genrule or write_file) holding one 'stage<TAB>script' line per stage in stage order, exported to the package that declares the suite, so a test target can list it in data and read it; a stage whose script is a label gives its path relative to the workspace. Build it in a scratch worktree; the supported alternative for now is bazel query over the generated py_tests (bazel query 'attr(srcs, scripts/farm_, //:all)' declared by a genquery), which needs no change.",
+      "evidence": "2026-11-16T06:06:14Z: 2026-11-16 gcalculus:W296 ASK: gcalculus' F-arm roster (scripts/farm_roster.py, landed fba41b0) must know which scripts the gate's stages run and today text-parses BUILD.bazel's non-comment lines for scripts/farm_*.py strings; the fleet rule is to ask the tool. gate_stages (rules_py/gate.bzl line 90) takes {name: (script, args[, extra_data[, options]])} and declares one py_test per stage plus a suite; it emits no mapping as data. READ: the mapping is in the macro's own argument, so the macro is the natural emitter. NOT DONE: any change.",
+      "issued_at": "2026-11-16T06:05:59Z",
+      "minted_during": "interrupt",
+      "caused_by": "gcalculus:W296",
+      "last_worked": "2026-11-16T06:06:14Z",
       "ticks_blocked": 0
     }
   ],
