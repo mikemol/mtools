@@ -130,6 +130,15 @@ mutants_sharded(
         "//fence:fence",
         "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
+        # ⚑ NAMED, NOT GLOBBED (W2442; an input belongs iff the build fails without it): the control
+        # runs `test_stub_authority`, which reads `stubs/allowlist.txt` and checks the two stub
+        # packages against their libraries, and the mutation tree is a copy of what the target
+        # stages, so without these three the control failed on the UNMUTATED module and six of
+        # eight shards read ERRORED. MEASURED: the allowlist alone is not enough, the stubtest
+        # then reports mypy build errors in the libraries because the stubs are absent.
+        "stubs/allowlist.txt",
+        "stubs/icalendar/__init__.pyi",
+        "stubs/recurring_ical_events/__init__.pyi",
     ] + glob(["src/**/*.py", "tests/**/*.py", "tests/fixtures/*.ics"]),
     size = "medium",
 )
