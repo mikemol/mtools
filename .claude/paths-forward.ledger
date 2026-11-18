@@ -8004,3 +8004,5 @@
 2026-11-18T15:27:45Z  status W2724 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-18T15:27:46Z  interrupt W2726 minted    -         "Census every mutation baseline cell and declared mutant whose outcome depends on a duration or a bound, and make each deterministic by an event (the class of W2725)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2725
 2026-11-18T15:32:33Z  status W2726 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-18T16:01:55Z  status W2724 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-18T16:01:55Z  status W2725 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

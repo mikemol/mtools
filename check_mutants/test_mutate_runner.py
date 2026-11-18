@@ -14,6 +14,7 @@ assertion on a runner that copies `os.environ` whole, with its decoy repository 
 from __future__ import annotations
 
 import ast
+import concurrent.futures
 import os
 import pathlib
 import subprocess
@@ -204,7 +205,12 @@ def test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names(
     mutate_runner.run(grid, mutate_runner.Mutant(pathlib.Path("mod.py"), _SITE_SOURCE, _SITE))
     refs = _git("-C", str(decoy), "for-each-ref", env=clean).stdout
     assert not refs, f"the suite committed into the decoy: {refs.strip()}"
-    assert [k for k in seen[0] if k.startswith("GIT_")] == [], "a GIT_* variable reached the suite"
+    # ⚑ THE CALLER'S GIT_* NEVER REACHES THE SUITE; THE RUNNER'S OWN CONFIG INJECTION DOES (W2724):
+    # GIT_DIR and its kin point git at the real repository, GIT_CONFIG_* is what `quiet_git` sets.
+    own = {k for k in seen[0] if k.startswith("GIT_")}
+    assert own == {k for k in mutate_runner.quiet_git({}) if k.startswith("GIT_")}, (
+        "a caller's GIT_* variable reached the suite"
+    )
 
 
 # ⚑ THE SUITE WAITS FOR `f` TO SUCCEED: unmutated it passes at once, mutated it retries far past
@@ -352,6 +358,130 @@ def test_a_silent_idle_suite_is_ended_after_the_patience_not_a_deadline(
         _launch(_SILENT, monkeypatch, tmp_path)
 
 
+_SLOW_SILENT = "import time\ntime.sleep(1.2)\nprint('done')\n"
+
+
+def _frozen_cpu(_pid: int) -> float:
+    return 1.0
+
+
+def _yes(_root: int) -> bool:
+    return True
+
+
+def _no(_root: int) -> bool:
+    return False
+
+
+def test_a_suite_waiting_on_the_host_that_got_no_cpu_is_never_ended_as_hung(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2642, forced: the CPU reads frozen and nothing is printed, but a process is runnable.
+
+    The poll is 0.1 s and the patience 4, so the old rule (bytes and CPU unchanged for 4 polls)
+    ended this suite at about 0.4 s while it was due to finish at 1.2 s: a live suite the
+    scheduler had not yet run, killed as hung. A runnable process is never a stall, so it finishes.
+    """
+    monkeypatch.setattr(mutate_runner, "_cpu", _frozen_cpu)
+    monkeypatch.setattr(mutate_runner, "waiting_on_host", _yes)
+    assert _launch(_SLOW_SILENT, monkeypatch, tmp_path) == "done"
+
+
+def test_a_frozen_cpu_with_nothing_runnable_is_still_ended_as_hung(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The positive control for the test above: a frozen CPU and nothing runnable is a stall."""
+    monkeypatch.setattr(mutate_runner, "_cpu", _frozen_cpu)
+    monkeypatch.setattr(mutate_runner, "waiting_on_host", _no)
+    with pytest.raises(subprocess.TimeoutExpired):
+        _launch(_SLOW_SILENT, monkeypatch, tmp_path)
+
+
+def _fake_proc(root: pathlib.Path, rows: tuple[tuple[int, int, int, str], ...]) -> pathlib.Path:
+    """Write a `/proc` of `(pid, parent, group, state)` rows, one `stat` file each.
+
+    Returns:
+        the directory, which `waiting_on_host` reads in place of `/proc`.
+
+    """
+    root.mkdir(exist_ok=True)
+    for pid, ppid, group, state in rows:
+        entry = root / str(pid)
+        entry.mkdir()
+        text = f"{pid} (a (b)) {state} {ppid} {group} " + "0 " * 20
+        (entry / "stat").write_text(text, encoding="utf-8")
+    return root
+
+
+def test_waiting_on_host_finds_a_running_descendant_anywhere(tmp_path: pathlib.Path) -> None:
+    """The leader sleeps, its grandchild runs: the tree is waiting on the host."""
+    proc = _fake_proc(tmp_path, ((10, 1, 10, "S"), (11, 10, 10, "S"), (12, 11, 12, "R")))
+    assert mutate_runner.waiting_on_host(10, proc)
+
+
+def test_waiting_on_host_finds_a_descendant_blocked_on_disk_io(tmp_path: pathlib.Path) -> None:
+    """A grandchild in uninterruptible sleep (`D`) is waiting on the host too (github-cb)."""
+    proc = _fake_proc(tmp_path, ((10, 1, 10, "S"), (11, 10, 10, "S"), (12, 11, 12, "D")))
+    assert mutate_runner.waiting_on_host(10, proc)
+
+
+def test_waiting_on_host_is_false_when_the_whole_tree_sleeps_on_its_own(
+    tmp_path: pathlib.Path,
+) -> None:
+    """A tree that is all `S` is the absence the hang watch exists to count, runners outside it."""
+    proc = _fake_proc(tmp_path, ((10, 1, 10, "S"), (11, 10, 10, "S"), (99, 1, 99, "R")))
+    assert not mutate_runner.waiting_on_host(10, proc)
+
+
+def test_a_suite_blocked_on_disk_io_is_never_ended_as_hung(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2642 review, forced: CPU frozen, nothing printed, a descendant in `D` throughout.
+
+    The I/O scheduler, not the CPU scheduler, holds this suite; the old rule and an R-only rule
+    both ended it at about 0.4 s of a 1.2 s run. Waiting on the host is not a stall.
+    """
+    proc = _fake_proc(tmp_path / "proc", ((10, 1, 10, "S"), (11, 10, 10, "D")))
+    real = mutate_runner.waiting_on_host
+
+    def blocked(_root: int) -> bool:
+        return real(10, proc)
+
+    monkeypatch.setattr(mutate_runner, "_cpu", _frozen_cpu)
+    monkeypatch.setattr(mutate_runner, "waiting_on_host", blocked)
+    assert _launch(_SLOW_SILENT, monkeypatch, tmp_path) == "done"
+
+
+def test_a_frozen_suite_asleep_on_its_own_is_ended_as_hung(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The positive control for the `D` case: the same tree with every process in `S` is a stall."""
+    proc = _fake_proc(tmp_path / "proc", ((10, 1, 10, "S"), (11, 10, 10, "S")))
+    real = mutate_runner.waiting_on_host
+
+    def asleep(_root: int) -> bool:
+        return real(10, proc)
+
+    monkeypatch.setattr(mutate_runner, "_cpu", _frozen_cpu)
+    monkeypatch.setattr(mutate_runner, "waiting_on_host", asleep)
+    with pytest.raises(subprocess.TimeoutExpired):
+        _launch(_SLOW_SILENT, monkeypatch, tmp_path)
+
+
+def test_waiting_on_host_reads_the_group_once_the_leader_has_gone(tmp_path: pathlib.Path) -> None:
+    """A leaked child in the suite's group still counts after the leader exits."""
+    proc = _fake_proc(tmp_path, ((20, 1, 10, "R"),))
+    assert mutate_runner.waiting_on_host(10, proc)
+
+
+def test_waiting_on_host_ignores_a_process_it_cannot_read(tmp_path: pathlib.Path) -> None:
+    """An entry that vanished or has no parseable `stat` is no process, never a runnable one."""
+    proc = _fake_proc(tmp_path, ((10, 1, 10, "S"),))
+    (tmp_path / "11").mkdir()
+    (tmp_path / "11" / "stat").write_text("garbage", encoding="utf-8")
+    assert not mutate_runner.waiting_on_host(10, proc)
+
+
 def test_the_tree_cpu_of_a_live_process_is_a_number_and_of_a_gone_one_is_none() -> None:
     """A gone root is None, never 0.0: a finished suite and an idle one are different answers."""
     mine = mutate_runner.tree_cpu(os.getpid())
@@ -409,6 +539,330 @@ def test_a_child_in_its_own_session_holding_the_pipe_ends_as_hung_without_a_cras
     """The group is empty when the kill comes, so it raised ProcessLookupError out of the pool."""
     with pytest.raises(subprocess.TimeoutExpired):
         _launch(_LEAKS_DETACHED, monkeypatch, tmp_path)
+
+
+def _fake_environs(root: pathlib.Path, entries: dict[int, bytes | None]) -> pathlib.Path:
+    """Write a `/proc` of `pid -> environ bytes` (None writes no file), one directory each.
+
+    Returns:
+        the directory, which `holders` reads in place of `/proc`.
+
+    """
+    root.mkdir(exist_ok=True)
+    for pid, environ in entries.items():
+        entry = root / str(pid)
+        entry.mkdir()
+        if environ is not None:
+            (entry / "environ").write_bytes(environ)
+    return root
+
+
+def test_holders_names_the_processes_whose_environment_carries_the_tree(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2694: HOME, a PYTHONPATH entry and a bare final entry all name the tree; lookalikes do not.
+
+    Not holders: a sibling whose name merely begins the same, another tree, a process with no
+    readable environment, and this process itself.
+    """
+    tree = tmp_path / "tmpab12cd34"
+    named = os.fsencode(tree)
+    # ⚑ THE FAKE PIDS ARE RELATIVE TO THIS PROCESS'S OWN: under bazel's sandbox the test runs in a
+    # pid namespace where its own pid is small, and a fixed `12` collided with it (the first bazel
+    # run of this test named two holders, not three, because `holders` rightly skipped itself).
+    me = os.getpid()
+    proc = _fake_environs(
+        tmp_path / "proc",
+        {
+            me + 1: b"PATH=/usr/bin\x00HOME=" + named + b"\x00LANG=C",
+            me + 2: b"PYTHONPATH=" + named + b"/katas/src:/elsewhere\x00",
+            me + 3: b"HOME=" + named + b"5\x00",
+            me + 4: None,
+            me + 5: b"HOME=/somewhere/else\x00",
+            me + 6: b"HOME=" + named,
+            me: b"HOME=" + named + b"\x00",
+        },
+    )
+    assert mutate_runner.holders(tree, proc) == [me + 1, me + 2, me + 6]
+
+
+def test_discard_removes_the_tree_with_one_rmtree(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2694: there is no concurrent writer, so the removal is one call and no retry."""
+    tree = tmp_path / "tree"
+    (tree / "src").mkdir(parents=True)
+    calls: list[pathlib.Path] = []
+
+    def counted(path: pathlib.Path) -> None:
+        calls.append(path)
+
+    monkeypatch.setattr("shutil.rmtree", counted)
+    mutate_runner.discard(tree)
+    assert calls == [tree]
+
+
+def test_discard_raises_a_named_error_when_the_tree_cannot_be_removed(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2694: a failed removal is a fact, not a race: one try, then an error naming the tree."""
+    tree = tmp_path / "stuck"
+    tree.mkdir()
+    calls: list[int] = []
+
+    def refuses(_path: pathlib.Path) -> None:
+        calls.append(1)
+        message = "Directory not empty"
+        raise OSError(39, message)
+
+    monkeypatch.setattr("shutil.rmtree", refuses)
+    proc = _fake_environs(tmp_path / "proc", {})
+    with pytest.raises(mutate_runner.ScratchTreeHeldError) as held:
+        mutate_runner.discard(tree, proc)
+    assert calls == [1]
+    assert held.value.root == tree
+    assert held.value.remaining == []
+    assert str(tree) in str(held.value)
+
+
+def test_the_held_error_names_the_processes_that_still_hold_the_tree(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2694: the error carries the pids still naming the tree, read when the removal failed."""
+    tree = tmp_path / "stuck"
+    tree.mkdir()
+    me = os.getpid()
+    proc = _fake_environs(tmp_path / "proc", {me + 1: b"HOME=" + os.fsencode(tree) + b"\x00"})
+
+    def refuses(_path: pathlib.Path) -> None:
+        message = "Directory not empty"
+        raise OSError(39, message)
+
+    monkeypatch.setattr("shutil.rmtree", refuses)
+    with pytest.raises(mutate_runner.ScratchTreeHeldError) as held:
+        mutate_runner.discard(tree, proc)
+    assert held.value.remaining == [me + 1]
+
+
+def test_a_sibling_tree_with_the_same_name_prefix_is_not_a_holder(tmp_path: pathlib.Path) -> None:
+    """W2694: a path that merely begins the same is another cell's tree and is never killed."""
+    tree = tmp_path / "tmpab12"
+    named = os.fsencode(tree)
+    me = os.getpid()
+    proc = _fake_environs(
+        tmp_path / "proc",
+        {
+            me + 1: b"HOME=" + named + b"-sibling\x00",
+            me + 2: b"HOME=" + named + b"2/src\x00",
+            me + 3: b"PYTHONPATH=/x:" + named + b"3:/y\x00",
+        },
+    )
+    assert mutate_runner.holders(tree, proc) == []
+
+
+_KILLED_BY_SIGKILL = -9  # a child's exit status when SIGKILL ended it
+
+_STUBBORN = """\
+import pathlib
+import signal
+import sys
+import threading
+
+for name in ("SIGTERM", "SIGINT", "SIGHUP"):
+    signal.signal(getattr(signal, name), signal.SIG_IGN)
+pathlib.Path(sys.argv[1]).write_text("up", encoding="utf-8")
+threading.Event().wait()
+"""
+
+
+def _stubborn_holder(tmp_path: pathlib.Path, tree: pathlib.Path) -> subprocess.Popen[bytes]:
+    """Start a process in its own session that names `tree` in HOME and ignores soft signals.
+
+    Returns:
+        the running child, after it has said it is up.
+
+    """
+    script = tmp_path / "stubborn.py"
+    script.write_text(_STUBBORN, encoding="utf-8")
+    ready = tmp_path / "ready"
+    child = subprocess.Popen(
+        [sys.executable, str(script), str(ready)],
+        env={**os.environ, "HOME": str(tree)},
+        start_new_session=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    for _ in range(1000):
+        if ready.exists():
+            break
+        threading.Event().wait(0.01)
+    assert ready.exists()
+    return child
+
+
+def test_end_holders_returns_only_after_a_stubborn_holder_has_exited(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2694: a holder that ignores soft signals is gone, not merely signalled, when it returns.
+
+    The assertion reads no clock and polls nothing: the process table is read once, right after
+    the call, and a holder still running at that instant fails it.
+    """
+    tree = tmp_path / "cell"
+    tree.mkdir()
+    child = _stubborn_holder(tmp_path, tree)
+    mutate_runner.end_holders(tree)
+    assert not _alive(child.pid)
+    assert child.wait() == _KILLED_BY_SIGKILL
+    assert mutate_runner.holders(tree) == []
+
+
+class _ReachedWaitError(Exception):
+    """Raised by the seam to show that `end_holders` reached its wait on a live holder."""
+
+
+def test_end_holders_waits_on_the_holder_after_signalling_it(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2694: the kill is followed by a wait on the pidfd; a kill-and-move-on never reaches it."""
+    tree = tmp_path / "cell"
+    tree.mkdir()
+    child = _stubborn_holder(tmp_path, tree)
+
+    def reached(
+        _read: list[int], _write: list[int], _err: list[int]
+    ) -> tuple[list[int], list[int], list[int]]:
+        raise _ReachedWaitError
+
+    monkeypatch.setattr(mutate_runner, "wait_readable", reached)
+    with pytest.raises(_ReachedWaitError):
+        mutate_runner.end_holders(tree)
+    child.kill()
+    child.wait()
+
+
+def test_a_held_tree_is_recorded_against_its_cell_and_is_not_a_verdict(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2694: the cell is named, the verdict is `held`, and no mutant outcome is invented."""
+    future: concurrent.futures.Future[str] = concurrent.futures.Future()
+    future.set_exception(mutate_runner.ScratchTreeHeldError(tmp_path / "cell", [7]))
+    held: list[str] = []
+    assert mutate_runner.settle_verdict(future, "mod.py::f", held) == "held"
+    assert len(held) == 1
+    assert held[0].startswith("mod.py::f: ")
+    assert "[7]" in held[0]
+
+
+def test_a_settled_verdict_passes_through_untouched() -> None:
+    """W2694: a cell that finished normally keeps its own verdict and records nothing."""
+    future: concurrent.futures.Future[str] = concurrent.futures.Future()
+    future.set_result("killed")
+    held: list[str] = []
+    assert mutate_runner.settle_verdict(future, "mod.py::f", held) == "killed"
+    assert held == []
+
+
+def test_the_shard_is_refused_by_cell_when_any_tree_was_held(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2694: an infrastructure failure ends the shard loudly, naming every cell it hit."""
+    mutate_runner.refuse_held([])
+    with pytest.raises(SystemExit) as exit_info:
+        mutate_runner.refuse_held(["a.py::f: tree held", "b.py::g: tree held"])
+    assert exit_info.value.code == 1
+    said = capsys.readouterr().err
+    assert "2 cell(s)" in said
+    assert "a.py::f" in said
+    assert "b.py::g" in said
+
+
+# ⚑ THE DETACHED DESCENDANT (W2694): the suite starts a child in a session of its own that holds
+# no pipe and keeps recreating an entry in the cell's tree for 15 s, as a katas mutant that leaves
+# the waiter's tree alive does. The leader exits, `launch` returns, and the child is still running
+# while the tree is removed: b89's `//katas:mutants_4` died of ENOTEMPTY on exactly that race.
+_LEAKER = """\
+import os
+import pathlib
+import sys
+import threading
+
+pathlib.Path(sys.argv[1], str(os.getpid())).write_text("", encoding="utf-8")
+for _ in range(1500):
+    try:
+        os.makedirs("leak/deeper", exist_ok=True)
+    except OSError:
+        pass
+    threading.Event().wait(0.01)
+"""
+
+_LEAKING_SUITE = """\
+import pathlib
+import subprocess
+import sys
+import threading
+
+import mod
+
+
+def test_f_while_a_detached_child_runs() -> None:
+    pids = pathlib.Path("@PIDS@")
+    before = len(list(pids.iterdir()))
+    subprocess.Popen(
+        [sys.executable, "@LEAKER@", str(pids)],
+        start_new_session=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    for _ in range(500):
+        if len(list(pids.iterdir())) > before:
+            break
+        threading.Event().wait(0.01)
+    assert mod.f() == 1
+"""
+
+
+def _alive(pid: int) -> bool:
+    try:
+        text = pathlib.Path("/proc", str(pid), "stat").read_text(encoding="utf-8")
+    except OSError:
+        return False
+    return text[text.rindex(")") + 2] != "Z"
+
+
+def _gone(pid: int) -> bool:
+    for _ in range(100):
+        if not _alive(pid):
+            return True
+        threading.Event().wait(0.05)
+    return False
+
+
+def test_a_descendant_in_its_own_session_is_dead_when_its_cell_ends(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2694: every child the suite started, in any session, is gone when `run` returns.
+
+    The test waits up to 5 s per child for a process that was sent SIGKILL to leave the process
+    table; that bound belongs to this assertion, not to the runner, which reads no clock.
+    """
+    pids = tmp_path / "pids"
+    pids.mkdir()
+    leaker = tmp_path / "leaker.py"
+    leaker.write_text(_LEAKER, encoding="utf-8")
+    dist = tmp_path / "dist"
+    (dist / "src").mkdir(parents=True)
+    (dist / "tests").mkdir()
+    (dist / "src" / "mod.py").write_text(_SITE_SOURCE, encoding="utf-8")
+    suite = _LEAKING_SUITE.replace("@PIDS@", str(pids)).replace("@LEAKER@", str(leaker))
+    (dist / "tests" / "test_leak.py").write_text(suite, encoding="utf-8")
+    (dist / "pyproject.toml").write_text("", encoding="utf-8")
+    grid = mutate_runner.Grid(pathlib.Path(sys.executable), dist, dist / "pyproject.toml")
+    mutant = mutate_runner.Mutant(pathlib.Path("src/mod.py"), _SITE_SOURCE, _SITE)
+    assert mutate_runner.run(grid, mutant) == "killed"
+    started = sorted(int(entry.name) for entry in pids.iterdir())
+    assert started, "the suite never started its child"
+    assert [pid for pid in started if not _gone(pid)] == []
 
 
 _GRAPH = """\
@@ -1504,3 +1958,80 @@ def test_a_phase_report_prints_its_cpu_only_when_phases_are_asked_for(
     assert printed.startswith("      phase copy: ")
     assert printed.endswith("s cpu\n")
     assert float(printed.split(": ")[1].split("s")[0]) >= 1.0
+
+
+def test_quiet_git_adds_the_two_settings_to_an_environment_without_a_config_count() -> None:
+    """W2724: maintenance.auto false and gc.auto 0, as git's own GIT_CONFIG_* variables."""
+    got = mutate_runner.quiet_git({"PATH": "/bin"})
+    assert got == {
+        "PATH": "/bin",
+        "GIT_CONFIG_COUNT": "2",
+        "GIT_CONFIG_KEY_0": "maintenance.auto",
+        "GIT_CONFIG_VALUE_0": "false",
+        "GIT_CONFIG_KEY_1": "gc.auto",
+        "GIT_CONFIG_VALUE_1": "0",
+    }
+
+
+def test_quiet_git_appends_to_a_config_count_the_environment_already_carries() -> None:
+    """W2724: a caller's own entry stays and the count grows by two; nothing is clobbered."""
+    given = {
+        "GIT_CONFIG_COUNT": "1",
+        "GIT_CONFIG_KEY_0": "user.name",
+        "GIT_CONFIG_VALUE_0": "t",
+    }
+    got = mutate_runner.quiet_git(given)
+    assert got["GIT_CONFIG_COUNT"] == "3"
+    assert (got["GIT_CONFIG_KEY_0"], got["GIT_CONFIG_VALUE_0"]) == ("user.name", "t")
+    assert (got["GIT_CONFIG_KEY_1"], got["GIT_CONFIG_VALUE_1"]) == ("maintenance.auto", "false")
+    assert (got["GIT_CONFIG_KEY_2"], got["GIT_CONFIG_VALUE_2"]) == ("gc.auto", "0")
+
+
+def test_quiet_git_does_not_change_the_environment_it_was_given() -> None:
+    """W2724: it returns a new mapping, so a caller's own environment is never edited."""
+    given = {"PATH": "/bin"}
+    mutate_runner.quiet_git(given)
+    assert given == {"PATH": "/bin"}
+
+
+_QUIET_GIT_SUITE = """\
+import subprocess
+import tempfile
+
+import mod
+
+
+def _setting(repo: str, name: str) -> str:
+    done = subprocess.run(
+        ["git", "-C", repo, "config", "--get", name],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return done.stdout.strip()
+
+
+def test_f_under_a_git_that_starts_no_background_maintenance() -> None:
+    with tempfile.TemporaryDirectory() as repo:
+        subprocess.run(["git", "init", "-q", repo], check=True)
+        assert _setting(repo, "maintenance.auto") == "false"
+        assert _setting(repo, "gc.auto") == "0"
+    assert mod.f() == 1
+"""
+
+
+def test_a_cells_git_runs_under_no_background_maintenance(tmp_path: pathlib.Path) -> None:
+    """W2724: the suite sees maintenance.auto false and gc.auto 0, so its control passes.
+
+    Red with the injection removed: the settings read empty, the control fails on the unmutated
+    module, and the cell reads errored instead of killed.
+    """
+    dist = tmp_path / "dist"
+    (dist / "src").mkdir(parents=True)
+    (dist / "tests").mkdir()
+    (dist / "src" / "mod.py").write_text(_SITE_SOURCE, encoding="utf-8")
+    (dist / "tests" / "test_quiet.py").write_text(_QUIET_GIT_SUITE, encoding="utf-8")
+    (dist / "pyproject.toml").write_text("", encoding="utf-8")
+    grid = mutate_runner.Grid(pathlib.Path(sys.executable), dist, dist / "pyproject.toml")
+    mutant = mutate_runner.Mutant(pathlib.Path("src/mod.py"), _SITE_SOURCE, _SITE)
+    assert mutate_runner.run(grid, mutant) == "killed"

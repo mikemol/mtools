@@ -609,3 +609,190 @@
   claim  = {W2458: `MUTATE_PHASES` makes a phase print its CPU delta, and unset it prints nothing.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_phase_report_prints_its_cpu_only_when_phases_are_asked_for},
 }
+
+@misc{root-mutate-runner-frozen-cpu-with-nothing-runnable-is-still-ended-as-hung,
+  section = {mutate_runner},
+  title  = {The positive control for the test above: a frozen CPU and nothing runnable is a stall},
+  claim  = {The positive control for the test above: a frozen CPU and nothing runnable is a stall.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_frozen_cpu_with_nothing_runnable_is_still_ended_as_hung},
+}
+
+@misc{root-mutate-runner-suite-waiting-on-the-host-that-got-no-cpu-is-never-ended-as-hung,
+  section = {mutate_runner},
+  title  = {W2642, forced: the CPU reads frozen and nothing is printed, but a process is runnable},
+  claim  = {W2642, forced: the CPU reads frozen and nothing is printed, but a process is runnable.
+            The poll is 0.1 s and the patience 4, so the old rule (bytes and CPU
+            unchanged for 4 polls) ended this suite at about 0.4 s while it was due to
+            finish at 1.2 s: a live suite the scheduler had not yet run, killed as hung.
+            A runnable process is never a stall, so it finishes.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_waiting_on_the_host_that_got_no_cpu_is_never_ended_as_hung},
+}
+
+@misc{root-mutate-runner-waiting-on-host-finds-a-running-descendant-anywhere,
+  section = {mutate_runner},
+  title  = {The leader sleeps, its grandchild runs: the tree is waiting on the host},
+  claim  = {The leader sleeps, its grandchild runs: the tree is waiting on the host.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_waiting_on_host_finds_a_running_descendant_anywhere},
+}
+
+@misc{root-mutate-runner-waiting-on-host-finds-a-descendant-blocked-on-disk-io,
+  section = {mutate_runner},
+  title  = {A grandchild in uninterruptible sleep (`D`) is waiting on the host too (github-cb)},
+  claim  = {A grandchild in uninterruptible sleep (`D`) is waiting on the host too (github-cb).},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_waiting_on_host_finds_a_descendant_blocked_on_disk_io},
+}
+
+@misc{root-mutate-runner-waiting-on-host-is-false-when-the-whole-tree-sleeps-on-its-own,
+  section = {mutate_runner},
+  title  = {A tree that is all `S` is the absence the hang watch exists to count, runners outside it},
+  claim  = {A tree that is all `S` is the absence the hang watch exists to count, runners outside
+            it.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_waiting_on_host_is_false_when_the_whole_tree_sleeps_on_its_own},
+}
+
+@misc{root-mutate-runner-suite-blocked-on-disk-io-is-never-ended-as-hung,
+  section = {mutate_runner},
+  title  = {W2642 review, forced: CPU frozen, nothing printed, a descendant in `D` throughout},
+  claim  = {W2642 review, forced: CPU frozen, nothing printed, a descendant in `D` throughout. The
+            I/O scheduler, not the CPU scheduler, holds this suite; the old rule and an
+            R-only rule both ended it at about 0.4 s of a 1.2 s run. Waiting on the host
+            is not a stall.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_blocked_on_disk_io_is_never_ended_as_hung},
+}
+
+@misc{root-mutate-runner-frozen-suite-asleep-on-its-own-is-ended-as-hung,
+  section = {mutate_runner},
+  title  = {The positive control for the `D` case: the same tree with every process in `S` is a stall},
+  claim  = {The positive control for the `D` case: the same tree with every process in `S` is a
+            stall.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_frozen_suite_asleep_on_its_own_is_ended_as_hung},
+}
+
+@misc{root-mutate-runner-waiting-on-host-reads-the-group-once-the-leader-has-gone,
+  section = {mutate_runner},
+  title  = {A leaked child in the suite's group still counts after the leader exits},
+  claim  = {A leaked child in the suite's group still counts after the leader exits.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_waiting_on_host_reads_the_group_once_the_leader_has_gone},
+}
+
+@misc{root-mutate-runner-waiting-on-host-ignores-a-process-it-cannot-read,
+  section = {mutate_runner},
+  title  = {An entry that vanished or has no parseable `stat` is no process, never a runnable one},
+  claim  = {An entry that vanished or has no parseable `stat` is no process, never a runnable one.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_waiting_on_host_ignores_a_process_it_cannot_read},
+}
+
+@misc{root-mutate-runner-holders-names-the-processes-whose-environment-carries-the-tree,
+  section = {mutate_runner},
+  title  = {W2694: HOME, a PYTHONPATH entry and a bare final entry all name the tree; lookalikes do not},
+  claim  = {W2694: HOME, a PYTHONPATH entry and a bare final entry all name the tree; lookalikes do
+            not. Not holders: a sibling whose name merely begins the same, another tree,
+            a process with no readable environment, and this process itself.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_holders_names_the_processes_whose_environment_carries_the_tree},
+}
+
+@misc{root-mutate-runner-descendant-in-its-own-session-is-dead-when-its-cell-ends,
+  section = {mutate_runner},
+  title  = {W2694: every child the suite started, in any session, is gone when `run` returns},
+  claim  = {W2694: every child the suite started, in any session, is gone when `run` returns. The
+            test waits up to 5 s per child for a process that was sent SIGKILL to leave
+            the process table; that bound belongs to this assertion, not to the runner,
+            which reads no clock.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_descendant_in_its_own_session_is_dead_when_its_cell_ends},
+}
+
+@misc{root-mutate-runner-discard-removes-the-tree-with-one-rmtree,
+  section = {mutate_runner},
+  title  = {W2694: there is no concurrent writer, so the removal is one call and no retry},
+  claim  = {W2694: there is no concurrent writer, so the removal is one call and no retry.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_discard_removes_the_tree_with_one_rmtree},
+}
+
+@misc{root-mutate-runner-discard-raises-a-named-error-when-the-tree-cannot-be-removed,
+  section = {mutate_runner},
+  title  = {W2694: a failed removal is a fact, not a race: one try, then an error naming the tree},
+  claim  = {W2694: a failed removal is a fact, not a race: one try, then an error naming the tree.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_discard_raises_a_named_error_when_the_tree_cannot_be_removed},
+}
+
+@misc{root-mutate-runner-held-error-names-the-processes-that-still-hold-the-tree,
+  section = {mutate_runner},
+  title  = {W2694: the error carries the pids still naming the tree, read when the removal failed},
+  claim  = {W2694: the error carries the pids still naming the tree, read when the removal failed.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_held_error_names_the_processes_that_still_hold_the_tree},
+}
+
+@misc{root-mutate-runner-sibling-tree-with-the-same-name-prefix-is-not-a-holder,
+  section = {mutate_runner},
+  title  = {W2694: a path that merely begins the same is another cell's tree and is never killed},
+  claim  = {W2694: a path that merely begins the same is another cell's tree and is never killed.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_sibling_tree_with_the_same_name_prefix_is_not_a_holder},
+}
+
+@misc{root-mutate-runner-end-holders-returns-only-after-a-stubborn-holder-has-exited,
+  section = {mutate_runner},
+  title  = {W2694: a holder that ignores soft signals is gone, not merely signalled, when it returns},
+  claim  = {W2694: a holder that ignores soft signals is gone, not merely signalled, when it
+            returns. The assertion reads no clock and polls nothing: the process table
+            is read once, right after the call, and a holder still running at that
+            instant fails it.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_end_holders_returns_only_after_a_stubborn_holder_has_exited},
+}
+
+@misc{root-mutate-runner-end-holders-waits-on-the-holder-after-signalling-it,
+  section = {mutate_runner},
+  title  = {W2694: the kill is followed by a wait on the pidfd; a kill-and-move-on never reaches it},
+  claim  = {W2694: the kill is followed by a wait on the pidfd; a kill-and-move-on never reaches it.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_end_holders_waits_on_the_holder_after_signalling_it},
+}
+
+@misc{root-mutate-runner-held-tree-is-recorded-against-its-cell-and-is-not-a-verdict,
+  section = {mutate_runner},
+  title  = {W2694: the cell is named, the verdict is `held`, and no mutant outcome is invented},
+  claim  = {W2694: the cell is named, the verdict is `held`, and no mutant outcome is invented.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_held_tree_is_recorded_against_its_cell_and_is_not_a_verdict},
+}
+
+@misc{root-mutate-runner-settled-verdict-passes-through-untouched,
+  section = {mutate_runner},
+  title  = {W2694: a cell that finished normally keeps its own verdict and records nothing},
+  claim  = {W2694: a cell that finished normally keeps its own verdict and records nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_settled_verdict_passes_through_untouched},
+}
+
+@misc{root-mutate-runner-shard-is-refused-by-cell-when-any-tree-was-held,
+  section = {mutate_runner},
+  title  = {W2694: an infrastructure failure ends the shard loudly, naming every cell it hit},
+  claim  = {W2694: an infrastructure failure ends the shard loudly, naming every cell it hit.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_shard_is_refused_by_cell_when_any_tree_was_held},
+}
+
+@misc{root-mutate-runner-quiet-git-adds-the-two-settings-to-an-environment-without-a-config-count,
+  section = {mutate_runner},
+  title  = {W2724: maintenance.auto false and gc.auto 0, as git's own GIT_CONFIG_* variables},
+  claim  = {W2724: maintenance.auto false and gc.auto 0, as git's own GIT_CONFIG_* variables.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_quiet_git_adds_the_two_settings_to_an_environment_without_a_config_count},
+}
+
+@misc{root-mutate-runner-quiet-git-appends-to-a-config-count-the-environment-already-carries,
+  section = {mutate_runner},
+  title  = {W2724: a caller's own entry stays and the count grows by two; nothing is clobbered},
+  claim  = {W2724: a caller's own entry stays and the count grows by two; nothing is clobbered.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_quiet_git_appends_to_a_config_count_the_environment_already_carries},
+}
+
+@misc{root-mutate-runner-quiet-git-does-not-change-the-environment-it-was-given,
+  section = {mutate_runner},
+  title  = {W2724: it returns a new mapping, so a caller's own environment is never edited},
+  claim  = {W2724: it returns a new mapping, so a caller's own environment is never edited.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_quiet_git_does_not_change_the_environment_it_was_given},
+}
+
+@misc{root-mutate-runner-cells-git-runs-under-no-background-maintenance,
+  section = {mutate_runner},
+  title  = {W2724: the suite sees maintenance.auto false and gc.auto 0, so its control passes},
+  claim  = {W2724: the suite sees maintenance.auto false and gc.auto 0, so its control passes. Red
+            with the injection removed: the settings read empty, the control fails on
+            the unmutated module, and the cell reads errored instead of killed.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_cells_git_runs_under_no_background_maintenance},
+}

@@ -33,6 +33,7 @@ import ast
 import atexit
 import concurrent.futures
 import contextlib
+import ctypes
 import dataclasses
 import fnmatch
 import json
@@ -46,7 +47,8 @@ import subprocess
 import sys
 import tempfile
 import threading
-from typing import TYPE_CHECKING, cast
+from select import select as wait_readable
+from typing import TYPE_CHECKING, Protocol, cast
 
 # ⚑⚑ THE FENCE SIBLING EDGE (mtools:W619, ruled A+B 2026-10-04). This runs under each
 # distribution's own `.venv`, and only fence's carries `mikemol.fence`, so `mutate_check.sh` names
@@ -394,6 +396,56 @@ def _cpu(pid: int) -> float | None:
     return alive if alive is not None else group_cpu(pid)
 
 
+_PROC = pathlib.Path("/proc")
+_HOST_STATES = frozenset({"R", "D"})
+_UNREADABLE = (-1, -1, "")
+
+
+def _row(entry: pathlib.Path) -> tuple[int, int, str]:
+    """Read one process's parent, process group and state letter from its `stat` file.
+
+    Returns:
+        (parent pid, process group, state letter), or `(-1, -1, "")` when the process is gone or
+        unreadable, which is no process and never a runnable one.
+
+    """
+    try:
+        text = (entry / "stat").read_text(encoding="utf-8", errors="replace")
+        fields = text[text.rindex(")") + _AFTER_COMM :].split()
+        return int(fields[_PPID]), int(fields[_PGRP]), fields[0]
+    except (OSError, ValueError, IndexError):
+        return _UNREADABLE
+
+
+def waiting_on_host(root: int, proc: pathlib.Path = _PROC) -> bool:
+    """Say whether any process of the suite is waiting on the HOST right now (state `R` or `D`).
+
+    ⚑ A PROCESS WAITING ON THE HOST IS NOT STALLED (W2642, the same defect as W2632 in katas'
+    waiter). The progress witness compares bytes and CPU between polls; on a busy host a live suite
+    can be given no CPU for several polls and then read as hung. `R` is runnable and not yet run
+    (the CPU scheduler); `D` is uninterruptible sleep, blocked on disk I/O (the I/O scheduler, a
+    contended md0 or a reclaiming btrfs): github-cb's review, 2026-11-17. Neither is the opposite
+    of an absence, so a poll in which any process of the suite's tree (or, once the leader has gone,
+    its group) is in either state is never evidence of a stall. `S` stays countable: a suite asleep
+    on its own futex or pipe with nothing waiting on the host is the genuine absence. This reads no
+    clock: it is one reading of the process states.
+
+    Returns:
+        True when the root's tree, or its process group, holds a process in state `R` or `D`.
+
+    """
+    table = {int(entry.name): _row(entry) for entry in proc.iterdir() if entry.name.isdecimal()}
+    members, pending = {root}, [root]
+    while pending:
+        parent = pending.pop()
+        for pid, (ppid, _group, _state) in table.items():
+            if ppid == parent and pid not in members:
+                members.add(pid)
+                pending.append(pid)
+    members |= {pid for pid, (_ppid, group, _state) in table.items() if group == root}
+    return any(table[pid][2] in _HOST_STATES for pid in members if pid in table)
+
+
 def _drain(fd: int, chunks: list[bytes]) -> None:
     """Copy a pipe's read end into `chunks` as it arrives, until every writer has closed it.
 
@@ -434,7 +486,8 @@ def _hung(
             return False
         cpu = _cpu(proc.pid)
         seen = (sum(len(block) for chunks, _reader in drains for block in chunks), cpu)
-        still = still + 1 if seen == last and (cpu is not None or ended) else 0
+        stalled = seen == last and (cpu is not None or ended) and not waiting_on_host(proc.pid)
+        still = still + 1 if stalled else 0
         last = seen
         if still >= patience:
             # ⚑ AN EMPTY GROUP IS THE KILL ALREADY DONE (W1509). The leader can exit and its group
@@ -825,6 +878,196 @@ def report_phase(label: str, since: float) -> None:
         sys.stdout.write(f"      phase {label}: {cpu_mark() - since:.2f}s cpu\n")
 
 
+class ScratchTreeHeldError(Exception):
+    """A cell's temp tree could not be removed although every holder had been ended (W2694).
+
+    It carries the tree and the processes still naming it, and `run_all` records it against the cell
+    as an INFRASTRUCTURE failure: never a mutant verdict, and never a shard that dies unnamed.
+    """
+
+    def __init__(self, root: pathlib.Path, remaining: list[int]) -> None:
+        """Name the tree and the pids that still hold it."""
+        super().__init__(f"{root} could not be removed; processes still holding it: {remaining}")
+        self.root = root
+        self.remaining = remaining
+
+
+def holders(root: pathlib.Path, proc: pathlib.Path = _PROC) -> list[int]:
+    """Name every live process whose environment mentions `root`, read from `/proc`.
+
+    ⚑ A CELL'S TREE NAMES ITSELF IN ITS DESCENDANTS' ENVIRONMENT (W2694): `HOME` and `PYTHONPATH`
+    are set to it, a random directory no other cell shares, so a process carrying it belongs to this
+    cell however many sessions it has started since. The suite's process GROUP is not enough: a
+    child the suite started in its own session (the katas waiter does, and the mutant
+    `timeout-leaves-the-tree` leaves it alive) is in no group the runner holds. The match ends at a
+    path separator, a colon, the end of an entry or the end of the data, so a sibling tree whose
+    name merely begins the same is not a holder.
+
+    Returns:
+        the pids, never this process's own; a process whose environment cannot be read (gone,
+        another user's, a zombie) is not named.
+
+    """
+    needle = re.compile(re.escape(os.fsencode(root)) + rb"(?=[/:\x00]|$)")
+    found: list[int] = []
+    for entry in proc.iterdir():
+        if not entry.name.isdecimal() or int(entry.name) == os.getpid():
+            continue
+        try:
+            environ = (entry / "environ").read_bytes()
+        except OSError:
+            continue
+        if needle.search(environ):
+            found.append(int(entry.name))
+    return sorted(found)
+
+
+_SYS_PIDFD_SEND_SIGNAL = 424
+_SYS_PIDFD_OPEN = 434
+# ⚑ THE PINNED PYTHON (3.13.13, hooks' own and bazel's) HAS NEITHER `os.pidfd_open` NOR
+# `signal.pidfd_send_signal`: its build predates them, and 3.14 has both. The kernel does, and the
+# two syscall numbers are the same on x86_64, arm64 and riscv, so they are called directly. Measured
+# 2026-11-18: 3.13.13 `hasattr` False for both, the raw `pidfd_open` on this process answers a fd.
+# ⚑ THIS SHIM IS DEBT THAT EXISTS ONLY BECAUSE OF THE 3.13 PIN, which breaks the fleet's 3.14 floor
+# (operator rows 69229 and 170277). It is DELETED by mtools:W2721, blocked on W2422 (the move of the
+# toolchain and every hub to 3.14): `_end` then calls the two `os`/`signal` wrappers directly.
+
+
+class _Syscall(Protocol):
+    """The shape of libc's `syscall`: a number and integer arguments, a signed result."""
+
+    def __call__(self, number: int, /, *args: int) -> int:
+        """Make the call."""
+        ...
+
+
+_SYSCALL = cast("_Syscall", ctypes.CDLL(None, use_errno=True).syscall)
+
+
+def _syscall(number: int, *args: int) -> int:
+    """Call one raw syscall, raising the `OSError` its errno names when it answers -1.
+
+    Returns:
+        the syscall's non-negative result.
+
+    Raises:
+        OSError: the syscall failed; `ProcessLookupError` for ESRCH, as the wrappers raise.
+
+    """
+    got = _SYSCALL(number, *args)
+    if got < 0:
+        code = ctypes.get_errno()
+        raise OSError(code, os.strerror(code))
+    return got
+
+
+def _end(pid: int) -> None:
+    """Kill one process through a pidfd and block until it has exited.
+
+    ⚑ SIGKILL IS ASYNCHRONOUS: a signalled process can still run until the kernel delivers it, and
+    it is not gone until it has exited. The pidfd names THIS process, so a pid reused in between
+    cannot be hit, and it becomes readable exactly when the process exits, so the wait is the
+    event itself and needs no timeout and no polling interval.
+    """
+    try:
+        fd = _syscall(_SYS_PIDFD_OPEN, pid, 0)
+    except ProcessLookupError:
+        return
+    try:
+        with contextlib.suppress(ProcessLookupError):
+            _syscall(_SYS_PIDFD_SEND_SIGNAL, fd, signal.SIGKILL, 0, 0)
+        wait_readable([fd], [], [])
+    finally:
+        os.close(fd)
+
+
+def end_holders(root: pathlib.Path, proc: pathlib.Path = _PROC) -> None:
+    """Kill every process holding `root` and wait for each to exit, until a scan finds none.
+
+    ⚑ A CELL ENDS WHEN ITS SUITE'S DESCENDANTS DO, not when its leader does. `launch` returns when
+    the leader has exited and its pipes have closed; a leaked grandchild that holds neither is
+    still running, and it can write into the tree while the tree is removed (W2694).
+
+    ⚑ THE LOOP ENDS WITHOUT A COUNTED LIMIT, AND THAT IS THE PROOF. Each pass ends every process it
+    named and waits for it to exit; a holder can only be started by a holder that was alive, so the
+    set of live holders strictly runs out. When a scan finds none, no process of the cell is
+    running, so nothing can write into the tree: the remover starts after every writer has exited.
+    """
+    while pids := holders(root, proc):
+        for pid in pids:
+            _end(pid)
+
+
+def discard(root: pathlib.Path, proc: pathlib.Path = _PROC) -> None:
+    """Remove a mutant's temp tree ONCE; raise `ScratchTreeHeldError` if that fails.
+
+    ⚑ THE REMOVAL HAS NO CONCURRENT WRITER, so it is one `rmtree` and a failure is a fact, not a
+    race to retry: a retry or `ignore_errors` here would hide a broken `end_holders` (W2694).
+    `TemporaryDirectory` raised ENOTEMPTY out of the pool and one cleanup took b89's
+    `//katas:mutants_4` down with no cell named. The error names the tree and what still holds it;
+    `run_all` records it against the cell. A tree is never left in place silently: the tmp tier is
+    shared memory, and an unnamed leftover is a capacity leak.
+
+    Raises:
+        ScratchTreeHeldError: the tree could not be removed; it names the tree and the holders.
+
+    """
+    try:
+        shutil.rmtree(root)
+    except OSError as err:
+        raise ScratchTreeHeldError(root, holders(root, proc)) from err
+
+
+class _ScratchTree:
+    """The temp tree one mutant runs in: made on entry, emptied of its holders and removed on exit.
+
+    Entering yields the directory's name, as `tempfile.TemporaryDirectory` did, so the body that
+    used that context manager reads the same.
+    """
+
+    def __init__(self) -> None:
+        self._root = pathlib.Path(tempfile.mkdtemp())
+
+    def __enter__(self) -> str:
+        return str(self._root)
+
+    def __exit__(self, *_exc: object) -> None:
+        end_holders(self._root)
+        discard(self._root)
+
+
+_QUIET_GIT = (("maintenance.auto", "false"), ("gc.auto", "0"))
+"""The git settings a cell's suite runs under: no detached background maintenance, no auto gc."""
+
+
+def quiet_git(env: dict[str, str]) -> dict[str, str]:
+    """Add the settings that stop git starting background maintenance, through its own env config.
+
+    ⚑ A FIXTURE'S `git commit` MUST NOT START A PROCESS THE SUITE DOES NOT OWN (W2724). `git commit`
+    can start detached `git maintenance run --auto`, which creates and removes
+    `objects/maintenance.lock`; a fixture that then copies the repository races it, and under gate
+    load the lock vanishes between the listing and the copy. b91 was refused at `//hooks:mutants_39`
+    by exactly that on an UNMUTATED control. Nondeterminism in every test that runs git, so it is
+    set where every cell's environment is made, by the runner.
+
+    ⚑ THE RUNNER SETS THIS, SO NOTHING RELIES ON A VARIABLE SURVIVING FROM A CALLER. `clean_env`
+    strips every `GIT_*` the caller passed (W619, hook redirections that point a suite at the real
+    repository); this is config injection by the runner itself, which that rule does not cover. An
+    environment that already names a `GIT_CONFIG_COUNT` is appended to, never overwritten.
+
+    Returns:
+        a copy of `env` with the settings added after any it already carried.
+
+    """
+    raw = env.get("GIT_CONFIG_COUNT", "")
+    start = int(raw) if raw.isdecimal() else 0
+    added: dict[str, str] = {}
+    for offset, (key, value) in enumerate(_QUIET_GIT):
+        added[f"GIT_CONFIG_KEY_{start + offset}"] = key
+        added[f"GIT_CONFIG_VALUE_{start + offset}"] = value
+    return {**env, **added, "GIT_CONFIG_COUNT": str(start + len(_QUIET_GIT))}
+
+
 def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) -> str:
     """Write `text` over module `rel` in a temp copy of the distribution and run its suite there.
 
@@ -836,7 +1079,7 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         this mutant's verdict.
 
     """
-    with tempfile.TemporaryDirectory() as tmp:
+    with _ScratchTree() as tmp:
         work = pathlib.Path(tmp) / grid.dist.name
         mark = cpu_mark()
         shutil.copytree(grid.dist, work, ignore=_not_source)
@@ -878,7 +1121,7 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         # ⚑ fence's `git_env.clean_env()` rule (W619: imported), at the runner, so suites not yet
         # written are covered too. A suite reading git state finds the repository from its `cwd`
         # as before.
-        env = clean_env()
+        env = quiet_git(clean_env())
         existing = env.get("PYTHONPATH", "")
         src = str(work / "src")
         env["PYTHONPATH"] = f"{src}{os.pathsep}{existing}" if existing else src
@@ -1481,6 +1724,40 @@ def free_cores(cpus: int, load1: float) -> int:
     return max(1, round(cpus - load1))
 
 
+def settle_verdict(future: concurrent.futures.Future[str], cell: str, held: list[str]) -> str:
+    """Read one cell's verdict; a held temp tree is recorded against the cell, not a verdict.
+
+    ⚑ AN INFRASTRUCTURE FAILURE IS NOT A MUTANT VERDICT (W2694). A tree that could not be removed
+    says nothing about whether the suite noticed the defect, so it is neither killed, survived nor
+    errored: it is collected by name and the shard refuses after every other cell has finished.
+
+    Returns:
+        the cell's verdict, or `held` for a cell whose tree could not be removed.
+
+    """
+    try:
+        return future.result()
+    except ScratchTreeHeldError as err:
+        held.append(f"{cell}: {err}")
+        return "held"
+
+
+def refuse_held(held: list[str]) -> None:
+    """Name every cell whose temp tree was held, and end the shard.
+
+    The shard is refused, loudly and by cell: a clean report over cells that left trees on the
+    shared tmp tier would be a capacity leak, and a crash that names no cell is what b89 was.
+    """
+    if not held:
+        return
+    sys.stderr.write(
+        f"\nmutate: {len(held)} cell(s) could not clean their temp tree (infrastructure):\n"
+    )
+    for line in held:
+        sys.stderr.write(f"    {line}\n")
+    sys.exit(1)
+
+
 def run_all(
     grid: Grid, mutants: list[Mutant], declared: list[Declared], *, debug: bool, share: int = 1
 ) -> tuple[list[str], list[tuple[str, str]]]:
@@ -1507,11 +1784,19 @@ def run_all(
     # writing hands the child the write descriptor; the next exec of the copy then fails (ETXTBSY).
     # Built here, on the one thread, the copy is closed before the first fork.
     portable_python(grid.py)
+    held: list[str] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(run, grid, mutant, debug=debug) for mutant in mutants]
         planted = [pool.submit(run_declared, grid, d, debug=debug) for d in declared]
-        verdicts = [f.result() for f in futures]
-        regex = [(d.label, f.result()) for d, f in zip(declared, planted, strict=True)]
+        verdicts = [
+            settle_verdict(f, f"{m.rel}::{m.name}", held)
+            for f, m in zip(futures, mutants, strict=True)
+        ]
+        regex = [
+            (d.label, settle_verdict(f, d.label, held))
+            for d, f in zip(declared, planted, strict=True)
+        ]
+    refuse_held(held)
     used = resource.getrusage(resource.RUSAGE_CHILDREN)
     sys.stdout.write(cpu_line(used.ru_utime + used.ru_stime, workers))
     return verdicts, regex
