@@ -163,3 +163,10 @@
   claim  = {`discard` drops the child's stderr; leaving it inherited is the control that shows it.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_discarded_stderr_reaches_nobody_and_inherited_stderr_reaches_the_caller},
 }
+
+@misc{procrun-proc-first-line-waits-for-a-child-that-is-slow-to-speak,
+  section = {proc},
+  title  = {A child silent for a second before its line still answers: the bound is in seconds},
+  claim  = {A child silent for a second before its line still answers: the bound is in seconds.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_first_line_waits_for_a_child_that_is_slow_to_speak},
+}

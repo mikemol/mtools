@@ -182,6 +182,22 @@ def test_first_line_returns_the_childs_first_line_and_leaves_it_running() -> Non
         assert child.poll() is None
 
 
+# ⚑ A CHILD THAT SPEAKS LATE ON PURPOSE (W2725). Every other `first_line` case has a child that
+# writes as soon as Python starts, so a bound a thousand times too short (seconds read as
+# milliseconds: `_LONG` as 30 ms) was missed whenever the host started Python inside 30 ms and
+# caught only on a loaded one: the declared mutant `first-line-bound-in-seconds-not-ms` was
+# SURVIVED on one gate run and KILLED on the next (b92). A child that sleeps a full second before
+# its first byte is later than any 30 ms bound however fast the host is, and far earlier than the
+# 30 s bound, so the verdict does not depend on how slow a read happens to be.
+_SPEAKS_LATE = "import time; time.sleep(1); print('late', flush=True)"
+
+
+def test_first_line_waits_for_a_child_that_is_slow_to_speak() -> None:
+    """A child silent for a second before its line still answers: the bound is in seconds."""
+    with spawn_piped([sys.executable, "-c", _SPEAKS_LATE]) as child:
+        assert child.first_line(_LONG) == "late"
+
+
 def test_first_line_gives_up_on_a_child_that_has_gone_quiet() -> None:
     """A child writing nothing for the idle bound raises, however long it would run."""
     sleeper = spawn_piped([sys.executable, "-c", _SLEEP])
