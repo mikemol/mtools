@@ -194,7 +194,7 @@ class Transition:
     at: str
 
 
-def record_after_state(config: PlanConfig, step: Transition) -> Path:
+def record_after_state(config: PlanConfig, step: Transition, who: dict[str, str]) -> Path:
     """Record one apply's state transition in the root's chained ledger (estate:W52, W2056).
 
     ⚑ THE ENTRY IS A LATTICE EDGE, NOT ONLY A NODE: it carries the hash the baseline had before the
@@ -202,6 +202,10 @@ def record_after_state(config: PlanConfig, step: Transition) -> Path:
     transition's `before` equal to the previous `after`. `root` is the domain's name: one chain
     per zone, never one for all. No planfile is needed; the caller supplies the three hashes and
     the time.
+
+    ⚑ WHO APPLIED IS GIVEN, NOT LOOKED UP (W2760): `who` is `current_applier()` read once at the
+    edge by the caller (the account lookup is a host name-service call, outside a unit test's
+    declared inputs), so this function reads no passwd entry and a test passes a fixture name.
 
     Returns:
         the ledger's path.
@@ -213,7 +217,7 @@ def record_after_state(config: PlanConfig, step: Transition) -> Path:
         "before_sha256": step.before_sha256,
         "after_sha256": step.after_sha256,
         "plan_sha256": step.plan_sha256,
-        "applier": current_applier(),
+        "applier": who,
         "at": step.at,
     }
     return append_ledger(config, step.root, entry)

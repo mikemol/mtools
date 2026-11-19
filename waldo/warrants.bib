@@ -1890,3 +1890,10 @@
   claim  = {The head (the summary) is kept; the cut is shown with an ellipsis.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_very_long_failure_is_cut_from_the_end_and_marked},
 }
+
+@misc{waldo-after-state-recording-an-after-state-reads-no-passwd-entry,
+  section = {after_state},
+  title  = {W2760: the account lookup is a host call; the unit takes the name it is given},
+  claim  = {W2760: the account lookup is a host call; the unit takes the name it is given.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_recording_an_after_state_reads_no_passwd_entry},
+}

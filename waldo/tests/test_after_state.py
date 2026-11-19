@@ -9,11 +9,15 @@ beside it and a mark that cannot be read are `truncated-below-mark`; one root's 
 another's; and each refusal is its own fixed string.
 """
 
+import pwd
 from pathlib import Path
+
+import pytest
 
 from mikemol.waldo import planjson, planledger
 from mikemol.waldo.planconfig import PlanConfig
 
+_WHO = {"user": "fixture-user", "sudo_user": "fixture-sudo"}
 _ROOT = "zone-a"
 _OTHER = "zone-b"
 _ONE = "1" * 64
@@ -39,7 +43,7 @@ def _config(tmp: Path) -> PlanConfig:
 
 def _apply(config: PlanConfig, root: str, before: str, after: str) -> Path:
     step = planledger.Transition(root, before, after, _PLAN, _AT)
-    return planledger.record_after_state(config, step)
+    return planledger.record_after_state(config, step, _WHO)
 
 
 def _ok(
@@ -66,7 +70,7 @@ def test_the_entry_is_a_lattice_edge_with_its_plan_and_applier(tmp_path: Path) -
     assert record["kind"] == planledger.AFTER_STATE
     assert (record["root"], record["before_sha256"], record["after_sha256"]) == (_ROOT, _ONE, _TWO)
     assert (record["plan_sha256"], record["at"]) == (_PLAN, _AT)
-    assert isinstance(record["applier"], dict)
+    assert record["applier"] == _WHO
     assert not record["prev"]
 
 
@@ -144,3 +148,18 @@ def test_every_refusal_is_its_own_fixed_string() -> None:
         planledger.TRUNCATED_BELOW_MARK,
     }
     assert len(reasons) == _REASONS
+
+
+def test_recording_an_after_state_reads_no_passwd_entry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2760: the account lookup is a host call; the unit takes the name it is given."""
+
+    def refuse(_uid: int) -> object:
+        msg = "a unit test reached the host's passwd database"
+        raise AssertionError(msg)
+
+    monkeypatch.setattr(pwd, "getpwuid", refuse)
+    config = _config(tmp_path)
+    _apply(config, _ROOT, _ONE, _TWO)
+    assert _ok(config, _TWO) is None
