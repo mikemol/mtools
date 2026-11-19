@@ -133,6 +133,35 @@ def plan_changes(plan: Json) -> list[str]:
     return sorted(out)
 
 
+class UndecidablePlanError(ValueError):
+    """A plan whose JSON has no `resource_changes` list to decide from."""
+
+
+def plan_has_work(plan: Json) -> bool:
+    """Decide from the plan's structure whether applying it would change anything.
+
+    The decision is never read from rendered text: `tofu show` renders the content of every planned
+    file, so any string a planned file holds can appear in it (W2765).
+
+    Returns:
+        True when a resource or an output has an action other than a no-op or a read, else False.
+
+    Raises:
+        UndecidablePlanError: when the plan has no `resource_changes` list to decide from.
+
+    """
+    if not isinstance(plan.get("resource_changes"), list):
+        msg = "the plan's JSON has no resource_changes list"
+        raise UndecidablePlanError(msg)
+    if plan_changes(plan):
+        return True
+    outputs = as_object(plan.get("output_changes"))
+    return any(
+        [str(a) for a in as_list(as_object(o).get("actions"))] not in ([], ["no-op"])
+        for o in outputs.values()
+    )
+
+
 def _destroys_digest(config: PlanConfig) -> str:
     # The digest of the allowed-destroys list, or '' when the consumer has none.
     path = config.allowed_destroys()

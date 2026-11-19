@@ -1521,13 +1521,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_without_assume_yes_it_needs_a_terminal_and_a_yes},
 }
 
-@misc{waldo-planflow-empty-plan-is-nothing-to-apply-and-asks-nothing,
-  section = {planflow},
-  title  = {`No changes.` is exit zero with no apply and no question},
-  claim  = {`No changes.` is exit zero with no apply and no question.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_empty_plan_is_nothing_to_apply_and_asks_nothing},
-}
-
 @misc{waldo-planflow-preflight-returns-the-binaries-or-the-code-that-stops-the-run,
   section = {planflow},
   title  = {Tools and a pre-plan check: refused is two, a held pre-plan is its code, none passes},
@@ -1896,4 +1889,33 @@
   title  = {W2760: the account lookup is a host call; the unit takes the name it is given},
   claim  = {W2760: the account lookup is a host call; the unit takes the name it is given.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_after_state.py -k test_recording_an_after_state_reads_no_passwd_entry},
+}
+
+@misc{waldo-planflow-rendered-text-saying-no-changes-does-not-skip-a-plan-with-real-creates,
+  section = {planflow},
+  title  = {W2765: `tofu show` renders a planned file's content, so the phrase can be in a real plan},
+  claim  = {W2765: `tofu show` renders a planned file's content, so the phrase can be in a real
+            plan.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_rendered_text_saying_no_changes_does_not_skip_a_plan_with_real_creates},
+}
+
+@misc{waldo-planflow-output-only-change-is-applied,
+  section = {planflow},
+  title  = {A plan with no resource action and one changed output still has work},
+  claim  = {A plan with no resource action and one changed output still has work.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_output_only_change_is_applied},
+}
+
+@misc{waldo-planflow-plan-with-no-resource-changes-list-is-refused-not-read-as-empty,
+  section = {planflow},
+  title  = {W2765: a JSON that cannot be decided from is stopped, never `nothing to apply`},
+  claim  = {W2765: a JSON that cannot be decided from is stopped, never `nothing to apply`.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_plan_with_no_resource_changes_list_is_refused_not_read_as_empty},
+}
+
+@misc{waldo-planflow-plan-of-no-ops-is-nothing-to-apply-and-asks-nothing,
+  section = {planflow},
+  title  = {A plan whose every action is a no-op is exit zero with no apply and no question},
+  claim  = {A plan whose every action is a no-op is exit zero with no apply and no question.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_plan_of_no_ops_is_nothing_to_apply_and_asks_nothing},
 }

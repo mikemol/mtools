@@ -8201,3 +8201,31 @@
 2026-11-19T10:25:58Z  interrupt W2763 minted    -         "Answer gcalculus:W391: how a tick closes while a review is pending (a wait card blocked on the reviewer, then --blocked-by that card)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=gcalculus:W391
 2026-11-19T10:26:08Z  status W2763 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-19T10:57:36Z  status W2761 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T10:58:25Z  status W2762 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T11:55:10Z  status W2759 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T12:20:59Z  status W2724 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T12:20:59Z  status W2758 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T12:20:59Z  status W2760 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T12:22:01Z  interrupt W2764 minted    -         "Two check_mutants busy-loop tests verdict on wall time, not CPU: a wall trip must be withheld, never a fail"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2747
+2026-11-19T12:23:00Z  status W2724 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:30:38Z  interrupt W2765 minted    -         "waldo planflow.confirm_and_apply decides empty-plan from rendered text, so a plan whose file content says No changes. applies nothing (incident)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2765
+2026-11-19T13:31:02Z  status W2765 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:34:42Z  status W2765 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:37:45Z  interrupt W2766 minted    -         "no-maybe-results: waldo refusal() returns Json | None and confirm_and_apply leans on it; convert to a raised typed refusal"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-00:W120
+2026-11-19T13:39:15Z  status W2765 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:42:44Z  status W2758 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:44:24Z  status W2764 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:49:46Z  status W2765 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:51:14Z  status W2765 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:51:15Z  status W2421 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:51:16Z  status W2726 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T13:51:49Z  interrupt W2767 minted    -         "Answer luthen-observability:W2769: waldo opa_plan takes a required --run-id and writes it into the apply-ledger row"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2769
+2026-11-19T13:52:49Z  status W2726 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T14:00:05Z  status W2765 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T14:02:51Z  status W2765 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T14:03:59Z  status W2765 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T14:04:21Z  status W2766 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T14:06:28Z  status W2767 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T14:06:47Z  status W2767 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-19T14:08:12Z  interrupt W2768 minted    -         "waldo --run-id becomes required for --apply and --apply-plan: Seams.run_id is str, the not-None branch and absent-key case are deleted, a missing flag is a usage refusal (exit 2)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2767
+2026-11-19T14:08:18Z  status W2768 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

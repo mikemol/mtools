@@ -163,12 +163,15 @@ src/mikemol/waldo/planreading.py|no-reading-still-taken|    if spec is None:|   
 src/mikemol/waldo/planflow.py|unreadable-reading-applies|    if before is not None and before\.get\("status"\) != READ:|    if False:|def=confirm_and_apply
 src/mikemol/waldo/planflow.py|unmet-preconditions-not-held|    withheld = \[\*withheld, \*unmet_preconditions\(seams\.tools, config, root\.name, changes\)\]|    withheld = withheld|def=judge
 src/mikemol/waldo/planflow.py|another-roots-verdict-applies|    if doc\.get\("root"\) != root\.name:|    if False:|def=refusal
-src/mikemol/waldo/planflow.py|moved-resource-set-applies|    if shown\.returncode == 0 and now == doc\.get\("changes"\):|    if True:|def=changes_match
+src/mikemol/waldo/planflow.py|moved-resource-set-applies|    if parsed is None or shown\.returncode != 0 or now != doc\.get\("changes"\):|    if False:|def=judged_plan
 src/mikemol/waldo/planflow.py|failed-apply-witnessed|    if apply_rc == 0:|    if True:|def=after_apply
 src/mikemol/waldo/planflow.py|unrunnable-witness-reads-ok|    if status in WITNESS_OK:|    if True:|def=after_apply
-src/mikemol/waldo/planflow.py|moved-set-not-checked-at-apply|    if doc is None or not changes_match\(seams, tofu, root, planfile, doc\):|    if doc is None:|def=confirm_and_apply
+src/mikemol/waldo/planflow.py|moved-set-not-checked-at-apply|        judged = judged_plan\(seams, tofu, root, planfile, doc\)|        judged = Judged({}, True)|def=confirm_and_apply
 src/mikemol/waldo/planflow.py|unmet-precondition-applies|    if unmet:|    if False:|def=confirm_and_apply
-src/mikemol/waldo/planflow.py|empty-plan-applied|    if "No changes\." in show\.stdout:|    if False:|def=confirm_and_apply
+src/mikemol/waldo/planflow.py|empty-plan-applied|    if not judged\.has_work:|    if False:|def=confirm_and_apply
+src/mikemol/waldo/planflow.py|rendered-text-skips-the-apply|    if not judged\.has_work:|    if not judged.has_work or "No changes." in show.stdout:|def=confirm_and_apply
+src/mikemol/waldo/planplan.py|undecidable-plan-read-as-empty|    if not isinstance\(plan\.get\("resource_changes"\), list\):|    if False:|def=plan_has_work
+src/mikemol/waldo/planplan.py|resource-actions-ignored|    if plan_changes\(plan\):|    if False:|def=plan_has_work
 src/mikemol/waldo/planflow.py|nobody-asked|    stopped = None if assume_yes else _confirmed\(seams\)|    stopped = None|def=confirm_and_apply
 src/mikemol/waldo/planflow.py|no-terminal-applies|    if not seams\.interactive:|    if False:|def=_confirmed
 src/mikemol/waldo/planflow.py|any-answer-applies|    if seams\.answer\(\) != "y":|    if False:|def=_confirmed

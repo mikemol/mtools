@@ -37,7 +37,14 @@ from mikemol.waldo.planconfig import PlanConfig
 from mikemol.waldo.planeval import Evidence, evaluate, refuse_unless, reported_of
 from mikemol.waldo.planjson import Json, as_object, list_at, parse_object
 from mikemol.waldo.planledger import append_ledger, current_applier, repo_commit
-from mikemol.waldo.planplan import plan_and_show, plan_changes, plan_flags, record_verdict
+from mikemol.waldo.planplan import (
+    UndecidablePlanError,
+    plan_and_show,
+    plan_changes,
+    plan_flags,
+    plan_has_work,
+    record_verdict,
+)
 from mikemol.waldo.planprecond import fired_names, unmet_preconditions
 from mikemol.waldo.planreading import READ, Prior
 from mikemol.waldo.plantools import Tools
@@ -195,23 +202,65 @@ def refusal(seams: Seams, root: Path, planfile: Path) -> Json | None:
     return doc
 
 
-def changes_match(seams: Seams, tofu: Path, root: Path, planfile: Path, doc: Json) -> bool:
-    """Check that the planfile on disk still acts on exactly the judged resource set.
+class PlanRefusedError(Exception):
+    """A planfile that may not be applied; `message` is what to say, empty when already said."""
+
+    def __init__(self, message: str) -> None:
+        """Carry the refusal's message."""
+        super().__init__(message)
+        self.message = message
+
+
+@dataclass(frozen=True, slots=True)
+class Judged:
+    """A planfile read once: its JSON and whether applying it would change anything."""
+
+    plan: Json
+    has_work: bool
+
+
+def admitted(seams: Seams, root: Path, planfile: Path) -> Json:
+    """Admit a planfile for a root, as `refusal` does, but by raising.
 
     Returns:
-        True when it does; otherwise False, with the two sets said.
+        the verdict.
+
+    Raises:
+        PlanRefusedError: when it may not be applied (the reason is already said).
+
+    """
+    doc = refusal(seams, root, planfile)
+    if doc is None:
+        already_said = ""
+        raise PlanRefusedError(already_said)
+    return doc
+
+
+def judged_plan(seams: Seams, tofu: Path, root: Path, planfile: Path, doc: Json) -> Judged:
+    """Read the planfile on disk once, and check it still acts on exactly the judged resource set.
+
+    Returns:
+        the plan's JSON and its work decision, both from the one read.
+
+    Raises:
+        PlanRefusedError: when the set moved, the JSON is unreadable, or it has no
+            `resource_changes` list.
 
     """
     shown = seams.tools.run(tofu, f"-chdir={root}", "show", "-json", str(planfile))
     parsed = parse_object(shown.stdout)
     now = ["(unreadable)"] if parsed is None else plan_changes(parsed)
-    if shown.returncode == 0 and now == doc.get("changes"):
-        return True
-    seams.out(
-        f"opa_plan --apply: REFUSED -- the planfile's resource set {now} is not the judged "
-        f"set {doc.get('changes')}\n"
-    )
-    return False
+    if parsed is None or shown.returncode != 0 or now != doc.get("changes"):
+        msg = (
+            f"opa_plan --apply: REFUSED -- the planfile's resource set {now} is not the judged "
+            f"set {doc.get('changes')}"
+        )
+        raise PlanRefusedError(msg)
+    try:
+        return Judged(parsed, plan_has_work(parsed))
+    except UndecidablePlanError as exc:
+        msg = f"opa_plan --apply: REFUSED -- {exc}"
+        raise PlanRefusedError(msg) from exc
 
 
 def ledger_entry(seams: Seams, root: Path, doc: Json, apply_rc: int, witness: Json) -> Json:
@@ -296,8 +345,12 @@ def confirm_and_apply(
         the process exit code.
 
     """
-    doc = refusal(seams, root, planfile)
-    if doc is None or not changes_match(seams, tofu, root, planfile, doc):
+    try:
+        doc = admitted(seams, root, planfile)
+        judged = judged_plan(seams, tofu, root, planfile, doc)
+    except PlanRefusedError as exc:
+        if exc.message:
+            seams.out(exc.message + "\n")
         return seams.exits.stopped
     unmet = unmet_preconditions(
         seams.tools, seams.config, root.name, [str(c) for c in list_at(doc, "changes")]
@@ -308,7 +361,7 @@ def confirm_and_apply(
         return seams.exits.withheld
     show = seams.tools.run(tofu, f"-chdir={root}", "show", "-no-color", str(planfile))
     seams.out(show.stdout)
-    if "No changes." in show.stdout:
+    if not judged.has_work:
         seams.out("opa_plan --apply: nothing to apply\n")
         return EXIT_OK
     stopped = None if assume_yes else _confirmed(seams)

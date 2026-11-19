@@ -431,12 +431,48 @@ def test_without_assume_yes_it_needs_a_terminal_and_a_yes(tmp_path: Path) -> Non
     assert world.host.applied == 1
 
 
-def test_an_empty_plan_is_nothing_to_apply_and_asks_nothing(tmp_path: Path) -> None:
-    """`No changes.` is exit zero with no apply and no question."""
-    world = _world(tmp_path, _Host(show_text="No changes.\n"))
+def test_a_plan_of_no_ops_is_nothing_to_apply_and_asks_nothing(tmp_path: Path) -> None:
+    """A plan whose every action is a no-op is exit zero with no apply and no question."""
+    world = _world(tmp_path, _Host(plan_json=_plan_text("a.x", "no-op")))
     world.judge()
     assert world.apply(yes=False) == planflow.EXIT_OK
     assert "nothing to apply" in world.text()
+    assert world.host.applied == 0
+
+
+def test_rendered_text_saying_no_changes_does_not_skip_a_plan_with_real_creates(
+    tmp_path: Path,
+) -> None:
+    """W2765: `tofu show` renders a planned file's content, so the phrase can be in a real plan."""
+    world = _world(tmp_path, _Host(show_text='  + content = "No changes."\nPlan: 1 to add\n'))
+    world.declare_witness()
+    world.judge()
+    assert world.apply() == planflow.EXIT_OK
+    assert world.host.applied == 1
+    assert "nothing to apply" not in world.text()
+
+
+def test_an_output_only_change_is_applied(tmp_path: Path) -> None:
+    """A plan with no resource action and one changed output still has work."""
+    output: dict[str, object] = {"actions": ["create"]}
+    plan: dict[str, object] = {"resource_changes": [], "output_changes": {"o": output}}
+    world = _world(tmp_path, _Host(plan_json=json.dumps(plan)))
+    world.declare_witness()
+    world.judge()
+    assert world.apply() == planflow.EXIT_OK
+    assert world.host.applied == 1
+
+
+def test_a_plan_with_no_resource_changes_list_is_refused_not_read_as_empty(
+    tmp_path: Path,
+) -> None:
+    """W2765: a JSON that cannot be decided from is stopped, never `nothing to apply`."""
+    bare: dict[str, object] = {"format_version": "1.2"}
+    world = _world(tmp_path, _Host(plan_json=json.dumps(bare)))
+    world.judge()
+    assert world.apply() == planflow.EXIT_STOPPED
+    assert "no resource_changes list" in world.text()
+    assert "nothing to apply" not in world.text()
     assert world.host.applied == 0
 
 
