@@ -25,6 +25,8 @@ import threading
 import mutants_gen
 import mutate_runner
 import pytest
+from mikemol.mutation.declarations import Declared
+from mikemol.mutation.regexop import RegexSpec
 
 _MUTANT = "raise AssertionError('mutant')"
 
@@ -2108,6 +2110,136 @@ def test_the_private_interpreter_is_built_before_the_first_worker_runs(
     verdicts, _regex = mutate_runner.run_all(grid, [mutant], [], debug=False)
     assert verdicts == ["killed"]
     assert order == ["prime", "run"]
+
+
+_GRANDCHILD = r"""
+import subprocess, sys
+burn = "import time\nt = time.process_time()\nwhile time.process_time() - t < 0.6: pass"
+subprocess.run([sys.executable, "-c", burn])
+"""
+
+
+_FLOOR = 0.5
+_CEILING = 5.0
+_CHARGED = 2.0
+
+
+def _same_python(py: pathlib.Path) -> tuple[str, str]:
+    return str(py), ""
+
+
+def _spent_by(code: str, monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path) -> float:
+    spent: dict[str, float] = {}
+    mutate_runner.timed(spent, "cell", lambda: _launch(code, monkeypatch, tmp_path))
+    return spent["cell"]
+
+
+def test_a_cell_is_charged_the_cpu_its_suite_burned(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W2805: about one CPU second burned by a suite is charged to its cell."""
+    assert _FLOOR <= _spent_by(_BUSY, monkeypatch, tmp_path) <= _CEILING
+
+
+def test_the_cpu_of_a_child_that_has_already_exited_is_still_charged(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The red case of a live-only sum: a child that exited is not lost.
+
+    A suite that spawns short processes (git, bazel) is not undercounted, because the reaped
+    child's CPU is in its parent's waited-for time.
+    """
+    assert _spent_by(_GRANDCHILD, monkeypatch, tmp_path) >= _FLOOR
+
+
+_BURN_AND_EXIT = "import time\nt = time.process_time()\nwhile time.process_time() - t < 0.6: pass\n"
+
+
+def test_cpu_burned_and_gone_before_the_first_poll_is_still_charged(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """github-00's plant: a child that burns CPU and exits between polls is charged exactly.
+
+    The poll interval is forced to 30 s, so the progress loop never reads the suite's CPU: a polled
+    peak would charge this cell 0.0, and the kernel's own accounting at the reap charges 0.6 s.
+    """
+    monkeypatch.setenv("MUTATE_POLL_S", "30")
+    spent: dict[str, float] = {}
+
+    def job() -> str:
+        argv = [sys.executable, "-c", _BURN_AND_EXIT]
+        return mutate_runner.launch(argv, tmp_path, dict(os.environ)).stdout
+
+    mutate_runner.timed(spent, "cell", job)
+    assert _FLOOR <= spent["cell"] <= _CEILING
+
+
+def test_a_cell_that_runs_nothing_is_charged_nothing_and_a_raising_cell_is_still_recorded() -> None:
+    """The controls: no launch is 0.0, and the CPU is recorded when the job raises."""
+    spent: dict[str, float] = {}
+    assert mutate_runner.timed(spent, "idle", lambda: "killed") == "killed"
+    assert spent == {"idle": 0.0}
+
+    class JobRaisedError(Exception):
+        """The job's own failure."""
+
+    def broken() -> str:
+        mutate_runner.charge(_CHARGED)
+        raise JobRaisedError
+
+    with pytest.raises(JobRaisedError):
+        mutate_runner.timed(spent, "broken", broken)
+    assert spent["broken"] >= _CHARGED
+
+
+def test_charge_outside_a_timed_cell_is_ignored() -> None:
+    """A launch made by no cell (the control of nothing) charges nothing and raises nothing."""
+    mutate_runner.charge(3.0)
+
+
+def test_the_cell_lines_name_each_cell_in_run_order_and_an_absent_one_reads_zero() -> None:
+    """One line per cell, in the given order, one decimal; a cell never timed is 0.0."""
+    lines = mutate_runner.cell_lines({"b": 12.34, "a": 0.04}, ["a", "b", "c"])
+    assert lines == "cell cpu=0.0s a\ncell cpu=12.3s b\ncell cpu=0.0s c\n"
+
+
+def test_the_reconciliation_line_says_how_much_of_the_shard_the_cells_account_for() -> None:
+    """The witness the instrument needs: the cells' sum, the shard's total and what is left."""
+    line = mutate_runner.reconcile_line({"a": 10.0, "b": 5.0}, 20.0)
+    assert line == "cells cpu=15.0s shard cpu=20.0s unattributed=5.0s\n"
+
+
+def test_a_shard_log_carries_a_cell_line_for_each_def_site_and_each_declared_cell(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2805: after the shard total, def-sites first and declared cells after, each with its CPU."""
+
+    def site(_grid: mutate_runner.Grid, _mutant: mutate_runner.Mutant, *, debug: bool) -> str:
+        assert not debug
+        mutate_runner.charge(2.5)
+        return "killed"
+
+    def planted(_grid: mutate_runner.Grid, _declared: Declared, *, debug: bool) -> str:
+        assert not debug
+        mutate_runner.charge(40.0)
+        return "killed"
+
+    monkeypatch.setattr(mutate_runner, "portable_python", _same_python)
+    monkeypatch.setattr(mutate_runner, "run", site)
+    monkeypatch.setattr(mutate_runner, "run_declared", planted)
+    grid = mutate_runner.Grid(pathlib.Path(sys.executable), tmp_path, tmp_path / "pyproject.toml")
+    mutant = mutate_runner.Mutant(pathlib.Path("mod.py"), "", "mod")
+    spec = Declared("src/other.py", RegexSpec("watch-never-gives-up", "a", "b"))
+    mutate_runner.run_all(grid, [mutant], [spec], debug=False)
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].startswith("shard cpu=")
+    assert lines[1:3] == [
+        "cell cpu=2.5s mod.py::mod",
+        "cell cpu=40.0s src/other.py::watch-never-gives-up",
+    ]
+    assert lines[3].startswith("cells cpu=42.5s shard cpu=")
 
 
 _CELL = "src/mod.py::returns-two"

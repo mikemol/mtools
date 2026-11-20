@@ -33,9 +33,11 @@ import ast
 import atexit
 import concurrent.futures
 import contextlib
+import contextvars
 import ctypes
 import dataclasses
 import fnmatch
+import functools
 import json
 import os
 import pathlib
@@ -72,7 +74,7 @@ from mikemol.mutation.declarations import DECLARATION_FILE, Declared, plant, rea
 from mikemol.mutation.sitewalk import GRID, FuncNode, Site, walk
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Mapping, Sequence
 
 CORE_LABEL = "mutants-core"
 """The prefix of the label claims that stand for cores (W1765): `mutants-core:<k>`."""
@@ -462,8 +464,13 @@ def _hung(
     proc: subprocess.Popen[bytes],
     drains: tuple[tuple[list[bytes], threading.Thread], ...],
     watch: tuple[float, int],
+    exited: threading.Event,
 ) -> bool:
     """Wait for the suite and its pipes to close, or end it when it shows no progress.
+
+    ⚑ THIS LOOP DETECTS A HANG AND MEASURES NOTHING (W2805): the suite's CPU is read exactly by
+    `reap`, from the kernel's own accounting at its exit, so no poll interval can shorten it.
+    `exited` is set by `_watch_exit` when the leader has exited and is NOT yet reaped.
 
     ⚑ THE COUNT IS OF POLLS WITHOUT PROGRESS, NOT OF SECONDS: bytes received and CPU are read each
     poll, any change in either resets the count, and the suite's group is killed only when it
@@ -479,9 +486,8 @@ def _hung(
     still = 0
     last: tuple[int, float | None] | None = None
     while True:
-        with contextlib.suppress(subprocess.TimeoutExpired):
-            proc.wait(timeout=poll)
-        ended = proc.poll() is not None
+        exited.wait(timeout=poll)
+        ended = exited.is_set()
         if ended and not any(reader.is_alive() for _chunks, reader in drains):
             return False
         cpu = _cpu(proc.pid)
@@ -496,6 +502,34 @@ def _hung(
             with contextlib.suppress(ProcessLookupError):
                 os.killpg(proc.pid, signal.SIGKILL)
             return True
+
+
+def _watch_exit(pid: int, exited: threading.Event) -> None:
+    """Block until the child has exited WITHOUT reaping it, then say so (W2805).
+
+    ⚑ `WNOWAIT` LEAVES THE ZOMBIE FOR `reap`: the exit status and the resource usage are read once,
+    by the one reaper, and `Popen` is never asked to wait.
+    """
+    with contextlib.suppress(ChildProcessError):
+        os.waitid(os.P_PID, pid, os.WEXITED | os.WNOWAIT)
+    exited.set()
+
+
+def reap(proc: subprocess.Popen[bytes]) -> tuple[int, float]:
+    """Reap the suite with `wait4` and read the CPU it and every descendant it waited for used.
+
+    ⚑ EXACT AND PER SUITE, which a `RUSAGE_CHILDREN` delta is not once cells run concurrently, and
+    which a polled peak is not either (a suite that burns CPU and exits between polls was lost,
+    and one shard reserves 8 CPUs, so one poll interval can hide tens of CPU seconds).
+
+    Returns:
+        (the exit code, ru_utime + ru_stime of the suite and its waited-for descendants).
+
+    """
+    _pid, status, usage = os.wait4(proc.pid, 0)
+    code = os.waitstatus_to_exitcode(status)
+    proc.returncode = code
+    return code, usage.ru_utime + usage.ru_stime
 
 
 def _text(chunks: list[bytes]) -> str:
@@ -555,12 +589,15 @@ def launch(
     )
     for _chunks, reader in drains:
         reader.start()
-    if _hung(proc, drains, (poll, patience)):
-        proc.wait()
+    exited = threading.Event()
+    threading.Thread(target=_watch_exit, args=(proc.pid, exited), daemon=True).start()
+    hung = _hung(proc, drains, (poll, patience), exited)
+    code, used = reap(proc)
+    charge(used)
+    if hung:
         raise subprocess.TimeoutExpired(argv, 0.0)
     os.close(out_r)
     os.close(err_r)
-    code = proc.wait()
     if code == -signal.SIGXCPU:
         raise subprocess.TimeoutExpired(argv, cpu_limit)
     return subprocess.CompletedProcess(argv, code, _text(out), _text(err))
@@ -1874,6 +1911,66 @@ def refuse_held(held: list[str]) -> None:
     sys.exit(1)
 
 
+_CELL_CPU: contextvars.ContextVar[list[float]] = contextvars.ContextVar("mutate_cell_cpu")
+"""The CPU seconds charged so far to the cell the current worker is running (W2805)."""
+
+
+def charge(seconds: float) -> None:
+    """Add CPU seconds to the cell this worker is running; nothing when no cell is being timed."""
+    box = _CELL_CPU.get(None)
+    if box is not None:
+        box[0] += seconds
+
+
+def timed(spent: dict[str, float], cell: str, job: Callable[[], str]) -> str:
+    """Run one cell's job and record the CPU its suites used against the cell's id.
+
+    ⚑ THE CPU IS RECORDED WHETHER THE JOB RETURNS OR RAISES, and a cell can run two suites (the
+    control and the mutant): every launch the worker makes while the job runs is charged to it.
+
+    Returns:
+        the job's verdict.
+
+    """
+    box = [0.0]
+    token = _CELL_CPU.set(box)
+    try:
+        return job()
+    finally:
+        _CELL_CPU.reset(token)
+        spent[cell] = box[0]
+
+
+def cell_lines(spent: Mapping[str, float], order: Sequence[str]) -> str:
+    """Say what each cell cost in CPU, one line per cell in run order (W2805).
+
+    ⚑ THE SHARD TOTAL HIDES WHICH CELL IS HEAVY: b104's two heaviest shards read 165.2 and 163.0 s
+    over four to eight cells each, and the guard could not tell whether one cell carried them. A
+    cell absent from `spent` reads 0.0, never a missing line.
+
+    Returns:
+        `cell cpu=<seconds>s <cell id>` per cell, newline-terminated.
+
+    """
+    return "".join(f"cell cpu={spent.get(cell, 0.0):.1f}s {cell}\n" for cell in order)
+
+
+def reconcile_line(spent: Mapping[str, float], total: float) -> str:
+    """Say how much of the shard's CPU the cells account for (W2805).
+
+    ⚑ THE WITNESS THE INSTRUMENT NEEDS: the per-cell numbers are complete only if they add up to
+    the shard's. What is left (the runner's own git calls, the interpreter copy) is `unattributed`;
+    a large share means work escaped the cells. CPU of a process that is not a waited descendant
+    of a suite (a daemonized child, a server a test talks to) is counted by neither side.
+
+    Returns:
+        `cells cpu=<sum>s shard cpu=<total>s unattributed=<difference>s`, newline-terminated.
+
+    """
+    cells = sum(spent.values())
+    return f"cells cpu={cells:.1f}s shard cpu={total:.1f}s unattributed={total - cells:.1f}s\n"
+
+
 def run_all(
     grid: Grid, mutants: list[Mutant], declared: list[Declared], *, debug: bool, share: int = 1
 ) -> tuple[list[str], list[tuple[str, str]]]:
@@ -1901,9 +1998,19 @@ def run_all(
     # Built here, on the one thread, the copy is closed before the first fork.
     portable_python(grid.py)
     held: list[str] = []
+    spent: dict[str, float] = {}
+    sites = [f"{m.rel}::{m.name}" for m in mutants]
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
-        futures = [pool.submit(run, grid, mutant, debug=debug) for mutant in mutants]
-        planted = [pool.submit(run_declared, grid, d, debug=debug) for d in declared]
+        futures = [
+            pool.submit(timed, spent, cell, functools.partial(run, grid, mutant, debug=debug))
+            for cell, mutant in zip(sites, mutants, strict=True)
+        ]
+        planted = [
+            pool.submit(
+                timed, spent, d.label, functools.partial(run_declared, grid, d, debug=debug)
+            )
+            for d in declared
+        ]
         verdicts = [
             settle_verdict(f, f"{m.rel}::{m.name}", held)
             for f, m in zip(futures, mutants, strict=True)
@@ -1914,7 +2021,10 @@ def run_all(
         ]
     refuse_held(held)
     used = resource.getrusage(resource.RUSAGE_CHILDREN)
-    sys.stdout.write(cpu_line(used.ru_utime + used.ru_stime, workers))
+    total = used.ru_utime + used.ru_stime
+    sys.stdout.write(cpu_line(total, workers))
+    sys.stdout.write(cell_lines(spent, [*sites, *(d.label for d in declared)]))
+    sys.stdout.write(reconcile_line(spent, total))
     return verdicts, regex
 
 

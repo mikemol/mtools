@@ -908,3 +908,65 @@
   claim  = {W2777 R3: only shard 0 of 2 is present, so the set is incomplete and refuses.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_missing_shard_in_the_set_is_refused},
 }
+
+@misc{root-mutate-runner-cell-is-charged-the-cpu-its-suite-burned,
+  section = {mutate_runner},
+  title  = {W2805: about one CPU second burned across short polls is charged, as a lower bound},
+  claim  = {W2805: about one CPU second burned across short polls is charged, as a lower bound.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_cell_is_charged_the_cpu_its_suite_burned},
+}
+
+@misc{root-mutate-runner-cpu-of-a-child-that-has-already-exited-is-still-charged,
+  section = {mutate_runner},
+  title  = {The red case of a live-only sum: a child that exited is not lost},
+  claim  = {The red case of a live-only sum: a child that exited is not lost. A suite that spawns
+            short processes (git, bazel) is not undercounted, because the reaped child's
+            CPU is in its parent's waited-for time.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_cpu_of_a_child_that_has_already_exited_is_still_charged},
+}
+
+@misc{root-mutate-runner-cell-that-runs-nothing-is-charged-nothing-and-a-raising-cell-is-still-recorded,
+  section = {mutate_runner},
+  title  = {The controls: no launch is 0.0, and the CPU is recorded when the job raises},
+  claim  = {The controls: no launch is 0.0, and the CPU is recorded when the job raises.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_cell_that_runs_nothing_is_charged_nothing_and_a_raising_cell_is_still_recorded},
+}
+
+@misc{root-mutate-runner-charge-outside-a-timed-cell-is-ignored,
+  section = {mutate_runner},
+  title  = {A launch made by no cell (the control of nothing) charges nothing and raises nothing},
+  claim  = {A launch made by no cell (the control of nothing) charges nothing and raises nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_charge_outside_a_timed_cell_is_ignored},
+}
+
+@misc{root-mutate-runner-cell-lines-name-each-cell-in-run-order-and-an-absent-one-reads-zero,
+  section = {mutate_runner},
+  title  = {One line per cell, in the given order, one decimal; a cell never timed is 0.0},
+  claim  = {One line per cell, in the given order, one decimal; a cell never timed is 0.0.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_cell_lines_name_each_cell_in_run_order_and_an_absent_one_reads_zero},
+}
+
+@misc{root-mutate-runner-shard-log-carries-a-cell-line-for-each-def-site-and-each-declared-cell,
+  section = {mutate_runner},
+  title  = {W2805: after the shard total, def-sites first and declared cells after, each with its CPU},
+  claim  = {W2805: after the shard total, def-sites first and declared cells after, each with its
+            CPU.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_shard_log_carries_a_cell_line_for_each_def_site_and_each_declared_cell},
+}
+
+@misc{root-mutate-runner-cpu-burned-and-gone-before-the-first-poll-is-still-charged,
+  section = {mutate_runner},
+  title  = {github-00's plant: a child that burns CPU and exits between polls is charged exactly},
+  claim  = {github-00's plant: a child that burns CPU and exits between polls is charged exactly.
+            The poll interval is forced to 30 s, so the progress loop never reads the
+            suite's CPU: a polled peak would charge this cell 0.0, and the kernel's own
+            accounting at the reap charges 0.6 s.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_cpu_burned_and_gone_before_the_first_poll_is_still_charged},
+}
+
+@misc{root-mutate-runner-reconciliation-line-says-how-much-of-the-shard-the-cells-account-for,
+  section = {mutate_runner},
+  title  = {The witness the instrument needs: the cells' sum, the shard's total and what is left},
+  claim  = {The witness the instrument needs: the cells' sum, the shard's total and what is left.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_reconciliation_line_says_how_much_of_the_shard_the_cells_account_for},
+}
