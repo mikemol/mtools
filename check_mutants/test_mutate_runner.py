@@ -1606,6 +1606,94 @@ def test_a_kill_by_a_test_that_passes_on_the_clean_module_stays_a_kill(
     assert mutate_runner.run_declared(grid, declared) == "killed"
 
 
+def _noted(grid: mutate_runner.Grid, declared: Declared) -> tuple[str, dict[str, str]]:
+    notes: dict[str, str] = {}
+    got = mutate_runner.timed(
+        {}, declared.label, lambda: mutate_runner.run_declared(grid, declared), notes
+    )
+    return got, notes
+
+
+def test_a_vouched_kill_names_its_killer_and_that_it_passed_in_the_control(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2818: 'failed under the mutant, passed in the control' is what a flaky neighbour looks like.
+
+    github-00's condition 2 on the revised b108: the log names the test and the control's pass.
+    """
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _controlled(monkeypatch, clean_fails=False)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    got, notes = _noted(grid, declared)
+    assert got == "killed"
+    assert notes[declared.label] == (
+        f"killed by {_NAMED_NODE} (control: passed on the unmutated module)"
+    )
+
+
+def test_a_kill_the_control_could_not_vouch_for_names_no_killer(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The other case: the named test also fails on the clean module, so errored and no note."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _controlled(monkeypatch, clean_fails=True)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    got, notes = _noted(grid, declared)
+    assert got == "errored"
+    assert notes == {}
+
+
+def test_a_kill_by_several_failing_tests_names_the_first_and_counts_the_rest(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The first failing node is named, so the control's choice is visible, and the rest counted."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    named = (
+        "FAILED tests/test_a.py::test_one - AssertionError\n"
+        "FAILED tests/test_b.py::test_two - AssertionError\n2 failed in 0.01s\n"
+    )
+    _controlled(monkeypatch, clean_fails=False, named=named)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    _got, notes = _noted(grid, declared)
+    assert notes[declared.label] == (
+        "killed by tests/test_a.py::test_one and 1 more (control: passed on the unmutated module)"
+    )
+
+
+def test_a_suite_ended_by_the_cpu_limit_is_a_kill_that_names_no_test(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A hang killed by the limit names no test, and says so, so it is not read as a test's kill."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+
+    def hangs(
+        argv: list[str], _cwd: pathlib.Path, _env: dict[str, str]
+    ) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(argv, 1)
+
+    monkeypatch.setattr(mutate_runner, "launch", hangs)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    got, notes = _noted(grid, declared)
+    assert got == "killed"
+    assert notes[declared.label].startswith("killed by no test: the suite ended")
+
+
+def test_the_cell_line_carries_the_note_after_the_id_and_a_cell_without_one_is_unchanged() -> None:
+    """W2818: the note follows the id on the same line; other cells print exactly as before."""
+    lines = mutate_runner.cell_lines(
+        {"a": 1.0}, ["a", "b"], {"a": "killed by t.py::x (control: passed on the unmutated module)"}
+    )
+    assert lines == (
+        "cell cpu=1.0s a killed by t.py::x (control: passed on the unmutated module)\n"
+        "cell cpu=0.0s b\n"
+    )
+    assert mutate_runner.cell_lines({"a": 1.0}, ["a"]) == "cell cpu=1.0s a\n"
+
+
 def test_the_suite_is_launched_without_the_callers_pythonhome(
     tmp_path: pathlib.Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -2240,6 +2328,97 @@ def test_a_shard_log_carries_a_cell_line_for_each_def_site_and_each_declared_cel
         "cell cpu=40.0s src/other.py::watch-never-gives-up",
     ]
     assert lines[3].startswith("cells cpu=42.5s shard cpu=")
+
+
+_EXCLUDED_CELL = "src/mod.py::returns-two"
+_OTHER_CELL = "src/other.py::kept"
+_PAIR = 2
+
+
+_Cells = tuple[list[str], list[str], list[tuple[str, mutate_runner.Mutant]], list[Declared]]
+
+
+def _cells(attempted: list[str], unreachable: list[str]) -> _Cells:
+    named, kept = _two_declared()
+    return (attempted, unreachable, [], [named, kept])
+
+
+def _two_declared() -> tuple[Declared, Declared]:
+    return (
+        Declared("src/mod.py", RegexSpec("returns-two", "a", "b")),
+        Declared("src/other.py", RegexSpec("kept", "a", "b")),
+    )
+
+
+def test_the_exclusion_drops_exactly_the_named_cell_and_nothing_else() -> None:
+    """W2816: the named declared cell leaves the run; every other cell is untouched."""
+    _named, kept = _two_declared()
+    cells = _cells(["src/a.py::f"], ["src/a.py::g"])
+    attempted, unreachable, jobs, declared = mutate_runner.drop_excluded(_EXCLUDED_CELL, cells)
+    assert declared == [kept]
+    assert (attempted, unreachable, jobs) == (["src/a.py::f"], ["src/a.py::g"], [])
+
+
+def test_an_unset_exclusion_drops_nothing() -> None:
+    """The control: no MUTATE_EXCLUDE is the run as it was."""
+    cells = _cells(["src/a.py::f"], [])
+    assert mutate_runner.drop_excluded("", cells) == cells
+
+
+def test_an_excluded_label_that_is_no_cell_of_the_run_is_refused_by_name() -> None:
+    """A stale or misdirected label raises, naming each such label, never ignored."""
+    cells = _cells(["src/a.py::f"], [])
+    with pytest.raises(ValueError, match=r"src/gone\.py::old") as caught:
+        mutate_runner.drop_excluded(f"{_EXCLUDED_CELL} src/gone.py::old", cells)
+    assert _EXCLUDED_CELL not in str(caught.value)
+
+
+def test_the_header_line_names_every_effective_exclusion_or_none() -> None:
+    """W2812's lesson: an exclusion that did not take is visible in the log header."""
+    assert mutate_runner.excluded_line("") == "excluded (MUTATE_EXCLUDE): none\n"
+    both = mutate_runner.excluded_line(f"{_OTHER_CELL} {_EXCLUDED_CELL}")
+    assert both == f"excluded (MUTATE_EXCLUDE): {_PAIR} cell(s): {_EXCLUDED_CELL}, {_OTHER_CELL}\n"
+
+
+def test_a_grid_run_prints_the_exclusion_and_does_not_plant_the_excluded_defect(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Through main: the header names it, REGEX lists no cell, and a stale label exits 1 by name."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    _seam(monkeypatch, 0, _PASSED)
+    monkeypatch.setenv("MUTATE_EXCLUDE", _EXCLUDED_CELL)
+    assert _run_main(grid) == 0
+    out = capsys.readouterr().out
+    assert f"excluded (MUTATE_EXCLUDE): 1 cell(s): {_EXCLUDED_CELL}" in out
+    assert "REGEX (0)" in out
+    monkeypatch.setenv("MUTATE_EXCLUDE", "src/gone.py::old")
+    assert _run_main(grid) == 1
+    assert "src/gone.py::old" in capsys.readouterr().err
+
+
+def test_an_exclusion_changes_only_the_shard_that_holds_the_cell(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Both directions: the holder drops exactly that cell, the other shard's plan is identical."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    holder = 0 if mutate_runner.in_shard(_EXCLUDED_CELL, (0, _PAIR)) else 1
+    other = 1 - holder
+    monkeypatch.setenv("MUTATE_PLAN", "1")
+
+    def plan(shard: int, exclude: str) -> str:
+        monkeypatch.setenv("MUTATE_SHARD", f"{shard}/{_PAIR}")
+        monkeypatch.setenv("MUTATE_EXCLUDE", exclude)
+        assert _run_main(grid) == 0
+        return capsys.readouterr().out
+
+    before_other = plan(other, "")
+    assert "declared=1" in plan(holder, "")
+    assert "declared=0" in plan(holder, _EXCLUDED_CELL)
+    assert plan(other, "") == before_other
 
 
 _CELL = "src/mod.py::returns-two"

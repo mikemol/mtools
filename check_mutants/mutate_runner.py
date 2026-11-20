@@ -177,6 +177,58 @@ class Selection:
         return dist if self.shard is None else f"{dist} shard {self.shard[0]}/{self.shard[1]}"
 
 
+def drop_excluded(
+    raw: str,
+    cells: tuple[list[str], list[str], list[tuple[str, Mutant]], list[Declared]],
+) -> tuple[list[str], list[str], list[tuple[str, Mutant]], list[Declared]]:
+    """Drop the cells `MUTATE_EXCLUDE` names (space-separated labels) from this run (W2816).
+
+    ⚑ THE GRID IS ASSIGNED BY A STABLE HASH OF EACH KEY (`in_shard`), NOT BY INDEX, so dropping a
+    cell moves no other cell: only the shard that held it changes. The cell keeps its declaration,
+    so a per-site target generated from the same `mutants.regex` still exists and runs it.
+    ⚑ A STALE EXCLUSION IS REFUSED BY NAME, never ignored: a label that is no cell of THIS run is
+    a declaration the code has moved away from, or a label sent to the wrong shard.
+    ⚑ SCAFFOLDING OF THE FLAT GRID (github-00): it retires with the sharded `:mutants` (W2775).
+
+    Args:
+        raw: the value of `MUTATE_EXCLUDE`, empty when unset.
+        cells: this run's def-sites, import-time sites, def-site mutants and declared defects.
+
+    Returns:
+        the same four collections without the excluded cells.
+
+    Raises:
+        ValueError: when a label is no cell of this run; the message names each.
+
+    """
+    excluded = frozenset(raw.split())
+    attempted, unreachable, jobs, declared = cells
+    held = frozenset([*attempted, *unreachable, *(d.label for d in declared)])
+    stale = sorted(label for label in excluded if label not in held)
+    if stale:
+        msg = f"MUTATE_EXCLUDE names no cell of this run: {', '.join(stale)}"
+        raise ValueError(msg)
+    return (
+        [s for s in attempted if s not in excluded],
+        [s for s in unreachable if s not in excluded],
+        [(site, mutant) for site, mutant in jobs if site not in excluded],
+        [d for d in declared if d.label not in excluded],
+    )
+
+
+def excluded_line(raw: str) -> str:
+    """Say which cells this run drops, so an exclusion that did not take is visible (W2812).
+
+    Returns:
+        one newline-terminated line: `none`, or the count and the labels.
+
+    """
+    excluded = sorted(set(raw.split()))
+    if not excluded:
+        return "excluded (MUTATE_EXCLUDE): none\n"
+    return f"excluded (MUTATE_EXCLUDE): {len(excluded)} cell(s): {', '.join(excluded)}\n"
+
+
 def select(raw_shard: str, site: str) -> Selection:
     """Read `MUTATE_SHARD` and `MUTATE_SITE`.
 
@@ -1195,12 +1247,15 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
             report_phase("suite (ended)", mark)
             if debug:
                 sys.stdout.write("      ended with no progress or over its CPU limit\n")
+            note("killed by no test: the suite ended with no progress or over its CPU limit")
             return "killed"
         if debug:
             _report_debug(proc)
         result = verdict(proc.returncode, proc.stdout)
         if result == "killed" and _baseline_fails(grid, (work, rel), env, work / REPORT_FILE):
             return "errored"
+        if result == "killed":
+            note(killer_note(work / REPORT_FILE))
         return result
 
 
@@ -1686,11 +1741,19 @@ def main(argv: list[str]) -> int:
     if chosen.site and not attempted and not declared:
         sys.stderr.write(f"mutate: MUTATE_SITE {chosen.site!r} names no site or defect\n")
         return 1
+    try:
+        attempted, unreachable, jobs, declared = drop_excluded(
+            os.environ.get("MUTATE_EXCLUDE", ""), (attempted, unreachable, jobs, declared)
+        )
+    except ValueError as exc:
+        sys.stderr.write(f"mutate: {exc}\n")
+        return 1
     if os.environ.get("MUTATE_PLAN"):
         sys.stdout.write(plan_line(grid.dist.name, attempted, unreachable, len(declared)))
         return 0
     if os.environ.get("MUTATE_LINT"):
         return lint_declared(grid.dist, declared)
+    sys.stdout.write(excluded_line(os.environ.get("MUTATE_EXCLUDE", "")))
     verdicts, regex = run_all(
         grid,
         [m for _site, m in jobs],
@@ -1922,26 +1985,74 @@ def charge(seconds: float) -> None:
         box[0] += seconds
 
 
-def timed(spent: dict[str, float], cell: str, job: Callable[[], str]) -> str:
-    """Run one cell's job and record the CPU its suites used against the cell's id.
+_CELL_NOTES: contextvars.ContextVar[list[str]] = contextvars.ContextVar("mutate_cell_notes")
+"""What the cell the current worker is running has to say about its verdict (W2818)."""
+
+
+def note(text: str) -> None:
+    """Add a line to the cell this worker is running; nothing when no cell is being timed."""
+    lines = _CELL_NOTES.get(None)
+    if lines is not None:
+        lines.append(text)
+
+
+def killer_note(report: pathlib.Path) -> str:
+    """Say which test killed a cell, and that the same test passed on the UNMUTATED module (W2818).
+
+    ⚑ CALLED ONLY FOR A KILL THE CONTROL VOUCHED FOR: `_baseline_fails` found the named test passing
+    on the clean module, so "failed under the mutant, passed in the control" is exactly what a
+    FLAKY NEIGHBOUR looks like, and the log now says so instead of a bare `killed` (mtools:W2819,
+    b108's flip of `entry.py::work_claims_main`, whose killer had to be inferred).
+
+    Returns:
+        `killed by <first failing node id> (control: passed on the unmutated module)`, with the
+        count of further failing nodes; or why no node is named.
+
+    """
+    try:
+        nodes = failing_nodes(report)
+    except NodeReportError as error:
+        return f"killed by an unnamed test ({error})"
+    if not nodes:
+        return "killed by no test in a Python file"
+    more = f" and {len(nodes) - 1} more" if len(nodes) > 1 else ""
+    return f"killed by {nodes[0]}{more} (control: passed on the unmutated module)"
+
+
+def timed(
+    spent: dict[str, float],
+    cell: str,
+    job: Callable[[], str],
+    notes: dict[str, str] | None = None,
+) -> str:
+    """Run one cell's job and record the CPU its suites used and what it noted, by the cell's id.
 
     ⚑ THE CPU IS RECORDED WHETHER THE JOB RETURNS OR RAISES, and a cell can run two suites (the
     control and the mutant): every launch the worker makes while the job runs is charged to it.
+    ⚑ THE NOTES (W2818) ARE KEPT IN `notes` WHEN ONE IS GIVEN: `killer_note` is what a killed cell
+    says about its killer.
 
     Returns:
         the job's verdict.
 
     """
     box = [0.0]
+    lines: list[str] = []
     token = _CELL_CPU.set(box)
+    note_token = _CELL_NOTES.set(lines)
     try:
         return job()
     finally:
+        _CELL_NOTES.reset(note_token)
         _CELL_CPU.reset(token)
         spent[cell] = box[0]
+        if notes is not None and lines:
+            notes[cell] = "; ".join(lines)
 
 
-def cell_lines(spent: Mapping[str, float], order: Sequence[str]) -> str:
+def cell_lines(
+    spent: Mapping[str, float], order: Sequence[str], notes: Mapping[str, str] | None = None
+) -> str:
     """Say what each cell cost in CPU, one line per cell in run order (W2805).
 
     ⚑ THE SHARD TOTAL HIDES WHICH CELL IS HEAVY: b104's two heaviest shards read 165.2 and 163.0 s
@@ -1949,10 +2060,15 @@ def cell_lines(spent: Mapping[str, float], order: Sequence[str]) -> str:
     cell absent from `spent` reads 0.0, never a missing line.
 
     Returns:
-        `cell cpu=<seconds>s <cell id>` per cell, newline-terminated.
+        `cell cpu=<seconds>s <cell id>` per cell, newline-terminated, with ` <note>` after the id
+        when the cell has one (a killed cell names its killer, W2818).
 
     """
-    return "".join(f"cell cpu={spent.get(cell, 0.0):.1f}s {cell}\n" for cell in order)
+    said = notes or {}
+    return "".join(
+        f"cell cpu={spent.get(cell, 0.0):.1f}s {cell}{' ' + said[cell] if cell in said else ''}\n"
+        for cell in order
+    )
 
 
 def reconcile_line(spent: Mapping[str, float], total: float) -> str:
@@ -1999,15 +2115,18 @@ def run_all(
     portable_python(grid.py)
     held: list[str] = []
     spent: dict[str, float] = {}
+    notes: dict[str, str] = {}
     sites = [f"{m.rel}::{m.name}" for m in mutants]
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
         futures = [
-            pool.submit(timed, spent, cell, functools.partial(run, grid, mutant, debug=debug))
+            pool.submit(
+                timed, spent, cell, functools.partial(run, grid, mutant, debug=debug), notes
+            )
             for cell, mutant in zip(sites, mutants, strict=True)
         ]
         planted = [
             pool.submit(
-                timed, spent, d.label, functools.partial(run_declared, grid, d, debug=debug)
+                timed, spent, d.label, functools.partial(run_declared, grid, d, debug=debug), notes
             )
             for d in declared
         ]
@@ -2023,7 +2142,7 @@ def run_all(
     used = resource.getrusage(resource.RUSAGE_CHILDREN)
     total = used.ru_utime + used.ru_stime
     sys.stdout.write(cpu_line(total, workers))
-    sys.stdout.write(cell_lines(spent, [*sites, *(d.label for d in declared)]))
+    sys.stdout.write(cell_lines(spent, [*sites, *(d.label for d in declared)], notes))
     sys.stdout.write(reconcile_line(spent, total))
     return verdicts, regex
 

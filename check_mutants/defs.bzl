@@ -24,7 +24,13 @@ Usage, in a distribution's BUILD.bazel, in place of its `sh_test(name = "mutants
                     size = "medium", timeout = "long")
 """
 
-def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, **kwargs):
+def _excluding(env, exclude_in, shard):
+    """Add MUTATE_EXCLUDE to one shard's env when that shard is named in `exclude_in`."""
+    if shard in exclude_in:
+        return dict(env, MUTATE_EXCLUDE = " ".join(exclude_in[shard]))
+    return env
+
+def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, exclude_in = {}, **kwargs):
     """Declare a distribution's mutation grid as `shards` targets and a suite named `name`.
 
     Args:
@@ -36,8 +42,15 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, **kw
         cpu_budget: when above 0, the CPU seconds one shard may use (`MUTATE_SHARD_CPU_S`); a shard
             over it is refused by the runner with its measured CPU, so the failure threshold is CPU
             and host load cannot fail a gate (W1772). 0 declares no budget.
+        exclude_in: `{shard index: [cell labels]}`: the cells that shard does NOT run
+            (`MUTATE_EXCLUDE`, W2816), set ONLY on the shards named, so the other shards' targets
+            are byte-identical and stay cached. A label that is no cell of its shard is refused by
+            the runner by name. SCAFFOLDING OF THE FLAT GRID: it retires with it (W2775).
         **kwargs: the arguments of the `sh_test` each shard is (srcs, args, data, size, timeout).
     """
+    for held in exclude_in:
+        if held < 0 or held >= shards:
+            fail("mutants_sharded: exclude_in names shard %d, but there are %d shards" % (held, shards))
     if shards < 1:
         fail("mutants_sharded: shards must be at least 1, got %d" % shards)
 
@@ -65,14 +78,14 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, **kw
         # longest bazel allows, there only so a shard that hangs without using CPU is still ended.
         kwargs["timeout"] = "eternal"
     if shards == 1:
-        native.sh_test(name = name, env = reserve, **kwargs)
+        native.sh_test(name = name, env = _excluding(reserve, exclude_in, 0), **kwargs)
         return
     names = []
     for i in range(shards):
         shard = "%s_%d" % (name, i)
         native.sh_test(
             name = shard,
-            env = dict(reserve, MUTATE_SHARD = "%d/%d" % (i, shards)),
+            env = _excluding(dict(reserve, MUTATE_SHARD = "%d/%d" % (i, shards)), exclude_in, i),
             **kwargs
         )
         names.append(shard)

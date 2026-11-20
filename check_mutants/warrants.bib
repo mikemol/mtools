@@ -970,3 +970,86 @@
   claim  = {The witness the instrument needs: the cells' sum, the shard's total and what is left.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_reconciliation_line_says_how_much_of_the_shard_the_cells_account_for},
 }
+
+@misc{root-mutate-runner-exclusion-drops-exactly-the-named-cell-and-nothing-else,
+  section = {mutate_runner},
+  title  = {W2816: the named declared cell leaves the run; every other cell is untouched},
+  claim  = {W2816: the named declared cell leaves the run; every other cell is untouched.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_exclusion_drops_exactly_the_named_cell_and_nothing_else},
+}
+
+@misc{root-mutate-runner-unset-exclusion-drops-nothing,
+  section = {mutate_runner},
+  title  = {The control: no MUTATE_EXCLUDE is the run as it was},
+  claim  = {The control: no MUTATE_EXCLUDE is the run as it was.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_unset_exclusion_drops_nothing},
+}
+
+@misc{root-mutate-runner-excluded-label-that-is-no-cell-of-the-run-is-refused-by-name,
+  section = {mutate_runner},
+  title  = {A stale or misdirected label raises, naming each such label, never ignored},
+  claim  = {A stale or misdirected label raises, naming each such label, never ignored.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_excluded_label_that_is_no_cell_of_the_run_is_refused_by_name},
+}
+
+@misc{root-mutate-runner-header-line-names-every-effective-exclusion-or-none,
+  section = {mutate_runner},
+  title  = {W2812's lesson: an exclusion that did not take is visible in the log header},
+  claim  = {W2812's lesson: an exclusion that did not take is visible in the log header.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_header_line_names_every_effective_exclusion_or_none},
+}
+
+@misc{root-mutate-runner-grid-run-prints-the-exclusion-and-does-not-plant-the-excluded-defect,
+  section = {mutate_runner},
+  title  = {Through main: the header names it, REGEX lists no cell, and a stale label exits 1 by name},
+  claim  = {Through main: the header names it, REGEX lists no cell, and a stale label exits 1 by
+            name.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_grid_run_prints_the_exclusion_and_does_not_plant_the_excluded_defect},
+}
+
+@misc{root-mutate-runner-exclusion-changes-only-the-shard-that-holds-the-cell,
+  section = {mutate_runner},
+  title  = {Both directions: the holder drops exactly that cell, the other shard's plan is identical},
+  claim  = {Both directions: the holder drops exactly that cell, the other shard's plan is
+            identical.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_an_exclusion_changes_only_the_shard_that_holds_the_cell},
+}
+
+@misc{root-mutate-runner-vouched-kill-names-its-killer-and-that-it-passed-in-the-control,
+  section = {mutate_runner},
+  title  = {W2818: 'failed under the mutant, passed in the control' is what a flaky neighbour looks like},
+  claim  = {W2818: 'failed under the mutant, passed in the control' is what a flaky neighbour looks
+            like. github-00's condition 2 on the revised b108: the log names the test
+            and the control's pass.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_vouched_kill_names_its_killer_and_that_it_passed_in_the_control},
+}
+
+@misc{root-mutate-runner-kill-the-control-could-not-vouch-for-names-no-killer,
+  section = {mutate_runner},
+  title  = {The other case: the named test also fails on the clean module, so errored and no note},
+  claim  = {The other case: the named test also fails on the clean module, so errored and no note.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_kill_the_control_could_not_vouch_for_names_no_killer},
+}
+
+@misc{root-mutate-runner-kill-by-several-failing-tests-names-the-first-and-counts-the-rest,
+  section = {mutate_runner},
+  title  = {The first failing node is named, so the control's choice is visible, and the rest counted},
+  claim  = {The first failing node is named, so the control's choice is visible, and the rest
+            counted.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_kill_by_several_failing_tests_names_the_first_and_counts_the_rest},
+}
+
+@misc{root-mutate-runner-suite-ended-by-the-cpu-limit-is-a-kill-that-names-no-test,
+  section = {mutate_runner},
+  title  = {A hang killed by the limit names no test, and says so, so it is not read as a test's kill},
+  claim  = {A hang killed by the limit names no test, and says so, so it is not read as a test's
+            kill.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_ended_by_the_cpu_limit_is_a_kill_that_names_no_test},
+}
+
+@misc{root-mutate-runner-cell-line-carries-the-note-after-the-id-and-a-cell-without-one-is-unchanged,
+  section = {mutate_runner},
+  title  = {W2818: the note follows the id on the same line; other cells print exactly as before},
+  claim  = {W2818: the note follows the id on the same line; other cells print exactly as before.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_cell_line_carries_the_note_after_the_id_and_a_cell_without_one_is_unchanged},
+}

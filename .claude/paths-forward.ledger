@@ -8363,3 +8363,45 @@
 2026-11-20T10:40:03Z  status W2805 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-20T10:56:28Z  interrupt W2806 minted    -         "hooks watch-loop declared mutants: bound each watch loop's test by an event or tick count the test controls, so an unbounded mutant fails in seconds, not at the 120 s cap"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2802
 2026-11-20T10:56:47Z  status W2806 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T10:58:12Z  interrupt W2807 minted    -         "mutation runner shard line: rename children= to workers= (it is the pool width, not a count of children)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2805
+2026-11-20T10:58:18Z  status W2807 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T12:03:17Z  interrupt W2808 minted    -         "ratchet: a shrink-only census of every shards = value in every BUILD file, so a count can only fall (github-00 ruling 2026-11-20)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2802
+2026-11-20T12:03:27Z  status W2808 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T12:06:21Z  interrupt W2809 minted    -         "hooks/BUILD.bazel: take the over-half cells' modules out of the sharded grid and put their per-site targets in the gate"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2802
+2026-11-20T12:06:39Z  status W2809 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T12:27:43Z  interrupt W2810 minted    -         "Re-run the whole hooks site suite with W2805's runner and store the measured list: per-cell CPU and verdict for every site"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2205
+2026-11-20T12:27:57Z  status W2810 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T12:33:34Z  interrupt W2811 minted    -         "mutants_gen: emit each site's own baseline slice beside its BUILD, with a freshness test that the slices reassemble to the ratchet's file"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2205
+2026-11-20T12:33:36Z  interrupt W2812 minted    -         "mutation runner: print the effective MUTATE_* settings in the shard log header, so an override that did not take is visible"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2205
+2026-11-20T12:33:54Z  status W2811 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T12:33:56Z  status W2812 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T12:39:59Z  interrupt W2813 minted    -         "ratchet: a shared shrink-only census of glob( calls in BUILD and bzl files, refusing any new one, adoptable by every repo"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2806
+2026-11-20T12:40:13Z  status W2813 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T12:42:11Z  interrupt W2814 minted    -         "pycodemod: rewrite each glob() in a dist's BUILD to select_tracked over git ls-files, dry-run first, every expansion equal to the glob's as a set"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2813
+2026-11-20T12:42:22Z  status W2814 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T13:01:55Z  interrupt W2815 minted    -         "mikemol-review-ref: turn a patch or a parked source into one commit on a review ref naming its card, one piece or a batch"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W2380
+2026-11-20T13:02:09Z  status W2815 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:11Z  status W2805 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:11Z  status W2806 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:11Z  status W2807 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:11Z  status W2808 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:11Z  status W2810 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:11Z  status W2811 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:11Z  status W2812 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:41Z  status W2807 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:42Z  status W2808 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:44Z  status W2811 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:45Z  status W2812 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:23:51Z  status W2810 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:24:38Z  status W2806 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:25:46Z  interrupt W2816 minted    -         "mutation runner: a shard drops named cells AFTER its assignment, so the other shards' cells do not shift"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2806
+2026-11-20T14:26:06Z  status W2816 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T14:34:34Z  interrupt W2817 minted    -         "mutants_sharded: take exclude = [labels] and compute each label's shard in Starlark with the runner's FNV-1a, with a test that the two hashes agree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2816
+2026-11-20T14:34:42Z  status W2817 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T16:42:49Z  interrupt W2818 minted    -         "mutation runner: a KILLED cell names the test that killed it, in the shard log"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2816
+2026-11-20T16:42:54Z  interrupt W2819 minted    -         "entry.py::work_claims_main is a baselined survivor that flipped to killed once: find its killer, make the cell deterministic"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2816
+2026-11-20T16:43:08Z  status W2819 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T16:43:10Z  status W2818 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T16:45:49Z  interrupt W2820 minted    -         "hooks tests that read bazel-bin or a .venv outside their declared bazel inputs: a census check"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2819
+2026-11-20T16:46:02Z  status W2820 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T16:50:22Z  status W2818 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
