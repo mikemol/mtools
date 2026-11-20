@@ -8329,3 +8329,28 @@
 2026-11-20T06:19:45Z  status W2799 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-20T06:24:46Z  interrupt W2800 minted    -         "testgate must run a stack's own tests over the --freeze-from tree, not the live working tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2772
 2026-11-20T06:24:58Z  status W2800 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:02:14Z  status W2790 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:40:08Z  interrupt W2801 minted    -         "retros.py: --add-retro requires no precommit, so a retro without one escapes nemik's retro judging"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W121
+2026-11-20T07:40:16Z  status W2801 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2774 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2780 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2788 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2791 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2796 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2798 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2799 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:18Z  status W2800 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:42:24Z  status W2800 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:45:29Z  status W2780 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:45:30Z  status W2798 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:45:31Z  status W2791 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:45:32Z  status W2799 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:45:33Z  status W2796 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:45:33Z  status W2788 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:49:46Z  interrupt W2802 minted    -         "hooks mutation grid: shards 433 to 597, the shard guard's count (INTERIM until cone sharding)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2774
+2026-11-20T07:50:16Z  status W2802 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:50:21Z  interrupt W2803 minted    -         "submit_problem and the refusals it asks return str | None, a maybe-result: give them a Refusal | Clear result type"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2800
+2026-11-20T07:50:26Z  status W2803 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:52:44Z  status W2802 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T07:52:46Z  interrupt W2804 minted    -         "shard guard (W1602): prescribe a shard count by projecting from per-site cost and name an indivisible cell when no count converges"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2802
+2026-11-20T07:52:55Z  status W2804 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
