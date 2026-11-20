@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import ast
 import concurrent.futures
+import json
 import os
 import pathlib
 import subprocess
@@ -999,10 +1000,11 @@ def _seam(monkeypatch: pytest.MonkeyPatch, declared_rc: int, declared_out: str) 
     def suite(
         argv: list[str],
         cwd: pathlib.Path,
-        _env: dict[str, str],
+        env: dict[str, str],
     ) -> subprocess.CompletedProcess[str]:
         text = (cwd / "src" / "mod.py").read_text(encoding="utf-8")
         seen.append(text)
+        pathlib.Path(env["MUTATE_NODES"]).write_text("", encoding="utf-8")  # the plugin's start
         if "AssertionError" in text:
             return subprocess.CompletedProcess(argv, 1, f"{_FAILED}AssertionError: mutant\n", "")
         return subprocess.CompletedProcess(argv, declared_rc, declared_out, "")
@@ -1525,7 +1527,8 @@ def test_claim_cores_stops_at_the_wanted_count_and_takes_labels_in_order() -> No
     assert ledger.held == set(got)
 
 
-_NAMED_FAILURE = "FAILED tests/test_env.py::test_the_checker - AssertionError\n1 failed in 0.01s\n"
+_NAMED_NODE = "tests/test_env.py::test_the_checker"
+_NAMED_FAILURE = f"FAILED {_NAMED_NODE} - AssertionError\n1 failed in 0.01s\n"
 _TWO = "src/mod.py|returns-two|return 1|return 2|\nsrc/mod.py|returns-three|return 1|return 3|\n"
 
 
@@ -1549,10 +1552,20 @@ def _controlled(
     runs: list[tuple[str, str]] = []
 
     def suite(
-        argv: list[str], cwd: pathlib.Path, _env: dict[str, str]
+        argv: list[str], cwd: pathlib.Path, env: dict[str, str]
     ) -> subprocess.CompletedProcess[str]:
         text = (cwd / "src" / "mod.py").read_text(encoding="utf-8")
         runs.append((text, [a for a in argv if not a.startswith("-")][-1]))
+        # The plugin's report: the Python test ids the failure text names, as pytest would write.
+        failed = [
+            ln.removeprefix("FAILED ").split(" - ")[0]
+            for ln in named.splitlines()
+            if ln.startswith("FAILED ") and ".py::" in ln
+        ]
+        if text != _SITE_SOURCE and "MUTATE_NODES" in env:
+            report = pathlib.Path(env["MUTATE_NODES"])
+            lines = [json.dumps(node) + "\n" for node in failed]
+            report.write_text("".join(lines), encoding="utf-8")
         if text == _SITE_SOURCE and times_out:
             raise subprocess.TimeoutExpired(argv, 1)
         if text == _SITE_SOURCE and no_tests:
@@ -1664,6 +1677,273 @@ def test_a_control_that_times_out_errors_the_cell_and_is_asked_again_for_the_nex
     verdicts = [mutate_runner.run_declared(grid, d) for d in mutate_runner.read_declared(grid.dist)]
     assert verdicts == ["errored", "errored"]
     assert sum(1 for text, _ in runs if text == _SITE_SOURCE) == len(verdicts)
+
+
+def test_a_failed_line_for_a_non_test_item_does_not_become_the_controls_id(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2769: the control runs the node pytest reported, not the first `FAILED` line of the text.
+
+    pytestspec prints `FAILED spec.rego::p` for a spec item, ahead of the real test's line. That id
+    collects nothing, so the cell read ERRORED; it must read the true verdict.
+    """
+    noisy = (
+        f"FAILED spec.rego::p - AssertionError\nFAILED {_NAMED_NODE} - AssertionError\n1 failed\n"
+    )
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    runs = _controlled(monkeypatch, clean_fails=False, named=noisy)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "killed"
+    assert runs[1] == (_SITE_SOURCE, _NAMED_NODE)
+
+
+def test_a_suite_that_reports_no_failed_python_test_gets_no_control(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2769: only a spec item failed, so there is no test to put against the clean module."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    spec_only = "FAILED spec.rego::p - AssertionError\n1 failed\n"
+    runs = _controlled(monkeypatch, clean_fails=False, named=spec_only)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "killed"
+    assert [text for text, _ in runs] == ["def f():\n    return 2\n"]
+
+
+def test_failing_nodes_keeps_python_test_ids_and_skips_well_formed_spec_ids(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2769: a well-formed spec id is a declared non-test; an empty report names no test."""
+    report = tmp_path / "nodes.jsonl"
+    report.write_text('"spec.rego::p"\n"tests/test_a.py::test_x[a b]"\n', encoding="utf-8")
+    assert mutate_runner.failing_nodes(report) == ["tests/test_a.py::test_x[a b]"]
+    report.write_text("", encoding="utf-8")
+    assert mutate_runner.failing_nodes(report) == []
+
+
+def test_a_missing_node_report_is_a_typed_error_and_never_an_empty_list(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2769 R1: absence means the plugin did not run, so it cannot read as no failing test."""
+    with pytest.raises(mutate_runner.NodeReportMissingError):
+        mutate_runner.failing_nodes(tmp_path / "absent.jsonl")
+
+
+@pytest.mark.parametrize("bad", ["not json\n", "42\n", "[1]\n"])
+def test_a_line_the_plugin_wrote_that_is_not_a_node_id_is_a_typed_error(
+    tmp_path: pathlib.Path, bad: str
+) -> None:
+    """W2769 R2: an unparseable line is a broken instrument, refused rather than skipped."""
+    report = tmp_path / "nodes.jsonl"
+    report.write_text(bad, encoding="utf-8")
+    with pytest.raises(mutate_runner.NodeReportMalformedError):
+        mutate_runner.failing_nodes(report)
+
+
+def test_a_suite_whose_plugin_never_loaded_errors_the_cell_and_names_the_reason(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2769 R1: a suite launched without the plugin writes no report, and the cell is ERRORED."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    monkeypatch.setattr(mutate_runner, "_CONTROLS", {})
+
+    def suite(
+        argv: list[str], _cwd: pathlib.Path, _env: dict[str, str]
+    ) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(argv, 1, _NAMED_FAILURE, "")
+
+    monkeypatch.setattr(mutate_runner, "launch", suite)
+    (declared,) = mutate_runner.read_declared(grid.dist)
+    assert mutate_runner.run_declared(grid, declared) == "errored"
+    assert "the plugin did not run" in capsys.readouterr().out
+
+
+_SPEC_CONFTEST = """\
+import pytest
+
+
+class SpecItem(pytest.Item):
+    def runtest(self):
+        raise AssertionError("the spec item fails")
+
+    def reportinfo(self):
+        return self.path, 0, "spec"
+
+
+class SpecFile(pytest.File):
+    def collect(self):
+        yield SpecItem.from_parent(self, name="p")
+
+
+def pytest_collect_file(parent, file_path):
+    if file_path.suffix == ".rego":
+        return SpecFile.from_parent(parent, path=file_path)
+    return None
+"""
+
+
+def _pytest_with_plugin(
+    root: pathlib.Path, report: pathlib.Path
+) -> subprocess.CompletedProcess[str]:
+    """Run real pytest in `root` with the runner's node plugin written beside the tests.
+
+    Returns:
+        the completed pytest process.
+
+    """
+    (root / mutate_runner.PLUGIN_FILE).write_text(mutate_runner.NODE_PLUGIN, encoding="utf-8")
+    return subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "-p", "_mutate_nodes"],
+        cwd=root,
+        env={**os.environ, "MUTATE_NODES": str(report), "PYTHONPATH": str(root)},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def test_the_node_plugin_creates_an_empty_report_when_no_test_fails(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2769 R1: a suite that ran and failed nothing leaves an EMPTY file, not a missing one."""
+    (tmp_path / "test_ok.py").write_text("def test_ok():\n    pass\n", encoding="utf-8")
+    report = tmp_path / mutate_runner.REPORT_FILE
+    _pytest_with_plugin(tmp_path, report)
+    assert report.is_file()
+    assert mutate_runner.failing_nodes(report) == []
+
+
+def test_the_node_plugin_names_the_real_test_when_a_spec_item_fails_ahead_of_it(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2769: real pytest, a spec item whose `FAILED` line precedes the real test's.
+
+    The text's first `FAILED` line names `spec.rego::p`, which pytest cannot collect; the plugin's
+    report names only the test.
+    """
+    (tmp_path / "conftest.py").write_text(_SPEC_CONFTEST, encoding="utf-8")
+    (tmp_path / "spec.rego").write_text("p\n", encoding="utf-8")
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "test_real.py").write_text(
+        "def test_real():\n    raise AssertionError('real')\n", encoding="utf-8"
+    )
+    report = tmp_path / mutate_runner.REPORT_FILE
+    done = _pytest_with_plugin(tmp_path, report)
+    spec_line = done.stdout.index("FAILED spec.rego::p")
+    assert spec_line < done.stdout.index("FAILED tests/test_real.py::test_real")
+    assert mutate_runner.failing_nodes(report) == ["tests/test_real.py::test_real"]
+
+
+_REGEN_REPORT = (
+    "KILLED (1) \N{EM DASH} the suite RAN and a test FAILED:\n    src/m.py::f\n\n"
+    "SURVIVED (1) \N{EM DASH} the suite ran and noticed nothing:\n    src/m.py::g\n\n"
+    "ERRORED (0) \N{EM DASH} the suite did NOT run, so it noticed nothing:\n\n"
+    "REGEX (0) \N{EM DASH} defects the distribution DECLARED:\n"
+)
+
+
+def _dist_with_logs(
+    root: pathlib.Path, baseline: str, shard: str
+) -> tuple[pathlib.Path, pathlib.Path]:
+    dist = root / "d"
+    dist.mkdir()
+    (dist / "mutants-baseline.txt").write_text(baseline, encoding="utf-8")
+    log = root / "logs" / "d" / shard / "test.log"
+    log.parent.mkdir(parents=True)
+    log.write_text(_REGEN_REPORT, encoding="utf-8")
+    return dist, root / "logs"
+
+
+def test_regen_takes_a_cell_off_that_now_reads_killed_and_says_so(
+    tmp_path: pathlib.Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2777: the stale errored cell is paid down and the surviving one stays."""
+    old = "errored src/m.py::f\nsurvived src/m.py::g\n"
+    dist, logs = _dist_with_logs(tmp_path, old, "mutants_1")
+    assert mutate_runner.regen_baseline(dist, logs) == 0
+    out = capsys.readouterr().out
+    assert "OFF errored src/m.py::f" in out
+    assert "paydown: 1 cell(s) off" in out
+    written = (dist / "mutants-baseline.txt").read_text(encoding="utf-8")
+    assert written.endswith("survived src/m.py::g\n")
+    assert "src/m.py::f" not in written
+
+
+def test_regen_reads_a_new_cell_as_debt_and_exits_one(
+    tmp_path: pathlib.Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2777: a cell the baseline never listed is NEW debt, named, and the exit is 1."""
+    dist, logs = _dist_with_logs(tmp_path, "", "mutants_1")
+    assert mutate_runner.regen_baseline(dist, logs) == 1
+    out = capsys.readouterr().out
+    assert "NEW survived src/m.py::g" in out
+    assert "the debt may only fall" in out
+
+
+def test_regen_finds_a_plain_targets_log_and_refuses_a_dist_with_none(
+    tmp_path: pathlib.Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2777: `mutants/test.log` serves a plain sh_test; no log at all is refused, named."""
+    dist, logs = _dist_with_logs(tmp_path, "survived src/m.py::g\n", "mutants")
+    assert mutate_runner.regen_baseline(dist, logs) == 0
+    capsys.readouterr()
+    assert mutate_runner.regen_baseline(dist, tmp_path / "nowhere") == 1
+    assert "no mutation test logs for d" in capsys.readouterr().err
+
+
+def _shard_log(root: pathlib.Path, shard: int, total: int) -> None:
+    """Write one shard's log, stating `shard i/N` the way the runner's report does."""
+    log = root / "logs" / "d" / f"mutants_{shard}" / "test.log"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    log.write_text(f"d shard {shard}/{total}: ATTEMPTED 1 def-site(s)\n" + _REGEN_REPORT, "utf-8")
+
+
+def test_regen_names_a_malformed_old_baseline_and_changes_nothing(
+    tmp_path: pathlib.Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2777 R1: an unreadable old baseline is refused with its problem, never read as empty."""
+    dist, logs = _dist_with_logs(tmp_path, "not a baseline line\n", "mutants_1")
+    assert mutate_runner.regen_baseline(dist, logs) == 1
+    assert "not '<verdict> <cell>'" in capsys.readouterr().err
+    assert (dist / "mutants-baseline.txt").read_text(encoding="utf-8") == "not a baseline line\n"
+
+
+def test_regen_with_a_new_cell_leaves_the_baseline_file_untouched(tmp_path: pathlib.Path) -> None:
+    """W2777 R2: debt is written only when nothing is NEW; a NEW cell exits 1 and writes nothing."""
+    dist, logs = _dist_with_logs(tmp_path, "", "mutants_1")
+    before = (dist / "mutants-baseline.txt").read_bytes()
+    assert mutate_runner.regen_baseline(dist, logs) == 1
+    assert (dist / "mutants-baseline.txt").read_bytes() == before
+
+
+def test_a_complete_shard_set_is_accepted_and_a_leftover_beyond_the_count_is_refused(
+    tmp_path: pathlib.Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2777 R3: shards 0 and 1 of 2 regenerate; a leftover mutants_9 of another layout refuses."""
+    dist = tmp_path / "d"
+    dist.mkdir()
+    (dist / "mutants-baseline.txt").write_text("survived src/m.py::g\n", encoding="utf-8")
+    _shard_log(tmp_path, 0, 2)
+    _shard_log(tmp_path, 1, 2)
+    assert mutate_runner.regen_baseline(dist, tmp_path / "logs") == 0
+    capsys.readouterr()
+    _shard_log(tmp_path, 9, 433)
+    assert mutate_runner.regen_baseline(dist, tmp_path / "logs") == 1
+    assert "leftover" in capsys.readouterr().err
+
+
+def test_a_missing_shard_in_the_set_is_refused(
+    tmp_path: pathlib.Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2777 R3: only shard 0 of 2 is present, so the set is incomplete and refuses."""
+    dist = tmp_path / "d"
+    dist.mkdir()
+    _shard_log(tmp_path, 0, 2)
+    assert mutate_runner.regen_baseline(dist, tmp_path / "logs") == 1
+    assert "not exactly shards 0..1" in capsys.readouterr().err
 
 
 def _fake_venv(root: pathlib.Path, home: str) -> pathlib.Path:

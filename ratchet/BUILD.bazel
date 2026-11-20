@@ -177,7 +177,7 @@ mutants_sharded(
     # survived, 0 errored, 87 declared defects killed), so the grid failed on cost alone; two put
     # about 217 s in each. `//ratchet:mutants` stays the suite name.
     name = "mutants",
-    shards = 2,
+    shards = 5,
     cpu_budget = 300,
     cpus = 6,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],

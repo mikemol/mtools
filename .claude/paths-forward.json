@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2768,
+  "counter": 2796,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -62880,7 +62880,7 @@
     {
       "symbol": "W2724",
       "title": "hooks test_worktreereap_remove copies a git template repo while git's background maintenance holds objects/maintenance.lock, so the unmutated control raises (b91 refused at //hooks:mutants_39)",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W2694",
         "W2680"
@@ -62890,14 +62890,16 @@
         "gate-repair",
         "soundness"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2769"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "W2760 LANDED 25a3a3b5, the cause of the refusal at //waldo:mutants. Resubmit b96 (W2724 part 2, review/W2724-part2-bazelrc-git-env fbc17f14, stack /home/mikemol/mtools-stacks/b96.json, freeze from mtools-scratch/mtools-W2724b) after the round holds W2724. Rebase check first: the tree base is 3ab540f and HEAD is now 25a3a3b5 (waldo files only), so the .bazelrc bytes are unaffected.",
-      "evidence": "2026-11-18T14:51:43Z: 2026-11-18 github-b0's route (hermetic fix at the test environment, not the fixture): .bazelrc test --test_env=GIT_CONFIG_COUNT=2 with maintenance.auto=false and gc.auto=0. CHECKED FIRST and it does NOT reach the failure: the failing target is a mutation shard and check_mutants/mutate_runner.py lines 1089 to 1092 builds each suite's environment with fence git_env.clean_env(), which strips every GIT_* variable (PREFIX = GIT_), so the config variables are dropped before the suite runs; run_git_in passes os.environ through, so plain py_tests would get them. So the route needs the runner to carry GIT_CONFIG_COUNT, GIT_CONFIG_KEY_n and GIT_CONFIG_VALUE_n through (config injection, not a hook redirection), which edits mutate_runner.py (W2694's file) and .bazelrc (W2636's file). Order question sent to github-b0. github-b0 ruled no unchanged resubmit (flakes block); the b91 resubmission was withdrawn (key 1795013356557479845). Nothing built; scratch mtools-W2724 open. | 2026-11-18T14:54:53Z: 2026-11-18 PART 1 BUILT per github-b0's alternative (the RUNNER sets the immunity; nothing relies on a variable surviving from .bazelrc), in the W2694 scratch tree (mtools-W2642), as a DELTA on 73f6b8f9: check_mutants/mutate_runner.py gains quiet_git(env), which adds GIT_CONFIG_KEY_n/VALUE_n for maintenance.auto=false and gc.auto=0 and bumps GIT_CONFIG_COUNT by two (appending to a count the environment already has, never clobbering), and _run_text applies it right after clean_env() (the one place a cell's suite environment is made). TESTS (4 new, 106 in the file, all pass): fresh environment gets exactly the two settings; an existing count 1 becomes 3 with the caller's entry kept; the input mapping is not edited; and a REAL CELL whose suite runs git init and reads git config --get maintenance.auto and gc.auto under the runner's environment (false and 0) is killed. RED with the injection removed (quiet_git replaced by the identity): the cell reads 'errored' not 'killed', with b91's own message 'control ... also fails on the UNMUTATED module' (the setting reads empty). One existing test changed meaning, stated: test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names asserted that NO GIT_* reached the suite; it now asserts that the only GIT_* are the runner's own config keys (the caller's GIT_DIR decoy still never arrives). 4 warrants, pairing 106 functions 0 findings; pycheck admits both files. Delta vs 73f6b8f9: mutate_runner.py +34 lines and one replaced, test_mutate_runner.py +77 (plus the changed assertion). NOT DONE: bazel (running), commit of the delta for github-b0, part 2 (.bazelrc test env for plain py_tests, with or after W2636) and the template's own immunity in the cutover. | 2026-11-18T14:56:27Z: 2026-11-18: part 1 COMMITTED as a delta for review: branch feature/W2694-quiet-git eb7ebb60b7d3939028e1c5930c643ae582ec1b9d on 73f6b8f9; blobs mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a; bazel //:test_mutate_runner //:ruff //:mypy_check_mutants 3 of 3, BES f647d0f7-e6ec-4270-b7a3-da36e4ff00ab. Sent to github-b0; waiting for the pass, then W2694 alone (one entry) with these bytes. | 2026-11-18T14:59:14Z: 2026-11-18: github-b0 PASS-SUBMIT at eb7ebb60 and ruled the entry's honest owner is W2724 (the round's rank 1, whose part 1 these bytes are; W2694 had left the round because W2724 took its demand). SUBMITTED b92 = one entry, waypoint W2724, subject 'W2724 part 1 + W2694 (check_mutants ...)', bytes mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a, HEAD a365e9a7, background task bpg6ubjp9. On landing: send github-b0 the COMMITTED sha, close W2694 against the same sha, leave W2724 open for part 2 (.bazelrc for plain py_tests, with or after W2636) and the template's own immunity in the cutover. | 2026-11-18T15:27:45Z: 2026-11-18: b92 (this card's part 1 with W2694) refused twice by flakes that are not its own: first //hooks:mutants_39 (git maintenance lock race, this card's cause), then //procrun:mutants (a baseline cell that flips with timing, W2725). github-b0: b92 changes mutate_runner.py, which every mutation shard runs under, so it reruns every dist's shards and is exposed to every baseline's flakes; the cure is to clear each flake in its own stack that does NOT touch the runner (that reruns only its own dist's shards), then b92 unchanged. So W2725 blocks this card's landing. Bytes unchanged: mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a. | 2026-11-18T16:11:33Z: 2026-11-18: W2725 LANDED f251b278 (b93). The round briefly lost this card because my class card W2726 had a false enables edge to it (corrected to W2665); round.json 16:07:22Z has W2724 rank 1. SUBMITTED b92 UNCHANGED (waypoint W2724; bytes mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a; HEAD f251b278), background task biejlhye8, on github-b0's standing word. On green: send github-b0 the COMMITTED sha, close W2694 against it, keep W2724 open for part 2 (.bazelrc) and the template's immunity. On refusal: the failing target and its line to github-b0 first. | 2026-11-18T23:25:28Z: 2026-11-18: PART 1 LANDED d2dbb2de (b92, with W2694). W2724 stays OPEN: part 2 is the .bazelrc test env for plain py_tests (with or after W2636 on that file) and the template's own immunity in the cutover; nothing built for either. | 2026-11-19T11:55:08Z: 2026-11-19 RE-WIRED per github-00 (operator ruling on velocity gain): b96 is not a runner edit, so W2759 is not its blocker. Its refusal at //waldo:mutants was a control that ran the waldo planledger test reaching the host's passwd; W2760 removes that call, is PASS-SUBMIT, and is in the gate as b98. So the true blocker is W2760 landing, then b96 resubmits.",
+      "evidence": "2026-11-18T14:51:43Z: 2026-11-18 github-b0's route (hermetic fix at the test environment, not the fixture): .bazelrc test --test_env=GIT_CONFIG_COUNT=2 with maintenance.auto=false and gc.auto=0. CHECKED FIRST and it does NOT reach the failure: the failing target is a mutation shard and check_mutants/mutate_runner.py lines 1089 to 1092 builds each suite's environment with fence git_env.clean_env(), which strips every GIT_* variable (PREFIX = GIT_), so the config variables are dropped before the suite runs; run_git_in passes os.environ through, so plain py_tests would get them. So the route needs the runner to carry GIT_CONFIG_COUNT, GIT_CONFIG_KEY_n and GIT_CONFIG_VALUE_n through (config injection, not a hook redirection), which edits mutate_runner.py (W2694's file) and .bazelrc (W2636's file). Order question sent to github-b0. github-b0 ruled no unchanged resubmit (flakes block); the b91 resubmission was withdrawn (key 1795013356557479845). Nothing built; scratch mtools-W2724 open. | 2026-11-18T14:54:53Z: 2026-11-18 PART 1 BUILT per github-b0's alternative (the RUNNER sets the immunity; nothing relies on a variable surviving from .bazelrc), in the W2694 scratch tree (mtools-W2642), as a DELTA on 73f6b8f9: check_mutants/mutate_runner.py gains quiet_git(env), which adds GIT_CONFIG_KEY_n/VALUE_n for maintenance.auto=false and gc.auto=0 and bumps GIT_CONFIG_COUNT by two (appending to a count the environment already has, never clobbering), and _run_text applies it right after clean_env() (the one place a cell's suite environment is made). TESTS (4 new, 106 in the file, all pass): fresh environment gets exactly the two settings; an existing count 1 becomes 3 with the caller's entry kept; the input mapping is not edited; and a REAL CELL whose suite runs git init and reads git config --get maintenance.auto and gc.auto under the runner's environment (false and 0) is killed. RED with the injection removed (quiet_git replaced by the identity): the cell reads 'errored' not 'killed', with b91's own message 'control ... also fails on the UNMUTATED module' (the setting reads empty). One existing test changed meaning, stated: test_a_mutant_suite_cannot_commit_into_the_repository_the_caller_names asserted that NO GIT_* reached the suite; it now asserts that the only GIT_* are the runner's own config keys (the caller's GIT_DIR decoy still never arrives). 4 warrants, pairing 106 functions 0 findings; pycheck admits both files. Delta vs 73f6b8f9: mutate_runner.py +34 lines and one replaced, test_mutate_runner.py +77 (plus the changed assertion). NOT DONE: bazel (running), commit of the delta for github-b0, part 2 (.bazelrc test env for plain py_tests, with or after W2636) and the template's own immunity in the cutover. | 2026-11-18T14:56:27Z: 2026-11-18: part 1 COMMITTED as a delta for review: branch feature/W2694-quiet-git eb7ebb60b7d3939028e1c5930c643ae582ec1b9d on 73f6b8f9; blobs mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a; bazel //:test_mutate_runner //:ruff //:mypy_check_mutants 3 of 3, BES f647d0f7-e6ec-4270-b7a3-da36e4ff00ab. Sent to github-b0; waiting for the pass, then W2694 alone (one entry) with these bytes. | 2026-11-18T14:59:14Z: 2026-11-18: github-b0 PASS-SUBMIT at eb7ebb60 and ruled the entry's honest owner is W2724 (the round's rank 1, whose part 1 these bytes are; W2694 had left the round because W2724 took its demand). SUBMITTED b92 = one entry, waypoint W2724, subject 'W2724 part 1 + W2694 (check_mutants ...)', bytes mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a, HEAD a365e9a7, background task bpg6ubjp9. On landing: send github-b0 the COMMITTED sha, close W2694 against the same sha, leave W2724 open for part 2 (.bazelrc for plain py_tests, with or after W2636) and the template's own immunity in the cutover. | 2026-11-18T15:27:45Z: 2026-11-18: b92 (this card's part 1 with W2694) refused twice by flakes that are not its own: first //hooks:mutants_39 (git maintenance lock race, this card's cause), then //procrun:mutants (a baseline cell that flips with timing, W2725). github-b0: b92 changes mutate_runner.py, which every mutation shard runs under, so it reruns every dist's shards and is exposed to every baseline's flakes; the cure is to clear each flake in its own stack that does NOT touch the runner (that reruns only its own dist's shards), then b92 unchanged. So W2725 blocks this card's landing. Bytes unchanged: mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a. | 2026-11-18T16:11:33Z: 2026-11-18: W2725 LANDED f251b278 (b93). The round briefly lost this card because my class card W2726 had a false enables edge to it (corrected to W2665); round.json 16:07:22Z has W2724 rank 1. SUBMITTED b92 UNCHANGED (waypoint W2724; bytes mutate_runner.py 7ad2b6b4, test_mutate_runner.py a87ea81c, warrants.bib 074dfa0a; HEAD f251b278), background task biejlhye8, on github-b0's standing word. On green: send github-b0 the COMMITTED sha, close W2694 against it, keep W2724 open for part 2 (.bazelrc) and the template's immunity. On refusal: the failing target and its line to github-b0 first. | 2026-11-18T23:25:28Z: 2026-11-18: PART 1 LANDED d2dbb2de (b92, with W2694). W2724 stays OPEN: part 2 is the .bazelrc test env for plain py_tests (with or after W2636 on that file) and the template's own immunity in the cutover; nothing built for either. | 2026-11-19T11:55:08Z: 2026-11-19 RE-WIRED per github-00 (operator ruling on velocity gain): b96 is not a runner edit, so W2759 is not its blocker. Its refusal at //waldo:mutants was a control that ran the waldo planledger test reaching the host's passwd; W2760 removes that call, is PASS-SUBMIT, and is in the gate as b98. So the true blocker is W2760 landing, then b96 resubmits. | 2026-11-19T16:33:44Z: b96 REFUSED 2026-11-19 at //pytestspec:mutants_1 (BES 6af599e1-fe5b-4b47-8edf-14974443e6e0): RISE errored pytestspec plugin.py::forwarded-report-counted-again, not in mutants-baseline.txt (which lists skipped-case-evaluated and others as errored). The grid's controls for spec.rego cells collect 0 items. A flake blocks; no unchanged resubmit. HEAD still 25a3a3b5.",
       "issued_at": "2026-11-18T14:48:58Z",
       "minted_during": "interrupt",
       "caused_by": "W2694",
-      "last_worked": "2026-11-19T12:23:00Z",
+      "last_worked": "2026-11-19T16:33:44Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:H/E:N/C:N/I:L/A:H/X:N/S:U/F:K/W:Y",
       "vector_source": "agent",
@@ -62952,11 +62954,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Write the tracked BES-pair comparer (two invocation ids -> cells whose verdict differs) with a planted-pair test; run it on b91/b92 and b89 pairs; then one card per flaky cell",
-      "evidence": "2026-11-18T15:50:22Z: 2026-11-18 STATIC CENSUS (scratchpad timing_census.py, untracked, read-only; run on a365e9a7's registries): 2999 declared mutants read in 38 dists; 183 have a pattern or replacement text matching a duration, bound or wait word (timeout, poll, idle, _MS, sleep, wait, seconds, deadline, patience, period, interval, budget, limit, retry, ...): audiostruct 1, buildtel 8, debtplan 8, fence 6, frontier 2, gatecheck 1, hooks 90 of 1083, katas 10, pathsforward 15, pkgbuild 2, procrun 5, pycodemod 10, pytestspec 3, ratchet 5, transcriptstruct 3, waldo 11, webpage 3. ONLY THREE of the 183 are recorded in a mutants-baseline.txt (the cells that can read STALE or RISE): hooks ready-card-in-the-gate-still-demanded (mutants.regex line 868; the pattern matches 'waiting', so probably a false positive), procrun capture-stdout-drops-the-timeout (line 43; a real survivor: no test notices a dropped timeout; stable, not a flip), pytestspec unknown-disposition-accepted (line 149; matched by a limit-like word, to read). W2725's own cell (first-line-bound-in-seconds-not-ms, procrun line 52) is among the 183 and is now fixed. WHAT THIS INSTRUMENT CANNOT SEE: (1) a FLIP, which is a property of two runs, not of text, so the census lists candidates and cannot name a flaky cell; (2) a unit hidden behind a constant or a function name; (3) a declared mutant whose killing test is timing-sensitive although its own text is not (hooks' flake, W2724, was a fixture race, invisible here); (4) def-site mutants, which are generated, not declared. CONCLUSION: the static list is too wide to act on (183) and too narrow to be complete; the right instrument compares shard logs across runs of the same bytes. | 2026-11-18T16:06:40Z: 2026-11-18: EDGE CORRECTED. This card was wired to enable W2724, which is not true: b92 (W2724) goes next unchanged on github-b0's word and does not wait for the census; the edge put the demand on this card and took W2724 out of the round (round.json 16:05:14Z: W2726 rank 1, W2724 absent). It now enables W2665, the chain every gate flake delays (a flaky baseline cell refuses any stack that changes a runner or its dist), which is what it really serves. | 2026-11-19T13:51:16Z: 2026-11-19: no tick is spending on the census now; status returned to ready to match the truth (github-00). | 2026-11-19T13:53:34Z: 2026-11-19 READ: bazel-testlogs in the main checkout keeps only the LATEST test.log per target (18 dists), so it cannot show a flip; two runs of the same bytes exist only in BES (GetInvocation per invocation id, skill bes-logs). NEXT: a tracked script (not in .claude) that, given two BES invocation ids of the same sha, lists each mutation shard cell whose verdict line differs; start from b89 (refused at katas mutants_4) against its resubmit, and b91/b92 pairs, whose ids are in their cards.",
+      "evidence": "2026-11-18T15:50:22Z: 2026-11-18 STATIC CENSUS (scratchpad timing_census.py, untracked, read-only; run on a365e9a7's registries): 2999 declared mutants read in 38 dists; 183 have a pattern or replacement text matching a duration, bound or wait word (timeout, poll, idle, _MS, sleep, wait, seconds, deadline, patience, period, interval, budget, limit, retry, ...): audiostruct 1, buildtel 8, debtplan 8, fence 6, frontier 2, gatecheck 1, hooks 90 of 1083, katas 10, pathsforward 15, pkgbuild 2, procrun 5, pycodemod 10, pytestspec 3, ratchet 5, transcriptstruct 3, waldo 11, webpage 3. ONLY THREE of the 183 are recorded in a mutants-baseline.txt (the cells that can read STALE or RISE): hooks ready-card-in-the-gate-still-demanded (mutants.regex line 868; the pattern matches 'waiting', so probably a false positive), procrun capture-stdout-drops-the-timeout (line 43; a real survivor: no test notices a dropped timeout; stable, not a flip), pytestspec unknown-disposition-accepted (line 149; matched by a limit-like word, to read). W2725's own cell (first-line-bound-in-seconds-not-ms, procrun line 52) is among the 183 and is now fixed. WHAT THIS INSTRUMENT CANNOT SEE: (1) a FLIP, which is a property of two runs, not of text, so the census lists candidates and cannot name a flaky cell; (2) a unit hidden behind a constant or a function name; (3) a declared mutant whose killing test is timing-sensitive although its own text is not (hooks' flake, W2724, was a fixture race, invisible here); (4) def-site mutants, which are generated, not declared. CONCLUSION: the static list is too wide to act on (183) and too narrow to be complete; the right instrument compares shard logs across runs of the same bytes. | 2026-11-18T16:06:40Z: 2026-11-18: EDGE CORRECTED. This card was wired to enable W2724, which is not true: b92 (W2724) goes next unchanged on github-b0's word and does not wait for the census; the edge put the demand on this card and took W2724 out of the round (round.json 16:05:14Z: W2726 rank 1, W2724 absent). It now enables W2665, the chain every gate flake delays (a flaky baseline cell refuses any stack that changes a runner or its dist), which is what it really serves. | 2026-11-19T13:51:16Z: 2026-11-19: no tick is spending on the census now; status returned to ready to match the truth (github-00). | 2026-11-19T13:53:34Z: 2026-11-19 READ: bazel-testlogs in the main checkout keeps only the LATEST test.log per target (18 dists), so it cannot show a flip; two runs of the same bytes exist only in BES (GetInvocation per invocation id, skill bes-logs). NEXT: a tracked script (not in .claude) that, given two BES invocation ids of the same sha, lists each mutation shard cell whose verdict line differs; start from b89 (refused at katas mutants_4) against its resubmit, and b91/b92 pairs, whose ids are in their cards. | 2026-11-20T00:27:02Z: 2026-11-20 STATUS MADE TRUE (github-00): not in hand: b101 stack in progress. The BES comparer is not being built this tick; it read working only because nothing set it back. Back to working when picked up again.",
       "issued_at": "2026-11-18T15:27:46Z",
       "minted_during": "interrupt",
       "caused_by": "W2725",
-      "last_worked": "2026-11-19T13:53:34Z",
+      "last_worked": "2026-11-20T00:30:20Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:H/E:N/C:N/I:L/A:H/X:N/S:U/F:K/W:Y",
       "vector_source": "agent",
@@ -63763,15 +63765,15 @@
         "telemetry"
       ],
       "blocked_on": [
-        "W2765"
+        "W2769"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Submit /home/mikemol/mtools-stacks/b97.json (freeze from mtools-scratch/mtools-W2758) once W2765 has landed and round.json holds W2758",
-      "evidence": "2026-11-19T08:55:50Z: 2026-11-19 github-00 (cold review of the telemetry skill): the SUCCESS path leaks too: trace --readback prints 'read back trace_id=... from <url>' on stdout, the line a session pastes as its witness. Already in the inventory (tracecmd.py line 95); the sweep covers every stream write including success paths, and the structural test must fail on it. Replacement text: 'read back trace_id=<id> from service <name>'. | 2026-11-19T10:15:05Z: 2026-11-19 BUILT in scratch tree mtools-W2758 (base 3ab540f), review branch review/W2758-otlp-no-address 55676850. sender.py: all 7 SendError texts say 'the store' plus status or strerror/exception type, never the URL (bad URL: 'not http or https'). tracecmd._read_back takes the service: stdout 'read back trace_id=<id> from service <name>', stderr 'trace_id=<id> of service <name> is not visible yet (status N); read it back again'. cli.py stderr sites 169-314 READ: they echo option names and endpoint NAMES, never a resolved address. New otlp/tests/test_no_address_in_output.py (6 tests, 89 otlp tests pass): host:port planted on every verb (trace metric metrics query-metrics query-traces log) x unreachable, bad URL, 200, 404, 500; RED on the unfixed source (7 of 8 fail) and green fixed; structural AST walker with in-suite positive control, run against the UNFIXED source it finds exactly the 9 old sites (sender 51 59 62 81 91 94 113, tracecmd 95 97). Warrants +5/+1 and rubric row. //otlp:all 23 of 23, BES 17466f59-5c9d-48f7-856f-4e183e67eb3e. NOT DONE: the round does not hold W2758 (mtools top three W2421 W2726 W2760), so no stack is submitted; branch+sha to github-00; declared mutants for the new wording; store read-back of nothing (no metric emitted). | 2026-11-19T10:17:51Z: 2026-11-19 github-00 PASS-SUBMIT once the two declared mutants exist; delta sha 3ffd94dd sent, grid 23 of 23 BES 26e43d18-ce8b-47b8-a03b-c52946b1c8b4. Stack b97.json written (closes true). Waiting only on the round. | 2026-11-19T10:19:36Z: 2026-11-19 round.json top three for mtools are W2421 W2726 W2760, not W2758; stack b97.json is ready, so it waits behind the round-held card W2760 that is nearest to landing. | 2026-11-19T13:42:44Z: 2026-11-19: b97 is built and PASS-SUBMIT (review/W2758-otlp-no-address 3ffd94dd); blocked behind W2765 (host-applier incident, one gate at a time, the round does not hold W2758).",
+      "evidence": "2026-11-19T08:55:50Z: 2026-11-19 github-00 (cold review of the telemetry skill): the SUCCESS path leaks too: trace --readback prints 'read back trace_id=... from <url>' on stdout, the line a session pastes as its witness. Already in the inventory (tracecmd.py line 95); the sweep covers every stream write including success paths, and the structural test must fail on it. Replacement text: 'read back trace_id=<id> from service <name>'. | 2026-11-19T10:15:05Z: 2026-11-19 BUILT in scratch tree mtools-W2758 (base 3ab540f), review branch review/W2758-otlp-no-address 55676850. sender.py: all 7 SendError texts say 'the store' plus status or strerror/exception type, never the URL (bad URL: 'not http or https'). tracecmd._read_back takes the service: stdout 'read back trace_id=<id> from service <name>', stderr 'trace_id=<id> of service <name> is not visible yet (status N); read it back again'. cli.py stderr sites 169-314 READ: they echo option names and endpoint NAMES, never a resolved address. New otlp/tests/test_no_address_in_output.py (6 tests, 89 otlp tests pass): host:port planted on every verb (trace metric metrics query-metrics query-traces log) x unreachable, bad URL, 200, 404, 500; RED on the unfixed source (7 of 8 fail) and green fixed; structural AST walker with in-suite positive control, run against the UNFIXED source it finds exactly the 9 old sites (sender 51 59 62 81 91 94 113, tracecmd 95 97). Warrants +5/+1 and rubric row. //otlp:all 23 of 23, BES 17466f59-5c9d-48f7-856f-4e183e67eb3e. NOT DONE: the round does not hold W2758 (mtools top three W2421 W2726 W2760), so no stack is submitted; branch+sha to github-00; declared mutants for the new wording; store read-back of nothing (no metric emitted). | 2026-11-19T10:17:51Z: 2026-11-19 github-00 PASS-SUBMIT once the two declared mutants exist; delta sha 3ffd94dd sent, grid 23 of 23 BES 26e43d18-ce8b-47b8-a03b-c52946b1c8b4. Stack b97.json written (closes true). Waiting only on the round. | 2026-11-19T10:19:36Z: 2026-11-19 round.json top three for mtools are W2421 W2726 W2760, not W2758; stack b97.json is ready, so it waits behind the round-held card W2760 that is nearest to landing. | 2026-11-19T13:42:44Z: 2026-11-19: b97 is built and PASS-SUBMIT (review/W2758-otlp-no-address 3ffd94dd); blocked behind W2765 (host-applier incident, one gate at a time, the round does not hold W2758). | 2026-11-19T18:51:59Z: 2026-11-19 18:5x: W2765 landed (9ea59144) so the old blocker is gone, but round.json (as_of after 18:11Z) holds W2769, W2726, W2774, not W2758, and the submit check refuses a stack outside the round. b97 (otlp, PASS-SUBMIT 3ffd94dd) is built and waits for a slot: blocked behind W2769, the gate-repair lane that frees the next slot when it lands. Nothing left to build on W2758.",
       "issued_at": "2026-11-19T08:13:26Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W2754",
-      "last_worked": "2026-11-19T13:42:44Z",
+      "last_worked": "2026-11-19T18:51:59Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -63904,7 +63906,7 @@
     {
       "symbol": "W2765",
       "title": "waldo planflow.confirm_and_apply decides empty-plan from rendered text, so a plan whose file content says No changes. applies nothing (incident)",
-      "status": "working",
+      "status": "done",
       "enables": [
         "luthen-observability:W2765"
       ],
@@ -63914,14 +63916,14 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Submit /home/mikemol/mtools-stacks/b100.json with --freeze-from mtools-scratch/mtools-W2765 once round.json holds W2765; then send github-00 and luthen-observability the landed sha, close W2765",
-      "evidence": "2026-11-19T13:31:02Z: Incident from github-00 2026-11-19: planflow.py:311 tested No changes. in tofu show text; luthen host plan renders planflow.py itself so 48 changes applied nothing. Design per github-00: structure from show -json, refuse missing resource_changes, planted test, census same class in waldo. | 2026-11-19T13:34:42Z: Built in scratch tree off 25a3a3b5; review ask sent to github-00 on review/W2765-planflow-structure at b46285ff0f4fbdfb56ac3d2114a7efbf85bc957f (waits on github:W120). waldo pytest 312 passed; six declared mutants killed locally; MUTATE_LINT clean; census: only decision from human output in waldo src. NOT MEASURED: //waldo:mutants grid, bazel //waldo. | 2026-11-19T13:37:53Z: REVISE from github-00 at b46285ff (R1 bool, R2 typed result and raised refusal) applied; new review ref review/W2765-planflow-structure fcb3b05b8794c974c8b44b6b5621fbb41ab6a654, waiting on github:W120. waldo pytest 312 passed, six declared mutants killed. R3 is W2766. | 2026-11-19T13:39:15Z: github-00 PASS-SUBMIT at fcb3b05b8794c974c8b44b6b5621fbb41ab6a654 (review/W2765-planflow-structure), 2026-11-19; residue (empty-string sentinel) bound to W2766. | 2026-11-19T13:43:40Z: INCIDENT ON THE ONLY APPLIER: a false 'applied' (48 host changes skipped, success reported); the host set luthen-observability:W2765, W2002 (47 host rows), W2004 is frozen behind this fix. Vector set accordingly (I:H/A:H). luthen asked to block on mtools:W2765 by citation. Resubmit b100 when round.json holds it; if the export still ranks W2726 and W2421 above it after both edges exist, send github-00 the export lines for nemik:W2325. | 2026-11-19T13:49:46Z: 2026-11-19 13:45Z: both demand edges exist and the vector is set, yet round.json 13:43:38Z holds W2724, W2421, W2726 and not W2765; export lines sent to github-00 as the fixture for nemik:W2325. The gate refuses b100 at submit until the round holds W2765. | 2026-11-19T13:51:14Z: github-00 ruling 13:50Z: unblocked from nemik:W2325 (fixture is evidence for it, not a dependency). Only wait is the round, a condition. | 2026-11-19T13:51:57Z: ROUND WRITER (read from luthen-observability host/systemd/user): nemik-rank nemik --round-file round.json --landings landings.json is run by luthen-nemik-round.service (timer, six minutes after the landings timer, hourly) and by luthen-nemik-round-event.service started by a .path unit on queue writes, with --digest-file: it ranks only when the digest of each card's status, touches, vector, blocked_on, enables, manifest, cause and the landings moved (nemik:W2217); two ExecStart lines so a write during the first run is seen. The 13:43:38Z export predated my 13:4xZ vector and status edits. | 2026-11-19T13:59:22Z: ROUND RULE READ (post-edit export 13:53:39Z still without W2765): nemik data/bands.toml:25 orders gate-repair, velocity, critical; gate-repair is a strict first tier (l.33); velocity and gate-repair are by touches tag. W2765 is band critical; round holds W2724, W2726 (gate-repair tag), W2723 (velocity, working). Ordered by band before salience (roundcli._ranked, roundof.round_of, rank.py:621 adds working cards). Designed behaviour, a candidate defect for nemik:W2325; I do not tag W2765 into a band it is not in. Asked github-00 whether to wait for b96 to land and the round to turn over or fix W2723 first. | 2026-11-19T14:00:05Z: 2026-11-19: the gate refuses b100 at submit because the round (bands: gate-repair, velocity, critical) holds W2724, W2726, W2723 and not W2765; W2723 is the round check's own transitive-demand defect, the named fix for this class. Awaiting github-00's ruling on wait versus fixing W2723 first; blocked on W2723 until then. b100 built and PASS-SUBMIT at fcb3b05b. | 2026-11-19T14:02:51Z: VELOCITY WARRANT (github-00 ruling 2026-11-19, quoting the operator in the host transcript, lines ~188896 and ~188975, which I did not read myself): 'what's the velocity of a broken gate?' (answer: zero, an open circuit); 'velocity is the conductor everything else must pass through; what influences velocity influences everything'. The host apply path is frozen: it applied nothing at 13:07Z (48 changes) and recorded applied; luthen-observability W2002 (47 host rows), W2004, W2767 and every later host row wait on it. So the tag is true, not a rank lever. Unblocked from W2723 (github-00: do not fix W2723 first). If the round still omits W2765 because W2723 outranks it inside the band, wait for b96 (W2724) to land and the round to turn over.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-19T13:31:02Z: Incident from github-00 2026-11-19: planflow.py:311 tested No changes. in tofu show text; luthen host plan renders planflow.py itself so 48 changes applied nothing. Design per github-00: structure from show -json, refuse missing resource_changes, planted test, census same class in waldo. | 2026-11-19T13:34:42Z: Built in scratch tree off 25a3a3b5; review ask sent to github-00 on review/W2765-planflow-structure at b46285ff0f4fbdfb56ac3d2114a7efbf85bc957f (waits on github:W120). waldo pytest 312 passed; six declared mutants killed locally; MUTATE_LINT clean; census: only decision from human output in waldo src. NOT MEASURED: //waldo:mutants grid, bazel //waldo. | 2026-11-19T13:37:53Z: REVISE from github-00 at b46285ff (R1 bool, R2 typed result and raised refusal) applied; new review ref review/W2765-planflow-structure fcb3b05b8794c974c8b44b6b5621fbb41ab6a654, waiting on github:W120. waldo pytest 312 passed, six declared mutants killed. R3 is W2766. | 2026-11-19T13:39:15Z: github-00 PASS-SUBMIT at fcb3b05b8794c974c8b44b6b5621fbb41ab6a654 (review/W2765-planflow-structure), 2026-11-19; residue (empty-string sentinel) bound to W2766. | 2026-11-19T13:43:40Z: INCIDENT ON THE ONLY APPLIER: a false 'applied' (48 host changes skipped, success reported); the host set luthen-observability:W2765, W2002 (47 host rows), W2004 is frozen behind this fix. Vector set accordingly (I:H/A:H). luthen asked to block on mtools:W2765 by citation. Resubmit b100 when round.json holds it; if the export still ranks W2726 and W2421 above it after both edges exist, send github-00 the export lines for nemik:W2325. | 2026-11-19T13:49:46Z: 2026-11-19 13:45Z: both demand edges exist and the vector is set, yet round.json 13:43:38Z holds W2724, W2421, W2726 and not W2765; export lines sent to github-00 as the fixture for nemik:W2325. The gate refuses b100 at submit until the round holds W2765. | 2026-11-19T13:51:14Z: github-00 ruling 13:50Z: unblocked from nemik:W2325 (fixture is evidence for it, not a dependency). Only wait is the round, a condition. | 2026-11-19T13:51:57Z: ROUND WRITER (read from luthen-observability host/systemd/user): nemik-rank nemik --round-file round.json --landings landings.json is run by luthen-nemik-round.service (timer, six minutes after the landings timer, hourly) and by luthen-nemik-round-event.service started by a .path unit on queue writes, with --digest-file: it ranks only when the digest of each card's status, touches, vector, blocked_on, enables, manifest, cause and the landings moved (nemik:W2217); two ExecStart lines so a write during the first run is seen. The 13:43:38Z export predated my 13:4xZ vector and status edits. | 2026-11-19T13:59:22Z: ROUND RULE READ (post-edit export 13:53:39Z still without W2765): nemik data/bands.toml:25 orders gate-repair, velocity, critical; gate-repair is a strict first tier (l.33); velocity and gate-repair are by touches tag. W2765 is band critical; round holds W2724, W2726 (gate-repair tag), W2723 (velocity, working). Ordered by band before salience (roundcli._ranked, roundof.round_of, rank.py:621 adds working cards). Designed behaviour, a candidate defect for nemik:W2325; I do not tag W2765 into a band it is not in. Asked github-00 whether to wait for b96 to land and the round to turn over or fix W2723 first. | 2026-11-19T14:00:05Z: 2026-11-19: the gate refuses b100 at submit because the round (bands: gate-repair, velocity, critical) holds W2724, W2726, W2723 and not W2765; W2723 is the round check's own transitive-demand defect, the named fix for this class. Awaiting github-00's ruling on wait versus fixing W2723 first; blocked on W2723 until then. b100 built and PASS-SUBMIT at fcb3b05b. | 2026-11-19T14:02:51Z: VELOCITY WARRANT (github-00 ruling 2026-11-19, quoting the operator in the host transcript, lines ~188896 and ~188975, which I did not read myself): 'what's the velocity of a broken gate?' (answer: zero, an open circuit); 'velocity is the conductor everything else must pass through; what influences velocity influences everything'. The host apply path is frozen: it applied nothing at 13:07Z (48 changes) and recorded applied; luthen-observability W2002 (47 host rows), W2004, W2767 and every later host row wait on it. So the tag is true, not a rank lever. Unblocked from W2723 (github-00: do not fix W2723 first). If the round still omits W2765 because W2723 outranks it inside the band, wait for b96 (W2724) to land and the round to turn over. | 2026-11-19T18:14:49Z: LANDED 9ea59144 (b100, gate exit 0, PUSHED), 2026-11-19: waldo planflow decides an empty plan from tofu show -json, never from rendered text. Review: github-00 PASS-SUBMIT fcb3b05b. Revendor for luthen through luthen-observability's mechanism (W2002).",
       "issued_at": "2026-11-19T13:30:38Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W2765",
-      "last_worked": "2026-11-19T14:03:59Z",
+      "last_worked": "2026-11-19T18:14:49Z",
       "ticks_blocked": 0,
-      "completed": null,
+      "completed": "20261119T181449Z",
       "vector": "WV:1/R:H/E:N/C:N/I:H/A:H/X:N/S:U/F:K/W:Y",
       "vector_source": "agent"
     },
@@ -63934,38 +63936,36 @@
         "waldo"
       ],
       "blocked_on": [
-        "W2765"
+        "W2767"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Make waldo planflow.refusal() raise PlanRefusedError instead of returning Json | None, drop admitted()'s empty-message case; census other Json | None returns in waldo; review ref to github-00",
-      "evidence": "2026-11-19T13:39:13Z: github-00 2026-11-19 on W2765 PASS-SUBMIT fcb3b05b: done-condition includes removing admitted()'s empty-string PlanRefusedError sentinel and confirm_and_apply's if exc.message check, once refusal() raises with its own message. | 2026-11-19T14:04:21Z: 2026-11-19: W2766 edits waldo planflow.py (refusal(), admitted(), confirm_and_apply), the same lines b100 (W2765) freezes and is about to land; the fix builds on W2765's landed sha, not on a tree that will change. Done-condition per github-00: admitted()'s empty-string PlanRefusedError sentinel and confirm_and_apply's if exc.message check go away.",
+      "evidence": "2026-11-19T13:39:13Z: github-00 2026-11-19 on W2765 PASS-SUBMIT fcb3b05b: done-condition includes removing admitted()'s empty-string PlanRefusedError sentinel and confirm_and_apply's if exc.message check, once refusal() raises with its own message. | 2026-11-19T14:04:21Z: 2026-11-19: W2766 edits waldo planflow.py (refusal(), admitted(), confirm_and_apply), the same lines b100 (W2765) freezes and is about to land; the fix builds on W2765's landed sha, not on a tree that will change. Done-condition per github-00: admitted()'s empty-string PlanRefusedError sentinel and confirm_and_apply's if exc.message check go away. | 2026-11-19T18:53:58Z: 2026-11-19: W2766 (refusal() raises, admitted()'s empty-string sentinel goes) and W2767 (--run-id on plancli, Seams.run_id, ledger_entry) both edit waldo/src/mikemol/waldo/planflow.py; github-00's order is W2767 first, built off the landed 9ea59144. W2767 is being built (scratch tree mtools-W2767, design settled); W2766 builds off W2767's landing so the two reviews do not collide on one file.",
       "issued_at": "2026-11-19T13:37:45Z",
       "minted_during": "interrupt",
       "caused_by": "github-00:W120",
-      "last_worked": "2026-11-19T14:04:21Z",
+      "last_worked": "2026-11-19T18:53:58Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2767",
       "title": "Answer luthen-observability:W2769: waldo opa_plan takes a required --run-id and writes it into the apply-ledger row",
-      "status": "blocked",
+      "status": "working",
       "enables": [
         "W2768"
       ],
       "touches": [
         "waldo"
       ],
-      "blocked_on": [
-        "W2765"
-      ],
-      "blocked_kind": "agent",
+      "blocked_on": [],
+      "blocked_kind": null,
       "next_bounded_step": "On github-00's answer (mandatory or not; refuse or ignore on verify): build in a scratch tree off the landed W2765 sha: plancli --run-id validated once, Seams.run_id, ledger_entry writes it only when given, conflict with run_fields refused; planted tests, mutants, warrants; review branch + sha",
       "evidence": "2026-11-19T14:06:47Z: 2026-11-19: read waldo plancli.py and planflow.py: waldo mints no run id; ledger_entry spreads seams.run_fields() (luthen's seam). Design sent to github-00 (flag validated once, Seams.run_id typed field, key written only when given, conflict with run_fields refused, verify refuses the flag, no mint, not mandatory pending ruling); waiting on the design review (github:W120). Builds after W2765 lands (same files). | 2026-11-19T14:08:19Z: github-00 ACCEPTED the design with rulings: (1) mandatory, staged: this entry is INTERIM (Seams.run_id optional, labelled INTERIM in the field docstring and the row-writer, naming W2768 as the card that ends it); W2768 makes it required after luthen-observability:W2769 lands. (2) --run-id on --verify or a plan-only run is a usage error, exit 2 with the reason (not stopped). Validation once before any work, conflict with run_fields refusing, planted tests through the real main, three mutant rows stand. Entry off the landed W2765, ref and sha to github-00. Blocked on W2765 landing (same files).",
       "issued_at": "2026-11-19T13:51:49Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W2769",
-      "last_worked": "2026-11-19T14:08:19Z",
+      "last_worked": "2026-11-19T18:16:11Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:N/C:N/I:L/A:L/X:N/S:U/F:K/W:Y",
       "vector_source": "agent",
@@ -63993,6 +63993,594 @@
       "completed": null,
       "vector": "WV:1/R:L/E:N/C:N/I:L/A:L/X:N/S:U/F:K/W:Y",
       "vector_source": "agent"
+    },
+    {
+      "symbol": "W2769",
+      "title": "pytestspec mutants_1 refused b96: one declared-defect cell newly ERRORED, not in baseline",
+      "status": "working",
+      "enables": [
+        "W2724"
+      ],
+      "touches": [
+        "mutation",
+        "gate-repair"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "On github-00's verdict, rebuild stack b101 (W2769 + W2777 entry with the five paths) and submit when the round holds W2769",
+      "evidence": "2026-11-19T16:37:58Z: 2026-11-19 forced reading per github-00: bazel test //pytestspec:mutants_1 --runs_per_test=3 with MUTATE_SITE=plugin.py::forwarded-report-counted-again on a main worktree 25a3a3b5 (mtools-W2769-main) is running as b1l1b52i8; the same on b96's tree (mtools-W2724b) follows. | 2026-11-19T16:44:35Z: FORCED READING 2026-11-19: //pytestspec:mutants_1 on main 25a3a3b5 (worktree mtools-W2769-main), --runs_per_test=3: the cell forwarded-report-counted-again reads ERRORED 3 of 3 and the same RISE each run. So it is pre-existing, not b96's. (MUTATE_SITE cannot be used on a sharded target: the runner refuses SITE with the target's SHARD, and an empty SHARD still counts as set.) CAUSE READ FROM THE RUNNER: check_mutants/mutate_runner.py _baseline_fails takes the FIRST line matching ^FAILED (\\S.*?) in the mutant's output as a pytest id and reruns it as the control. pytestspec's own plugin prints FAILED lines for spec items (spec.rego::p, ::else, ::origin-row, ::c, ::bad), which are not pytest ids: the control collects no test (exit 5), is read as a baseline that cannot vouch, and the cell is ERRORED. The control prints once per id (_CONTROLS caches it), which is why the forwarded cell shows no control line of its own. Which cells err depends on whether a spec FAILED line precedes the real pytest one, so the three baselined siblings and this cell are plausibly one class, not yet proved. NOT DONE: the b96-tree three runs (running); one planted run showing the first FAILED line of this cell. | 2026-11-19T16:47:04Z: b96 tree (mtools-W2724b) //pytestspec:mutants_1 --runs_per_test=3: FAILED in 2 of 3 with the same RISE (cell errored); one run PASSED, so the cell is NONDETERMINISTIC (killed in some runs, errored in others), where main read errored 3 of 3. Same verdict class on both trees, so pre-existing; the flip points at which FAILED line comes first in the mutant output (an ordering/timing effect), not at b96. | 2026-11-19T17:07:16Z: BUILT 2026-11-19: review/W2769-control-reads-pytests-node-report 55d90bed (base 25a3a3b5), sent to github-00. Runner writes a pytest plugin into each mutant tree and the control reads failed node ids from its JSON-lines report (failing_nodes, node_env); no text parsing. WITNESSES: //:test_mutate_runner //:ruff //:mypy_check_mutants pass; //pytestspec:mutants_1 x3 on the fixed tree 0 rises each (unfixed: errored 3/3 main, 2/3 b96 tree); all 8 shards pass against an EMPTY pytestspec/mutants-baseline.txt, regenerated by --write-baseline (59 lines out). Order: W2769 first, then b96 (blocked on W2769), then b99 re-fold. | 2026-11-19T17:16:25Z: github-00 PASS-SUBMIT at 6757d300 (review/W2769-control-reads-pytests-node-report). Submitted as stack b101, queued behind b100. Notes from the review, not changed: (a) OSError of any kind reads as missing (name a permission fault if it ever matters); (b) under xdist workers also append failed ids, so a node can appear twice: harmless for named[0], not for a line count. After landing: the b96 flip check on its tree, then b96 and b99 re-folded once. | 2026-11-19T18:50:15Z: b101 REFUSED 2026-11-19 at //pkgbuild:mutants_7, culprit unattributed: STALE errored pkgbuild environments.py::failed-put-is-success (baseline of 1, 0 rises, 1 stale). The node-report control reaches every dist whose mutants-baseline.txt lists errored cells; I regenerated only pytestspec. Running ratchet, pathsforward, audiostruct, icsstruct, katas, mdstruct, pkgbuild, corpus, procrun, pycodemod, importdag with the fixed runner (task buki45nr5) to regenerate each baseline with --write-baseline, then a delta ref to github-00. HEAD still 9ea59144. | 2026-11-19T18:51:52Z: MECHANIZATION carded as W2776 (github-00): a stack touching a runner cone unit must carry every dist baseline that lists errored or survived cells, or presubmit refuses naming them. Linked here; W2776 enables W2769's lineage. | 2026-11-19T23:51:42Z: ALL-DISTS RUN DONE 2026-11-19 (task bb0da79l6, final runner bytes, committed earlier as 5d6f4464): 587 of 588 tests pass, the one failure //pkgbuild:mutants_7 is the stale cell the b101 gate named; no other dist's baseline went stale. pkgbuild/mutants-baseline.txt regenerated by the new --regen-baseline verb (W2777): OFF errored pkgbuild environments.py::failed-put-is-success, 1 cell paid down. Delta ref review/W2769-baseline-paydown b3be0b99 (base 9ea59144) sent to github-00: runner + tests + warrants + pytestspec and pkgbuild baselines.",
+      "issued_at": "2026-11-19T16:33:30Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T23:51:42Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2770",
+      "title": "Writer carries a typed per-card estimate: own delivery cost, and effect on CPU-s and attempts per landing",
+      "status": "blocked",
+      "enables": [
+        "nemik:W2325"
+      ],
+      "touches": [
+        "paths-forward",
+        "velocity"
+      ],
+      "blocked_on": [
+        "W2771"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2771 gives a measurement: read the writer's vector handling and nemik's shapes; send the field grammar, refusals and the nemik-check Warning to github-00 as a branch and sha",
+      "evidence": "2026-11-19T17:34:32Z: 2026-11-19 operator ruling via github-00 (host 695f3e0a line 193949): each card carries an estimate of its own delivery cost and of its effect on CPU-s and attempts per landing; velocity derives from the effect. Design sent to github-00 (estimate = cost and effect, each cpu_s, attempts, basis in measured/analogue/guess, as_of; no estimate is a nemik-check Warning). MY ESTIMATE as_of 2026-11-19, basis analogue, low confidence: cost ~2 attempts and ~1500 CPU-s; effect 0 directly (an instrument). Waiting on github-00 for the design before any entry. | 2026-11-19T17:36:00Z: RULED 2026-11-19 (github-00): cost AND effect each carry low/high (a measured basis may have low == high), so a guess looks as uncertain as it is and later forecast error can be scored against the interval; effect gains a SCOPE (a repo list or a touches surface) plus a horizon, because per landing with no population cannot be checked; an instrument card's effect is honestly 0 on landings and its value reaches ranking through its enables edges, no special field. Keep analogue bases cited.",
+      "issued_at": "2026-11-19T17:34:04Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T17:36:06Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2771",
+      "title": "One attempts series for every landing path: repo, card and outcome (landed, refused, withdrawn)",
+      "status": "blocked",
+      "enables": [
+        "W2770",
+        "luthen-observability:W2774"
+      ],
+      "touches": [
+        "velocity",
+        "telemetry"
+      ],
+      "blocked_on": [
+        "W2772"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2772 lands: read commit_verdict, commit_kata.commit, the stack runner and the luthen and gcalculus land scripts; design the one emitter and the log-row fields; send the entry to github-00 as a branch and sha",
+      "evidence": "2026-11-19T17:34:33Z: 2026-11-19 operator ruling via github-00 (host 695f3e0a line 193949). Design sent: keep the bounded counter mikemol.commit.verdict{repo,verdict,stage} (its docstring forbids a card label) and add a per-attempt LOG row carrying card, outcome, attempt index and gate CPU-s; one emitter called by mikemol-commit, the stack runner and the luthen and gcalculus land scripts. Open: is a per-card metric label acceptable at about 2800 cards. MY ESTIMATE as_of 2026-11-19, basis analogue, low confidence: cost ~2 attempts and ~2500 CPU-s; effect 0 directly (it makes every other estimate checkable). Waiting on github-00. | 2026-11-19T17:35:58Z: RULED 2026-11-19 (github-00): NO per-card label on the counter; the bounded counter plus an outcome, and one LOG row per attempt carrying the card id (cardinality belongs in logs), to VictoriaLogs (log to services, not files), each emitter's failure naming the query. Count WITHDRAWN as an outcome only when a submit was actually made. Blocked on W2772 (its tests must not pollute the series this reads). | 2026-11-19T17:41:25Z: CLAIMS luthen-observability:W2774 (checks.land emits one attempt record per land attempt, queue-check refusals included): the fleet attempts series with a small emitter the land scripts call. Its asks: counted per attempt, labels repo, waypoint, outcome (landed, precheck-refused, check-refused, commit-refused, gate-refused, raced) and the step stopped at. Ruled 2026-11-19 (github-00): the card id goes in a LOG row, not a metric label. First data point from luthen: W2757 2 attempts, W2761 1, W2766 3 (two stopped at the queue check, one landed): 6 attempts for 3 landings.",
+      "issued_at": "2026-11-19T17:34:08Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T17:41:25Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2772",
+      "title": "Commit tests emit to a scratch endpoint or a no-op exporter, never the production store",
+      "status": "working",
+      "enables": [
+        "W2771"
+      ],
+      "touches": [
+        "telemetry",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Wait for the gate verdicts of b100, b101, b102; on landing send github-00 the sha, take the series window after the next full hooks gate, then start W2771",
+      "evidence": "2026-11-19T17:34:34Z: 2026-11-19 operator ruling via github-00 (host 695f3e0a line 193949). Design sent: an autouse hooks conftest fixture points MIKEMOL_ENDPOINTS at an unroutable scratch value and strips the otlp binary, so commit_verdict.emit finds no program or store, plus a test that the emit path in the commit tests plans no store; the series check (no repo=test_* in the store) needs the store, whose port 30829 refused me today. Open: where the scratch endpoint lives. MY ESTIMATE as_of 2026-11-19, basis analogue, low confidence: cost ~1 attempt and ~1000 CPU-s; effect 0 CPU-s directly, removes about 39 false rows per 7 days (github-00's count, not measured by me). Waiting on github-00. | 2026-11-19T17:35:56Z: RULED 2026-11-19 (github-00): NO scratch endpoint (an unroutable address risks a connect stall, a wall-clock wait). The autouse fixture replaces commit_verdict's store resolver with one that RAISES if called, so a test reaching the real emitter fails loudly; tests that check emission inject a recording fake through the seam; plant one test that calls the real emit path under the fixture and expects the raise. READ MYSELF 2026-11-19, live store vmsingle.buildbuddy.svc.cluster.local:8428 (30829 is retired): count_over_time of mikemol.commit.verdict over 7d by repo and verdict gives 9 test_* repos at 36-39 rows each, plus repo=repo at 57; mtools has 1 COMMITTED and no REFUSED in 7d (its refusals reach no series: W2771). | 2026-11-19T17:52:10Z: BUILT 2026-11-19: review/W2772-tests-never-reach-the-real-verdict-store 3258f716 (base 25a3a3b5), sent to github-00. commit_verdict.store_resolver seam, asked before the binary; hooks conftest closes it with a raising function; commit tests inject recorded_verdicts; planted test_no_real_verdict_emitter (2 cases). First cut failed under bazel (conftest import widened every target's data); now uses sys.modules. W2773 rides as the second entry. WITNESSES: 20 hooks bazel targets plus graph_fresh and ruff pass; graph.json and dag.bzl regenerated; 91 local tests pass. NOT MEASURED: the whole hooks suite, the store after landing, subprocess-launched commit CLIs. | 2026-11-19T18:01:19Z: REVISED 2026-11-19: review/W2772-tests-never-reach-the-real-verdict-store da2c4bba (base 25a3a3b5), sent to github-00. Added the environment closure (github-00): the hooks conftest points MIKEMOL_ENDPOINTS at a scratch endpoints file containing {} and removes MIKEMOL_OTLP_BIN and the OTEL_EXPORTER_OTLP vars, so a child resolves no store; the variable's file wins over the HOME file (mikemol.endpoints.resolve.endpoints_path reads HOME only when it is unset). Planted subprocess test asserts the inherited file is {} (not 'fake otlp never called': the child can still start it and resolve nothing). WHOLE SUITE under bazel, 299 hooks targets: 296 pass first run, 3 failed (test_verdictlog 6 tests and test_index_refresh 1 test reached the emitter, test_bar_fires wanted a warrant); all fixed, rerun green. SERIES WITNESS TO TAKE AFTER LANDING: count_over_time({mikemol.commit.verdict, repo=~test_.*|repo}[the gate window]) == 0 via the pinned mikemol-otlp query-metrics; store is vmsingle.buildbuddy.svc.cluster.local:8428 (30829 retired). | 2026-11-19T18:04:24Z: READ OF mikemol-otlp (github-00 ask), 2026-11-19: METRIC verb otlp/cli.py:194-203 _metrics_where (--url, then OTEL standard vars, then base_url of vmsingle-http, metriccmd.py:26); with a scratch endpoints file {} it returns both empty, and cli.py:208-215 _metric returns EXIT_USAGE before a Request exists, so sender.post is never reached; endpoints/resolve.py:49-75 base_url returns None for a file without the name. No default address and no fallback port found on the metric or trace path (cli.py:162-173, tracecmd.py:29). GAP FOUND: the LOG verb reads MIKEMOL_OTLP_LOGS_URL (cli.py:48,150-159), a complete URL, before the endpoints file; the conftest now strips it, planted child asserts it absent. store_named needs no change for the metric path. Review: github-00 PASS-SUBMIT at da2c4bba; the logs-URL line changed the bytes, new ref 546c0d94 sent. | 2026-11-19T18:06:43Z: github-00 PASS-SUBMIT at 546c0d94 (with W2773). Submitted as stack b102 (two entries, W2772 then W2773), queued behind b100 (W2765) and b101 (W2769); neither had landed (HEAD 25a3a3b5). After landing: read the series window after the next full hooks gate with the pinned mikemol-otlp query-metrics (count_over_time of mikemol.commit.verdict, repo=~test_.*|repo, expected 0), then W2771.",
+      "issued_at": "2026-11-19T17:34:09Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T18:06:43Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2773",
+      "title": "test_gatetargets main test sends real metrics when run outside the bazel sandbox, so it fails on a host with a store",
+      "status": "working",
+      "enables": [
+        "W2772"
+      ],
+      "touches": [
+        "telemetry"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Finish W2772's bazel batch (bgc0j9gw3), write the stack with two entries (W2772, W2773), send github-00 the review branch and sha",
+      "evidence": "2026-11-19T17:48:43Z: FIXED in scratch tree mtools-W2772 (uncommitted): the test deleted MIKEMOL_OTLP_BIN and set HOME but left MIKEMOL_ENDPOINTS, which a session carries, so main found a store and shipped real rows (sent=True). One line: monkeypatch.delenv(ENDPOINTS_ENV). Before: 1 failed (fails on main 25a3a3b5 too); after: tests/test_gatetargets.py 17 passed. Lands as the second entry of W2772's stack (one gate, two entries).",
+      "issued_at": "2026-11-19T17:47:37Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T17:48:43Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2774",
+      "title": "hooks mutation grid: shards 215 to 433, because mutants_124 used 241 of 300 CPU s",
+      "status": "working",
+      "enables": [
+        "W2772",
+        "W2775"
+      ],
+      "touches": [
+        "gate-repair",
+        "mutation"
+      ],
+      "blocked_on": [
+        "github:W120"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Resubmit b102 (W2774, W2772, W2773) when one export holds all three; W2765 landed as 9ea59144 so a slot is open",
+      "evidence": "2026-11-19T18:08:18Z: b102 REFUSED AT SUBMIT 2026-11-19 by the shard guard (W1602): hooks mutants_124 used 241 CPU s of 300 (80%), set shards = 433 (now 215) in hooks/BUILD.bazel before the stack. Nothing ran, nothing landed. One-line change built: review/W2774-hooks-mutation-shards-433 8b4d28fb, sent to github-00. NOT MEASURED: the 433-shard grid (the gate runs it). | 2026-11-19T18:10:11Z: github-00 PASS-SUBMIT at 8b4d28fb. ESTIMATE as_of 2026-11-19, read from the store vmsingle (mikemol.gate.target.cpu.seconds, target=~//hooks:mutants_.*, 14d): the per-shard fixed cost is bounded above by the lowest shard reading, 9.4 s (mutants_20; the next lows 10.5, 11.1, 11.6, 12.6, 12.9, 13.7, 14.1 s), and that shard still ran its mutants, so the fixed cost is at most 9.4 s; LOW 5 s is my GUESS (no near-empty shard exists to read it from). 218 added shards: effect on CPU-s per hooks grid = +1,090 (low, guess) to +2,050 (high, 218 x 9.4, measured bound). BASELINE read the same way: the sum of the latest reading of each of the 215 shards = 16,946.8 CPU-s, so +6% to +12%. Attempts per landing: removes the shard-guard refusal for hooks stacks (it fired once today, b102); effect on landings that touch hooks, horizon until W2775. CHECK AFTER LANDING: read the hooks grid total over the next gates against [+1,090, +2,050] on 16,946.8. INTERIM until cone sharding: the doubling is an opaque slice count; W2775 retires it, blocked on W2727 (cone lineage W2748-W2751). | 2026-11-19T18:16:07Z: TWO REFUSAL LINES, for nemik:W2325's band defect (github-00): (1) b102 first submit: 'NOT COMMITTED mtools: this stack is refused at submit, before it waits: //hooks:mutants_124 used 241 CPU s of 300 (80%), past half: set shards = 433 (now 215) in hooks/BUILD.bazel before this stack'. (2) b102 resubmit as W2774, W2772, W2773 with the round at W2769, W2726, W2765 (round.json as_of 2026-11-19T18:11:01Z held none of the three): 'W2726 is in this repository's round and ready, but the working set includes W2772, W2773, W2774, which is not: take W2726 first with mikemol-paths-forward --state .claude/paths-forward.json --update W2726 --status working'. After the export held W2774 (as_of 18:11:54Z) the same refusal named only W2772, W2773. The round put a census (W2726, status working in the file) ahead of a stack whose first entry repairs the gate's own shard guard; W2774 carries the gate-repair touches tag, the strict first band.",
+      "issued_at": "2026-11-19T18:08:05Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T18:16:07Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2775",
+      "title": "Retire the interim hooks shard count 433: size the hooks grid by cone, not by index slice",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "check_mutants",
+        "velocity",
+        "gate-repair"
+      ],
+      "blocked_on": [
+        "W2727"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2727: isolate what made mutants_124 heavy as its own cone, return the slice count, and read the hooks grid's total CPU before and after",
+      "evidence": "2026-11-19T18:10:09Z: INTERIM DEBT of mtools:W2774 (shards 215 to 433, an opaque index-slice count): the fleet rule of 2026-11-14 is to shard along cones, never in opaque slices; doubling because mutants_124 grew hot is the opaque fix. The cone lineage is W2727 with W2748 to W2751. This card retires the doubling.",
+      "issued_at": "2026-11-19T18:10:01Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T18:10:09Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2776",
+      "title": "Presubmit: a stack that touches a runner cone unit must regenerate every dist baseline that lists errored or survived cells, or refuse naming the dists",
+      "status": "blocked",
+      "enables": [
+        "W2769"
+      ],
+      "touches": [
+        "check_mutants",
+        "gate-repair",
+        "velocity"
+      ],
+      "blocked_on": [
+        "W2769"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2769 lands: read the runner-cone and the presubmit seam, design the check, send github-00 the design",
+      "evidence": "2026-11-19T18:51:50Z: From github-00, 2026-11-19, after b101 (W2769) was refused at pkgbuild mutants_7: a runner change reaches every dist's baseline and that is knowable before submit. The runner-cone (W2746) knows which units decide a verdict. ESTIMATE as_of 2026-11-19, basis analogue, low confidence: cost 1 landing, ~2 attempts, ~1500 CPU-s (a hooks-only presubmit change; analogue W2772's stack). EFFECT: removes one refused full-grid attempt per runner change; a refused full grid is on the order of the hooks grid alone, 16,946.8 CPU-s measured (sum of the latest 215 shard readings, vmsingle, 14d), plus the other dists unmeasured, so +/- [15,000, 30,000] CPU-s saved per runner change; runner changes this week: b89, b91, b96, b101 (4, from this session). Scope: stacks touching mutate_runner or mutate_core. Linked from W2769. | 2026-11-19T19:03:46Z: 2026-11-19: W2776's rule (a stack touching a runner cone unit must carry every dist baseline with errored or survived cells) is checked against the runner as W2769 leaves it, and its first user is W2769's own all-dists baseline regeneration (b101 is not landed; the run over the dists is in flight, task buki45nr5). Building the check before the runner it guards lands would plant the criterion against code that is about to change. Blocked on W2769 landing.",
+      "issued_at": "2026-11-19T18:51:42Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T19:03:46Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2777",
+      "title": "Script: regenerate a dist's mutation baseline from its shard logs and print the cells that came off or are new",
+      "status": "working",
+      "enables": [
+        "W2776"
+      ],
+      "touches": [
+        "check_mutants",
+        "gate-repair",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "On github-00's pass: build stack b101 as two entries (W2769 + W2777 with five paths, then the W2788 interim guard on the ratchet dist) and submit when the round holds W2769",
+      "evidence": "2026-11-19T18:56:33Z: BUILT 2026-11-19 in scratch tree mtools-W2769-main (user: mechanize first): mutate_runner.py gains shard_logs(dist, testlogs) and regen_baseline(dist, testlogs) and the verb --regen-baseline DIST TESTLOGS. It finds <testlogs>/<dist>/mutants_N/test.log (or the plain mutants/test.log), runs write_baseline over them, prints OFF <verdict> <cell> for each cell paid down and NEW <verdict> <cell> for each cell not previously listed; exit 1 on a NEW cell, no logs, or a bad log. Three planted tests (paydown, NEW debt exit 1, plain target and no logs): check_mutants tests 119 passed locally; pycheck admits both files. NOT DONE: warrants for the 3 tests; bazel //:test_mutate_runner; use it on the eight dists. | 2026-11-19T23:53:28Z: github-00 REVISE of b3be0b99 (the paydown itself accepted, measured: 587 of 588, only pytestspec 59 and pkgbuild 1 owed) 2026-11-19, three items and one run. R1: regen_baseline docstring promises exit 1 when the old baseline is bad but the code discards read_baseline's problem (before, _problem = ...; after, _problem = ...), so an unreadable old baseline reads as empty, every cell prints NEW, exit 1 for the wrong reason: check each problem, refuse with it named. R2: it WRITES DEBT BEFORE ASKING: on NEW cells the file is already written and the exit is 1, so a grown baseline sits one git add from landing: write ONLY when no cell is NEW; otherwise print the OFF and NEW lists and exit 1 with the file UNTOUCHED. R3 (the live hazard): shard_logs globs mutants_*/test.log and bazel's testlogs keeps logs of shards that no longer exist; b102 moves hooks from 215 to 433 shards, so a later regen at another count would fold a previous run's logs in: refuse unless the logs found are EXACTLY the target's declared shard set (count equals the BUILD's shards, indices 0 to N-1, no others) and every log comes from ONE run (each test.log, or bazel's test.xml beside it, carries the invocation: compare); plant a leftover mutants_N beyond the declared count which must refuse. RUN: run //:test_mutate_runner at b3be0b99 in a fresh detached worktree (the interim for the run-at-sha rule), cite the sha with the verdict, then send the new sha. | 2026-11-20T00:04:13Z: REVISE 4 BUILT 2026-11-19 (github-00 R1 to R3): in the W2769 tree, merged_baseline(dist, logs) is split out of write_baseline (returns the merged map or None after naming a malformed old baseline or a crashed shard log); regen_baseline now checks the shard set first (shard_set_problem: every log states the same shard i/N, indices exactly 0..N-1 once each, count N; neither test.log nor test.xml carries the bazel invocation id, read 2026-11-19, so same-layout logs of an OLDER run could still mix: stated in the docstring, not claimed), reads the old baseline and refuses with the problem named (R1), prints OFF and NEW, and WRITES ONLY WHEN NO CELL IS NEW, otherwise exits 1 with the file untouched (R2). 4 new planted tests (malformed old baseline named, NEW cell leaves bytes unchanged, complete set accepted with a leftover mutants_9 of 433 refused as 'leftover', a missing shard refused); 123 tests pass locally; pycheck admits both files; warrants +4. Review ref review/W2769-baseline-paydown 2685480d (base 9ea59144). RUN at the sha as github-00 asked: fresh detached worktree mtools-W2777-run at 2685480d, bazel test //:test_mutate_runner //:ruff //:mypy_check_mutants started (task in flight). | 2026-11-20T00:06:36Z: RUN AT THE SHA 2026-11-19: fresh detached worktree mtools-W2777-run at 2685480d, bazel test //:test_mutate_runner //:ruff //:mypy_check_mutants: all three PASS (exit 0). Verdict cited for sha 2685480d75dcc117ad505b37cc8de93857a53e9b; sent to github-00 with the revise. | 2026-11-20T00:10:48Z: FOLD-INS 2026-11-19 (github-00): merged_baseline raises BaselineMergeError (no None-union) and require_one_shard_set raises it (no empty-string sentinel), regen_baseline catches once, prints, exits 1; known_baseline and the class support it. 123 runner tests pass; pycheck admits. Review ref review/W2769-baseline-paydown 259ee3f4. RUN AT THE SHA: fresh detached worktree mtools-W2777-run2 at 259ee3f4, bazel test //:test_mutate_runner //:ruff //:mypy_check_mutants: all PASS (exit 0). Follow-up cards W2791 (invocation id) and W2792 (residue). github-00 said PASS-SUBMIT without another review round if the delta was only these two.",
+      "issued_at": "2026-11-19T18:53:59Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:10:48Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2778",
+      "title": "mikemol-landing-verify: one pinned command that checks a landing against its reviewed sha, and host rows against their declared hashes",
+      "status": "working",
+      "enables": [
+        "W2779"
+      ],
+      "touches": [
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Add the pyproject entry and the hooks/bin launcher, regenerate graph and warrants, plant the QUEUE_SUFFIXES parity test, run the hooks bazel targets, send github-00 the branch and sha",
+      "evidence": "2026-11-19T18:58:46Z: OPERATOR RULE 2026-11-19 (host 695f3e0a line 194691, relayed by github-00): if you could do it by hand, mechanize it; mechanizing forces correctness criteria that by-hand work replaces with confirmation bias. Design sent: mikemol-landing-verify REPO --reviewed SHA --landed SHA [--allow PATH...] compares trees, default allow set the queue files, exit 1 naming every other path; --host-rows recomputes sha256 per lib row at the landed sha (format not yet read); criteria as planted repos (stray path, changed blob, wrong hash) plus controls; lives in hooks/bin beside mikemol-commit. ESTIMATE as_of 2026-11-19, basis guess, not a CPU effect: cost ~2 attempts and ~1500 CPU-s; review latency -1 to -5 min of reviewer time per landing (guess); escapes: an out-of-set path refuses before it is called verified. Waiting on github-00 for the design. | 2026-11-19T19:00:05Z: github-00 APPROVED the design 2026-11-19, answers: (1) host rows are luthen-observability's host/lib_rows.jsonl, sorted JSONL, one object per row with name, source (repo-relative path), target, mode, activate, sha256; take the row file as an argument (--host-rows PATH-IN-REPO), no luthen default; each row's sha256 must equal sha256(git show LANDED:source), a missing source refuses; READ THE FORMAT AT A SHA, not from the description. (2) allow default: the queue files only, taken from the writer's own knowledge of a queue's companions (paths-forward.json, .ledger, the rendered .md gcalculus commits), not typed in the verifier. (3) stacks: reviewed side is the TIP of the reviewed stack, landed side the landed tip; add a plant: a two-commit landed stack whose tip tree equals the reviewed tip reads 0. Effect is review latency and escapes, not CPU. | 2026-11-19T19:03:01Z: BUILT PART 2026-11-19 in scratch tree mtools-W2778 (base 9ea59144): hooks/src/mikemol/hooks/landing_verify.py (strays: git diff --name-status --no-renames over two shas, so trees not commits; row_problems: each JSONL row's sha256 vs git show LANDED:source, missing source and a bad line refuse; queue_files: the writer's companions of a state file; exit 0/1/2, cannot-judge never a pass) and hooks/tests/test_landing_verify.py (11 tests, real git, planted: stray path, changed blob, wrong hash, plus controls: queue-only clean, --allow admits, equal sha and a two-commit stack with the reviewed tip tree clean, rename as two paths, missing source, malformed line, unresolvable sha exit 2). 11 passed; pycheck admits both. NOT DONE: console-script entry in hooks/pyproject.toml, hooks/bin launcher beside mikemol-commit, graph.json and dag.bzl, warrants, a parity test pinning QUEUE_SUFFIXES to pathsforward/store.py (the module cannot import the writer), bazel run.",
+      "issued_at": "2026-11-19T18:58:32Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T19:03:01Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2779",
+      "title": "mikemol-landing-verify --staged WORKTREE: the worktree's staged index tree against the reviewed tree, at submit",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [
+        "W2778"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2778 is reviewed: add --staged WORKTREE (read the index tree with git write-tree in that worktree, then the same tree comparison), plant the absent-from-index case",
+      "evidence": "2026-11-19T19:12:45Z: From github-00 2026-11-19: gcalculus independently built the same criterion for the moment BEFORE submit (the staged index against the reviewed ref) and was asked to send its design and five planted cases instead of landing it. Scope: a --staged WORKTREE mode, the worktree's index tree against --reviewed's tree, with the same queue-file allowance and the same refusal format; their vocabulary DIFFERS / ABSENT / NOT PASSED is adopted across both modes. One command for both moments, submit and landing. SPLIT as github-00 allowed: landed mode first (W2778), staged mode second (this card). ESTIMATE as_of 2026-11-19, basis guess, not a CPU effect: cost ~1 attempt and ~1000 CPU-s (a hooks-only module extension over W2778's); effect on review latency and escapes, at SUBMIT: a stack whose index differs from the reviewed ref is refused before the gate runs, saving the gate attempt a wrong index would cost (one refused full grid, 15,000 to 30,000 CPU-s, the interval on W2776, unmeasured here) whenever it fires; frequency unknown. | 2026-11-19T19:14:51Z: FROM gcalculus 2026-11-19 (direct message; its card is gcalculus:W443, blocked on W2778, wired by it in about 1 attempt once the mode exists): the mode it built and WITHDREW in scratch/W440 of gcalculus (e7a1454, 4685dec, unsubmitted; read by those shas): staged side = git ls-files -s parsed to (path, blob), changed side = git diff --name-only BASE HEAD; problems DIFFERS (staged at another blob than the reviewed one), ABSENT (reviewed tree has it, the index lacks it), NOT PASSED (a path changed over BASE that the reviewed tree does not carry); queue files exempt. FIVE PLANTS to carry over: equal (0); one blob differs (1); a path absent from the index (1); a changed path not in the reviewed tree (1); changed queue files only (0). Real-input control: against the three blobs a reviewer passed, 3 equal exit 0; one blob id's last digit changed exits 1 naming the path with the passed and staged id. MAPPING CAVEAT to confirm with gcalculus: NOT PASSED over BASE is narrower than 'in the checked tree and not in the reviewed tree' when the staged tree is not BASE plus the changes. Landed-mode vocabulary already adopted in the W2778 tree (M DIFFERS, D ABSENT, A NOT PASSED). | 2026-11-19T19:19:05Z: CONFIRMED by gcalculus 2026-11-19: the whole-tree form is right for the staged mode, no --base. The staged side is a freeze worktree whose index IS the reviewed tip, so the criterion is staged tree == reviewed tree except queue files, both directions; a --base restriction would only add a way for a stale path to pass. Keep DIFFERS / ABSENT / NOT PASSED as mapped (path in both at another blob; in reviewed, missing from checked; in checked, absent from reviewed). Their five plants reduce to the stray-path, changed-blob and queue-only-clean cases already in W2778's tests, plus an absent-from-index case to add. Nothing else needed from gcalculus; gcalculus:W443 stays blocked on this card.",
+      "issued_at": "2026-11-19T19:12:35Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T19:19:05Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2780",
+      "title": "Run at SHA: materialize a commit's tree into a run-owned directory and run bazel targets there, so no run reads a tree someone edits",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "velocity",
+        "hooks",
+        "gate-repair"
+      ],
+      "blocked_on": [
+        "W2793"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Write hooks/tests/test_runat.py: plants (mid-run edit on a sentinel event, cwd is the copy, git rev-parse HEAD prints the sha, directory and ref gone after a failure, unresolvable sha 7, last line JSON round-trips a quoted argv, venv sync failure is 7 and runs nothing), then runat.py, entry, launcher",
+      "evidence": "2026-11-19T20:27:46Z: OPERATOR RULING 2026-11-19 (host 695f3e0a line 195318, relayed by github-00): a git state should be the input to a run, so bazel works on an isolated copy and it does not matter what happens in the live checkout; holding the checkout hostage makes runs fragile and paralyzes the agent. 'I will not touch the tree until it finishes' is the symptom. The mechanism exists: the stack gate freezes ONE tree from a commit (--freeze-from) and runs there. Generalize it: run at SHA materializes the tree of SHA into a run-owned directory (git archive or a detached worktree, removed after), runs the given bazel targets there with the shared disk and remote cache (a materialized copy of an unchanged tree is mostly cache hits), and the run's record names the SHA. CRITERIA FIRST: a planted case where the live tree is edited mid-run and the result is unchanged and equals a run at the same SHA. Grid runs, sweeps and the regen readings go through it. TRIGGER: my all-dists run buki45nr5 was invalidated by my own edit of mutate_runner.py in the tree it ran on (dozens of shards 'input dependency modified during execution'). ESTIMATE as_of 2026-11-19, basis guess, low confidence: cost ~2 attempts and ~1500 CPU-s (a hooks-only module over the freeze path); EFFECT on CPU-s per landing: removes the invalidated rerun, which for a multi-dist run is on the order of [5,000, 20,000] CPU-s each time (the hooks grid alone reads 16,946.8 CPU-s; unmeasured for the 11-dist set), and removes the wall-clock waiting, which it does not count; frequency this session: 1 (buki45nr5), others possible earlier (b99's tree). Scope: every grid run, sweep and regen reading. | 2026-11-19T20:29:00Z: READ 2026-11-19: hooks/src/mikemol/hooks/stacktree.py (W1612) states the design this card generalizes: an entry's identity is a git TREE sha built in a private index (stackland.build, read-tree over a head), pinned under refs/mtools/stack/<key>/<n> so gc cannot take it, 'a presubmit exports one tree and runs on it' so the gate's unchanged paths are cache hits; operator design point 2026-10-18 via github-8f. The export itself I did not find in hooks/src (grep for checkout-index, read-tree, git archive finds only the building of trees, stackgate.py:55 read-tree, and wheel.py/revendor.py using git archive for dists). So the existing mechanism names a tree and does not yet materialize it for an arbitrary run. DESIGN to send: runat.run_at(repo, sha, argv): pin sha under a ref (as stacktree.pin does), materialize its tree into a run-owned directory with git archive (a pure copy: no live index or worktree state to race, unlike a worktree that shares the repo's git dir), run argv there with the caller's env, print and record 'ran at <sha>', remove the directory and the ref after. First plant (criterion): a live tree edited MID-RUN while the run waits on an EVENT (a sentinel file, no clock) gives the same output as a run at that sha with no edit. | 2026-11-19T20:30:08Z: SCOPE from github-00 2026-11-19: luthen's pre-ref gate is checks.gate (a Python command) and gcalculus's real runs are scripts, so the mode runs an ARBITRARY COMMAND in the materialized tree, bazel being one such command: mikemol-run-at REPO SHA -- COMMAND..., and prints each verdict line with the sha. luthen blocked luthen-observability:W2789 on this card rather than build a local wrapper and will send its requirement directly. The design's run_at(repo, sha, argv) already takes an argv; the open piece is 'each verdict line with the sha' (prefix every output line, or a closing line RAN AT <sha> rc=N). | 2026-11-19T20:30:48Z: REQUIREMENT from luthen-observability (W2789, blocked on this card) 2026-11-19: run an arbitrary command (python -m checks.gate, about 25 CPU-minutes class; bazel test over declared targets; bazel build verdict targets) in the materialized tree; RECORD THE SHA WITH EACH VERDICT LINE, shape 'sha <sha40>: <command> <verdict> <exit code>'; the tree is created fresh and removed after; nothing under the live checkout is read or written; the command's exit code is the verdict, never a pipe's. This settles the open: the closing line is that shape (full 40-char sha; verdict PASS on exit 0, FAIL otherwise, the exit code printed), the run-at process exits with the command's own code. | 2026-11-19T20:32:20Z: github-00 ACCEPTED the design 2026-11-19 with one structural change and three details. CHANGE: not git archive (no .git; gcalculus's @tracked rule runs git ls-files -z, luthen's checks.gate has committed-and-pushed and HEAD-against-tree rungs, gen-warrants and stage checks read HEAD): materialize a REAL repository, git clone --shared --no-checkout into the run directory (alternates to the repo's objects) and check out the pinned sha detached; the copy has its own .git, index and HEAD so the live checkout cannot race it (a worktree would register in the live repo's worktree list and share refs). Plant: a command running git rev-parse HEAD in the copy prints SHA. DETAILS: (1) an unresolvable SHA is CANNOT_RUN, exit 7 in the fleet table, not 2; (2) closing line RAN AT <sha> rc=<n> argv=<shell-quoted command>, no wall, so a verdict line cannot be read as another command's; (3) OPEN, stated and not guessed: commands that need the repo's VENV (luthen's gate runs .venv/bin/python): the copy has none, and the live venv matches the LIVE lock, not SHA's; honest version syncs a venv from SHA's uv.lock into the run directory (uv sync --frozen against the shared uv cache) or refuses with 7 when the command needs one and none can be made; ask luthen. CONFLICT to settle: luthen's closing line shape is 'sha <sha40>: <command> <verdict> <exit code>'. | 2026-11-19T20:33:30Z: luthen-observability ANSWERED 2026-11-19 (and corrected itself: the '25 CPU-minutes class' was NOT a measurement; its land gate takes 25 to 50 minutes WALL): (1) checks.gate needs a git directory with HEAD: lib-rows-baseline (--vs-head, git rev-parse --verify HEAD and git ls-tree, exit 7 CANNOT_RUN reported WITHHELD without git), index-matches-tree, git-worktree-redirect; a tree with no .git withholds them. Confirms the shared-clone design. (2) The caller's environment supplies the venv: the gate runs as .venv/bin/python -m checks.gate from a tree with no .venv of its own (luthen uses the main venv's python from the scratch tree, which works). So the venv OPEN resolves to: run the command with the caller's environment and NO venv sync in the first version. (3) .terraform init state is absent in any fresh tree, so tofu-root reads HELD there (W2740): a known artifact, nothing to supply. luthen has not run the gate on a .git-less tree and will send the list of rungs that go non-ok. luthen's INTERIM today: a fresh detached worktree of the ref's sha, removed after. REMAINING OPEN: the closing line shape (luthen 'sha <sha40>: <command> <verdict> <exit code>' vs github-00 'RAN AT <sha> rc=<n> argv=<shell-quoted>'), to be settled by them. | 2026-11-19T20:35:52Z: SETTLED 2026-11-19 by github-00 (final; luthen told): closing record is ONE JSON object on its own line, the LAST line of stdout, with keys run_at (the 40-char sha), rc (int) and argv (a JSON array, no shell quoting), plus venv true when --venv; the command's own output passes through untouched above it. Pinned by test: the last line parses and the argv of a command with spaces and quotes round-trips exactly. --venv is an explicit opt-in: sync a venv for the sha's own uv.lock into the run directory (uv sync --frozen --no-build, shared uv cache) before the command, first on PATH; a sync failure is exit 7 with uv's message and the command never runs; without --venv no venv is made. luthen measured a warm frozen sync of this repo's lock at about 1.5 s prepare and 0.5 s install (20 packages); cold needs the network for the registry packages. Materialization is a real repository: git clone --shared --no-checkout, then a detached checkout. Unresolvable sha is exit 7; usage is exit 2. | 2026-11-20T00:27:01Z: 2026-11-20 STATUS MADE TRUE (github-00): not in hand: b101 stack in progress. The card is designed and approved but not being built this tick; it read working only because nothing set it back (the stale-working case). Back to working when picked up again. Lane order lives in priority and edges, untouched. | 2026-11-20T00:28:00Z: 2026-11-20 QUEUED BEHIND THE GATE-REPAIR LANE (github-00's lane order: the b101 resubmit, then the rest): W2793 is the shard guard's own input and must land for b101 to run at all; marking W2780 working while it is not being built is what held W2793 out of the round (the round keeps working cards ahead of a higher-band card, nemik:W2325's data point), and setting it ready tripped the ready-card rule. So the honest state is blocked on W2793 by ordering, not by code: nothing in W2780's design depends on W2793's files. It goes ready the moment W2793 lands, and I build its plants first (the test_runat.py list is on the card).",
+      "issued_at": "2026-11-19T20:27:37Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:28:00Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2781",
+      "title": "mikemol-paths-forward --owed: list each reviewer finding whose card is not done, with due date, days left, finding id, card status and witness",
+      "status": "working",
+      "enables": [
+        "gcalculus:W451"
+      ],
+      "touches": [
+        "paths-forward",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "When bsf1u19bi finishes: change the id spelling in owedfindings.py and its tests (mtools:R1.1 becomes mtools:R1-1), rerun, then the review ref",
+      "evidence": "2026-11-19T20:35:16Z: SPEC from gcalculus 2026-11-19 (github-00: drain into the writer): scratch/W448 of gcalculus, 878b075 and c8ef06e, unsubmitted, a 194-line script parsing the writer's own --retros output (header <repo>:R<n>, finding <k>: blocks with finding_card, finding_owner, due, finding_witness; certify_change blocks name no card and are skipped) and --queue rows, printing each finding whose card is not done: due date, signed days left, retro.finding, card (status), witness start, soonest due first; a card of another repo reads 'not read'; --selftest with a real retro excerpt and a planted queue. LIMITS in its docstring: a finding is open exactly when its CARD is not done (no per-finding status in the retro record, so an upper bound). TWO ADDITIONS from gcalculus's reviewer R51 that a writer can do: (1) a CLOSING SIGNAL, a convention such as 'CLOSES R<n> finding <k>' in the evidence of the card the finding names, so the mode prints open, closed and overdue-and-open; (2) a count by card. READING (not mine to land): 119 owed of 207 findings naming a card, 55 past due (14 due 2026-11-17, 41 due 2026-11-18) in gcalculus, an upper bound, from a queue copy at main 86c41e6. gcalculus:W451 is the use side, blocked on this card. ESTIMATE as_of 2026-11-19, basis guess, not a CPU effect: cost ~2 attempts and ~1500 CPU-s (a pathsforward module, the writer is a pinned dist); EFFECT on review latency and escapes: unpaid findings are where escapes come from; today a count by eye over the listing took a reviewer minutes and was labelled unchecked; interval 5 to 30 minutes of reviewer time per reading (guess), and the escape effect is the 55 past-due findings that nothing but a hand listing names. Scope: every repo with a reviewer; later nemik aggregates it fleet-wide. NOT READ BY ME: scratch/W448, the retro storage in the writer. | 2026-11-19T20:36:51Z: READ 2026-11-19: gcalculus scratch/W448 878b075 scripts/owed_findings.py (194 lines) by its sha. It PARSES THE WRITER'S TEXT: parse_retros reads the --retros listing by indentation and 'finding_card:'/'due:' prefixes, parse_queue splits '--queue' rows into four whitespace fields. That is the form a writer mode must NOT copy: inside the writer the retros are structured records (pathsforward/retros.py: the doc's retros list, each retro with its findings; a card-finding has finding_card, finding_owner, due, finding_witness, a certify_change finding has no card; render_full is the writer's own text rendering of them), so the mode reads the records and the waypoints' statuses directly and parses nothing. What carries over: the join (a finding is open exactly when its card is not done), the output fields (due, signed days left, retro.finding, card with status, witness start), soonest due first, 'not read' for a card of another repository, and the selftest idea (a real retro excerpt plus a planted queue). Limit carried: no per-finding status, so an upper bound. gcalculus's two additions: a closing signal read from the card's evidence and a count by card. | 2026-11-19T20:38:14Z: APPROVED by github-00 2026-11-19: build entry 1 (the join, dates, count, count by card, --json with named fields). CHANGE to entry 2, the closing signal: NOT a phrase matched in evidence prose (an exact-phrase match in free text is the text-parsing defect removed from entry 1: a typo silently does not close, a quoted sentence silently does). A TYPED field the writer records: --closes R<n>.<k>, repeatable, on --update or --done, validated against the retro records at write time (an unknown retro or finding is REFUSED, like --vector); --owed reads that field; the fleet adopts it by using the flag. nemik-check: leave it alone; overdue findings add no warning or page until nemik aggregates the mode, and then only as information to the owning session, never VIOLATES. | 2026-11-19T20:39:47Z: ENTRY 2 SPLIT OUT 2026-11-19 as mtools:W2782, on hold behind nemik's ruling on the closing-signal standard (commit trailers, not a writer flag). Entry 1 here proceeds: the join, dates, count, count by card, --json, reading the structured records. Module name owedfindings, tests in pathsforward/tests/test_owedfindings.py (plants first), in scratch tree mtools-W2781 (base 9ea59144). Template: readyolder.py and its test, cli registration at the _READINGS set, the mode list and the dispatch. | 2026-11-19T21:23:08Z: BUILT PART 2026-11-19 in scratch tree mtools-W2781 (base 9ea59144): pathsforward/src/mikemol/pathsforward/owedfindings.py (rows, report, report_json over the structured State: retros list with findings, waypoints, residue; a card of another repository reads 'not read', a residue card 'dropped', done is skipped, certify_change never a row; due-sorted; count by card; named-field JSON) and pathsforward/tests/test_owedfindings.py (6 tests: owed with signed days, done/certify_change/foreign, order, count by card plus total, JSON round-trip, dropped and own-prefix local). 6 passed; pycheck admits both. NOT DONE: cli wiring (the mode list, _READINGS, argparse --owed, handler _owed with --json, dispatch), a cli test (no beat, refusal), warrants, graph if the dist has one, bazel, review ref to github-00. | 2026-11-19T21:49:06Z: BUILT 2026-11-19 in scratch tree mtools-W2781: --owed wired in cli.py by codemod (import, _FLAGS, _READINGS, handler _owed with --json, dispatch); pycheck admits cli.py (the edit gate judges it alone). New: owedfindings.py, tests/test_owedfindings.py (6), tests/test_owedfindings_cli.py (3: prints the owed finding and total and leaves no beat, --json named fields, zero owed is stated). 13 passed with test_readyolder locally. Warrants appended (9, 1 rubric row, titles for the two sections). NOT DONE: the pathsforward bazel targets (I did not find their names; bazel query of the dist printed 66 KB of noise), review ref to github-00. | 2026-11-19T23:24:44Z: nemik 2026-11-19 (nemik:W2358) adopted the 1-based k and asked for the SPELLING before --owed lands: print the finding id as repo:Rn-k with a HYPHEN (mtools:R1-2), not the dot form, because a GitHub autolink id cannot contain a dot and the line could then be pasted straight into a Closes-Finding trailer; nemik parses only the hyphen form. DECISION: change owedfindings to the hyphen spelling (the row text and the JSON retro/finding stay separate fields). NOT DONE YET, deliberately: the W2781 tree is being read by the bazel run bsf1u19bi, and editing it mid-run is the invalidation mistake of buki45nr5; the change waits for that run to finish.",
+      "issued_at": "2026-11-19T20:33:32Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T23:24:44Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2782",
+      "title": "--owed closing signal: read closures from landed commit trailers, once nemik rules the standard",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "paths-forward",
+        "velocity"
+      ],
+      "blocked_on": [
+        "github:W120"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After nemik rules the trailer standard (key, value grammar for findings and cards, several per commit): --owed reads closures through the reader transcriptstruct --intents uses, and mikemol-commit gains a flag that writes the trailer, validated against the retro records at commit time",
+      "evidence": "2026-11-19T20:39:46Z: ON HOLD per github-00 2026-11-19: the operator ruled a closing signal like CLOSES R<n> finding <k> belongs in COMMIT MESSAGES, perhaps as a mail-style trailer, and which standard to use is nemik's question (the ecosystem's focal point for standards). github-00's --closes writer flag is superseded as the SOURCE: closure happens when the fix lands and the commit records it. The fleet already writes git trailers (Waypoint:, Gated-Tree:, Co-Authored-By:) and transcriptstruct --intents already reads landed trailers. github-00 wrote nemik's inbox asking for ONE standard (key name, value grammar for findings and cards, several per commit, how the writer reads them): letter 2026-11-19-github-00-closing-signal-standard.md. Blocked on that ruling by citation. Likely shape: --owed reads closures from landed commits' trailers through the same reader --intents uses; mikemol-commit gains a flag that WRITES the trailer, validated against the retro records at commit time so a bad id is refused before it lands. ESTIMATE deferred until nemik rules (basis would be a guess now).",
+      "issued_at": "2026-11-19T20:39:39Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T20:39:46Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2783",
+      "title": "pycheck: static mock-target verification, a patch target must exist in the declared packages, and create=True needs a stated reason",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "pycheck",
+        "velocity",
+        "soundness"
+      ],
+      "blocked_on": [
+        "github:W120"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Read pycheck's test-file passes and the bazel test shape for a hermetic probe; send github-00 the full design with plants for both rungs",
+      "evidence": "2026-11-19T21:54:47Z: OPERATOR RULING 2026-11-19 via github-00: a parked preventive measure counts as velocity once something is hit that a backburnered thing would have caught. THE HIT: luthen:W2790, luthen's checks/hoststate_fence_test.py patched planflow.changes_match, which waldo 9ea5914 (this repo's W2765) removed; the test went AttributeError only under the sha's own venv, so luthen's main has been red since 5fe43617 unseen, and would have turned every luthen landing red the moment W2777 synced the venv. DESIGN SKETCH (send first): an ast pass over test files resolves every patch target (mock.patch('pkg.mod.name'), patch.object(module, 'name'), monkeypatch.setattr(module, 'name', ...)) against the module as the DECLARED packages define it and refuses one that does not exist; create=True refused unless a stated reason sits beside it (create=True is how a dead target hides). Second rung, designed even if it lands later: refuse a patch whose target exists but which the code under test never references. PLANTS: a removed name refused, a renamed name refused, create=True with no reason refused, a valid target admitted. ESTIMATE as_of 2026-11-19, basis analogue (the W2790 hit, one red main for an unmeasured number of landings), low confidence: cost ~2 attempts and ~2500 CPU-s (a pycheck-family change in a pinned dist, vendored by every repo); EFFECT on attempts per landing: prevents the red-main class, which for luthen would have refused every landing until fixed; I do not have the count of refused attempts, so the interval is a guess, 1 to 10 refused attempts per occurrence; CPU effect per occurrence 15,000 to 30,000 CPU-s per refused full gate (the interval on W2776, unmeasured here). Scope: every repo's tests. | 2026-11-19T21:56:04Z: github-00 2026-11-19: weigh an IMPORT PROBE over the AST: a bazel test whose packages are exactly the declared ones, importing the target module and asking hasattr, is sound for setattr and star-imports, and in a hermetic sandbox 'no code runs' buys little; the AST pass could stay as a fast pre-commit lint with the probe as the gate's authority. Pick by which gives a sound refusal with fewer declared exceptions. MY CHOICE for the design: the IMPORT PROBE is the authority (zero declared exceptions for import-time names, since the module is asked what it has), run in the dist's own test sandbox; the AST pass is the fast lint and, where it cannot resolve a name, it stays silent rather than refusing (it never refuses what the probe would admit). Residue the probe does not cover: a module whose import needs a resource the sandbox lacks (it refuses with the import error named, never a pass), and a name bound lazily on first use (module __getattr__), which hasattr does answer by calling it.",
+      "issued_at": "2026-11-19T21:54:31Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T21:56:04Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2784",
+      "title": "Ratchet: count each repo's module-level monkeypatches of other packages' internals as shrink-only debt, and new tests use injected seams",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "pycheck",
+        "velocity",
+        "soundness"
+      ],
+      "blocked_on": [
+        "W2783"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2783 is reviewed: design the count and the baseline shape, send github-00",
+      "evidence": "2026-11-19T21:54:48Z: OPERATOR RULING 2026-11-19 via github-00, the same hit as W2783 (luthen:W2790, a test patched a function another package had removed). Measure 2: CONTRACT FAKES OVER MODULE MONKEYPATCHING, as a RATCHET not a big-bang rewrite: count each repo's module-level monkeypatches of OTHER packages' internals as named debt, shrink-only (the baseline-file and birth-rebaseline shape of W1667), and a rule that new tests use injected seams (the Seams / recorder pattern waldo and the commit kata already use). The count is the paydown series. Design after (1), the cheaper catch. ESTIMATE as_of 2026-11-19, basis guess, low confidence: cost ~3 attempts and ~3000 CPU-s (a count pass, a baseline per repo, a rule); EFFECT: shrinks the class W2783 only catches when a target is removed, so it reduces refused attempts where a patch breaks without removal (a changed signature); unmeasured, guess 0 to 3 refused attempts per quarter per repo. The paydown is the series.",
+      "issued_at": "2026-11-19T21:54:32Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T21:54:48Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2786",
+      "title": "mikemol-commit --closes-finding ID: write the Closes-Finding trailer and refuse an id that names no finding in the repo's retros",
+      "status": "working",
+      "enables": [
+        "nemik:W2358"
+      ],
+      "touches": [
+        "hooks",
+        "velocity",
+        "paths-forward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Wire --closes-finding in commit_kata (Request field, parse, message_of, body refusal, the call to refusals as a usage error), plant those cases in test_commit_kata, then the parity test, graph, warrants, bazel",
+      "evidence": "2026-11-19T23:24:43Z: FROM nemik 2026-11-19 (nemik:W2358, github-00's ruling): trailer is Closes-Finding with the value repo:Rn-k (hyphen, not dot: a GitHub autolink id cannot contain a dot), k 1-BASED (transcripts cite k=1 far more than k=0: nemik 81 vs 0, host 108 vs 0, mtools 15 vs 0). mikemol-commit gains --closes-finding repo:Rn-k: it writes the trailer and REFUSES an id that names no finding in that repo's retros (no such retro, k above its findings count, or k below 1), so a typo is refused before it lands. The value is the id only, reasons go in the body. nemik's reader trusts only well-formed landed trailers and blocks W2358's reader stage on this card. DESIGN CARE: commit_kata is in the hooks dist and cannot import the writer at runtime (a runtime sibling edge breaks every repo that vendors this wheel), so reading the retro records must go through the writer's own CLI or a pinned parity, which I have not designed. ESTIMATE as_of 2026-11-19, basis guess, low confidence, not a CPU effect: cost ~3 attempts and ~3000 CPU-s (a commit_kata flag, a retro read, graph, warrants); EFFECT on escapes: a mistyped closing id is refused before it lands instead of being read later as never closed; frequency unknown, interval 0 to 2 per month per repo, guess. Scope: every repo that closes a finding. | 2026-11-19T23:25:54Z: READ 2026-11-19: hooks/src/mikemol/hooks/commit_kata.py parse() (line 706) keeps single-valued flags in a dict and refuses an unrecognised flag (W2116), Request (line 213) is waypoint, subject, body, paths, trailer, message_of (line 377) writes Waypoint and the co-author trailer and refuses an Admission line, body_refusal keeps the body from carrying the tool's trailers. hooks has no dependency on pathsforward, so validation reads the repo's .claude/paths-forward.json as JSON (the retros list, each record id and findings, from retros.py add_retro) with a parity test, not an import and not the writer's text. DESIGN sent to github-00 with plants and two open questions (is a certify_change position closable, other-repo ids refused in version 1). | 2026-11-19T23:27:15Z: APPROVED by github-00 2026-11-19 with answers and one change. (1) certify_change positions: REFUSE in v1 (no card, no due date, --owed never lists them, a closure no reader acts on is noise): if nemik's W2358 later gives them closure semantics the rule widens with a test. (2) other-repo ids: REFUSE in v1 (cross-repo closure needs the sibling's retros at a pinned sha, never its live checkout: a later card). CHANGE from the operator's ruling that a run's input is a git state: validate against the state file AS STAGED in the commit being made (git show :.claude/paths-forward.json, the index), not the working tree, so the trailer and the retro it names are checked against the same bytes that land and a later edit to the working copy cannot change the verdict. PLANT: a working-tree retro that is not staged must not validate an id. FLEET REACH: luthen and gcalculus land through their own scripts, not mikemol-commit, so the trailer writer and the validator go in a small IMPORTABLE function their land scripts can call, so no second implementation appears: note for their adoption (luthen-observability, gcalculus). | 2026-11-19T23:29:26Z: BUILT PART 2026-11-19 in scratch tree mtools-W2786 (base 9ea59144): hooks/src/mikemol/hooks/closes_finding.py (importable: refusal, refusals, trailer_lines, staged_state; the staged queue read through git show :.claude/paths-forward.json; id form repo:Rn-k with k 1-based; refuses malformed id, another repository, no staged queue, unknown retro, k below 1 or above the count, a certify_change position) and hooks/tests/test_closes_finding.py (8 tests on real git repos with the queue staged: valid ids and trailer lines, unknown retro and k=0 and k above count, certify_change, other repo and malformed, absent index file, a working-tree retro NOT staged does not validate, a staged retro still validates after the working copy is edited away, no ids means no refusal). 8 passed, pycheck admits both. NOT DONE: Request.closes, parse() for the repeatable flag, message_of writing the lines, body_refusal for a body carrying the trailer, commit_kata calling refusals before the gate, a parity test pinning the retro shape to pathsforward/retros.py, graph.json and dag.bzl, warrants, bazel, review ref.",
+      "issued_at": "2026-11-19T23:24:34Z",
+      "minted_during": "interrupt",
+      "caused_by": "nemik:W2358",
+      "last_worked": "2026-11-19T23:29:26Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2788",
+      "title": "ratchet external study: triage ten claims and three confirmed defects at source, planted test first (bool NEW in rebaseline, kinds regex drops prebaseline, census _CONCISE fail-open)",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "ratchet",
+        "soundness",
+        "gate-repair"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Build the review ref for the interim guard (census.py, test_census_preview.py, ratchet warrants) and send github-00; or ride it in W2777's entry if github-00 prefers; JSON census after b101 and b102",
+      "evidence": "2026-11-19T23:52:43Z: CONFIRMED 2026-11-19, FIRST CLAIM READ AS ASKED: census.py:34 _CONCISE requires a rule token followed by a colon (path:line:col: rule: message). MEASURED with the repo's ruff 0.16.6 on a planted dist (one unused import, pyproject with only lint select F, RUFF_BIN the hooks venv's ruff): census.run_ruff(dist, preview=False) returned an EMPTY census while ruff printed 'F401 [*] os imported but unused' (a CODE with a space, no colon, so the regex matches nothing) and exited 1 (findings, accepted by run_ruff as success); census.run_ruff(dist, preview=True) returned ['mod.py:unused-import'] (preview prints rule NAMES with a colon, the form _CONCISE was written for). So when ruff runs without --preview the census silently reads ZERO DEBT from a tree ruff reports findings for: a FAIL-OPEN reading of zero debt. The repo's own configs arm preview repo-wide (hooks/pyproject.toml:301 preview = true), which is why the gate has not shown it, but run_ruff takes preview as a parameter and any caller or dist with preview false is exposed. PROBE: scratchpad census_probe.py (untracked, throwaway). FIX SHAPE: fail closed: ruff exit 1 (findings) with a parsed census of zero keys is CensusUnavailableError (output not in the expected form), the planted test red at main first. Other claims not yet read: bool NEW in rebaseline.py:82, kinds.py:38 regex, and the ten listed in the letter. | 2026-11-19T23:56:01Z: DAMAGE ASSESSMENT 2026-11-19 (github-00's ask, put here even though it comes back mostly empty): the ONLY production caller of census.run_ruff is ratchet/src/mikemol/ratchet/cli.py:294 and it hard-codes run_ruff(dist, preview=True); a repo-wide search (every .py, .sh, .bzl, BUILD.bazel under ~/github excluding venvs and scratch) finds no other caller (gabion's invariant_graph.py and substrate's split_census.py match the name run_ruff or census only, not this function; I did not read them). run_ruff inserts --preview whenever preview is True, and with --preview ruff prints rule NAMES with the colon _CONCISE wants (measured: preview=True returned mod.py:unused-import on the planted dist). So the fail-open is LATENT, not live today: it needs preview=False (no caller passes it) or a ruff whose --preview concise output stops printing names. The regex has been the same since the first commit e6564851 (2026-09-05, minting the baselines), so no baseline was minted or paid down under a different parse, and with preview hard-coded there is no flip whose coincidence with a baseline drop could be read. NOT DONE: git history of each dist's ratchet-preview.txt for drops (not read: with preview hard-coded I have no hypothesis for which commit to blame, and I will say so rather than claim it clean); the fleet's non-mtools dists that call the ratchet through their own pin were not enumerated. FIX (github-00: from structure, not a zero-keys refusal): ruff --output-format json, each finding's name (or code) and filename, independent of preview; refuse rc 1 with zero findings or unparseable JSON; keys must equal today's path:rule-name for the same findings (planted: JSON census equals the concise census key for key on a preview-on dist). JSON measured on ruff 0.16.6: each finding carries code (F401), name (unused-import), filename (absolute) with or without --preview. | 2026-11-19T23:58:55Z: INTERIM LANDED IN SCRATCH 2026-11-19 (github-00's new order: the W2777 revise, then b101 and b102, then the JSON census): in tree mtools-W2788 (base 9ea59144) run_ruff now REFUSES preview=False with CensusUnavailableError naming W2788, ahead of any ruff lookup; plant ratchet/tests/test_census_preview.py was RED at main (it got the 'ruff could not be run' message) and is green; with test_census and test_cannot_census 15 passed (a first run showed 5 failures only because my PYTHONPATH lacked atomicwrite/src: not a defect). LOOSE ENDS READ: gabion/src/gabion/tooling/runtime/invariant_graph.py and substrate/scratch/split_census.py contain no run_ruff, no _CONCISE and no 'concise' (grep): neither calls run_ruff nor holds a second copy. NON-MTOOLS DISTS that run the ratchet through their own pin go through the same cli.py:294, so the latent finding covers them: they too pass preview=True. NOT DONE: pycheck on census.py is admitted (the edit gate), warrants for the new test, bazel, review ref; the JSON census waits for its turn.",
+      "issued_at": "2026-11-19T23:51:50Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-19T23:58:55Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2789",
+      "title": "Defrag tool: measure, propose, apply, verify and ratchet a package's fragmentation, run on hooks first",
+      "status": "working",
+      "enables": [
+        "W2775"
+      ],
+      "touches": [
+        "hooks",
+        "velocity",
+        "check_mutants"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "In order, after the runner pipeline and W2788: importdag cone report mode (W2790), then survey gabion's partitioning and extraction and write down what to absorb, then the tool's propose step on hooks; no code before github-00 reviews the design",
+      "evidence": "2026-11-19T23:58:54Z: OPERATOR 2026-11-19 via github-00: hooks/src/mikemol/hooks is an enormous flat module needing better directory structure, one functional cone cannot easily be extracted. DESIGN FIRST, NO ENTRY. (1) SURVEY: host memory records gabion as prior art for the too-big split-focus problem, importdag and W2746's cone machinery compute the import graph: read what each offers, do NOT write a third partitioner. (2) DERIVE BOUNDARIES FROM THE GRAPH not names: compute hooks' module import graph and cones (the commit tool's from commit_kata.main, the gate and stack runner's, the emitters', the hook entry points') and propose subpackages where a cone closes with few edges out, with the numbers (modules per subpackage, edges crossing each boundary). (3) FIRST TARGET: the commit tool's cone as its own subpackage, so it can later be extracted alone (the operator's need, feeds the held one-repo-per-dist split W1153). (4) MECHANIZED MOVES: pycodemod moves and import rewrites, never by hand, NO compatibility shims (re-export stubs are wrappers, convergence is integration); rewrite the importers in mtools in the same entry and name the codemod in the repin path so vendoring repos pick up the new paths. (5) GAIN: smaller cones mean finer bazel targets, more cache hits and cone-shaped mutation shards, the structured fix W2774's 433-shard doubling waits for (W2775). Rank on that vector; do not jump the order W2777, b101, b102, W2788. ESTIMATE as_of 2026-11-19, basis guess, low confidence: cost large, 5 or more attempts and over 10,000 CPU-s (a move touching most of 215 test targets and the graph, plus the codemod); EFFECT on CPU-s per landing: positive only through cone-shaped shards and cache reuse, unmeasured: the hooks grid reads 16,946.8 CPU-s over 215 shards (vmsingle, 14d) with shard 124 at 247 against a minimum 9.4, so the interval I will not guess until the graph is measured. Edge: W2775 (retire the opaque shard count) waits on this and W2727. | 2026-11-19T23:59:48Z: MEASURED 2026-11-19 from hooks/graph.json (the committed importdag output, 'imports' only, typing_only excluded; scratchpad hooks_cone.py, throwaway): hooks has 203 modules. THE COMMIT TOOL'S CONE (everything reached from commit_kata) is 74 modules, 36 percent, closed by construction (0 edges leave it). 99 import edges enter it FROM OUTSIDE (from the other 129 modules), but they land on only 19 cone modules, concentrated on a few leaves: runproc 34, payload 24, vlogdetach 6, commit_span 5, stacksnap 4, tool_path 3, stamps 3, heartbeat 3, commit_counts 3, vlogship 2, vlogrecord 2, isolated 2, commit_kata 2 (imported from outside twice), vlogconfig 1, trainbisect 1, stacktree 1, stackland 1, round_wire 1, round_order 1. Other roots' cones: stackrun 16 (all inside commit_kata's), stackland 7, verdictlog 9, gatetargets 12 (11 shared), watchdog 13 (12 shared), tick_stop 14 and tick_gate 15 (7 shared), pycheck 15 (2 shared), trainrun 3, no_chaining 3 (0 shared), scratch 2, revendor 1 (0 shared). SO THE CUT, as the numbers say: the commit tool's cone is extractable as a downward-closed set, but 19 of its modules are imported from outside, so a clean package boundary is two parts: a shared kernel (the 19, led by runproc and payload) that both sides depend on, and the commit-specific remainder, 55 modules (74 minus 19). That is a proposal from the graph, not a decision: I have not read gabion's partitioner or W2746's cone code yet (the survey of point 1), and I have not checked that the 19 are free of cone-only dependencies beyond graph.json's imports (a module imported by name through importlib or a string would not show). NOT MEASURED: the gain in CPU-s per landing. | 2026-11-20T00:01:40Z: NOTE from github-00 2026-11-19: (1) the cone script becomes an importdag mode (W2790), not a hand step. (2) The 74-of-203 commit cone is itself a finding: a commit tool reaching 36 percent of hooks suggests some of what it imports belongs to its callers (gating, stacks), not to committing. In the full cut, MARK which of the 55 commit-specific modules the commit PATH really needs (from main's call graph, not only its imports) against those it only imports through. Then the survey of gabion and W2746. | 2026-11-20T00:02:19Z: RE-SCOPED 2026-11-19 (operator via github-00: this analysis and extraction should itself be mechanized, basically codebase-level defrag). The deliverable is NOT a hand-designed cut of hooks but a DEFRAG TOOL run on hooks first and re-runnable by every repo. LOOP: (1) MEASURE: importdag's cone report (W2790: each entry point's cone, outward closure, in-edges by landing module, the shared kernel) plus dynamic imports (importlib or string imports) FLAGGED rather than missed. (2) PROPOSE: a cut minimizing crossing edges, separating the shared kernel, stating the numbers before and after. (3) APPLY: pycodemod moves and import rewrites, BUILD targets regenerated from the new graph (named inputs, never globs), no shims, and an emitted REWRITE MAP so vendoring repos apply the same codemod at their repin. (4) VERIFY: the graph after equals the proposal, every test passes at the resulting sha (run at sha, W2780), and the mutation shards follow the new cones. (5) RATCHET: a fragmentation measure (modules in the flattest package, crossing edges, cone overlap) as a shrink-only series, so defrag runs again when a measured rise warrants it. PRIOR ART FIRST: host memory says gabion was designed for exactly this too-big, split-focus problem, lineage gabion to substrate to mtools: read what it built (partitioning, extraction) and ABSORB it, not rewrite it. Order: behind W2777, b101, b102 and W2788. MY MEASUREMENT so far (hooks/graph.json, imports only): 203 modules; the commit cone is 74, closed, 99 inbound edges landing on 19 modules (runproc 34, payload 24); kernel 19 plus commit-specific 55. RE-ESTIMATE as_of 2026-11-19, basis guess, low confidence: cost LARGE, 8 or more attempts and over 20,000 CPU-s across the stages (the tool, its first run on hooks that touches most of 215 test targets, the ratchet series); EFFECT on CPU-s per landing: through finer cones, cache hits and cone-shaped mutation shards (the structured fix the 433-shard doubling W2774 waits for, W2775); unmeasured, so no interval until a first proposal states a before-and-after number, which the tool's step 2 produces; the hooks grid reads 16,946.8 CPU-s over 215 shards today (vmsingle, 14d).",
+      "issued_at": "2026-11-19T23:58:42Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:02:19Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2790",
+      "title": "importdag: a cone-report mode (each root's cone, whether it closes outward, in-edges grouped by the cone module they land on)",
+      "status": "blocked",
+      "enables": [
+        "W2789"
+      ],
+      "touches": [
+        "importdag",
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [
+        "W2777"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Read importdag's graph reader and CLI; plant the three graphs first; send github-00 the design",
+      "evidence": "2026-11-20T00:01:39Z: FROM github-00 2026-11-19: my throwaway scratchpad script (hooks_cone.py) is the by-hand step the operator's rule retires; the report it computes (each root's cone, whether it closes outward, in-edges grouped by the cone module they land on) is what W2789's design and every later split re-ask: make it a MODE of importdag, the tool that owns graph.json, with planted graphs as its tests (a closed cone, an open one, a kernel hit by many): extending the existing tool, not a third partitioner. ESTIMATE as_of 2026-11-19, basis analogue (a small reading mode over an existing graph), low confidence, not a CPU effect: cost ~2 attempts and ~1500 CPU-s (importdag is a pinned dist, graph freshness checks); EFFECT on review latency and escapes: every later split reads the same cone report by command instead of by a hand script; interval 15 to 60 minutes of agent time per split design, a guess. Not read yet: importdag's reader and CLI shape. | 2026-11-20T00:03:00Z: 2026-11-19 ORDER (github-00, after the operator's re-scope of W2789): W2777's revise R1 to R3 with the run at the sha, then the b101 and b102 resubmits, then W2788, and the defrag work (W2789, with this importdag mode) stays behind them. Blocked on W2777, the first of that order, which is in progress (the codemod for R1 to R3 is written, not applied).",
+      "issued_at": "2026-11-20T00:01:02Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:03:00Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2791",
+      "title": "regen_baseline: take the bazel invocation id and read exactly that run's shard logs from BuildBuddy, so one run is proved by construction",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "check_mutants",
+        "gate-repair"
+      ],
+      "blocked_on": [
+        "W2777"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2777 lands: read buildtel's bb_log and the BES GetInvocation reply for test targets; design --regen-baseline DIST --invocation ID; plant that logs of another invocation are refused; send github-00 the design",
+      "evidence": "2026-11-20T00:09:50Z: FROM github-00 2026-11-19 (W2777 review): the one-run proof for --regen-baseline exists elsewhere in our tooling: buildtel's bb_log reads a run's logs BY INVOCATION ID from BuildBuddy, and the bes-logs skill documents the GetInvocation RPC. A regen that takes the invocation id and reads exactly that run's shard logs proves one run by construction instead of inferring it from the local testlogs directory (where neither test.log nor test.xml carries the id: read 2026-11-19). It is the follow-up to W2777's stated limit (same-layout logs of an older run can still mix). Blocked on W2777 landing: this extends the verb that entry adds. ESTIMATE as_of 2026-11-19, basis guess, low confidence, not a CPU effect: cost ~2 attempts and ~1500 CPU-s (a check_mutants change over the same file as W2777, tests planted with a fake BES reply); EFFECT on escapes: a baseline regenerated from a mix of runs is a silently wrong debt record; frequency unknown (it needs two runs of one layout with bytes that differ in the cells), 0 to 1 per quarter, guess. Not read: bb_log and the BES RPC shape beyond the skill text.",
+      "issued_at": "2026-11-20T00:08:58Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:09:50Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2792",
+      "title": "ratchet-residue: read_baseline returns (value, problem) pairs where a typed error would carry the problem",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "check_mutants",
+        "soundness"
+      ],
+      "blocked_on": [
+        "W2777"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Census the (value, problem) readers in check_mutants and the dists it serves; convert read_baseline to raise, with callers; residue of the W2777 review (github-00), not widened into that entry",
+      "evidence": "2026-11-20T00:09:50Z: RESIDUE of the W2777 review (github-00 2026-11-19): the module's older (value, problem) convention in read_baseline (and any other pair-returning reader in check_mutants) is pre-existing and not widened into the W2777 entry, which makes its own new functions raise one typed BaselineMergeError. This card converts the older readers. Blocked on W2777 because it shares mutate_runner.py. ESTIMATE as_of 2026-11-19, basis guess, not a CPU effect: cost ~1 attempt and ~1000 CPU-s; effect on escapes: removes a discard-the-problem class (the R1 defect of this review) from the older readers; interval 0 to 1 per half-year, guess.",
+      "issued_at": "2026-11-20T00:09:04Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:09:50Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2793",
+      "title": "ratchet mutation grid: shards 2 to 5, because mutants_0 used 270 of 300 CPU s (INTERIM until cone sharding)",
+      "status": "working",
+      "enables": [
+        "W2788"
+      ],
+      "touches": [
+        "gate-repair",
+        "mutation"
+      ],
+      "blocked_on": [
+        "github:W120"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Review ref for the one-line change to github-00; then b101 becomes three entries (W2793 BUILD, W2777 + W2769, W2788 guard)",
+      "evidence": "2026-11-20T00:18:15Z: b101 REFUSED AT SUBMIT 2026-11-19 by the shard guard (W1602): //ratchet:mutants_0 used 270 CPU s of 300 (90%), past half: set shards = 5 (now 2) in ratchet/BUILD.bazel before this stack. Nothing ran, nothing landed (HEAD 9ea59144). The count is the guard's, not mine. The BUILD comment at ratchet/BUILD.bazel:175 records why it was two (W2340: one shard measured 433.2 s of CPU against the 300 s budget, two put about 217 s in each) and the grid has grown since. INTERIM until cone sharding (an opaque index-slice count, like W2774; the fleet rule is to shard along cones): retired by W2775, which waits on W2727 and W2789. ESTIMATE as_of 2026-11-19, basis analogue (the W2774 reading), low confidence: the vmsingle store has NO reading for //ratchet:mutants shards (the query returned an empty vector), so I cannot read ratchet's own fixed cost per shard; analogue is the hooks minimum shard, 9.4 s, an upper bound there. 3 added shards cost +15 (low, 3 x 5 s, a guess) to +28 (high, 3 x 9.4 s) CPU-s per ratchet grid on a baseline of about 540 CPU-s (two shards of 270, the guard's reading for shard 0 and the 433 s total in the BUILD comment, neither a fresh measurement): +3% to +5%. CHECK after landing: read the ratchet grid's total over the next gates against that interval; the store has no series for it yet, so the first reading is the baseline. | 2026-11-20T00:22:30Z: CORRECTION 2026-11-20: my estimate said the store had NO series for //ratchet:mutants shards. That was a reading error (an instant query without last_over_time over a window). Measured now with last_over_time[30d]: //ratchet:mutants_0 269.8 and //ratchet:mutants_1 266.9 CPU s, total 536.7: the baseline of about 540 in the estimate is now a measurement, not an inference. The per-shard fixed cost of ratchet is still unread (only whole-shard totals exist); the added-shard interval +15 to +28 CPU-s (+3% to +5%) stands on the hooks minimum as an upper bound. See W2794. | 2026-11-20T00:23:56Z: UNBLOCKED 2026-11-20: github-00 PASS-SUBMIT at 6d1133ff; I had left the card BLOCKED on github:W120 (the review wait), which kept it out of the round's ready cards. GATE-REPAIR, not ordinary work (github-00): this change is the shard guard's own input, a repair that lets the gate run at all for any stack touching the ratchet dist; the card carries the gate-repair touches tag, so the round's band order (gate-repair first) places it, as W2765's velocity tag did. b101 goes when the export holds W2793.",
+      "issued_at": "2026-11-20T00:18:01Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:23:56Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2794",
+      "title": "gate CPU emitter has no reading for //ratchet:mutants shards: find whether they are cached so never emitted, or not emitted at all",
+      "status": "done",
+      "enables": [],
+      "touches": [
+        "telemetry",
+        "velocity",
+        "check_mutants"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": null,
+      "evidence": "2026-11-20T00:22:35Z: ANSWERED 2026-11-20 by reading, and it CORRECTS my own earlier claim: the series is NOT missing. My query was an instant query, which looks back only the store's short default window, and the points are SPARSE (a cached target emits nothing, so a target has one point per uncached run). With last_over_time over 30d the store returns //ratchet:mutants_0 = 269.8 and //ratchet:mutants_1 = 266.9 CPU s (and a stale //ratchet:mutants = 134.4 from the old one-shard layout), one point per shard. Their sum, 536.7, matches the baseline of about 540 inferred for W2793, now measured. LESSON for every shard estimate: read gate CPU with last_over_time over a window, never an instant query. No emitter defect found, nothing to fix. | 2026-11-20T00:22:38Z: no commit: the answer is a reading of the store (last_over_time over 30d returns the ratchet shard series), not a change; a finding about my own query, with no defect in the emitter.",
+      "issued_at": "2026-11-20T00:20:31Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:22:38Z",
+      "ticks_blocked": 0,
+      "completed": "20261120T002235Z"
+    },
+    {
+      "symbol": "W2795",
+      "title": "mikemol-otlp query-metrics refuses an instant query on an event-driven family and names the windowed form",
+      "status": "working",
+      "enables": [],
+      "touches": [
+        "otlp",
+        "telemetry",
+        "soundness"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Check what VictoriaMetrics returns (metadata endpoint, a marker label on the sample); send github-00 the design with the three options and my lean, then the plant (an instant query on an event-driven family refuses naming last_over_time)",
+      "evidence": "2026-11-20T00:23:57Z: FROM github-00 2026-11-20 (after my instant-query reading error on the ratchet shard series): the rule that an instrument's window must exceed the reading interval should be a REFUSAL, not a lesson. mikemol-otlp query-metrics should refuse an INSTANT query on a family the registry marks event-driven (mikemol.gate.target.cpu.seconds is registered 'event-driven (a cached result is not re-emitted)') and require an explicit window, or apply last_over_time over a declared one. PLANT: an instant query on that family refuses, naming the windowed form. ESTIMATE as_of 2026-11-20, basis analogue (my own wrong reading of tonight), low confidence, not a CPU effect: cost ~2 attempts and ~1500 CPU-s (an otlp dist change with the registry read); EFFECT on escapes: wrong readings avoided (an empty vector read as no data); the hit tonight cost one wrong estimate and a correction to a reviewer, interval 0 to 2 per month, guess. Not read: how the registry marks a family and the instant path in query_metrics.py. | 2026-11-20T00:26:00Z: READ 2026-11-20: (1) mikemol-otlp query-metrics (otlp/src/mikemol/otlp/query_metrics.py) builds an instant query URL (query_url, INSTANT_PATH /api/v1/query) or a range one when a window (start, end, step) is given; it knows nothing about families. (2) THE REGISTRY lives in luthen-observability, policy/metric_families/data.json, NOT in mtools: mikemol.gate.target.cpu.seconds is registered with owner mtools and a free-text 'purpose' that says 'EVENT-DRIVEN: a cached result is not re-emitted, so a target is absent when its last result was cached (the model joins by timestamp, never by presence)'; wall.seconds and children say 'event-driven like cpu.seconds'. (3) So 'the registry marks it event-driven' is PROSE inside a purpose string, not a typed field: a refusal in mikemol-otlp that read it would be matching free text, the defect removed from the closing signal tonight. DESIGN OPTIONS, not chosen: (a) luthen adds a typed field to each family's row (for example emission: event-driven) and the otlp reader reads that file by a path named in the endpoints file or an argument, a cross-repo read of luthen's file; (b) the metric carries its own marker as an OTLP attribute or in its description (W1914: the sample names what it counts), read back through the store's metadata, so the registry is not needed at query time; (c) a short list inside mikemol-otlp of event-driven family names, a duplicate of luthen's knowledge (the parity-test shape used elsewhere tonight). I lean to (b), because the reader then needs no sibling file and the marker travels with the data, but I have NOT checked that VictoriaMetrics returns a metric's description or an attribute through its API. Nothing is built.",
+      "issued_at": "2026-11-20T00:23:46Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:26:00Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2796",
+      "title": "Submit refusal remedy text must be computed from the queue's actual state, not a fixed 'take X first --status working'",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "hooks",
+        "velocity"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read the round check (hooks round_check/round_wire) and the message it prints; plant: with W2780 and W2726 already working the message must say so and name the real blocker (a stale working card holding the slot ahead of a higher-band card), not tell the agent to set them working; send github-00 the design",
+      "evidence": "2026-11-20T00:27:10Z: FROM github-00 2026-11-20 and my own b101 resubmit: the gate's submit refusal said 'W2780, W2726 are in this repository's round and ready, but the working set includes W2788, W2793, which is not: take W2780 first with --update W2780 --status working; then W2726', while both were ALREADY working in the queue (they were stale-working: designed, approved, not in hand). The text does not match the queue, and following it was impossible. The remedy must be computed from the queue's actual state: if the named cards are already working, say that a working card holds the round slot and that an honest not-in-hand card should be set ready or the higher-band card named, rather than telling the agent to set working. ESTIMATE as_of 2026-11-20, basis analogue (tonight's 3 submit refusals of this shape, b101 twice and b102 twice), low confidence, not a CPU effect: cost ~2 attempts and ~1500 CPU-s (a hooks round-check message and a test); EFFECT on attempts per landing: removes the guesswork that cost me a wrong order of two attempts and a round trip with github-00 per occurrence; interval 0 to 2 refused submits avoided per week, guess. Round check not read yet.",
+      "issued_at": "2026-11-20T00:27:03Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-20T00:27:10Z",
+      "ticks_blocked": 0
     }
   ],
   "residue": [
@@ -64503,6 +65091,20 @@
       "title": "A first-class read-scoped tick outcome: --tick-close accepts a look-only tick without a false block",
       "dropped_at": "2026-11-17T20:21:16Z",
       "reason": "duplicate of W2614 (a writer form that closes a look-only tick without a false block): asked as nemik:W2232 and as substrate:W386; its design points and evidence are carried onto W2614",
+      "recoverable": true
+    },
+    {
+      "symbol": "W2785",
+      "title": "pycheck edit hook: the formatter must not rewrite a file to syntax the repo's Python target cannot parse, and its ruff should match the repo's pinned ruff",
+      "dropped_at": "2026-11-19T22:29:31Z",
+      "reason": "Not an mtools change: nemik confirmed 2026-11-19 through the hook itself that [tool.ruff] target-version = py313 in nemik's pyproject clears the PEP 758 rewrite (the hook accepted an edit of src/nemik/check.py with five parenthesized except lines). The hook already runs the project's own venv and ruff, so hook and gate agree by design; nemik:W2362 carries the setting. nemik corrected its inference that the hook ran hooks/.venv ruff 0.16.6.",
+      "recoverable": true
+    },
+    {
+      "symbol": "W2787",
+      "title": "transcriptstruct --verify: accept an AskUserQuestion answer as an operator record, and nothing else that is a tool_result",
+      "dropped_at": "2026-11-19T23:44:41Z",
+      "reason": "Declined 2026-11-19 (github-00, confirmed against the tool schema): AskUserQuestion's input carries an answers field and an annotations field and the CALLING AGENT writes the tool_use input, so matching a tool_result to a tool_use named AskUserQuestion cannot prove a human chose anything (an agent-supplied answer, an unattended auto-answer or a default would all pass: the laundering the warrant check refuses). Standing rulings: an operator decision goes on a card blocked on 'operator: decide ...' with a push notification, not a dialog, and the operator's warrant is what they TYPED (named, quoted, or a numbered answer to a quoted ask). --verify refusing a tool_result as operator is correct and stays. Whether dialog answers should ever count is the operator's ruling, not a parser feature.",
       "recoverable": true
     }
   ],

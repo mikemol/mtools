@@ -796,3 +796,115 @@
             the unmutated module, and the cell reads errored instead of killed.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_cells_git_runs_under_no_background_maintenance},
 }
+
+@misc{root-mutate-runner-failed-line-for-a-non-test-item-does-not-become-the-controls-id,
+  section = {mutate_runner},
+  title  = {W2769: the control runs the node pytest reported, not the first `FAILED` line of the text},
+  claim  = {W2769: the control runs the node pytest reported, not the first `FAILED` line of the
+            text. pytestspec prints `FAILED spec.rego::p` for a spec item, ahead of the
+            real test's line. That id collects nothing, so the cell read ERRORED; it
+            must read the true verdict.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_failed_line_for_a_non_test_item_does_not_become_the_controls_id},
+}
+
+@misc{root-mutate-runner-suite-that-reports-no-failed-python-test-gets-no-control,
+  section = {mutate_runner},
+  title  = {W2769: only a spec item failed, so there is no test to put against the clean module},
+  claim  = {W2769: only a spec item failed, so there is no test to put against the clean module.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_that_reports_no_failed_python_test_gets_no_control},
+}
+
+@misc{root-mutate-runner-node-plugin-names-the-real-test-when-a-spec-item-fails-ahead-of-it,
+  section = {mutate_runner},
+  title  = {W2769: real pytest, a spec item whose `FAILED` line precedes the real test's},
+  claim  = {W2769: real pytest, a spec item whose `FAILED` line precedes the real test's. The text's
+            first `FAILED` line names `spec.rego::p`, which pytest cannot collect; the
+            plugin's report names only the test.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_node_plugin_names_the_real_test_when_a_spec_item_fails_ahead_of_it},
+}
+
+@misc{root-mutate-runner-failing-nodes-keeps-python-test-ids-and-skips-well-formed-spec-ids,
+  section = {mutate_runner},
+  title  = {W2769: a well-formed spec id is a declared non-test; an empty report names no test},
+  claim  = {W2769: a well-formed spec id is a declared non-test; an empty report names no test.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_failing_nodes_keeps_python_test_ids_and_skips_well_formed_spec_ids},
+}
+
+@misc{root-mutate-runner-missing-node-report-is-a-typed-error-and-never-an-empty-list,
+  section = {mutate_runner},
+  title  = {W2769 R1: absence means the plugin did not run, so it cannot read as no failing test},
+  claim  = {W2769 R1: absence means the plugin did not run, so it cannot read as no failing test.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_missing_node_report_is_a_typed_error_and_never_an_empty_list},
+}
+
+@misc{root-mutate-runner-line-the-plugin-wrote-that-is-not-a-node-id-is-a-typed-error,
+  section = {mutate_runner},
+  title  = {W2769 R2: an unparseable line is a broken instrument, refused rather than skipped},
+  claim  = {W2769 R2: an unparseable line is a broken instrument, refused rather than skipped.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_line_the_plugin_wrote_that_is_not_a_node_id_is_a_typed_error},
+}
+
+@misc{root-mutate-runner-suite-whose-plugin-never-loaded-errors-the-cell-and-names-the-reason,
+  section = {mutate_runner},
+  title  = {W2769 R1: a suite launched without the plugin writes no report, and the cell is ERRORED},
+  claim  = {W2769 R1: a suite launched without the plugin writes no report, and the cell is ERRORED.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_suite_whose_plugin_never_loaded_errors_the_cell_and_names_the_reason},
+}
+
+@misc{root-mutate-runner-node-plugin-creates-an-empty-report-when-no-test-fails,
+  section = {mutate_runner},
+  title  = {W2769 R1: a suite that ran and failed nothing leaves an EMPTY file, not a missing one},
+  claim  = {W2769 R1: a suite that ran and failed nothing leaves an EMPTY file, not a missing one.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_node_plugin_creates_an_empty_report_when_no_test_fails},
+}
+
+@misc{root-mutate-runner-regen-takes-a-cell-off-that-now-reads-killed-and-says-so,
+  section = {mutate_runner},
+  title  = {W2777: the stale errored cell is paid down and the surviving one stays},
+  claim  = {W2777: the stale errored cell is paid down and the surviving one stays.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_regen_takes_a_cell_off_that_now_reads_killed_and_says_so},
+}
+
+@misc{root-mutate-runner-regen-reads-a-new-cell-as-debt-and-exits-one,
+  section = {mutate_runner},
+  title  = {W2777: a cell the baseline never listed is NEW debt, named, and the exit is 1},
+  claim  = {W2777: a cell the baseline never listed is NEW debt, named, and the exit is 1.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_regen_reads_a_new_cell_as_debt_and_exits_one},
+}
+
+@misc{root-mutate-runner-regen-finds-a-plain-targets-log-and-refuses-a-dist-with-none,
+  section = {mutate_runner},
+  title  = {W2777: `mutants/test.log` serves a plain sh_test; no log at all is refused, named},
+  claim  = {W2777: `mutants/test.log` serves a plain sh_test; no log at all is refused, named.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_regen_finds_a_plain_targets_log_and_refuses_a_dist_with_none},
+}
+
+@misc{root-mutate-runner-regen-names-a-malformed-old-baseline-and-changes-nothing,
+  section = {mutate_runner},
+  title  = {W2777 R1: an unreadable old baseline is refused with its problem, never read as empty},
+  claim  = {W2777 R1: an unreadable old baseline is refused with its problem, never read as empty.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_regen_names_a_malformed_old_baseline_and_changes_nothing},
+}
+
+@misc{root-mutate-runner-regen-with-a-new-cell-leaves-the-baseline-file-untouched,
+  section = {mutate_runner},
+  title  = {W2777 R2: debt is written only when nothing is NEW; a NEW cell exits 1 and writes nothing},
+  claim  = {W2777 R2: debt is written only when nothing is NEW; a NEW cell exits 1 and writes
+            nothing.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_regen_with_a_new_cell_leaves_the_baseline_file_untouched},
+}
+
+@misc{root-mutate-runner-complete-shard-set-is-accepted-and-a-leftover-beyond-the-count-is-refused,
+  section = {mutate_runner},
+  title  = {W2777 R3: shards 0 and 1 of 2 regenerate; a leftover mutants_9 of another layout refuses},
+  claim  = {W2777 R3: shards 0 and 1 of 2 regenerate; a leftover mutants_9 of another layout
+            refuses.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_complete_shard_set_is_accepted_and_a_leftover_beyond_the_count_is_refused},
+}
+
+@misc{root-mutate-runner-missing-shard-in-the-set-is-refused,
+  section = {mutate_runner},
+  title  = {W2777 R3: only shard 0 of 2 is present, so the set is incomplete and refuses},
+  claim  = {W2777 R3: only shard 0 of 2 is present, so the set is incomplete and refuses.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_missing_shard_in_the_set_is_refused},
+}

@@ -1151,7 +1151,8 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         mark = cpu_mark()
         try:
             tests = chosen_tests(work, rel, os.environ.get("MUTATE_TESTS", ""))
-            proc = _launch_suite(grid, work, env, tests)
+            (work / PLUGIN_FILE).write_text(NODE_PLUGIN, encoding="utf-8")
+            proc = _launch_suite(grid, work, env, tests, work / REPORT_FILE)
             report_phase(f"suite ({len(tests)} chosen)", mark)
         except subprocess.TimeoutExpired:
             report_phase("suite (ended)", mark)
@@ -1161,13 +1162,101 @@ def _run_text(grid: Grid, rel: pathlib.Path, text: str, *, debug: bool = False) 
         if debug:
             _report_debug(proc)
         result = verdict(proc.returncode, proc.stdout)
-        if result == "killed" and _baseline_fails(grid, (work, rel), env, proc.stdout):
+        if result == "killed" and _baseline_fails(grid, (work, rel), env, work / REPORT_FILE):
             return "errored"
         return result
 
 
+REPORT_FILE = "mutate-nodes.jsonl"
+"""The file each mutant's suite writes its failed node ids to, in its own tree (W2769)."""
+
+PLUGIN_FILE = "_mutate_nodes.py"
+"""The plugin the runner writes into each mutant's tree and loads with `-p`."""
+
+NODE_PLUGIN = """\
+import json
+import os
+
+
+def pytest_sessionstart(session):
+    if not hasattr(session.config, 'workerinput'):
+        open(os.environ['MUTATE_NODES'], 'w', encoding='utf-8').close()
+
+
+def pytest_runtest_logreport(report):
+    if report.failed:
+        with open(os.environ['MUTATE_NODES'], 'a', encoding='utf-8') as out:
+            out.write(json.dumps(report.nodeid) + chr(10))
+"""
+"""A pytest plugin that CREATES `$MUTATE_NODES` at session start and appends each failed test's id.
+
+⚑ THE FILE EXISTS ONLY IF THE PLUGIN RAN. A report that is missing therefore means the instrument
+did not load, which is different from a suite that ran and failed no test (an empty file).
+"""
+
+CONTROL_REPORT_FILE = "mutate-control-nodes.jsonl"
+"""Where the control launch's plugin writes: the control's failures come from structure too."""
+
+
+class NodeReportError(Exception):
+    """The node report cannot be trusted, so the cell is ERRORED and the reason is named."""
+
+
+class NodeReportMissingError(NodeReportError):
+    """The report file does not exist: the plugin never ran in that suite."""
+
+
+class NodeReportMalformedError(NodeReportError):
+    """A line the plugin wrote does not parse as a node id: a broken instrument, not a non-test."""
+
+
+def failing_nodes(report: pathlib.Path) -> list[str]:
+    """Read the pytest node ids that failed, from the report the runner's plugin wrote (W2769).
+
+    ⚑⚑ THE ID COMES FROM pytest ITSELF, NOT FROM ITS HUMAN OUTPUT. The control used to take the
+    first `^FAILED ` line of the suite's text, and a suite that prints its own `FAILED` lines for
+    items that are not tests (pytestspec's spec items: `spec.rego::p`) handed the control an id
+    pytest cannot collect. It collected nothing (exit 5), the kill was read as unvouched and the
+    cell was ERRORED: a verdict that depended on which line came first, so it flipped between runs
+    of one tree (measured 2026-11-19, `//pytestspec:mutants_1`, mtools:W2769).
+    ⚑ A TEST NODE IS A `.py` FILE'S CASE. A failure whose file is not Python source (a spec item)
+    is not one; it is left out rather than named.
+
+    ⚑ ABSENCE MEANS ONE THING (github-00 R1). The plugin creates the file at session start, so a
+    missing file is a plugin that never loaded and a line that does not parse is a broken
+    instrument: both raise, and neither reads as "no test failed".
+
+    Returns:
+        the failing test ids in the order they failed; empty when the suite ran and no test in a
+        Python file failed.
+
+    Raises:
+        NodeReportMissingError: the report file does not exist.
+        NodeReportMalformedError: a line is not a JSON string.
+
+    """
+    try:
+        lines = report.read_text(encoding="utf-8").splitlines()
+    except OSError as error:
+        msg = f"the node report {report.name} is missing: the plugin did not run in that suite"
+        raise NodeReportMissingError(msg) from error
+    nodes: list[str] = []
+    for line in lines:
+        try:
+            node: object = json.loads(line)
+        except ValueError as error:
+            msg = f"the node report {report.name} has a line that is not JSON: {line[:80]!r}"
+            raise NodeReportMalformedError(msg) from error
+        if not isinstance(node, str):
+            msg = f"the node report {report.name} has a line that is not a node id: {line[:80]!r}"
+            raise NodeReportMalformedError(msg)
+        if node.partition("::")[0].endswith(".py"):
+            nodes.append(node)
+    return nodes
+
+
 def _baseline_fails(
-    grid: Grid, tree: tuple[pathlib.Path, pathlib.Path], env: dict[str, str], output: str
+    grid: Grid, tree: tuple[pathlib.Path, pathlib.Path], env: dict[str, str], report: pathlib.Path
 ) -> bool:
     """Say whether the test that killed a mutant also fails on the UNMUTATED module (W2340).
 
@@ -1188,17 +1277,22 @@ def _baseline_fails(
         collected nothing; False when it passes there or when the output names no failing test.
 
     """
-    found = re.search(r"^FAILED (\S.*?)(?: - |$)", output, re.MULTILINE)
-    if found is None:
+    try:
+        named = failing_nodes(report)
+    except NodeReportError as error:
+        # ⚑ A BROKEN INSTRUMENT CANNOT VOUCH FOR A KILL: the cell is ERRORED and says why.
+        sys.stdout.write(f"      control: {error}\n")
+        return True
+    if not named:
         return False
-    test = found.group(1)
+    test = named[0]
     if test not in _CONTROLS:
         work, rel = tree
         (work / rel).write_text((grid.dist / rel).read_text(encoding="utf-8"), encoding="utf-8")
         for cache in work.rglob("__pycache__"):
             shutil.rmtree(cache, ignore_errors=True)
         try:
-            control = _launch_suite(grid, work, env, [test, "-vvv"])
+            control = _launch_suite(grid, work, env, [test, "-vvv"], work / CONTROL_REPORT_FILE)
         except subprocess.TimeoutExpired:
             # ⚑ A CONTROL THAT CANNOT RUN PROVES NOTHING (github-cb, B2 of the b66 review): the
             # kill is not vouched for, so the cell is ERRORED. NOT CACHED: the next mutant killed
@@ -1386,8 +1480,28 @@ def portable_python(py: pathlib.Path) -> tuple[str, str]:
     return _private_venv(base, sites[0].resolve()), ""
 
 
+def node_env(env: dict[str, str], work: pathlib.Path, report: pathlib.Path) -> dict[str, str]:
+    """Add what the node-report plugin needs: where to write, and where it is importable from.
+
+    ⚑ THE PLUGIN'S DIRECTORY IS NAMED ON `PYTHONPATH`, NOT LEFT TO `python -m`. Under bazel the
+    interpreter runs with a safe path (no implicit cwd entry), so `-p _mutate_nodes` could not
+    import and the suite never started (measured 2026-11-19 in `//:test_mutate_runner`).
+
+    Returns:
+        the environment with `MUTATE_NODES` and a `PYTHONPATH` that starts at `work`.
+
+    """
+    existing = env.get("PYTHONPATH", "")
+    path = f"{work}{os.pathsep}{existing}" if existing else str(work)
+    return {**env, "MUTATE_NODES": str(report), "PYTHONPATH": path}
+
+
 def _launch_suite(
-    grid: Grid, work: pathlib.Path, env: dict[str, str], tests: list[str]
+    grid: Grid,
+    work: pathlib.Path,
+    env: dict[str, str],
+    tests: list[str],
+    report: pathlib.Path,
 ) -> subprocess.CompletedProcess[str]:
     """Run the distribution's suite, or the tests chosen for this module, inside the mutant's tree.
 
@@ -1406,12 +1520,14 @@ def _launch_suite(
             "--no-header",
             "-p",
             "no:cacheprovider",
+            "-p",
+            PLUGIN_FILE.removesuffix(".py"),
             "-c",
             str(work / grid.config.name),
             *(tests or ["tests"]),
         ],
         work,
-        env,
+        node_env(env, work, report),
     )
     report_phase("control launch" if "-vvv" in tests else "suite launch", mark)
     return done
@@ -2002,6 +2118,49 @@ def render_baseline(cells: dict[str, str]) -> str:
     return header + "".join(f"{cells[cell]} {cell}\n" for cell in sorted(cells))
 
 
+class BaselineMergeError(Exception):
+    """A baseline cannot be regenerated; the message says why."""
+
+
+def known_baseline(dist: pathlib.Path) -> dict[str, str]:
+    """Read a distribution's recorded baseline, refusing a malformed one.
+
+    Returns:
+        the recorded cell -> verdict map (empty when the distribution has no baseline file).
+
+    Raises:
+        BaselineMergeError: the file is malformed, naming the first bad line.
+
+    """
+    cells, problem = read_baseline(dist)
+    if problem:
+        raise BaselineMergeError(problem)
+    return cells
+
+
+def merged_baseline(dist: pathlib.Path, logs: list[pathlib.Path]) -> dict[str, str]:
+    """Merge shard reports into a distribution's baseline without writing it.
+
+    Returns:
+        the merged cell -> verdict map.
+
+    Raises:
+        BaselineMergeError: the old baseline is malformed, or a log holds no shard report.
+
+    """
+    known = known_baseline(dist)
+    ran: set[str] = set()
+    debt: dict[str, str] = {}
+    for log in logs:
+        seen, owed = cells_from_log(log.read_text(encoding="utf-8"))
+        if not seen:
+            msg = f"{log} holds no shard report (a crashed shard?)"
+            raise BaselineMergeError(msg)
+        ran |= seen
+        debt.update(owed)
+    return {cell: verdict for cell, verdict in known.items() if cell not in ran} | debt
+
+
 def write_baseline(dist: pathlib.Path, logs: list[pathlib.Path]) -> int:
     """Rewrite a distribution's baseline from shard reports, keeping cells they did not run.
 
@@ -2013,20 +2172,113 @@ def write_baseline(dist: pathlib.Path, logs: list[pathlib.Path]) -> int:
         0 on success, 1 when the existing baseline is malformed or a log has no sections.
 
     """
-    known, problem = read_baseline(dist)
-    if problem:
-        sys.stderr.write(f"mutate: {problem}\n")
+    try:
+        merged = merged_baseline(dist, logs)
+    except BaselineMergeError as error:
+        sys.stderr.write(f"mutate: {error}\n")
         return 1
-    ran: set[str] = set()
-    debt: dict[str, str] = {}
+    (dist / BASELINE_FILE).write_text(render_baseline(merged), encoding="utf-8")
+    sys.stdout.write(f"{BASELINE_FILE}: {len(merged)} cell(s) from {len(logs)} report(s)\n")
+    return 0
+
+
+def shard_logs(dist: pathlib.Path, testlogs: pathlib.Path) -> list[pathlib.Path]:
+    """Find a distribution's mutation test logs under bazel's testlogs root (W2777).
+
+    Returns:
+        every `<testlogs>/<dist>/mutants_N/test.log` in name order; the single
+        `<testlogs>/<dist>/mutants/test.log` of a plain `sh_test` target when there are no shards;
+        empty when neither exists.
+
+    """
+    base = testlogs / dist.name
+    sharded = sorted(base.glob("mutants_*/test.log"))
+    plain = base / "mutants" / "test.log"
+    return sharded or ([plain] if plain.is_file() else [])
+
+
+_SHARD_LINE = re.compile(r"\bshard (\d+)/(\d+):")
+
+
+def require_one_shard_set(logs: list[pathlib.Path]) -> None:
+    """Require the logs to be exactly ONE complete shard set (github-00 R3).
+
+    ⚑ BAZEL'S TESTLOGS KEEPS THE LOGS OF SHARDS THAT NO LONGER EXIST, so a regeneration after the
+    shard count changed (hooks 215 to 433) would fold a previous layout's logs into the baseline.
+    Each runner report prints `shard i/N`; the set is accepted only when every log states the same
+    N, the indices are exactly 0..N-1 once each, and the log count is N. ⚑ NOT PROVED: that every
+    log is from ONE RUN: neither test.log nor test.xml carries the invocation id (read 2026-11-19),
+    so same-layout logs of an older run could still mix.
+
+    A plain single-target log (no `shard i/N` line) passes.
+
+    Raises:
+        BaselineMergeError: the logs repeat a shard, state different counts, or are not exactly
+            shards 0..N-1.
+
+    """
+    seen: dict[int, int] = {}
+    counts: set[int] = set()
     for log in logs:
-        seen, owed = cells_from_log(log.read_text(encoding="utf-8"))
-        if not seen:
-            sys.stderr.write(f"mutate: {log} holds no shard report (a crashed shard?)\n")
-            return 1
-        ran |= seen
-        debt.update(owed)
-    merged = {cell: verdict for cell, verdict in known.items() if cell not in ran} | debt
+        found = _SHARD_LINE.search(log.read_text(encoding="utf-8"))
+        if found is None:
+            continue
+        index, total = int(found.group(1)), int(found.group(2))
+        if index in seen:
+            msg = f"shard {index} appears in two logs ({log})"
+            raise BaselineMergeError(msg)
+        seen[index] = total
+        counts.add(total)
+    if not seen:
+        return
+    if len(counts) != 1:
+        msg = f"the logs state different shard counts {sorted(counts)}: another layout's leftover"
+        raise BaselineMergeError(msg)
+    (total,) = counts
+    if sorted(seen) != list(range(total)) or len(logs) != total:
+        listed = f"found {sorted(seen)} in {len(logs)} log(s)"
+        msg = f"the logs are not exactly shards 0..{total - 1}: {listed}"
+        raise BaselineMergeError(msg)
+
+
+def regen_baseline(dist: pathlib.Path, testlogs: pathlib.Path) -> int:
+    """Regenerate a distribution's baseline from its shard logs and say what changed (W2777).
+
+    ⚑ MECHANIZES THE STEP A RUNNER CHANGE OWES EVERY DIST (b101 was refused at pkgbuild after only
+    pytestspec's baseline was regenerated). It finds the logs, runs `write_baseline` over them, then
+    prints each cell that came OFF (paydown) and each NEW cell (debt, which may only fall): a NEW
+    cell is read before anything changes: the exit is 1 and the file is UNTOUCHED (github-00 R2). It
+    also refuses logs that are not exactly one complete shard set (R3), and a malformed old
+    baseline (R1), each with the reason named.
+
+    Returns:
+        0 when the baseline was written and no cell is new; 1 when there are no logs, they are
+        not one complete shard set, a log or the old baseline is bad, or a cell is new (nothing
+        is written then).
+
+    """
+    logs = shard_logs(dist, testlogs)
+    if not logs:
+        sys.stderr.write(f"mutate: no mutation test logs for {dist.name} under {testlogs}\n")
+        return 1
+    try:
+        require_one_shard_set(logs)
+        before = known_baseline(dist)
+        merged = merged_baseline(dist, logs)
+    except BaselineMergeError as error:
+        sys.stderr.write(f"mutate: {error}\n")
+        return 1
+    for cell in sorted(set(before) - set(merged)):
+        sys.stdout.write(f"OFF {before[cell]} {cell}\n")
+    sys.stdout.write(f"paydown: {len(set(before) - set(merged))} cell(s) off\n")
+    new = sorted(set(merged) - set(before))
+    for cell in new:
+        sys.stdout.write(f"NEW {merged[cell]} {cell}\n")
+    if new:
+        sys.stdout.write(
+            f"mutate: {len(new)} NEW cell(s): the debt may only fall; {BASELINE_FILE} NOT written\n"
+        )
+        return 1
     (dist / BASELINE_FILE).write_text(render_baseline(merged), encoding="utf-8")
     sys.stdout.write(f"{BASELINE_FILE}: {len(merged)} cell(s) from {len(logs)} report(s)\n")
     return 0
@@ -2042,6 +2294,8 @@ def cli(argv: list[str]) -> int:
         the command's exit status.
 
     """
+    if len(argv) == _MIN_ARGV + 1 and argv[1] == "--regen-baseline":
+        return regen_baseline(pathlib.Path(argv[2]), pathlib.Path(argv[3]))
     if len(argv) >= _MIN_ARGV and argv[1] == "--write-baseline":
         return write_baseline(pathlib.Path(argv[2]), [pathlib.Path(p) for p in argv[_MIN_ARGV:]])
     if len(argv) == _MIN_ARGV and argv[1] == "--check-baseline":
