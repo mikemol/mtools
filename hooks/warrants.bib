@@ -19138,3 +19138,37 @@
             exit.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_an_outcome_that_could_not_be_read_is_unknown_with_exit_seven_never_withdrawn},
 }
+
+@misc{hooks-commitprogress-watch-gives-up-in-exactly-the-waits-the-correct-code-needs,
+  section = {commitprogress},
+  title  = {The passing case AT the bound: a ceiling of the waits it takes still gives up},
+  claim  = {The passing case AT the bound: a ceiling of the waits it takes still gives up. The bound
+            cannot sit below what the real code uses and fail the good path under load.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commitprogress.py -k test_a_watch_gives_up_in_exactly_the_waits_the_correct_code_needs},
+}
+
+@misc{hooks-vlogfollow-loop-passes-exactly-as-often-as-the-arm-wants-with-the-ceiling-at-that-count,
+  section = {vlogfollow},
+  title  = {The passing case AT the bound: a ceiling of the passes it takes still passes the arm},
+  claim  = {The passing case AT the bound: a ceiling of the passes it takes still passes the arm.
+            The bound cannot sit below what the real loop uses and fail the good path
+            under load.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_vlogfollow.py -k test_the_loop_passes_exactly_as_often_as_the_arm_wants_with_the_ceiling_at_that_count},
+}
+
+@misc{hooks-commit-withdraw-leader-with-followers-is-refused-with-a-ceiling-of-no-sleeps-at-all,
+  section = {commit_withdraw},
+  title  = {The passing case AT the bound: the correct code sleeps zero times here},
+  claim  = {The passing case AT the bound: the correct code sleeps zero times here. The bound cannot
+            sit below what the real code uses and fail the good path under load.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_withdraw.py -k test_a_leader_with_followers_is_refused_with_a_ceiling_of_no_sleeps_at_all},
+}
+
+@misc{hooks-commit-kata-stalled-git-is-given-up-on-in-exactly-the-looks-the-correct-watch-needs,
+  section = {commit-kata},
+  title  = {The passing case AT the bound: a ceiling of the 2 looks it takes still gives up},
+  claim  = {The passing case AT the bound: a ceiling of the 2 looks it takes still gives up. The
+            bound cannot sit below what the real watch uses and fail the good path under
+            load.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_stalled_git_is_given_up_on_in_exactly_the_looks_the_correct_watch_needs},
+}

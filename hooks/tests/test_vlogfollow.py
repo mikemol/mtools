@@ -20,18 +20,30 @@ from mikemol.hooks import vlogfollow
 _PASSES_WANTED = 2
 _QUIET_PAUSES = 5
 _MOST_PAUSES = 50
+# ⚑ THE PASS BOUND (W2806, github-00): the pause bound above cannot see the mutant that turns
+# the inner "while signature(path) == seen and not stop()" into "while False": it never pauses,
+# so it re-runs step on every iteration and `stop` (pauses >= N) never becomes true, and it
+# would spin until the runner's 120 s CPU cap. WHY 20: no arm needs more than
+# _PASSES_WANTED = 2 passes (the held arm makes 2); 20 is the ceiling, ten times what the
+# correct loop uses, and the at-the-bound test below plants the passing case at exactly 2.
+_MOST_PASSES = 20
 
 
 class _Run:
     """A recorded run: the passes made and the pauses taken, with an action on the pauses."""
 
-    def __init__(self, on_pause: Callable[["_Run"], None] | None = None) -> None:
+    def __init__(
+        self, on_pause: Callable[["_Run"], None] | None = None, most_passes: int = _MOST_PASSES
+    ) -> None:
         self.passes = 0
         self.pauses = 0
         self.on_pause = on_pause
+        self.most_passes = most_passes
 
     def step(self) -> bool:
         self.passes += 1
+        if self.passes > self.most_passes:
+            pytest.fail(f"the loop kept passing past {self.most_passes} passes without a change")
         return False
 
     def pause(self) -> None:
@@ -66,6 +78,26 @@ def test_an_append_makes_the_next_pass_and_only_then(tmp_path: Path) -> None:
     got = vlogfollow.follow(run.step, path, run.pause, lambda: run.passes >= _PASSES_WANTED)
     assert got == _PASSES_WANTED
     assert run.pauses == _QUIET_PAUSES
+
+
+def test_the_loop_passes_exactly_as_often_as_the_arm_wants_with_the_ceiling_at_that_count(
+    tmp_path: Path,
+) -> None:
+    """The passing case AT the bound: a ceiling of the passes it takes still passes the arm.
+
+    The bound cannot sit below what the real loop uses and fail the good path under load.
+    """
+    path = tmp_path / "app.log"
+    path.write_text("one\n", encoding="utf-8")
+
+    def append_on_fifth(run: _Run) -> None:
+        if run.pauses == _QUIET_PAUSES:
+            with path.open("a", encoding="utf-8") as handle:
+                handle.write("two\n")
+
+    run = _Run(append_on_fifth, most_passes=_PASSES_WANTED)
+    got = vlogfollow.follow(run.step, path, run.pause, lambda: run.passes >= _PASSES_WANTED)
+    assert got == _PASSES_WANTED
 
 
 def test_a_rotation_to_a_file_of_the_same_size_is_a_change(tmp_path: Path) -> None:

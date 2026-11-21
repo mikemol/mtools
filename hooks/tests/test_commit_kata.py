@@ -5,11 +5,12 @@
 from __future__ import annotations
 
 import io
+import os
 import shutil
 import subprocess
 import threading
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TextIO
 
 from mikemol.hooks import commit_kata
 
@@ -144,18 +145,72 @@ class _TooSlow:
         self.killed.set()
 
 
+# ⚑ THE BOUND IS A COUNT OF LOOKS THE TEST CONTROLS, NOT A CLOCK (W2806, github-00): a mutant that
+# makes the watch never give up (commitprogress "if stalled(seen, looks)" to "if False") would
+# keep looking at this child until the runner's 120 s CPU cap killed the suite (measured: this
+# module alone read 119.5 s under that mutant). Each look reads the child's two output files once
+# through commit_kata.sized, so counting those calls counts looks. WHY 20: with
+# MIKEMOL_COMMIT_STALL_LOOKS=2 the correct watch gives up after exactly _STALL_LOOKS = 2 looks
+# (MEASURED: this child's tree reads no ticks and its files no bytes from the start, so every look
+# is flat); 20 is the ceiling, ten times that, and the at-the-bound test below plants the passing
+# case at exactly 2.
+_STALL_LOOKS = 2
+_MOST_LOOKS = 20
+_FILES_PER_LOOK = 2
+
+
+class _LookedTooLongError(BaseException):
+    """The watch kept looking past the bound; a BaseException so no handler swallows it."""
+
+
+class _CountedLooks:
+    """commit_kata.sized, counted: fails the test once more than `most` looks were taken."""
+
+    def __init__(self, most: int) -> None:
+        self.most = most
+        self.reads = 0
+
+    @property
+    def looks(self) -> int:
+        """How many looks the watch has taken."""
+        return self.reads // _FILES_PER_LOOK
+
+    def __call__(self, handle: TextIO) -> int:
+        self.reads += 1
+        if self.looks > self.most:
+            raise _LookedTooLongError
+        return os.fstat(handle.fileno()).st_size
+
+
 def test_a_gate_that_makes_no_progress_is_a_verdict_not_a_traceback(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """mtools:W844, W1804: a stalled git reads NOT COMMITTED and names the phase, never raises."""
     monkeypatch.setattr(subprocess, "Popen", _TooSlow)
-    monkeypatch.setenv("MIKEMOL_COMMIT_STALL_LOOKS", "2")
+    monkeypatch.setattr(commit_kata, "sized", _CountedLooks(_MOST_LOOKS))
+    monkeypatch.setenv("MIKEMOL_COMMIT_STALL_LOOKS", str(_STALL_LOOKS))
     monkeypatch.setenv("MIKEMOL_COMMIT_LOOK_S", "0.01")
     done = commit_kata.run_git(["commit"])
     assert done.returncode == commit_kata.TIMED_OUT
     line = commit_kata.verdict(Path("/x/repo"), "a" * 40, "a" * 40, done.returncode)
     assert line.startswith("NOT COMMITTED repo: stalled, no CPU and no output")
     assert "HEAD is still" in line
+
+
+def test_a_stalled_git_is_given_up_on_in_exactly_the_looks_the_correct_watch_needs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The passing case AT the bound: a ceiling of the 2 looks it takes still gives up.
+
+    The bound cannot sit below what the real watch uses and fail the good path under load.
+    """
+    counted = _CountedLooks(_STALL_LOOKS)
+    monkeypatch.setattr(subprocess, "Popen", _TooSlow)
+    monkeypatch.setattr(commit_kata, "sized", counted)
+    monkeypatch.setenv("MIKEMOL_COMMIT_STALL_LOOKS", str(_STALL_LOOKS))
+    monkeypatch.setenv("MIKEMOL_COMMIT_LOOK_S", "0.01")
+    assert commit_kata.run_git(["commit"]).returncode == commit_kata.TIMED_OUT
+    assert counted.looks == _STALL_LOOKS
 
 
 def test_a_stalled_verdict_names_the_last_gate_phase_and_other_lines_are_untouched() -> None:

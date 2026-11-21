@@ -128,6 +128,7 @@ mutant_site(
         "//hooks:tests/test_vlogfollow.py",
         "//hooks:mutants.regex",
     ],
+    tags = [],
 )
 
 mutant_site(

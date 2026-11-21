@@ -12,6 +12,7 @@ load("@hooks_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 load(":closure.bzl", "deps_of", "lib", "test_deps")
 load(":dag.bzl", "GRAPH")
+load(":gated_sites.bzl", "GATED_EXCLUDE_IN")
 
 # W1989: THE FILES THE GENERATED MUTATION SITES STAGE, exported by the graph's own names (modules,
 # tests, support), so a per-site package under `hooks/sites/` can name them as `//hooks:<path>`.
@@ -492,6 +493,10 @@ sh_test(
 mutants_sharded(
     name = "mutants",
     shards = 597,
+    # W2809: the sites that run as their own per-site targets (hooks/gated-sites.txt, the one list
+    # check_mutants/mutants_gen.py reads) are NOT run here: it emits this table and the sites'
+    # `tags = []` from that list, so no site runs twice. This is a decomposition, not a count change.
+    exclude_in = GATED_EXCLUDE_IN,
     cpu_budget = 300,
     cpus = 8,
     srcs = ["@mikemol_check_mutants//:mutate_check.sh"],

@@ -5,6 +5,8 @@
 import os
 from pathlib import Path
 
+import pytest
+
 from mikemol.hooks import commitprogress as progress
 
 # pid (comm) state ppid pgrp session tty tpgid flags minflt cminflt majflt cmajflt utime stime ...
@@ -66,8 +68,27 @@ _PACE = (_FLAT_LOOKS, 0.0)
 _EXIT_THREE = 3
 
 
-def _never_ends(_seconds: float) -> int | None:
-    return None
+# ⚑ THE BOUND IS A COUNT THE TEST CONTROLS, NOT A CLOCK (W2806, github-00): a mutant that makes the
+# watch unbounded ("if stalled(seen, looks)" to "if False") would loop against a child that never
+# ends until the runner's 120 s CPU cap killed it; this fake fails the test after `most` waits, so
+# that mutant fails in a few calls. WHY 20: the stalling path needs _FLAT_LOOKS + 1 = 4 waits (the
+# first look records progress, then _FLAT_LOOKS flat looks); 20 is the ceiling, five times what the
+# correct code uses, and the at-the-bound test below plants the passing case at exactly 4.
+_MOST_WAITS = 20
+
+
+class _NeverEnds:
+    """A wait that always says the process still runs, and fails the test past `most` waits."""
+
+    def __init__(self, most: int = _MOST_WAITS) -> None:
+        self.most = most
+        self.calls = 0
+
+    def __call__(self, _seconds: float) -> int | None:
+        self.calls += 1
+        if self.calls > self.most:
+            pytest.fail(f"the watch kept waiting past {self.most} waits and never gave up")
+        return None
 
 
 def _zero() -> int:
@@ -81,8 +102,19 @@ def _ends_with_three(_seconds: float) -> int | None:
 def test_a_watch_ends_on_a_stall_and_never_on_elapsed_time() -> None:
     """A child that spends nothing and writes nothing is given up on after the looks."""
     table = {5: (1, 7)}
-    got = progress.watch(_never_ends, 5, progress.Probes(_zero, lambda: table), _PACE)
+    got = progress.watch(_NeverEnds(), 5, progress.Probes(_zero, lambda: table), _PACE)
     assert got is None
+
+
+def test_a_watch_gives_up_in_exactly_the_waits_the_correct_code_needs() -> None:
+    """The passing case AT the bound: a ceiling of the waits it takes still gives up.
+
+    The bound cannot sit below what the real code uses and fail the good path under load.
+    """
+    table = {5: (1, 7)}
+    waits = _NeverEnds(most=_FLAT_LOOKS + 1)
+    assert progress.watch(waits, 5, progress.Probes(_zero, lambda: table), _PACE) is None
+    assert waits.calls == _FLAT_LOOKS + 1
 
 
 def test_a_watch_keeps_waiting_while_the_tree_spends_cpu_or_writes() -> None:
@@ -162,7 +194,7 @@ def test_the_same_gate_without_the_server_counted_is_the_control_and_stalls() ->
     def procs() -> progress.Procs:
         return {5: (1, 3), 9: (1, next(ticks))}
 
-    assert progress.watch(_never_ends, 5, progress.Probes(_zero, procs), _PACE) is None
+    assert progress.watch(_NeverEnds(), 5, progress.Probes(_zero, procs), _PACE) is None
 
 
 def _entry(proc: Path, pid: int, comm: str, args: list[str]) -> None:

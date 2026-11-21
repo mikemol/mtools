@@ -1487,6 +1487,125 @@ def test_check_names_a_stale_or_orphaned_package_and_write_makes_it_fresh(
     assert mutants_gen.main(["--dist", "nope", "--check"]) == mutants_gen.EXIT_USAGE
 
 
+_GEN_SHARDS = 7
+_GATED_KEY = "src/p/a.py::f"
+
+
+def _gated_dist(tmp_path: pathlib.Path, listed: str) -> pathlib.Path:
+    dist = _gen_dist(tmp_path)
+    (dist / "BUILD.bazel").write_text(f"x(\n    shards = {_GEN_SHARDS},\n)\n", encoding="utf-8")
+    (dist / "gated-sites.txt").write_text(listed, encoding="utf-8")
+    return dist
+
+
+def _site_block(text: str, name: str) -> str:
+    block = next(b for b in text.split("mutant_site(")[1:] if f'name = "{name}"' in b)
+    return block.split("\n)\n")[0]
+
+
+def test_a_gated_site_is_in_the_gate_and_in_its_shards_exclusion_and_an_ungated_one_in_neither(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2809: one list makes both halves, so no site runs twice and none runs in neither.
+
+    The gated key carries `tags = []` (in `//...`) AND is the one label excluded from the shard
+    the runner's own hash puts it in; the ungated key keeps `manual` and is excluded from none.
+    """
+    files = mutants_gen.generate(_gated_dist(tmp_path, f"# a comment\n\n{_GATED_KEY}\n"))
+    text = files["d/sites/src/p/a/BUILD.bazel"]
+    assert "tags = []" in _site_block(text, "f")
+    assert "tags" not in _site_block(text, "g")
+    assert "tags" not in _site_block(files["d/sites/src/p/b/BUILD.bazel"], "f")
+    bzl = files["d/gated_sites.bzl"]
+    held = [i for i in range(_GEN_SHARDS) if mutate_runner.in_shard(_GATED_KEY, (i, _GEN_SHARDS))]
+    assert len(held) == 1
+    assert bzl.count(_GATED_KEY) == 1
+    assert f'    {held[0]}: [\n        "{_GATED_KEY}",\n    ],\n' in bzl
+    assert "src/p/a.py::g" not in bzl
+    assert "do not edit" in bzl
+
+
+def test_a_distribution_with_no_gated_list_emits_no_exclusion_file(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2809: the list is optional; without it nothing is gated and nothing is excluded."""
+    files = mutants_gen.generate(_gen_dist(tmp_path))
+    assert "d/gated_sites.bzl" not in files
+    assert not any("tags = []" in text for text in files.values())
+
+
+def test_a_gated_key_that_is_no_cell_is_refused_by_name(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2809: a stale gated key is refused, never quietly skipped (the exclusion would be stale)."""
+    _gated_dist(tmp_path, "src/p/a.py::ghost\n")
+    monkeypatch.chdir(tmp_path)
+    assert mutants_gen.main(["--dist", "d", "--check"]) == mutants_gen.EXIT_USAGE
+    assert "src/p/a.py::ghost" in capsys.readouterr().err
+
+
+def test_the_shard_count_is_read_from_the_dists_build_file_and_refused_unless_exactly_one(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2809 (github-00's SHOULD): no `shards = N`, or several, is an error naming the file.
+
+    The generator refuses rather than guess a count: a guessed one would put the exclusion on
+    the wrong shard.
+    """
+    dist = _gated_dist(tmp_path, f"{_GATED_KEY}\n")
+    assert mutants_gen.shard_count(dist) == _GEN_SHARDS
+    build = dist / "BUILD.bazel"
+    for text, found in (("", 0), ("shards = 3,\nshards = 4,\n", 2)):
+        build.write_text(text, encoding="utf-8")
+        with pytest.raises(mutants_gen.ShardCountError) as caught:
+            mutants_gen.shard_count(dist)
+        assert (caught.value.path, caught.value.found) == (str(build), found)
+    monkeypatch.chdir(tmp_path)
+    assert mutants_gen.main(["--dist", "d", "--check"]) == mutants_gen.EXIT_USAGE
+    assert "declares 2" in capsys.readouterr().err
+
+
+_BOUND_FILE = """
+class _TooLongError(BaseException):
+    pass
+
+
+def test_the_bound_trips():
+    raise _TooLongError
+
+
+def test_the_next_one_still_runs():
+    assert True
+"""
+
+
+def test_a_bound_that_raises_a_base_exception_fails_its_test_and_the_session_goes_on(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2806: a bound's BaseException is reported as a FAILED test and the session goes on.
+
+    github-00's note 1: the bounds in hooks/tests raise a BaseException subclass so no handler
+    swallows it; planted here, pytest reports that test FAILED and runs the next one. A mutant
+    that trips a bound is therefore a killed cell with a named test, never an aborted suite that
+    would read as a hang or a crash.
+    """
+    (tmp_path / "test_bound.py").write_text(_BOUND_FILE, encoding="utf-8")
+    done = subprocess.run(
+        [sys.executable, "-m", "pytest", "-p", "no:cacheprovider", "-q", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=tmp_path,
+    )
+    assert done.returncode == 1
+    assert "FAILED test_bound.py::test_the_bound_trips" in done.stdout
+    assert "1 failed, 1 passed" in done.stdout
+
+
 _NINE = 9
 
 

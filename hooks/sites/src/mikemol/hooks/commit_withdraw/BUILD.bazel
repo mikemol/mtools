@@ -3290,6 +3290,7 @@ mutant_site(
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
     ],
+    tags = [],
 )
 
 mutant_site(

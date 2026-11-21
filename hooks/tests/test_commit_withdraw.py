@@ -103,8 +103,34 @@ class _Resolves:
         self.path.write_text(json.dumps(entries), encoding="utf-8")
 
 
+# ⚑ THE BOUND IS A COUNT THE TEST CONTROLS, NOT A CLOCK (W2806, github-00): the default sleep was
+# a no-op, so a withdrawn leader that never leaves the live map (the mutant 'if followers' to
+# 'if False') was waited on forever, until the runner's 120 s CPU cap. WHY 5: the correct code
+# makes NO sleep in the arms that use the default (a queued entry ends at once and a leader
+# with followers is refused before any wait); 5 is the ceiling above that, and the at-the-bound
+# test plants the passing case with a ceiling of exactly 0.
+_MOST_SLEEPS = 5
+
+
+class _SleptTooLongError(BaseException):
+    """The withdraw kept waiting past the bound; a BaseException so no handler swallows it."""
+
+
+class _BoundedSleep:
+    """A wait that does nothing and fails the test past `most` sleeps."""
+
+    def __init__(self, most: int = _MOST_SLEEPS) -> None:
+        self.most = most
+        self.calls = 0
+
+    def __call__(self, _seconds: float) -> None:
+        self.calls += 1
+        if self.calls > self.most:
+            raise _SleptTooLongError
+
+
 def _witness(
-    sleep: _Resolves | None,
+    sleep: _Resolves | _BoundedSleep | None,
     kills: _Kills,
     commits: list[tuple[str, str]] | None,
     head: str | None,
@@ -113,7 +139,7 @@ def _witness(
         repo="mtools",
         head=lambda: head,
         since=lambda _before: commits,
-        sleep=sleep or (lambda _seconds: None),
+        sleep=sleep or _BoundedSleep(),
         probe=_probe,
         kill=kills,
         table=list,
@@ -185,6 +211,22 @@ def test_a_queued_entry_or_a_leader_with_followers_is_not_waited_for(tmp_path: P
     code, text = commit_withdraw.withdraw_settled(path, "40", witness)
     assert code == commit_withdraw.EXIT_REFUSED
     assert f"leads {_JOINED} joined stack(s)" in text
+
+
+def test_a_leader_with_followers_is_refused_with_a_ceiling_of_no_sleeps_at_all(
+    tmp_path: Path,
+) -> None:
+    """The passing case AT the bound: the correct code sleeps zero times here.
+
+    The bound cannot sit below what the real code uses and fail the good path under load.
+    """
+    path = _map(tmp_path / "c")
+    sleeps = _BoundedSleep(most=0)
+    commits = [("c0ffee1234567", "W1 would be a false landing")]
+    witness = _witness(sleeps, _Kills(), commits, "aaaaaaa")
+    code, _text = commit_withdraw.withdraw_settled(path, "40", witness)
+    assert code == commit_withdraw.EXIT_REFUSED
+    assert sleeps.calls == 0
 
 
 def test_a_landed_withdraw_releases_the_trees_and_prints_one_line_and_a_refusal_does_not(

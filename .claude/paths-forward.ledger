@@ -8405,3 +8405,72 @@
 2026-11-20T16:45:49Z  interrupt W2820 minted    -         "hooks tests that read bazel-bin or a .venv outside their declared bazel inputs: a census check"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2819
 2026-11-20T16:46:02Z  status W2820 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-20T16:50:22Z  status W2818 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T16:53:05Z  interrupt W2821 minted    -         "mutation runner: a kill by a test outside the mutated module's import cone is a flaky neighbour, an ERRORED cell, never a kill"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2818
+2026-11-20T16:53:14Z  status W2821 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:23:10Z  status W2816 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:23:11Z  status W2818 working>landed writer    "working -> landed"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:43:12Z  status W2809 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:43:51Z  status W2809 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:52:13Z  interrupt W2822 minted    -         "mutants_gen: flip the per-site default, every generated site target gated (tags = []) except a named, shrinking not-yet-green list, each entry citing its cause card"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2809
+2026-11-20T20:52:18Z  status W2822 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:52:19Z  interrupt W2823 minted    -         "Retire the sharded //hooks:mutants target and shards = 597 when the not-yet-green list is empty; W2808's shrink-only census reads 0 for hooks"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2822
+2026-11-20T20:52:23Z  status W2823 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:56:51Z  interrupt W2824 minted    -         "Round check refuses a stack whose frozen queue marks the passed-over cards working, and its refusal names no source"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2809
+2026-11-20T20:57:07Z  status W2824 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T20:58:52Z  status W2824 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T21:01:41Z  status W2809 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T21:01:41Z  status W2824 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-20T21:02:22Z  status W2824 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T17:59:34Z  interrupt W2825 minted    -         "hooks sites: 47 def-site mutants could not be RUN (incomplete grid), classify per module and fix each cause"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2810
+2026-11-21T17:59:35Z  interrupt W2826 minted    -         "hooks sites: 37 def-site mutants SURVIVE, per module add the assertion or the missing graph edge"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2810
+2026-11-21T17:59:36Z  interrupt W2827 minted    -         "hooks sites: 31 declared defects SURVIVE, per cell a killing assertion or a stale declaration"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2810
+2026-11-21T17:59:37Z  interrupt W2828 minted    -         "hooks sites: 25 declared defects ERRORED, read each error and fix the runner or the declaration"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2810
+2026-11-21T17:59:37Z  interrupt W2829 minted    -         "hooks sites: two TIMED_OUT sites and two killed-but-refused cells, bound each hanging test as W2806 did"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2810
+2026-11-21T18:00:26Z  status W2809 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T18:10:01Z  status W2824 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T18:11:58Z  status W2824 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T18:16:19Z  status W2810 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T18:16:19Z  status W2822 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T19:32:01Z  interrupt W2830 minted    -         "Answer luthen-observability:W1715: exit census misses bare literal exits (emit(..., 2), return 2, sys.exit)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1715
+2026-11-21T19:32:08Z  interrupt W2831 minted    -         "Answer skills:W26: add pin rows for repo-owned skills (nemik first) under the host pin table"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=skills:W26
+2026-11-21T19:32:09Z  interrupt W2832 minted    -         "Answer skills:W36: reviewed-loop cadence debt, G0 before every tick-open and G0/G1 after every tick"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=skills:W36
+2026-11-21T19:32:10Z  interrupt W2833 minted    -         "Answer skills:W43: the writer --render emits a blank line after its DERIVED comment"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=skills:W43
+2026-11-21T19:32:11Z  interrupt W2834 minted    -         "Answer skills:W83: hook refusals name find-the-tool and --kinds refuses an unknown kind"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=skills:W83
+2026-11-21T19:32:12Z  interrupt W2835 minted    -         "Answer skills:W84: transcriptstruct count-only and projects-directory grep modes"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=skills:W84
+2026-11-21T19:32:13Z  interrupt W2836 minted    -         "Answer skills:W87: drain luthen run_git_clean into a shared tested scrubbed-git helper"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=skills:W87
+2026-11-21T19:32:49Z  status W2822 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T19:34:43Z  status W2825 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T19:34:44Z  interrupt W2837 minted    -         "round reader: refuse an unstamped round or type it Stamped or Unstamped, source_note prints unstamped for None"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2824
+2026-11-21T19:35:43Z  interrupt W2838 minted    -         "hooks sites: stage the routing table into the 13 structural_query and routing_table site targets (control test_routing_table fails)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2825
+2026-11-21T19:35:43Z  interrupt W2839 minted    -         "hooks sites: stage count_test_functions.py into the 12 gen_warrants and warrant_crosscheck site targets (control test_gen_warrants_write fails)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2825
+2026-11-21T19:35:43Z  interrupt W2840 minted    -         "hooks sites: stage hooks/adopt/tools-hook into the 9 runproc site targets (control test_adopt_launcher fails, rc 127)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2825
+2026-11-21T19:35:43Z  interrupt W2841 minted    -         "hooks sites: stage the work-claims queue fixture into the 9 work_claims_hook site targets (control test_work_claims_fixture fails)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2825
+2026-11-21T19:35:43Z  interrupt W2842 minted    -         "hooks sites: stage settings, .githooks/pre-push and the standing-facts inputs into the 4 singleton site targets (no_verify, githook_pre_push, standing_facts)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2825
+2026-11-21T20:07:40Z  status W2826 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:08:47Z  status W2827 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:09:30Z  interrupt W2843 minted    -         "Ask nemik: the file observer reports only exists, so a nemik-witnesses query on input.file mtime can never hold"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2824
+2026-11-21T20:09:42Z  status W2827 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:11:23Z  interrupt W2844 minted    -         "Ask nemik: admit a gate-repair card on the critical path to the round, or list W2824, so the round check can pass the stack that fixes it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2824
+2026-11-21T20:13:48Z  interrupt W2845 minted    -         "Shard guard real repair: decompose hooks mutants_195 along its import cones into separate targets, never a shards= bump"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2775
+2026-11-21T20:13:53Z  status W2833 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:16:11Z  status W2827 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:16:23Z  interrupt W2846 minted    -         "hooks sites: tests skip when opa or shellcheck is absent so their mutants survive, declare the tool in the site targets (privacy_*, shellcheck*)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2826
+2026-11-21T20:17:12Z  status W2828 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:17:47Z  status W2828 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:19:59Z  status W2839 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:20:38Z  status W2838 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:20:40Z  status W2840 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:20:42Z  status W2841 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:20:44Z  status W2842 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:36:39Z  status W2829 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:37:43Z  status W2809 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:37:49Z  status W2806 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:37:50Z  status W2786 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:37:51Z  status W2800 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:37:52Z  status W2824 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:40:00Z  status W2816 landed>done writer    "landed -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:40:00Z  status W2817 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:44:25Z  status W2809 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:44:58Z  status W2817 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:46:07Z  status W2806 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T20:48:12Z  status W2806 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

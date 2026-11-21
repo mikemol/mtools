@@ -1,0 +1,11 @@
+# W2809: the mutation sites that run as their own per-site targets in the gate and are NOT run by
+# the sharded //hooks:mutants. One site key per line (src/<module>.py::<label>, as the runner's
+# report prints it). check_mutants/mutants_gen.py reads this file and, from it alone, emits both
+# halves, so no site runs twice: `tags = []` on the site's target in hooks/sites/, and the shard's
+# exclusion in hooks/gated_sites.bzl. REGENERATE: python3 check_mutants/mutants_gen.py --dist hooks --write
+#
+# Each of these three plants a loop that never ends; with W2806's bounds the unbounded mutant
+# fails fast, and the cell read about 120 CPU s in its shard before they did.
+src/mikemol/hooks/commit_withdraw.py::leader-with-followers-withdrawn
+src/mikemol/hooks/commitprogress.py::watch-never-gives-up
+src/mikemol/hooks/vlogfollow.py::quiet-file-passed-on-every-pause

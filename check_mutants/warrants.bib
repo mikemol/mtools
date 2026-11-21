@@ -1053,3 +1053,49 @@
   claim  = {W2818: the note follows the id on the same line; other cells print exactly as before.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_cell_line_carries_the_note_after_the_id_and_a_cell_without_one_is_unchanged},
 }
+
+@misc{root-mutate-runner-gated-site-is-in-the-gate-and-in-its-shards-exclusion-and-an-ungated-one-in-neither,
+  section = {mutate_runner},
+  title  = {W2809: one list makes both halves, so no site runs twice and none runs in neither},
+  claim  = {W2809: one list makes both halves, so no site runs twice and none runs in neither. The
+            gated key carries `tags = []` (in `//...`) AND is the one label excluded
+            from the shard the runner's own hash puts it in; the ungated key keeps
+            `manual` and is excluded from none.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_gated_site_is_in_the_gate_and_in_its_shards_exclusion_and_an_ungated_one_in_neither},
+}
+
+@misc{root-mutate-runner-distribution-with-no-gated-list-emits-no-exclusion-file,
+  section = {mutate_runner},
+  title  = {W2809: the list is optional; without it nothing is gated and nothing is excluded},
+  claim  = {W2809: the list is optional; without it nothing is gated and nothing is excluded.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_distribution_with_no_gated_list_emits_no_exclusion_file},
+}
+
+@misc{root-mutate-runner-gated-key-that-is-no-cell-is-refused-by-name,
+  section = {mutate_runner},
+  title  = {W2809: a stale gated key is refused, never quietly skipped (the exclusion would be stale)},
+  claim  = {W2809: a stale gated key is refused, never quietly skipped (the exclusion would be
+            stale).},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_gated_key_that_is_no_cell_is_refused_by_name},
+}
+
+@misc{root-mutate-runner-bound-that-raises-a-base-exception-fails-its-test-and-the-session-goes-on,
+  section = {mutate_runner},
+  title  = {W2806: a bound's BaseException is reported as a FAILED test and the session goes on},
+  claim  = {W2806: a bound's BaseException is reported as a FAILED test and the session goes on.
+            github-00's note 1: the bounds in hooks/tests raise a BaseException subclass
+            so no handler swallows it; planted here, pytest reports that test FAILED and
+            runs the next one. A mutant that trips a bound is therefore a killed cell
+            with a named test, never an aborted suite that would read as a hang or a
+            crash.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_bound_that_raises_a_base_exception_fails_its_test_and_the_session_goes_on},
+}
+
+@misc{root-mutate-runner-shard-count-is-read-from-the-dists-build-file-and-refused-unless-exactly-one,
+  section = {mutate_runner},
+  title  = {W2809 (github-00's SHOULD): no `shards = N`, or several, is an error naming the file},
+  claim  = {W2809 (github-00's SHOULD): no `shards = N`, or several, is an error naming the file.
+            The generator refuses rather than guess a count: a guessed one would put the
+            exclusion on the wrong shard.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_shard_count_is_read_from_the_dists_build_file_and_refused_unless_exactly_one},
+}
