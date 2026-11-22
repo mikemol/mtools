@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2846,
+  "counter": 2871,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -64860,11 +64860,11 @@
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "Resubmit b110 (14 paths, review branch r3 670ff7fc, queue file refreshed) as the A1 atom once the round lists W2809 or W2806; quote the round check verdict to github-00; then A4 (W2800), A2 is part of A1, A6, A3",
-      "evidence": "2026-11-20T12:06:39Z: 2026-11-20: THE FIRST HOOKS STACK, github-00's ruling (c) after the operator's L198296: a real hooks/BUILD.bazel change that DECOMPOSES (the guard admits a stack carrying hooks/BUILD.bazel at any reading) and does not change a count: remove the over-half cells' modules from the sharded grid and put their per-site targets (W1989's hooks/sites/, about 160 packages already committed) in the gate; NO SITE MAY RUN TWICE (never in both the sharded :mutants and a per-site target); the stack states how many sites leave the grid and that shards = 597 is untouched; W2806's test bound rides it if the reading confirms the ~120 s prediction. Then W2800 (b105), then b102. HELD ON W2805 AND W2806, REAL DEPENDENCIES: W2805's per-cell reading names the over-half cells; W2806 is the prediction the reading confirms or refutes. ESTIMATE as_of 2026-11-20, basis a guess: own cost ~3 attempts and ~2500 CPU-s (a BUILD change over the generator's output plus a no-double-run check and its plants); effect on the guard: removes the two shards past half (151.9 and 151.3 s) from the sharded grid, so every later hooks stack clears the guard instead of needing a BUILD edit; effect on attempts: ends the refusals of b105 and every hooks stack behind it. Not read: hooks/BUILD.bazel's cell selection and //hooks/sites:suite. | 2026-11-20T12:33:58Z: 2026-11-20: W2809'S REAL BLOCKER ADDED: W2811 (each site's own baseline slice): the baselined over-half cells need their per-site targets to read the ratchet's debt for them, without making the 40-line hooks/mutants-baseline.txt an input of every site (coarse inputs). | 2026-11-20T14:23:26Z: 2026-11-20: W2805 LANDED (c4d7466b); W2811 REMOVED AS A BLOCKER of the FIRST stack: the three cells this stack takes out of the sharded grid (commitprogress watch-never-gives-up, commit_withdraw leader-with-followers-withdrawn, vlogfollow quiet-file-passed-on-every-pause) are NOT lines of hooks/mutants-baseline.txt (the baselined cells I found are vlogwatch.kill_group and round_wire's ready-card-in-the-gate-still-demanded), so their per-site targets need no baseline slice. W2811 stays the blocker for any later move of a BASELINED cell to a per-site target. Now blocked only on W2806 (the test bound that makes the three per-site targets pass under the 120 s budget, riding the same stack). | 2026-11-20T14:26:09Z: 2026-11-20 DESIGN (W2806 + W2809 as ONE stack, github-00's note 1): runner half first as its own non-hooks stack, W2816 (a shard drops named cells AFTER its index assignment, so the other 594 shards' cell sets and cache keys do not shift); then the hooks stack: (a) W2806's three test bounds (existing modules); (b) hooks/BUILD.bazel: mutants_sharded gets exclude = [commitprogress.py::watch-never-gives-up, commit_withdraw.py::leader-with-followers-withdrawn, vlogfollow.py::quiet-file-passed-on-every-pause], and the three per-site targets declared_<name> under hooks/sites/ become gate targets (today they are manual, under //hooks/sites:suite); (c) no site runs twice: a check that every excluded label has a per-site target in the gate and no per-site target in the gate has its cell in the sharded grid; (d) the stack states 3 sites leave the sharded grid and shards = 597 is untouched. WITNESS (stated now): in its own gate run the three per-site targets each read seconds (the bound makes the unbounded mutant fail fast, the per-site verdict is still 'killed'), shards 290, 195 and 579 each drop by about 120 s (to about 33, 34 and 35 s), the heaviest shard is 255 at about 135.5 s, under the guard's half. ALSO ANSWERED (github-00 note 2): hooks/mutants-baseline.txt DOES list mutants_473's two survivors (line 7 'survived commit_kata.py::_witness.<locals>.head', line 34 'survived stackbuildfiles.py::refusal-never-asks-what-is-ahead'; line 8 is its sibling _witness.<locals>.since), so the shard's '0 rise(s)' BASELINE line is correct: they are debt on record, no runner defect. | 2026-11-20T16:04:26Z: 2026-11-20 NOTES FROM github-00 (W2806 PASSED as the test half; the combined stack follows once b108 lands): (2) THE STACK'S WITNESS RECORDS EACH PER-SITE TARGET'S CPU so the next reading has a baseline: measured locally against the whole suite with the bounds in: commitprogress watch-never-gives-up 12.9 s, vlogfollow quiet-file-passed-on-every-pause 1.1 s, commit_withdraw leader-with-followers-withdrawn 22.4 s (the largest of the three). The gate run's own lines replace these as the baseline (cell cpu= per target, reconciliation 0.0). | 2026-11-20T20:26:24Z: 2026-11-20 READ BEFORE BUILDING (b109 landed 6b54fed2): the three per-site targets are GENERATED (check_mutants/mutants_gen.py render_module; hooks/sites/**/BUILD.bazel 'do not edit'), tags default to manual (mutant_site) and they are private to their package, so 'join the gate' cannot be a hand edit of hooks/BUILD.bazel: it is a generator change. SHARD INDICES CHECKED by FNV-1a at 597: commitprogress watch-never-gives-up 290, commit_withdraw leader-with-followers-withdrawn 195, vlogfollow quiet-file-passed-on-every-pause 579 (scratchpad/which_shard.py). DESIGN: a per-dist list file (hooks/gated-sites.txt, one site key per line) read by mutants_gen: a listed cell gets tags = [] (in //...), every other cell stays manual, so only 3 of ~160 generated files change; hooks/BUILD.bazel gets exclude_in = {290: [...], 195: [...], 579: [...]}; a python test in check_mutants asserts the two agree (every listed key is in exclude_in at the shard its FNV hash names, and no exclude_in label is missing from the list: NO SITE RUNS TWICE). Starlark cannot read the file, which is why the check is a test (W2817 would remove the duplication). Sent to github-00 for a ruling before building. | 2026-11-20T20:43:12Z: 2026-11-20: UNBLOCKED: W2816 landed 6b54fed2 and W2806's test half rides this stack (b110); the stack is built and run green at 3aef2c0d. | 2026-11-20T20:43:51Z: 2026-11-20: b110 (review/W2809-gated-sites-r2 3aef2c0d, run green BES 668974f7) is submitted and in the gate; on the verdict close W2809 and W2806 against the landed sha. | 2026-11-20T21:01:41Z: 2026-11-20 PARKING: b110 re-cut (review branch review/W2809-gated-sites-r3, sha 670ff7fc94c6d82bfd45de1475e1f68fa8039166) was refused at submit by the round check, which is right by design (W2824's diagnosis); W2809 reaches the round through the edges W2824 enables W2809 and W2809 enables W2800. Nothing is gating. Next session: W2824's text fix first, then resubmit the b110 stack file from a fresh freeze tree. | 2026-11-21T18:00:26Z: 2026-11-21 BLOCKED ON THE ROUND, A REAL DEPENDENCY: b110 (review branch r3 670ff7fc, the stack file b110.json) is refused at submit by the round check, which is right by design (W2824's diagnosis): the round file lists W2810, W2806 and W2786 as ready round cards, and a stack naming W2809 outside the round is refused until they leave ready (worked or blocked) or the round admits W2809. nemik's 17:55Z round still excludes W2809; the edges that should raise its rank (W2824 enables W2809 enables W2800 enables eight cards) are in. W2810 is the round's rank 1 and is being worked (the measured list is read, W2825 to W2829 atomized). Lift when a published round admits W2809 or W2810 and the others leave the ready set. | 2026-11-21T20:44:25Z: 2026-11-21 DECOMPOSITION FINDING (found while cutting A1): A1 CANNOT BE W2809 WITHOUT W2806. The three gated cells are measured in the whole-suite run at 122.4 s (commitprogress watch-never-gives-up) and 123.8 s (commit_withdraw leader-with-followers-withdrawn), FAILED as killed-but-REFUSED on the per-site CPU budget of 120 s; vlogfollow read 1.1 s locally. W2806 adds the count bounds that bring them to 12.9, 1.1 and 22.4 s locally. So a stack that puts those three per-site targets in the gate (tags = []) without W2806 fails its own gate on the budget; and W2806 cannot pass the shard guard without carrying hooks/BUILD.bazel, which only W2809 changes. The two cards are ONE ATOM, the original b110 (14 paths: check_mutants 3, hooks/BUILD.bazel, gated-sites.txt, gated_sites.bzl, three site BUILD files, W2806 four test files, hooks/warrants.bib). The earlier edge W2806 blocked_on W2809 is half of a true two-way dependency and is recorded as the stack pair, not a one-way wait. W2824 and W2800 do not share it: they are separate atoms behind this one for the shard guard only. | 2026-11-21T20:46:08Z: 2026-11-21 CO-LANDS WITH W2806 IN ONE STACK (github-00 ruling): see W2806. The stack closes exactly these two cards, W2806 (entry 1: hooks tests commit_kata, commit_withdraw, commitprogress, vlogfollow, hooks/warrants.bib) and W2809 (entry 2: check_mutants generator and tests and warrants, hooks/BUILD.bazel, gated-sites.txt, gated_sites.bzl, three site BUILD files), 14 paths, so it names no card it does not close. The measured 122.4 s and 123.8 s cells against the 120 s budget are why entry 2 fails its gate without entry 1, and the shard guard demands hooks/BUILD.bazel, which entry 2 carries. A4 (W2800), A6 (W2786) and A3 (W2824) stay behind it for the guard only. | 2026-11-21T20:50:33Z: 2026-11-21 W2806 MERGED INTO THIS CARD (github-00 ruling, a collapse audited as an equivalence of fate): W2806 was \"Bound the three watch-loop tests so their mutants fail fast\", the count bounds of four test modules: commitprogress _NeverEnds (20 waits, an at-the-bound test at the 4 the correct code needs), vlogfollow _Run.step (20 passes, at 2), commit_withdraw _BoundedSleep (5 sleeps, at 0), commit_kata _CountedLooks over commit_kata.sized (20 looks, at the 2 the correct watch takes), each raising a BaseException subclass so no handler swallows it. ITS WITNESS: with the bounds the three per-site cells read 12.9 (commitprogress watch-never-gives-up), 1.1 (vlogfollow quiet-file-passed-on-every-pause) and 22.4 s (commit_withdraw leader-with-followers-withdrawn) locally, and 5.9, 1.5 and 8.6 s in the reviewed gate-shaped run. WHY ONE CARD: the two fail without each other. Without the bounds the whole-suite run read commitprogress at 122.4 s and commit_withdraw at 123.8 s, FAILED killed-but-REFUSED against the 120 s per-site budget, so this stack fails its own gate; and W2806, a hooks stack, needs hooks/BUILD.bazel in the stack for the shard guard (mutants_195 at 159 CPU s of 300, 53%), which only this card changes. The stack is the 14 paths of review/W2809-gated-sites-r3 670ff7fc94c6d82bfd45de1475e1f68fa8039166 (reviewed PASS-SUBMIT), submitted as ONE entry closing W2809; no card is closed by hand outside the record. W2806 is in residue with its full entry, pointing here.",
+      "evidence": "2026-11-20T12:06:39Z: 2026-11-20: THE FIRST HOOKS STACK, github-00's ruling (c) after the operator's L198296: a real hooks/BUILD.bazel change that DECOMPOSES (the guard admits a stack carrying hooks/BUILD.bazel at any reading) and does not change a count: remove the over-half cells' modules from the sharded grid and put their per-site targets (W1989's hooks/sites/, about 160 packages already committed) in the gate; NO SITE MAY RUN TWICE (never in both the sharded :mutants and a per-site target); the stack states how many sites leave the grid and that shards = 597 is untouched; W2806's test bound rides it if the reading confirms the ~120 s prediction. Then W2800 (b105), then b102. HELD ON W2805 AND W2806, REAL DEPENDENCIES: W2805's per-cell reading names the over-half cells; W2806 is the prediction the reading confirms or refutes. ESTIMATE as_of 2026-11-20, basis a guess: own cost ~3 attempts and ~2500 CPU-s (a BUILD change over the generator's output plus a no-double-run check and its plants); effect on the guard: removes the two shards past half (151.9 and 151.3 s) from the sharded grid, so every later hooks stack clears the guard instead of needing a BUILD edit; effect on attempts: ends the refusals of b105 and every hooks stack behind it. Not read: hooks/BUILD.bazel's cell selection and //hooks/sites:suite. | 2026-11-20T12:33:58Z: 2026-11-20: W2809'S REAL BLOCKER ADDED: W2811 (each site's own baseline slice): the baselined over-half cells need their per-site targets to read the ratchet's debt for them, without making the 40-line hooks/mutants-baseline.txt an input of every site (coarse inputs). | 2026-11-20T14:23:26Z: 2026-11-20: W2805 LANDED (c4d7466b); W2811 REMOVED AS A BLOCKER of the FIRST stack: the three cells this stack takes out of the sharded grid (commitprogress watch-never-gives-up, commit_withdraw leader-with-followers-withdrawn, vlogfollow quiet-file-passed-on-every-pause) are NOT lines of hooks/mutants-baseline.txt (the baselined cells I found are vlogwatch.kill_group and round_wire's ready-card-in-the-gate-still-demanded), so their per-site targets need no baseline slice. W2811 stays the blocker for any later move of a BASELINED cell to a per-site target. Now blocked only on W2806 (the test bound that makes the three per-site targets pass under the 120 s budget, riding the same stack). | 2026-11-20T14:26:09Z: 2026-11-20 DESIGN (W2806 + W2809 as ONE stack, github-00's note 1): runner half first as its own non-hooks stack, W2816 (a shard drops named cells AFTER its index assignment, so the other 594 shards' cell sets and cache keys do not shift); then the hooks stack: (a) W2806's three test bounds (existing modules); (b) hooks/BUILD.bazel: mutants_sharded gets exclude = [commitprogress.py::watch-never-gives-up, commit_withdraw.py::leader-with-followers-withdrawn, vlogfollow.py::quiet-file-passed-on-every-pause], and the three per-site targets declared_<name> under hooks/sites/ become gate targets (today they are manual, under //hooks/sites:suite); (c) no site runs twice: a check that every excluded label has a per-site target in the gate and no per-site target in the gate has its cell in the sharded grid; (d) the stack states 3 sites leave the sharded grid and shards = 597 is untouched. WITNESS (stated now): in its own gate run the three per-site targets each read seconds (the bound makes the unbounded mutant fail fast, the per-site verdict is still 'killed'), shards 290, 195 and 579 each drop by about 120 s (to about 33, 34 and 35 s), the heaviest shard is 255 at about 135.5 s, under the guard's half. ALSO ANSWERED (github-00 note 2): hooks/mutants-baseline.txt DOES list mutants_473's two survivors (line 7 'survived commit_kata.py::_witness.<locals>.head', line 34 'survived stackbuildfiles.py::refusal-never-asks-what-is-ahead'; line 8 is its sibling _witness.<locals>.since), so the shard's '0 rise(s)' BASELINE line is correct: they are debt on record, no runner defect. | 2026-11-20T16:04:26Z: 2026-11-20 NOTES FROM github-00 (W2806 PASSED as the test half; the combined stack follows once b108 lands): (2) THE STACK'S WITNESS RECORDS EACH PER-SITE TARGET'S CPU so the next reading has a baseline: measured locally against the whole suite with the bounds in: commitprogress watch-never-gives-up 12.9 s, vlogfollow quiet-file-passed-on-every-pause 1.1 s, commit_withdraw leader-with-followers-withdrawn 22.4 s (the largest of the three). The gate run's own lines replace these as the baseline (cell cpu= per target, reconciliation 0.0). | 2026-11-20T20:26:24Z: 2026-11-20 READ BEFORE BUILDING (b109 landed 6b54fed2): the three per-site targets are GENERATED (check_mutants/mutants_gen.py render_module; hooks/sites/**/BUILD.bazel 'do not edit'), tags default to manual (mutant_site) and they are private to their package, so 'join the gate' cannot be a hand edit of hooks/BUILD.bazel: it is a generator change. SHARD INDICES CHECKED by FNV-1a at 597: commitprogress watch-never-gives-up 290, commit_withdraw leader-with-followers-withdrawn 195, vlogfollow quiet-file-passed-on-every-pause 579 (scratchpad/which_shard.py). DESIGN: a per-dist list file (hooks/gated-sites.txt, one site key per line) read by mutants_gen: a listed cell gets tags = [] (in //...), every other cell stays manual, so only 3 of ~160 generated files change; hooks/BUILD.bazel gets exclude_in = {290: [...], 195: [...], 579: [...]}; a python test in check_mutants asserts the two agree (every listed key is in exclude_in at the shard its FNV hash names, and no exclude_in label is missing from the list: NO SITE RUNS TWICE). Starlark cannot read the file, which is why the check is a test (W2817 would remove the duplication). Sent to github-00 for a ruling before building. | 2026-11-20T20:43:12Z: 2026-11-20: UNBLOCKED: W2816 landed 6b54fed2 and W2806's test half rides this stack (b110); the stack is built and run green at 3aef2c0d. | 2026-11-20T20:43:51Z: 2026-11-20: b110 (review/W2809-gated-sites-r2 3aef2c0d, run green BES 668974f7) is submitted and in the gate; on the verdict close W2809 and W2806 against the landed sha. | 2026-11-20T21:01:41Z: 2026-11-20 PARKING: b110 re-cut (review branch review/W2809-gated-sites-r3, sha 670ff7fc94c6d82bfd45de1475e1f68fa8039166) was refused at submit by the round check, which is right by design (W2824's diagnosis); W2809 reaches the round through the edges W2824 enables W2809 and W2809 enables W2800. Nothing is gating. Next session: W2824's text fix first, then resubmit the b110 stack file from a fresh freeze tree. | 2026-11-21T18:00:26Z: 2026-11-21 BLOCKED ON THE ROUND, A REAL DEPENDENCY: b110 (review branch r3 670ff7fc, the stack file b110.json) is refused at submit by the round check, which is right by design (W2824's diagnosis): the round file lists W2810, W2806 and W2786 as ready round cards, and a stack naming W2809 outside the round is refused until they leave ready (worked or blocked) or the round admits W2809. nemik's 17:55Z round still excludes W2809; the edges that should raise its rank (W2824 enables W2809 enables W2800 enables eight cards) are in. W2810 is the round's rank 1 and is being worked (the measured list is read, W2825 to W2829 atomized). Lift when a published round admits W2809 or W2810 and the others leave the ready set. | 2026-11-21T20:44:25Z: 2026-11-21 DECOMPOSITION FINDING (found while cutting A1): A1 CANNOT BE W2809 WITHOUT W2806. The three gated cells are measured in the whole-suite run at 122.4 s (commitprogress watch-never-gives-up) and 123.8 s (commit_withdraw leader-with-followers-withdrawn), FAILED as killed-but-REFUSED on the per-site CPU budget of 120 s; vlogfollow read 1.1 s locally. W2806 adds the count bounds that bring them to 12.9, 1.1 and 22.4 s locally. So a stack that puts those three per-site targets in the gate (tags = []) without W2806 fails its own gate on the budget; and W2806 cannot pass the shard guard without carrying hooks/BUILD.bazel, which only W2809 changes. The two cards are ONE ATOM, the original b110 (14 paths: check_mutants 3, hooks/BUILD.bazel, gated-sites.txt, gated_sites.bzl, three site BUILD files, W2806 four test files, hooks/warrants.bib). The earlier edge W2806 blocked_on W2809 is half of a true two-way dependency and is recorded as the stack pair, not a one-way wait. W2824 and W2800 do not share it: they are separate atoms behind this one for the shard guard only. | 2026-11-21T20:46:08Z: 2026-11-21 CO-LANDS WITH W2806 IN ONE STACK (github-00 ruling): see W2806. The stack closes exactly these two cards, W2806 (entry 1: hooks tests commit_kata, commit_withdraw, commitprogress, vlogfollow, hooks/warrants.bib) and W2809 (entry 2: check_mutants generator and tests and warrants, hooks/BUILD.bazel, gated-sites.txt, gated_sites.bzl, three site BUILD files), 14 paths, so it names no card it does not close. The measured 122.4 s and 123.8 s cells against the 120 s budget are why entry 2 fails its gate without entry 1, and the shard guard demands hooks/BUILD.bazel, which entry 2 carries. A4 (W2800), A6 (W2786) and A3 (W2824) stay behind it for the guard only. | 2026-11-21T20:50:33Z: 2026-11-21 W2806 MERGED INTO THIS CARD (github-00 ruling, a collapse audited as an equivalence of fate): W2806 was \"Bound the three watch-loop tests so their mutants fail fast\", the count bounds of four test modules: commitprogress _NeverEnds (20 waits, an at-the-bound test at the 4 the correct code needs), vlogfollow _Run.step (20 passes, at 2), commit_withdraw _BoundedSleep (5 sleeps, at 0), commit_kata _CountedLooks over commit_kata.sized (20 looks, at the 2 the correct watch takes), each raising a BaseException subclass so no handler swallows it. ITS WITNESS: with the bounds the three per-site cells read 12.9 (commitprogress watch-never-gives-up), 1.1 (vlogfollow quiet-file-passed-on-every-pause) and 22.4 s (commit_withdraw leader-with-followers-withdrawn) locally, and 5.9, 1.5 and 8.6 s in the reviewed gate-shaped run. WHY ONE CARD: the two fail without each other. Without the bounds the whole-suite run read commitprogress at 122.4 s and commit_withdraw at 123.8 s, FAILED killed-but-REFUSED against the 120 s per-site budget, so this stack fails its own gate; and W2806, a hooks stack, needs hooks/BUILD.bazel in the stack for the shard guard (mutants_195 at 159 CPU s of 300, 53%), which only this card changes. The stack is the 14 paths of review/W2809-gated-sites-r3 670ff7fc94c6d82bfd45de1475e1f68fa8039166 (reviewed PASS-SUBMIT), submitted as ONE entry closing W2809; no card is closed by hand outside the record. W2806 is in residue with its full entry, pointing here. | 2026-11-22T00:25:05Z: 2026-11-21 PARKED (operator ruling relayed by github-00: park the skills and mtools repos, steer tokens to luthen). b112 (one entry, W2809, the 14 paths at 670ff7fc) is INFLIGHT in the gate and lands or refuses by itself, its verdict going to the commit log; nothing of mine waits on a session to run it. SUBMIT ORDER BEHIND IT, each only after b112 returns and its own bazel is green: (1) W2839 r4 09b00ead; (2) W2863 r3 0cec8093; (3) W2859 f5010a8b, then W2860 r2 fbad107d, then W2861 r2 8d449a5d; (4) W2853 300b89f8 then W2854 r2 d69be5f9; (5) W2865 c069cfb7 and W2866 715d2e64 (not on the critical path). The b112 gate event file was still growing at the last read (54,661,952 bytes at 23:48:35Z, +236,732 in 26 min).",
       "issued_at": "2026-11-20T12:06:21Z",
       "minted_during": "interrupt",
       "caused_by": "W2802",
-      "last_worked": "2026-11-21T20:50:33Z",
+      "last_worked": "2026-11-22T00:25:05Z",
       "ticks_blocked": 0,
       "completed": null,
       "weight": 8
@@ -64906,15 +64906,16 @@
         "mutation"
       ],
       "blocked_on": [
-        "W2809"
+        "W2809",
+        "W2839"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Read check_mutants/mutants_gen.py and defs.bzl for how a site target stages inputs and where the sharded grid finds mutants-baseline.txt; plant first: a site package carries only its own baseline slice, a baseline change to one cell invalidates only that site's target, the slices reassembled equal hooks/mutants-baseline.txt byte for byte (a freshness test, check mode), a cell in the ratchet file with no site is refused; send github-00 the design",
-      "evidence": "2026-11-20T12:33:54Z: 2026-11-20: FROM github-00 (note 1 on the baseline finding): THE BASELINE FIX MUST BE CONE-SHAPED TOO. Staging hooks/mutants-baseline.txt into every per-site target makes one 40-line file an input of all about 2138 targets: any baseline change (each paydown) invalidates every site's cache, the coarse-input class again (memory coarse-input-sets-mean-atomize-source). So stage each site its OWN baseline entries: mutants_gen.py (which already generates the site packages) emits each site's baseline slice beside its BUILD, or a per-module baseline file, with a freshness test that the slices REASSEMBLE EXACTLY to the ratchet's file. The ratchet stays one declared set; its inputs are decomposed along the same cones as the sites. THIS IS W2809'S REAL BLOCKER: W2809's baselined over-half cells (e.g. the baselined survivors) need it before their per-site targets can stand in the gate. Found by reading: the per-site targets log 'BASELINE (0 recorded ...)' where the sharded grid logs 'BASELINE (40 recorded ...)', so they refuse debt the ratchet admits (vlogwatch.kill_group line 40 and round_wire's declared cell line 31 of hooks/mutants-baseline.txt). HELD ON W2805 BY ORDER, not code (gate repair first, velocity-first): it edits check_mutants (the generator and defs.bzl), a non-hooks dist, plus the regenerated hooks/sites (a hooks path: the stack that regenerates the sites meets the hooks guard unless it carries a real decomposition, W2809's). ESTIMATE as_of 2026-11-20, basis a guess and a count: own cost ~3 attempts and ~3000 CPU-s (a generator change, about 160 regenerated site packages, a freshness gate target, plants); effect on CPU-s per landing: each paydown of the baseline then reruns one site instead of about 2138 targets' cache (a cone-shaped input), a saving of a fraction of the hooks site grid per baseline edit, unmeasured; effect on attempts: unblocks W2809 and W1989's retirement of the sharded :mutants. Not read: mutants_gen.py and defs.bzl. | 2026-11-20T14:23:44Z: 2026-11-20: W2805 landed; W2811 is no longer W2809's blocker (the first stack's three cells are not baselined); held behind W2809 by order (gate repair first, velocity-first), not by code. It is still the blocker for moving a BASELINED cell to a per-site target.",
+      "evidence": "2026-11-20T12:33:54Z: 2026-11-20: FROM github-00 (note 1 on the baseline finding): THE BASELINE FIX MUST BE CONE-SHAPED TOO. Staging hooks/mutants-baseline.txt into every per-site target makes one 40-line file an input of all about 2138 targets: any baseline change (each paydown) invalidates every site's cache, the coarse-input class again (memory coarse-input-sets-mean-atomize-source). So stage each site its OWN baseline entries: mutants_gen.py (which already generates the site packages) emits each site's baseline slice beside its BUILD, or a per-module baseline file, with a freshness test that the slices REASSEMBLE EXACTLY to the ratchet's file. The ratchet stays one declared set; its inputs are decomposed along the same cones as the sites. THIS IS W2809'S REAL BLOCKER: W2809's baselined over-half cells (e.g. the baselined survivors) need it before their per-site targets can stand in the gate. Found by reading: the per-site targets log 'BASELINE (0 recorded ...)' where the sharded grid logs 'BASELINE (40 recorded ...)', so they refuse debt the ratchet admits (vlogwatch.kill_group line 40 and round_wire's declared cell line 31 of hooks/mutants-baseline.txt). HELD ON W2805 BY ORDER, not code (gate repair first, velocity-first): it edits check_mutants (the generator and defs.bzl), a non-hooks dist, plus the regenerated hooks/sites (a hooks path: the stack that regenerates the sites meets the hooks guard unless it carries a real decomposition, W2809's). ESTIMATE as_of 2026-11-20, basis a guess and a count: own cost ~3 attempts and ~3000 CPU-s (a generator change, about 160 regenerated site packages, a freshness gate target, plants); effect on CPU-s per landing: each paydown of the baseline then reruns one site instead of about 2138 targets' cache (a cone-shaped input), a saving of a fraction of the hooks site grid per baseline edit, unmeasured; effect on attempts: unblocks W2809 and W1989's retirement of the sharded :mutants. Not read: mutants_gen.py and defs.bzl. | 2026-11-20T14:23:44Z: 2026-11-20: W2805 landed; W2811 is no longer W2809's blocker (the first stack's three cells are not baselined); held behind W2809 by order (gate repair first, velocity-first), not by code. It is still the blocker for moving a BASELINED cell to a per-site target. | 2026-11-21T21:56:11Z: 2026-11-21 QUESTION FROM github-00 (W2839 review), with the fact it rests on: githook_pre_push.py::_stdin_bytes is line 13 of hooks/mutants-baseline.txt (survived), so it is recorded debt, yet its per-site target reads BASELINE (0 recorded): 1 rise and fails (BES 5ed0c0cb at W2839 r4 09b00ead, c62953cc at r3), because a site stages no baseline slice. Today the site is manual, so no red reaches //.... THE DECISION when W2822 flips the default so every site is gated: either (a) W2811 lands first, each site stages its own baseline slice and the cell reads as recorded debt with no rise, or (b) the cell goes on W2822 hooks/not-green-sites.txt citing W2811. (a) removes the whole class (the 4 baselined could-not-be-RUN cells, the 21 def-site and 15 declared survivors that are debt: 40 in all), (b) lists 40 cells to pay down twice. A baseline cannot take the cell by hand, but it already holds it. Recommendation: (a), W2811 first. | 2026-11-21T21:58:09Z: 2026-11-21 RULING (a) and A TEST ARM THAT MUST FAIL TODAY (github-00): W2811 lands first, so W2822 is blocked on it. The arm: a per-site run of a BASELINED cell must read as recorded debt with no rise. Concretely for githook_pre_push.py::_stdin_bytes (line 13 of hooks/mutants-baseline.txt, survived): its site log must read BASELINE (1 recorded in mutants-baseline.txt): 0 rise(s), and its target must pass (SURVIVED is the recorded verdict). TODAY it reads BASELINE (0 recorded): 1 rise(s) and FAILS (BES 5ed0c0cb at W2839 r4 09b00ead and c62953cc at r3), so the arm is RED before W2811 and green after, the before and after the card needs. A second arm, the converse: a per-site run of a cell that is NOT in the baseline and survives must still read as a rise and fail, so the slice cannot make a site lenient. A third: the slices reassemble to hooks/mutants-baseline.txt byte for byte (the freshness test already planned here). Cone shape stays: each site stages only its own line. | 2026-11-21T21:59:52Z: 2026-11-21 BLOCKERS RE-CHECKED (github-00 loose end): neither has landed, so neither is stale. W2809 (b112) is INFLIGHT in the gate, not landed, and W2811 edits the same generator and regenerated sites W2809 changes (mutants_gen.py, defs.bzl, hooks/sites BUILD files), so the order is real by FILE OVERLAP and not only by the earlier gate-repair-first order. ADDED: W2839 (r4 09b00ead, PASS-SUBMIT behind b112) rewrites render_module and generate in the same file and regenerates 15 site files, so a baseline-slice stack cut before W2839 lands would conflict on the same functions. W2805 and W2816 (the earlier blockers) are landed and not blockers. Nothing else blocks it: no gate repair, no round card, no new test file needed (the arms are planted in the existing runner module). The round check will still apply when it is cut. State: BLOCKED on W2809 and W2839, both ordering by file overlap, ready the moment W2839 lands.",
       "issued_at": "2026-11-20T12:33:34Z",
       "minted_during": "interrupt",
       "caused_by": "W2205",
-      "last_worked": "2026-11-20T14:23:44Z",
+      "last_worked": "2026-11-21T21:59:52Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -65122,7 +65123,7 @@
     {
       "symbol": "W2822",
       "title": "mutants_gen: flip the per-site default, every generated site target gated (tags = []) except a named, shrinking not-yet-green list, each entry citing its cause card",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W2775"
       ],
@@ -65131,14 +65132,16 @@
         "mutation",
         "gate-repair"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2811"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Read the duplicate cell (two labels, one cell), map each cause to its card W2825 to W2829, then write hooks/not-green-sites.txt and the mutants_gen flip in the scratch tree on top of b110, with its ratchet check, after b110 lands",
-      "evidence": "2026-11-20T20:52:18Z: 2026-11-20: OPERATOR RULING relayed by github-00 (host session 695f3e0a L201494, uuid d74e4874-beb6-4a6b-8f24-2f9ade5db514, 2026-11-20T20:50:38Z): 'At this point, there should be shard per mutant per shard.' The unit is one mutant, its own target with its own cone; the flat 597-shard grid with an exclusion list is scaffolding to retire (W2775, W1989). ORDER (github-00): b110 lands as is (the first three sites), then W2810's whole-suite re-run (critical path), then this flip as its own stack. COST TO WATCH: the gate then evaluates about 2138 small targets instead of 597; each re-runs only when its own cone changes (L97611). ESTIMATE as_of 2026-11-20, basis a guess and an analogue: own cost ~4 attempts and ~4000 CPU-s (generator change, ratchet file and its check, regenerated site BUILD files, plants); effect on gate CPU: unknown sign, the first reading is the measurement (the hooks grid costs about 15,800 CPU-s at 433 shards by the store; per-site targets stage narrower cones, so a cold run should cost about the same and a warm one less); cache-hit rate to be READ from the first gate after the flip, not predicted. HELD ON W2810, A REAL DEPENDENCY: the not-yet-green list is seeded from its measured list. | 2026-11-21T19:33:47Z: 2026-11-21: draft not-green list built from the W2810 measured list: 144 rows, 143 distinct cells (one cell appears under two labels, to be read before the list is cut). Causes: 43 could-not-run, 41+15 declared defect not killed, 37 def-site survived (21 of them baselined debt), 2 refused, 2 timed out. Draft lives in the session scratchpad, not tracked. Not yet in a stack: the flip rides after b110, which is held on the round draw.",
+      "evidence": "2026-11-20T20:52:18Z: 2026-11-20: OPERATOR RULING relayed by github-00 (host session 695f3e0a L201494, uuid d74e4874-beb6-4a6b-8f24-2f9ade5db514, 2026-11-20T20:50:38Z): 'At this point, there should be shard per mutant per shard.' The unit is one mutant, its own target with its own cone; the flat 597-shard grid with an exclusion list is scaffolding to retire (W2775, W1989). ORDER (github-00): b110 lands as is (the first three sites), then W2810's whole-suite re-run (critical path), then this flip as its own stack. COST TO WATCH: the gate then evaluates about 2138 small targets instead of 597; each re-runs only when its own cone changes (L97611). ESTIMATE as_of 2026-11-20, basis a guess and an analogue: own cost ~4 attempts and ~4000 CPU-s (generator change, ratchet file and its check, regenerated site BUILD files, plants); effect on gate CPU: unknown sign, the first reading is the measurement (the hooks grid costs about 15,800 CPU-s at 433 shards by the store; per-site targets stage narrower cones, so a cold run should cost about the same and a warm one less); cache-hit rate to be READ from the first gate after the flip, not predicted. HELD ON W2810, A REAL DEPENDENCY: the not-yet-green list is seeded from its measured list. | 2026-11-21T19:33:47Z: 2026-11-21: draft not-green list built from the W2810 measured list: 144 rows, 143 distinct cells (one cell appears under two labels, to be read before the list is cut). Causes: 43 could-not-run, 41+15 declared defect not killed, 37 def-site survived (21 of them baselined debt), 2 refused, 2 timed out. Draft lives in the session scratchpad, not tracked. Not yet in a stack: the flip rides after b110, which is held on the round draw. | 2026-11-21T21:37:48Z: 2026-11-21 CARRIED FROM github-00 (W2839 review): when the default flips and every site is gated, githook_pre_push:_stdin_bytes (a baselined-debt cell that a per-site target reads as SURVIVED with one baseline rise, BES c62953cc) and the other baselined cells must either be listed in hooks/not-green-sites.txt citing W2811 as their cause, or W2811 (a per-site baseline slice) must land first, or the cell baseline records that rise through the baseline tool own write path. A hand edit of the baseline does not count. Today it is manual (gated-sites.txt holds only three keys), so no red reaches //... | 2026-11-21T21:58:07Z: 2026-11-21 github-00 RULING (a): W2822 is BLOCKED ON W2811, so the default flip cannot happen first and nobody can hand-fill hooks/not-green-sites.txt. W2811 (a per-site baseline slice) clears the class of 40 baselined cells once, where listing them as not-green would pay them down twice. The other cells of the measured list (the staging, tool-env and bound causes) stay as their own cards and feed the not-green list only after W2811 has landed.",
       "issued_at": "2026-11-20T20:52:13Z",
       "minted_during": "interrupt",
       "caused_by": "W2809",
-      "last_worked": "2026-11-21T19:33:47Z",
+      "last_worked": "2026-11-21T21:58:07Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -65276,7 +65279,7 @@
     {
       "symbol": "W2826",
       "title": "hooks sites: 37 def-site mutants SURVIVE, per module add the assertion or the missing graph edge",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W2822"
       ],
@@ -65285,21 +65288,24 @@
         "mutation",
         "gate-repair"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2846",
+        "W2811"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Verify whether the executor has shellcheck (read a passing shellcheck test log for SKIPPED counts), then read privacy_audit and privacy_shipped (15 real survivors) for their cause; atomize per cause class like W2825",
-      "evidence": "2026-11-21T17:59:48Z: 2026-11-21 ESTIMATE as_of 2026-11-21, basis a guess: own cost ~2 attempts per module and ~1500 CPU-s each (a planted test per surviving site, one module at a time), 37 sites over an unknown module count; effect: each killed site leaves W2822's not-yet-green list; a hooks stack adds test files, so it waits on W2800 (the testgate repair) as every test-adding stack does. | 2026-11-21T20:08:12Z: 2026-11-21 GROUPED the 37 def-site survivors by module from the measured list (exact-id baseline split): privacy_audit 11 (1 debt), privacy_shipped 4 (1), commit_kata 3 (3), pycheck_ratchet_run 2 (2), presubmit 2 (2), vlogwatch 2 (2), shellcheck 2 (0), shellcheck_cli 1 (0), and one each in codon_probe, gatetrend_cli, vlogcli, requeue, entry, build_failure, stackrun, stacksnap, loadwait, traindrive (all debt). 21 debt plus 16 real, matching the earlier split. FIRST SITE READ, shellcheck_cli._print: its killing tests exist (test_a_file_with_a_finding_exits_one_and_names_it asserts SC2086 reaches stdout, the census and explain tests likewise) but every one carries skipif(shellcheck.linter() is None), so a sandbox without a shellcheck binary SKIPS them and the no-op mutant changes no verdict: the survivor is an environment fact, not a missing assertion. HYPOTHESIS, UNREAD: the 3 shellcheck-module survivors (shellcheck.baseline, _quote_tag, shellcheck_cli._print, all non-debt) share this cause. To verify: whether the remote executor image carries shellcheck. If it does not, the fix is to pin shellcheck as a declared tool in those site targets (hermeticity-in-bazel), not to plant tests. The privacy_audit 11 are the next read (a git-dependent module?).",
+      "evidence": "2026-11-21T17:59:48Z: 2026-11-21 ESTIMATE as_of 2026-11-21, basis a guess: own cost ~2 attempts per module and ~1500 CPU-s each (a planted test per surviving site, one module at a time), 37 sites over an unknown module count; effect: each killed site leaves W2822's not-yet-green list; a hooks stack adds test files, so it waits on W2800 (the testgate repair) as every test-adding stack does. | 2026-11-21T20:08:12Z: 2026-11-21 GROUPED the 37 def-site survivors by module from the measured list (exact-id baseline split): privacy_audit 11 (1 debt), privacy_shipped 4 (1), commit_kata 3 (3), pycheck_ratchet_run 2 (2), presubmit 2 (2), vlogwatch 2 (2), shellcheck 2 (0), shellcheck_cli 1 (0), and one each in codon_probe, gatetrend_cli, vlogcli, requeue, entry, build_failure, stackrun, stacksnap, loadwait, traindrive (all debt). 21 debt plus 16 real, matching the earlier split. FIRST SITE READ, shellcheck_cli._print: its killing tests exist (test_a_file_with_a_finding_exits_one_and_names_it asserts SC2086 reaches stdout, the census and explain tests likewise) but every one carries skipif(shellcheck.linter() is None), so a sandbox without a shellcheck binary SKIPS them and the no-op mutant changes no verdict: the survivor is an environment fact, not a missing assertion. HYPOTHESIS, UNREAD: the 3 shellcheck-module survivors (shellcheck.baseline, _quote_tag, shellcheck_cli._print, all non-debt) share this cause. To verify: whether the remote executor image carries shellcheck. If it does not, the fix is to pin shellcheck as a declared tool in those site targets (hermeticity-in-bazel), not to plant tests. The privacy_audit 11 are the next read (a git-dependent module?). | 2026-11-21T21:18:27Z: 2026-11-21 SURVIVOR CAUSES NOW SPLIT: the privacy_audit 11 and privacy_shipped 4 def-site survivors are the opa-env cause PROVEN FROM THE BUILD FILES (mutant_site sets no OPA_BIN or RUFF_BIN where the sharded grid does, so the opa tests skip): carried by W2846, with the fix shape recorded there. The shellcheck three (shellcheck.baseline, _quote_tag, shellcheck_cli._print) are a cone-narrowing question, not proven missing tool: the sharded grid kills them, so a test outside the cone probably does. The 21 baselined survivors are debt that W2811 (a per-site baseline slice) answers. What is left for this card is the 16 real survivors minus those: 11 plus 4 privacy (W2846), 3 shellcheck (read), and the singletons to read after W2846. | 2026-11-22T00:35:57Z: 2026-11-21 BLOCKED ON TWO REAL CAUSES, found by the survivor read, not on the park: of the 37 def-site survivors, 15 are the opa-env cause (mutant_site sets no OPA_BIN or RUFF_BIN where the sharded grid sets them, so the opa tests skip), carried by W2846 (itself behind W2847); 21 are baselined debt that a per-site target reads as a rise because it stages no baseline slice, which is W2811 (behind W2809 and W2839). The remaining 3 (shellcheck.baseline, _quote_tag, shellcheck_cli._print) are a cone-narrowing question to read by running the cell with the whole suite, after the staging and baseline fixes land. So no survivor of this card is fixable by a planted test until W2846 and W2811 land. The repository is also PARKED by an operator ruling relayed by github-00 (2026-11-21): no new card started.",
       "issued_at": "2026-11-21T17:59:35Z",
       "minted_during": "interrupt",
       "caused_by": "W2810",
-      "last_worked": "2026-11-21T20:08:12Z",
+      "last_worked": "2026-11-22T00:35:57Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2827",
       "title": "hooks sites: 31 declared defects SURVIVE, per cell a killing assertion or a stale declaration",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "W2822"
       ],
@@ -65308,14 +65314,17 @@
         "mutation",
         "gate-repair"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2846",
+        "W2811"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Read the two real non-privacy cells (rootdrop non-root-process-drops, commit_kata sudo-user-chosen-without-the-name) against their test lists, then close the rest of W2827 against W2846 and W2811 by citation",
-      "evidence": "2026-11-21T17:59:49Z: 2026-11-21 ESTIMATE as_of 2026-11-21, basis a guess: own cost ~2 attempts per cell and ~1500 CPU-s each (31 cells; a stale declaration is a one-line deletion, a missing assertion a planted test); effect: each fixed cell leaves W2822's list; stale lines found are residue to record, not silent deletions; test-adding stacks wait on W2800. | 2026-11-21T20:16:30Z: 2026-11-21 FIRST CELL READ, privacy_shipped declared cannot-judge-reads-as-a-finding (hooks/mutants.regex line 469, mutant: return privacy_audit.NO_JUDGE becomes return 1 in run): the killing test EXISTS (test_a_judge_that_cannot_judge_exits_two_and_is_never_a_finding asserts exit 2 for a dead opa and an absent policy) but the whole module carries pytestmark skipif(not _OPA), so a sandbox with no opa skips every test and the mutant changes no verdict. Same cause class as W2826 first site (shellcheck_cli._print, skipif no shellcheck): an environment fact, not a weak assertion or a stale line. This covers the privacy_* family (privacy_audit 11 and privacy_shipped 4 def-site survivors, 15 real) and plausibly most of the 16 declared survivors that are privacy cells. One shared card carries the fix: W2846 (declare opa and shellcheck as tools of the site targets). To read before W2846 is cut: that the executor image has neither tool (a passing site log shows no SKIPPED count, so the proof is a run with the tool declared, not a log). Remaining W2827 cells need their own read after W2846 classifies the tool-absent ones. | 2026-11-21T20:16:45Z: 2026-11-21 31 DECLARED SURVIVORS BY MODULE (exact-id baseline split): privacy_audit 10 (1 debt) and privacy_shipped 7 (2 debt) = 17 cells, the opa-absent class carried by W2846 (14 real); the other 14 are one cell each, 12 of them baselined debt (new_dist, gatejobs, repin_cli, pycheck_ratchet_write, subagent_guard, idle_stop, wheel, checkers, shardgate, stackahead, stackbuildfiles, round_wire) and 2 real and not baselined: rootdrop non-root-process-drops and commit_kata sudo-user-chosen-without-the-name. So W2827 splits: 17 to W2846, 12 debt cells that stay in the ratchet baseline (W2811 stages no baseline slice, so a debt cell reads as a failing site), 2 real per-cell reads.",
+      "evidence": "2026-11-21T17:59:49Z: 2026-11-21 ESTIMATE as_of 2026-11-21, basis a guess: own cost ~2 attempts per cell and ~1500 CPU-s each (31 cells; a stale declaration is a one-line deletion, a missing assertion a planted test); effect: each fixed cell leaves W2822's list; stale lines found are residue to record, not silent deletions; test-adding stacks wait on W2800. | 2026-11-21T20:16:30Z: 2026-11-21 FIRST CELL READ, privacy_shipped declared cannot-judge-reads-as-a-finding (hooks/mutants.regex line 469, mutant: return privacy_audit.NO_JUDGE becomes return 1 in run): the killing test EXISTS (test_a_judge_that_cannot_judge_exits_two_and_is_never_a_finding asserts exit 2 for a dead opa and an absent policy) but the whole module carries pytestmark skipif(not _OPA), so a sandbox with no opa skips every test and the mutant changes no verdict. Same cause class as W2826 first site (shellcheck_cli._print, skipif no shellcheck): an environment fact, not a weak assertion or a stale line. This covers the privacy_* family (privacy_audit 11 and privacy_shipped 4 def-site survivors, 15 real) and plausibly most of the 16 declared survivors that are privacy cells. One shared card carries the fix: W2846 (declare opa and shellcheck as tools of the site targets). To read before W2846 is cut: that the executor image has neither tool (a passing site log shows no SKIPPED count, so the proof is a run with the tool declared, not a log). Remaining W2827 cells need their own read after W2846 classifies the tool-absent ones. | 2026-11-21T20:16:45Z: 2026-11-21 31 DECLARED SURVIVORS BY MODULE (exact-id baseline split): privacy_audit 10 (1 debt) and privacy_shipped 7 (2 debt) = 17 cells, the opa-absent class carried by W2846 (14 real); the other 14 are one cell each, 12 of them baselined debt (new_dist, gatejobs, repin_cli, pycheck_ratchet_write, subagent_guard, idle_stop, wheel, checkers, shardgate, stackahead, stackbuildfiles, round_wire) and 2 real and not baselined: rootdrop non-root-process-drops and commit_kata sudo-user-chosen-without-the-name. So W2827 splits: 17 to W2846, 12 debt cells that stay in the ratchet baseline (W2811 stages no baseline slice, so a debt cell reads as a failing site), 2 real per-cell reads. | 2026-11-22T01:33:04Z: 2026-11-21 BLOCKED ON TWO REAL CAUSES (the declared-survivor read): of the 31 declared survivors, 17 are privacy_audit and privacy_shipped cells that skip for want of OPA_BIN in the per-site env (W2846, behind W2847), and 12 of the 14 single-cell ones are baselined debt a per-site target reads as a rise (W2811, behind W2809 and W2839). Only 2 are real and not baselined (rootdrop non-root-process-drops, commit_kata sudo-user-chosen-without-the-name); each needs a per-cell read against its test list, and that read is better done after the staging and tool-env fixes change which cells survive. The repository is parked by an operator ruling relayed by github-00: no new card started.",
       "issued_at": "2026-11-21T17:59:36Z",
       "minted_during": "interrupt",
       "caused_by": "W2810",
-      "last_worked": "2026-11-21T20:16:45Z",
+      "last_worked": "2026-11-22T01:33:04Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -65385,9 +65394,10 @@
       "issued_at": "2026-11-21T19:32:01Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1715",
-      "last_worked": null,
+      "last_worked": "2026-11-22T00:24:56Z",
       "ticks_blocked": 0,
-      "weight": 6
+      "weight": 6,
+      "completed": null
     },
     {
       "symbol": "W2831",
@@ -65399,128 +65409,153 @@
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "Wait for skills to confirm the row (their W26 is blocked on the bare repo name mtools until then), then close this card; send a new row on any landing that edits .claude/skills/struct-tools",
+      "evidence": "2026-11-21T21:35:55Z: 2026-11-21 ROW READ FROM THE OWNER GIT OBJECTS and sent as a letter to skills inbox: {repo mtools, path .claude/skills/struct-tools, sha 6b54fed2afc27dbcb72d640bb340dda0404b53f7, tree b5b2e01ac97bf36225a4b60e19c69342b9e9868e}. mtools owns one skill (ls-tree of .claude/skills at that sha shows struct-tools alone), the sha is a landed main tip, and the working tree equals it for that path (empty diff). Caveats stated in the letter: the pin is the skill tree not the repo, and none of the pending stacks touches .claude/skills, so the row stays valid until a landing edits struct-tools. NOT DONE: skills confirming the row, and their answer to re-pin on every such landing or on request.",
       "issued_at": "2026-11-21T19:32:08Z",
       "minted_during": "interrupt",
       "caused_by": "skills:W26",
-      "last_worked": null,
+      "last_worked": "2026-11-22T00:24:56Z",
       "ticks_blocked": 0,
-      "weight": 5
+      "weight": 5,
+      "completed": null
     },
     {
       "symbol": "W2832",
       "title": "Answer skills:W36: reviewed-loop cadence debt, G0 before every tick-open and G0/G1 after every tick",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "skills:W36"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2848",
+        "W2849",
+        "W2850",
+        "W2851"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-21T19:32:09Z",
       "minted_during": "interrupt",
       "caused_by": "skills:W36",
-      "last_worked": null,
+      "last_worked": "2026-11-21T21:37:57Z",
       "ticks_blocked": 0,
-      "weight": 3
+      "weight": 3,
+      "completed": null
     },
     {
       "symbol": "W2833",
       "title": "Answer skills:W43: the writer --render emits a blank line after its DERIVED comment",
-      "status": "working",
+      "status": "blocked",
       "enables": [
         "skills:W43"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2863"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Send review/W2833-render-blank-line to github-00, run bazel //pathsforward:all //:ruff at the sha in a fresh detached worktree, then tell skills the symbol W2833 once it lands",
       "evidence": "2026-11-21T20:15:11Z: 2026-11-21 BUILT in a scratch tree on 6b54fed2: render.py emits a blank line between the DERIVED comment and the heading (skills:W43, MD022); one new test in the EXISTING test_render.py (no new test file, so testgate is no bar); pathsforward warrants +1 via mikemol-gen-warrants --write; pycheck admits both py files; the whole pathsforward suite 1486 passed in the tree; no declared mutant in pathsforward/mutants.regex touches the changed line. NOT a hooks stack, so the shard guard does not apply, but the round check still will (W2833 is not in the round). Review ref review/W2833-render-blank-line 216d663993ff54a71f139dfaac51593a8fd60531. NOT DONE: bazel //pathsforward run at the sha, review by github-00, and a submit; the tracked mirror .claude/paths-forward.md here changes on the next render, not in this stack.",
       "issued_at": "2026-11-21T19:32:10Z",
       "minted_during": "interrupt",
       "caused_by": "skills:W43",
-      "last_worked": "2026-11-21T20:15:11Z",
+      "last_worked": "2026-11-21T22:13:34Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2834",
       "title": "Answer skills:W83: hook refusals name find-the-tool and --kinds refuses an unknown kind",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "skills:W83"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2852",
+        "W2853",
+        "W2854"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-21T19:32:11Z",
       "minted_during": "interrupt",
       "caused_by": "skills:W83",
-      "last_worked": null,
+      "last_worked": "2026-11-21T21:48:03Z",
       "ticks_blocked": 0,
-      "weight": 3
+      "weight": 3,
+      "completed": null
     },
     {
       "symbol": "W2835",
       "title": "Answer skills:W84: transcriptstruct count-only and projects-directory grep modes",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "skills:W84"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2856",
+        "W2857"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-21T19:32:12Z",
       "minted_during": "interrupt",
       "caused_by": "skills:W84",
-      "last_worked": null,
+      "last_worked": "2026-11-21T21:53:08Z",
       "ticks_blocked": 0,
-      "weight": 3
+      "weight": 3,
+      "completed": null
     },
     {
       "symbol": "W2836",
       "title": "Answer skills:W87: drain luthen run_git_clean into a shared tested scrubbed-git helper",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "skills:W87"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "blocked_on": [
+        "W2859",
+        "W2860",
+        "W2861",
+        "W2862"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Atomize by arm group, build in fence on top of b112 and W2800, tests folded into the existing fence/tests/test_git_env.py, one test per arm with its control, and send github-00 the design with the F3, F3b and C39 weighing before building",
+      "evidence": "2026-11-21T21:56:47Z: 2026-11-21 CAPABILITY SEARCH, read before design: (1) mtools already has fence/src/mikemol/fence/git_env.py clean_env, which removes every GIT_* variable and nothing else (tests: fence/tests/test_git_env.py against a decoy repo), plus the shell spelling git_env.sh git_scrubbed; (2) luthen-observability checks/run_tool.py run_git_clean is the SAME rule, scrubbed_env (no GIT_* prefix) plus a caller-chosen pin of GIT_* variables and exit 127 when git is absent; it adds nothing the fence function lacks except the pin and the no-git refusal. So the shared helper that exists covers ONE of the eight arms in skills W87 spec (arm 6, the GIT_* scrub). The other seven are NOT covered anywhere: the working-directory ceiling (1), both config layers (2), file hooks with an empty template and core.hooksPath (3), config hooks (4), signing (5), the identity (7) and the refusal to run outside the helper temp dir (8). DESIGN CHOICE: extend, do not duplicate: a new importable fence module (isolated git: an environment plus a runner that creates the temporary repository, taking clean_env as its first step) so luthen switches run_git_clean to the shared function and the scrub rule stays one spelling. The skills spec F3 and F3b and C39 findings are to be weighed at this card own review (the signer stub must emit SIG_CREATED, arm 2 refuses when /etc/gitconfig is absent, EMAIL scrubbed, GIT_CONFIG_PARAMETERS and GIT_CONFIG_COUNT scrubbed, an empty-template arm). A new test file in a dist tests directory is refused by the sandbox tests until W2800 lands, so the build waits on W2800 or folds its tests into the existing fence test_git_env.py.",
       "issued_at": "2026-11-21T19:32:13Z",
       "minted_during": "interrupt",
       "caused_by": "skills:W87",
-      "last_worked": null,
+      "last_worked": "2026-11-21T21:56:53Z",
       "ticks_blocked": 0,
-      "weight": 3
+      "weight": 3,
+      "completed": null
     },
     {
       "symbol": "W2837",
       "title": "round reader: refuse an unstamped round or type it Stamped or Unstamped, source_note prints unstamped for None",
-      "status": "ready",
+      "status": "working",
       "enables": [
         "W2824"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "",
-      "evidence": "",
+      "next_bounded_step": "After W2824 lands: cut on its sha, round_reason returns None on an unstamped round, source_note takes datetime, plant the unstamped case in the existing test_round_wire module, send github-00 the sha",
+      "evidence": "2026-11-21T22:05:52Z: 2026-11-21 READ OF THE CODE (round_wire.py in the W2824 build f33de99c): the maybe is DEAD, which makes the fix smaller than the two options github-00 offered. source_note(seen: datetime | None) prints \"unstamped\" for None, but round_reason only reaches it after refusals(...) returned something, and refusals returns [] whenever published_at(text) is None (line 307 to 309: a round with no stamp, or a stale one, judges nothing). So the \"unstamped\" branch is unreachable by any input: published_at is simply read TWICE, once in round_reason and once in refusals, and the second read is what guarantees the first is not None. FIX: in round_reason, return None right after reading when the stamp is None (an unstamped round can say nothing, exactly what refusals already does), then pass the stamp as a plain datetime to source_note(seen: datetime), dropping the None branch and the word unstamped. Behaviour is unchanged. PLANT: a round file with no as_of line gives None from round_reason (the existing refusals test names stale and unstamped as empty), and source_note takes a datetime only (mypy refuses None). It edits round_wire.py and its existing test module, a hooks stack, and touches the same function W2824 adds, so it waits for W2824 to land and is cut on that sha, not folded into the reviewed f33de99c.",
       "issued_at": "2026-11-21T19:34:44Z",
       "minted_during": "interrupt",
       "caused_by": "W2824",
-      "last_worked": null,
+      "last_worked": "2026-11-21T22:05:52Z",
       "ticks_blocked": 0,
-      "weight": 1
+      "weight": 1,
+      "completed": null
     },
     {
       "symbol": "W2838",
@@ -65545,20 +65580,20 @@
     },
     {
       "symbol": "W2839",
-      "title": "hooks sites: every site target stages the dist suite data (a suite_data filegroup over _SUITE_DATA, emitted by mutants_gen), one fix for 71 cells",
-      "status": "working",
+      "title": "hooks sites: each site target stages the data its own tests read (hooks/site-data.txt per test, a cell takes the union), the input rule",
+      "status": "ready",
       "enables": [
         "W2825"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Build in a scratch tree on top of W2809 (mutants_gen render_module and test, hooks/BUILD.bazel filegroup, regenerated site BUILD files), plant the failing case (a site whose control reads a staged file) in the existing test_mutate_runner module, and re-measure the 72 cells after it lands",
-      "evidence": "2026-11-21T20:17:58Z: 2026-11-21 COUNT CORRECTED by W2828: one declared warrant_crosscheck cell also fails its control for the same missing count_test_functions.py, so this card clears 13 site cells. | 2026-11-21T20:20:33Z: 2026-11-21 COLLAPSE, AUDITED: the five staging cards W2838 to W2842 name different files but ONE mechanism. Every file they name is already a member of hooks/BUILD.bazel _SUITE_DATA, the list declared once (W2340) for the data every TEST target stages: the live routing table .claude/skills/struct-tools/SKILL.md (W2838), //:count_test_functions.py (W2839), adopt/tools-hook (W2840), tests/fixtures/queue/alpha/paths-forward.json and .ledger (W2841), .claude/settings.json and the .githooks scripts (W2842). The sharded :mutants stages _SUITE_DATA; the per-site mutant_site targets stage only the module, its cone and its tests (mutants_gen.render_module), so a test that reads or executes a staged file fails its CONTROL and the cell is ERRORED. Distinct equal-mechanism check: the five groups share the failing-control shape in all 47 plus 25 logs (72 cells, 71 distinct sites by the duplicate-cell note), and the fix for each is the same generated line. FIX: hooks/BUILD.bazel gains a filegroup suite_data over _SUITE_DATA (or the dist exports it), mutants_gen.render_module adds //<dist>:suite_data to every site data when the dist declares it (a sibling of the gated_sites.bzl mechanism in W2809), and the regenerated sites stage it. Non-py data changes rarely, so cone caching is kept. It is a hooks BUILD plus a generator stack, so it rides the chain (W2844). W2838, W2840, W2841 and W2842 are covered by this card and are blocked on it, not dropped: each keeps its own cell list as its own witness for the re-measure.",
+      "next_bounded_step": "Submit r4 after b112 lands and github-00 confirms; then re-measure the 72 cells",
+      "evidence": "2026-11-21T20:17:58Z: 2026-11-21 COUNT CORRECTED by W2828: one declared warrant_crosscheck cell also fails its control for the same missing count_test_functions.py, so this card clears 13 site cells. | 2026-11-21T20:20:33Z: 2026-11-21 COLLAPSE, AUDITED: the five staging cards W2838 to W2842 name different files but ONE mechanism. Every file they name is already a member of hooks/BUILD.bazel _SUITE_DATA, the list declared once (W2340) for the data every TEST target stages: the live routing table .claude/skills/struct-tools/SKILL.md (W2838), //:count_test_functions.py (W2839), adopt/tools-hook (W2840), tests/fixtures/queue/alpha/paths-forward.json and .ledger (W2841), .claude/settings.json and the .githooks scripts (W2842). The sharded :mutants stages _SUITE_DATA; the per-site mutant_site targets stage only the module, its cone and its tests (mutants_gen.render_module), so a test that reads or executes a staged file fails its CONTROL and the cell is ERRORED. Distinct equal-mechanism check: the five groups share the failing-control shape in all 47 plus 25 logs (72 cells, 71 distinct sites by the duplicate-cell note), and the fix for each is the same generated line. FIX: hooks/BUILD.bazel gains a filegroup suite_data over _SUITE_DATA (or the dist exports it), mutants_gen.render_module adds //<dist>:suite_data to every site data when the dist declares it (a sibling of the gated_sites.bzl mechanism in W2809), and the regenerated sites stage it. Non-py data changes rarely, so cone caching is kept. It is a hooks BUILD plus a generator stack, so it rides the chain (W2844). W2838, W2840, W2841 and W2842 are covered by this card and are blocked on it, not dropped: each keeps its own cell list as its own witness for the re-measure. | 2026-11-21T21:17:29Z: 2026-11-21 BUILT on top of W2809 r3 (670ff7fc), review/W2839-site-suite-data 08fe573b68892549ce3a72e425caa243e0458d16. WHAT: hooks/BUILD.bazel declares filegroup suite_data over _SUITE_DATA (visible to //hooks/sites:__subpackages__); check_mutants/mutants_gen.py declares_suite_data(dist_dir) reads the dist BUILD for name = \"suite_data\" and render_module(..., *, suite_data) adds //<dist>:suite_data to EVERY cell def-site and declared of every module; the hooks sites regenerated: 203 site BUILD files plus hooks/BUILD.bazel, 204 files written, 2529 insertions and 1 deletion, one added data line per cell. Two planted tests in the EXISTING test_mutate_runner module (the failing case: a dist declaring the filegroup has every cell stage it, counted per BUILD file against the cell count; the control: no filegroup stages nothing, and a comment or a longer name such as suite_data_extra is not a declaration); check_mutants/warrants.bib +2 by gen-warrants --layout atom --prune. 149 runner tests pass in the tree, pycheck admits both py files (two lint findings fixed first: a keyword-only boolean flag, a docstring width). RUN AT THE SHA: bazel test of one site from each failing group (runproc:run, structural_query:main, gen_warrants:prune, work_claims_hook:main, githook_pre_push:_stdin_bytes, gatephase:declared_summary-read-past-the-block) plus //:test_mutate_runner //:ruff //:mypy_check_mutants running in a fresh detached worktree. NOT DONE: that run, github-00 review, the submit (a hooks stack behind b112, which it is based on), the re-measure of the 72 cells. | 2026-11-21T21:21:18Z: 2026-11-21 RUN AT 08fe573b (BES 91b8c659-f813-4d6f-8d07-de14fca0f368): 8 of 9 pass. PASS: runproc:run (was errored on test_adopt_launcher), structural_query:main (routing table), gen_warrants:prune (count_test_functions), work_claims_hook:main (queue fixture), gatephase:declared_summary-read-past-the-block (.githooks/pre-commit), and //:test_mutate_runner //:ruff //:mypy_check_mutants. So the staging fix turns the five failing groups green: one site from each of them. FAIL, as predicted and not a regression: githook_pre_push:_stdin_bytes now RUNS (its control passes) and reads SURVIVED, with BASELINE (0 recorded) and 1 rise: it is one of the 4 baselined-debt cells that a per-site target reports because a site stages no baseline slice (W2811), debt that hooks/mutants-baseline.txt already carries. That is the staging question answered and the baseline question exposed, exactly the split the W2810 list recorded (4 of the could-not-run rows were baselined). NOT DONE: github-00 review, the submit behind b112, the re-measure of all 72 cells. | 2026-11-21T21:27:48Z: 2026-11-21 REVISED per github-00 (REVISE of 08fe573b: all 203 sites got the whole _SUITE_DATA, a coarse input set: with coarse inputs split the source, never collapse the targets). r2: review/W2839-site-suite-data-r2 25a8d3f60a9f1f226b664711b2846e0c6809d8e9 on r3 670ff7fc. The suite_data filegroup is GONE. hooks/site-data.txt maps each test file to the labels it needs (named, never a glob, one line per test: routing table SKILL.md, count_test_functions.py, adopt/tools-hook, the queue fixture json, .githooks/pre-commit, .claude/settings.json, .githooks/pre-push, standing launcher and policy); mutants_gen reads it (read_site_data, refusing by line a line with no label, a repeated test, a missing test file, a non-label) and a cell stages the UNION over the tests it runs. Result: 15 of 204 files change (the sites whose cone includes a mapped test; a narrow-cone site gains nothing), not 203. INPUT-MUTATION ARM (the witness github-00 asked for), run locally in the scratch tree: each file moved aside, its test run: 9 of 10 local files NEEDED (baseline pass, test RED without the file), 1 NOT PROVEN: the queue fixture .ledger, which test_work_claims_fixture does not need, so it was REMOVED from the list; @opa//file was also removed because no local arm can prove it and the standing test needs OPA_BIN, which is W2846. Tests: 3 planted in the existing runner module (a cell stages the union of its tests and a file read by one test never lands in a site that does not run it; no list stages nothing extra; a malformed list is refused by line), 150 runner tests pass, pycheck admits, warrants +3. RUN AT THE SHA: bazel on one site per group plus //:test_mutate_runner //:ruff //:mypy_check_mutants running. | 2026-11-21T21:45:38Z: 2026-11-21 r4 BUILT (operator via github-00: declare the data in the test, in a parsable standard; chosen form pytest marker): review/W2839-site-suite-data-r4 09b00eadcd53fbcaaf6258e726a9543ae946bc56 on W2809 r3 670ff7fc. CAPABILITY SEARCH first: no PEP 723 in mtools, tomllib only for config, summit capability header/pep723/marker no entry (frontmatter is gabion for governed docs), and an existing per-file convention in this cone: pytest markers registered under strict-markers in hooks/pyproject.toml plus module-level pytestmark. WHAT: eight hooks test modules each declare pytestmark = pytest.mark.stages(\"//pkg:path\", ...) (routing_table, gen_warrants_write, adopt_launcher, work_claims_fixture, gate_phase_marks, no_verify, githook_pre_push, standing_facts); hooks/pyproject.toml registers stages; mutants_gen reads them with ast and refuses by module and line a non-literal argument, a label that is no //pkg:path, a label whose file does not exist, a marker through a variable or a decorator (the read is total, so no marker pytest applies is unseen), and a stages marker outside the module-level pytestmark; hooks/site_exports.bzl is GENERATED from the same labels (same REGENERATE header) and hooks/BUILD.bazel loads SITE_EXPORTS into exports_files, so the hand-listed block is gone; site-data.txt is deleted; a cell stages the union over its tests (15 site files change); mutants_gen --check goes stale when a marker and the file disagree (planted). Tests: 4 in the EXISTING runner module (union, exports derived and stale on a changed marker, no markers stages nothing, wrong markers refused by line), 151 runner tests pass, pycheck admits every changed py file, warrants +3 -2. DEVIATION FROM github-00 requirement 2, STATED: the cross-check against pytest own marker API is W2847; r4 makes the ast read refuse any marker it cannot see instead, which plants the variable and decorator cases. COST: the pyproject edit and eight test-module edits rerun the whole sharded hooks grid once (every shard stages pyproject and tests), the same cost class as the test edits already in b112. RUN AT THE SHA: bazel on a site per group, the eight changed hooks tests, graph_fresh, runner tests, ruff, mypy running. | 2026-11-21T21:52:59Z: 2026-11-21 r4 SAMPLE OF RECORD (so no rerun drops a cell): the bazel sample is 18 targets with their expected verdicts. GREEN (17): hooks/sites/src/mikemol/hooks/runproc:run, structural_query:main, gen_warrants:prune, work_claims_hook:main, gatephase:declared_summary-read-past-the-block, //hooks:graph_fresh, //hooks:test_routing_table, test_gen_warrants_write, test_adopt_launcher, test_work_claims_fixture, test_gate_phase_marks, test_no_verify, test_githook_pre_push, test_standing_facts, //:test_mutate_runner, //:ruff, //:mypy_check_mutants. DECLARED RED (1, W2811 debt, accepted by github-00): hooks/sites/src/mikemol/hooks/githook_pre_push:_stdin_bytes, which must read control passes, the cell runs, SURVIVED, BASELINE (0 recorded): 1 rise. r4 at 09b00ead: the 17 green BES 9b1a4276-60b4-42d1-89bc-a1ddc8312ba2, the red one BES 5ed0c0cb-d609-49a5-9061-7b237bfc7f5b, exactly as in r3. A first verdict line dropped the red cell by oversight and was corrected. | 2026-11-22T00:24:19Z: 2026-11-21 PARKED (operator ruling relayed by github-00). github-00 PASS-SUBMIT of W2839 r4 review/W2839-site-suite-data-r4 09b00eadcd53fbcaaf6258e726a9543ae946bc56 (parent W2809 r3 670ff7fc). CONDITIONS: bazel green at the sha (met: 17 of 17, BES 9b1a4276-60b4-42d1-89bc-a1ddc8312ba2, plus the known W2811 red githook_pre_push:_stdin_bytes BES 5ed0c0cb-d609-49a5-9061-7b237bfc7f5b reading as in r3), and it SUBMITS AFTER b112 (W2809, inflight). One-time rerun of the whole grid accepted. Cached run is sound because inputs are declared (operator ruling).",
       "issued_at": "2026-11-21T19:35:43Z",
       "minted_during": "interrupt",
       "caused_by": "W2825",
-      "last_worked": "2026-11-21T20:20:33Z",
+      "last_worked": "2026-11-22T00:24:56Z",
       "ticks_blocked": 0,
       "completed": null
     },
@@ -65628,78 +65663,606 @@
     {
       "symbol": "W2843",
       "title": "Ask nemik: the file observer reports only exists, so a nemik-witnesses query on input.file mtime can never hold",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2824"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "nemik"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "2026-11-21T20:43:31Z: 2026-11-21 STAND-IN RECORDED (github-00 note): until nemik reports mtime, a wait for a round republication uses the now observer, input.now compared as an ISO string (input.now is an ISO timestamp string, so input.now.epoch is not a field and a first attempt on it never evaluated; the string compare was proven with a one-shot that HELD). The wait in use is input.now > \"2026-11-21T21:12:00\", just past the next hourly publication (last as_of 2026-11-21T20:06:08Z); on firing, round.json is read directly. It costs nothing but cannot see that a publication happened, only that one was due. NEXT IF THE ROUND STILL OMITS W2809: first suspect the POLICY rule (W2809 is ready while trust-boundary cards are open on hooks), so send github-00 the round list and the nemik-rank --check POLICY lines naming W2809 before concluding nemik ignores the edges, and report whether the round is computed from the POLICY-filtered order.",
+      "evidence": "2026-11-21T20:43:31Z: 2026-11-21 STAND-IN RECORDED (github-00 note): until nemik reports mtime, a wait for a round republication uses the now observer, input.now compared as an ISO string (input.now is an ISO timestamp string, so input.now.epoch is not a field and a first attempt on it never evaluated; the string compare was proven with a one-shot that HELD). The wait in use is input.now > \"2026-11-21T21:12:00\", just past the next hourly publication (last as_of 2026-11-21T20:06:08Z); on firing, round.json is read directly. It costs nothing but cannot see that a publication happened, only that one was due. NEXT IF THE ROUND STILL OMITS W2809: first suspect the POLICY rule (W2809 is ready while trust-boundary cards are open on hooks), so send github-00 the round list and the nemik-rank --check POLICY lines naming W2809 before concluding nemik ignores the edges, and report whether the round is computed from the POLICY-filtered order. | 2026-11-21T22:06:35Z: 2026-11-21 BLOCKED ON NEMIK, A REAL BLOCKER: the ask is a letter in nemik inbox (2026-11-21-mtools-file-observer-reports-only-exists.md) that the file observer report mtime, citing mtools:W2843. nemik has no live session (github-00 ran ListAgents and found none), so no waypoint of nemik cites W2843 yet; the block is on the bare repo name until nemik mints one and tells us its symbol. The stand-in meanwhile is the now observer (input.now compared as an ISO string), recorded above. The operator said they cannot wake nemik from here, so this does not wait on them either.",
       "issued_at": "2026-11-21T20:09:30Z",
       "minted_during": "interrupt",
       "caused_by": "W2824",
-      "last_worked": "2026-11-21T20:43:31Z",
+      "last_worked": "2026-11-21T22:06:35Z",
       "ticks_blocked": 0,
-      "weight": 1
+      "weight": 1,
+      "completed": null
     },
     {
       "symbol": "W2844",
       "title": "Ask nemik: admit a gate-repair card on the critical path to the round, or list W2824, so the round check can pass the stack that fixes it",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2824"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "nemik"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-21T22:06:37Z: 2026-11-21 BLOCKED ON NEMIK, A REAL BLOCKER BUT NO LONGER ON THE CRITICAL PATH: the letter in nemik inbox (2026-11-21-mtools-round-admits-no-gate-repair-card.md) asks nemik to admit a gate-repair card on the critical path to the round or to list W2824. nemik has no live session and the operator cannot wake it, so the operator ruled to decompose instead; that worked: the next round (as_of 2026-11-21T20:48:26Z) listed W2809 at rank 1 after the edges were recorded, and b112 was admitted. The ask stays open for the producer to read, but nothing waits on it now.",
       "issued_at": "2026-11-21T20:11:23Z",
       "minted_during": "interrupt",
       "caused_by": "W2824",
-      "last_worked": null,
+      "last_worked": "2026-11-21T22:06:37Z",
       "ticks_blocked": 0,
-      "weight": 1
+      "weight": 1,
+      "completed": null
     },
     {
       "symbol": "W2845",
       "title": "Shard guard real repair: decompose hooks mutants_195 along its import cones into separate targets, never a shards= bump",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2800"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2809"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
-      "evidence": "",
+      "evidence": "2026-11-21T22:12:56Z: 2026-11-21 BLOCKED ON W2809, A REAL DEPENDENCY OF ITS PREMISE: W2845 exists because mutants_195 read 159 CPU s of 300 (53%) at the W2800 submit. mutants_195 is one of the three shards b112 (W2809) takes its never-ending cell out of (shards 290, 195 and 579, about 120 CPU s each): the reviewed run read them at about 34, 33 and 33 CPU s, and the heaviest shard at about 135 s, under the guard half. So whether a cone decomposition of mutants_195 is still needed is decided by b112 gate run own grid reading, not by the 159 s that predates it. Re-read after b112 lands: if the heaviest shard is under half the guard needs no shards change and this card is stale (drop it with the reading); if mutants_195 or another shard is still past half, decompose that one along its import cones. b112 is in the gate (inflight) and has no verdict yet.",
       "issued_at": "2026-11-21T20:13:48Z",
       "minted_during": "interrupt",
       "caused_by": "W2775",
-      "last_worked": null,
+      "last_worked": "2026-11-21T22:12:56Z",
       "ticks_blocked": 0,
-      "weight": 4
+      "weight": 4,
+      "completed": null
     },
     {
       "symbol": "W2846",
       "title": "hooks sites: tests skip when opa or shellcheck is absent so their mutants survive, declare the tool in the site targets (privacy_*, shellcheck*)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2822"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2847"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "After W2839 lands: mutant_site tool_env plus the dist-declared SITE_ENV emitted by mutants_gen, a planted test that a dist declaring it has every site carry its env, then re-measure the privacy cells; read the shellcheck three by running each cell with the whole suite",
+      "evidence": "2026-11-21T21:18:35Z: 2026-11-21 CAUSE READ FROM THE BUILD FILES, not hypothesised: the sharded //hooks:mutants runs every test with the TOOLS the test targets get. hooks/BUILD.bazel _TEST_ENV is {RUFF_BIN: the location of @mikemol_check_ruff//:bin, OPA_BIN: the location of @opa//file} and the sharded grid passes env = _TEST_ENV (line 535) and stages @opa//file inside _SUITE_DATA (line 210). The per-site macro mutant_site (check_mutants/defs.bzl line 123) sets only MUTATE_SITE, MUTATE_TESTS, MUTATE_VENV and MUTATE_SHARD_CPU_S: no OPA_BIN and no RUFF_BIN, so test_privacy_shipped (pytestmark skipif(not _OPA)) and the other opa tests SKIP in every site and the mutants survive. So the opa half is MISSING ENV, not a missing binary in the executor image, and the privacy family (privacy_audit 11 plus privacy_shipped 4 def-site and 17 declared, 14 real survivors in all) is this one cause. The W2839 filegroup stages @opa//file as part of suite_data but does not set the variable. FIX SHAPE: mutant_site takes the dist env (a tool_env dict) and the generator emits it from a dist-declared table, for example hooks/site_env.bzl exporting SITE_ENV equal to _TEST_ENV with its tool labels in the site data, so the tools are named in one place per dist (the same table the tests use). SHELLCHECK is NOT proven by this: no shellcheck label appears in hooks/BUILD.bazel for the test targets, and the sharded grid kills shellcheck.baseline, _quote_tag and shellcheck_cli._print, so there another test outside the import cone probably kills them: the shellcheck three are a CONE-NARROWING question (a console-script test outside the cone), to be read by running the cell with the whole suite.",
+      "issued_at": "2026-11-21T20:16:23Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2826",
+      "last_worked": "2026-11-21T22:17:07Z",
+      "ticks_blocked": 0,
+      "weight": 2,
+      "completed": null
+    },
+    {
+      "symbol": "W2847",
+      "title": "check_mutants input-mutation mode: for every label of hooks/site-data.txt, removing it must turn its test RED, run on every change to that file",
+      "status": "blocked",
+      "enables": [
+        "W2846"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2839"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Read mutants_gen and defs.bzl: prefer emitting the exports list from site-data.txt as a loaded bzl (one source), else a check mode comparing the two lists; plant the failing case (a named file not exported) and the converse; then the input-mutation mode",
+      "evidence": "2026-11-21T21:31:43Z: 2026-11-21 ADDED BY github-00 (review of W2839 r3 ca7cacd9): the four hooks-package files of hooks/site-data.txt are listed in TWO places, its own lines and the exports_files block in hooks/BUILD.bazel, so they can drift apart. THIS CARD THEREFORE ALSO CHECKS: fail when site-data.txt names a //hooks file that the block does not export (the analysis failure of the r2 bazel run, BES 33cced01: not visible from the site package), and fail when the block exports a file that site-data.txt no longer names. A single source would be better still (mutants_gen could emit the exports list from site-data.txt the way it emits gated_sites.bzl, as a bzl the BUILD loads), and that is the first thing to weigh: it removes the second list instead of checking it. The input-mutation arm itself: for every label of site-data.txt, removing it must turn its test RED (the W2839 witness run: 9 of 10 files needed, the queue fixture ledger not, @opa//file unproven locally). | 2026-11-21T22:29:15Z: 2026-11-21 BLOCKED ON W2839, A REAL DEPENDENCY: the input-mutation mode reads the stages markers that exist only in W2839 r4 (09b00ead), and checks them against the site_exports.bzl W2839 generates; neither is on main until W2839 lands after b112. Its design is fixed by then: read the markers (ast, and pytest own marker API as the cross-check github-00 asked for), for every label remove the file from a copy of the tree and the test must go RED, and fail when a stages label names a //hooks file the exports do not carry or the exports carry one no test declares (now derived from the markers, so that second check reduces to the staleness test W2839 plants). NOT STARTED beyond that.",
+      "issued_at": "2026-11-21T21:29:05Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2839",
+      "last_worked": "2026-11-21T22:29:15Z",
+      "ticks_blocked": 0,
+      "weight": 2,
+      "completed": null
+    },
+    {
+      "symbol": "W2848",
+      "title": "Writer --tick-open refuses when no card evidence carries a G0 line newer than the last --tick-close (skills:W36 refusal 1)",
+      "status": "blocked",
+      "enables": [
+        "W2832"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2863"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-21T21:37:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2832",
+      "last_worked": "2026-11-21T22:13:36Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2849",
+      "title": "Writer --tick-close --blocked-by refuses a card that is ready with no ask or blocker of its own (skills:W36 refusal 2)",
+      "status": "blocked",
+      "enables": [
+        "W2832"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2863"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-21T21:37:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2832",
+      "last_worked": "2026-11-21T22:13:37Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2850",
+      "title": "mikemol-commit prints a refusal or warning naming a landing made with no open tick (skills:W36 refusal 3)",
+      "status": "blocked",
+      "enables": [
+        "W2832"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2809"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-21T22:35:37Z: 2026-11-21 BLOCKED ON W2809, REAL BY FILE OVERLAP AND THE SHARD GUARD: skills:W36 refusal 3 (mikemol-commit prints a refusal or warning naming a landing made with no open tick) is a change to hooks commit_kata, so it is a hooks stack: the shard guard refuses it unless it carries hooks/BUILD.bazel, which only b112 (W2809, inflight) changes, and it touches the same commit_kata the b112 bounds and W2800 edit. DESIGN TO CHECK WHEN CUT, not read yet: how a landing learns that a tick is open (the writer keeps a lock with a holder and a taken_at in the queue file, and the session hooks report a tick lock free or held), whether mikemol-commit reads that without importing the writer (hooks cannot import pathsforward at runtime, as W2786 found), and whether the answer is a refusal or a warning (skills asked for either). It adds a test file or edits an existing module, so W2800 also bears on it. Ordered behind W2809 and W2800.",
+      "issued_at": "2026-11-21T21:37:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2832",
+      "last_worked": "2026-11-21T22:35:37Z",
+      "ticks_blocked": 0,
+      "weight": 5,
+      "completed": null
+    },
+    {
+      "symbol": "W2851",
+      "title": "Writer --reviewing names the running reviewer ids when it refuses an id that is not running (skills:W83 smaller finding)",
+      "status": "blocked",
+      "enables": [
+        "W2832"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2863"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "",
+      "issued_at": "2026-11-21T21:37:57Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2832",
+      "last_worked": "2026-11-21T22:13:39Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2852",
+      "title": "Hooks: the no-chaining and structural-query refusals also name find-the-tool and its search order (skills:W83 ask 1)",
+      "status": "blocked",
+      "enables": [
+        "W2834"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2809"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-21T22:39:43Z: 2026-11-21 BLOCKED ON W2809, THE SHARD GUARD: the no-chaining and structural-query refusals are hooks source (this repo hooks dist), so the change is a hooks stack and the guard refuses it unless it carries hooks/BUILD.bazel, which only b112 (W2809, inflight) changes. TWO FACTS TO READ WHEN IT IS CUT: (1) the skills letter says the find-the-tool skill is NOT installed in the fleet until the host change review lands it, so the refusal text should name a skill that exists by the time the stack lands: check that the skill is installed before pointing a refusal at it. (2) the refusal text today ends see .claude/skills/struct-tools/SKILL.md; the ask is to add find-the-tool with its search order (list the pinned bin, summit capability <need>, read the tool source, card the missing mode). The no-chaining refusal text is pinned by existing tests in the hooks dist, so the plant is an edit of those expected texts in the EXISTING modules, no new test file.",
+      "issued_at": "2026-11-21T21:48:03Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2834",
+      "last_worked": "2026-11-21T22:39:43Z",
+      "ticks_blocked": 0,
+      "weight": 4,
+      "completed": null
+    },
+    {
+      "symbol": "W2853",
+      "title": "transcriptstruct --kinds refuses an unknown block kind and points at --human or --prose --speakers (skills:W83 observation)",
+      "status": "ready",
+      "enables": [
+        "W2834"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "On the bazel run send github-00 the sha and verdict; then the zero-hit note (print the block kinds present when a grep finds nothing), also in the existing module",
+      "evidence": "2026-11-21T21:48:28Z: 2026-11-21 READ: transcriptstruct/src/mikemol/transcriptstruct/cli.py main passes --kinds straight to grep_blocks as block_kinds (query.py line 201 filters block.kind in block_kinds), so an unknown kind matches nothing and prints a count of zero hits. DESIGN: block kinds are an OPEN set (the decoder keeps whatever type the record carries, blocks.py lines 79 and 114, with \"?\" for a non-string), so a closed whitelist would refuse a legitimate new kind (image, redacted_thinking). The refusal is therefore on the SPEAKER names, which the tool documents (cli.py _DEFAULT_SPEAKERS is human, peer, assistant; --prose --speakers and --human take them): refuse any --kinds value that is a speaker kind, exit 2 with a message that names --human and --prose --speakers, as argparse already refuses an unknown flag. A kind that is neither a speaker nor in this transcript is still a quiet zero, so ALSO print on a zero-hit --grep the block kinds the transcript does carry (the stats mode already counts them). Both are planted in the existing transcriptstruct tests (a speaker kind refused naming the right flags, a real block kind unchanged, a zero-hit grep names the kinds present). A transcriptstruct-only change, not a hooks stack, so the shard guard does not apply; the round check will. | 2026-11-21T23:03:21Z: 2026-11-21 BUILT on main 6b54fed2: review/W2853-kinds-refuses-speakers 300b89f8ec63131f78442eb27805bb2f10f32468 (transcriptstruct only: cli.py, tests/test_cli.py, warrants.bib; a non-hooks stack, no shard guard). WHAT: _refuse_speakers(kinds) in cli.py, called in the --grep branch, refuses any --kinds value that is a speaker name (human, peer, assistant, the documented _DEFAULT_SPEAKERS) with exit 2 through the parser own error: --kinds takes block kinds (text, thinking, tool_use, tool_result), not speaker kinds (human); use --human TEXT or --prose --speakers human. A real block kind is NOT refused, since block kinds are an open set (a whitelist would refuse a new legitimate kind). The helper holds it because main was at the local-variable cap. TESTS (2, in the EXISTING test_cli.py): the speaker kind is refused naming --human TEXT and --prose --speakers human; the control, --kinds text, still runs and prints its denominators line. 223 transcriptstruct tests pass in the tree, pycheck admits both py files, warrants +2. NOT DONE HERE: the second half of the original ask, a zero-hit --grep naming the block kinds the transcript does carry (stays on this card); the bazel run at the sha is running. | 2026-11-22T00:24:21Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2853 review/W2853-kinds-refuses-speakers 300b89f8ec63131f78442eb27805bb2f10f32468 (main 6b54fed2). CONDITION: submits AFTER b112. Bazel green at the sha (42 of 42, BES 374b13b4-292d-402e-9f24-bc6ba16402d1). The second half (a zero-hit grep naming the block kinds the transcript carries) is still on this card.",
+      "issued_at": "2026-11-21T21:48:03Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2834",
+      "last_worked": "2026-11-22T00:24:56Z",
+      "ticks_blocked": 0,
+      "weight": 4,
+      "completed": null
+    },
+    {
+      "symbol": "W2854",
+      "title": "transcriptstruct --extract replaces an attached image with a placeholder or takes --no-images (skills:W83 observation)",
+      "status": "ready",
+      "enables": [
+        "W2834"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Run bazel //transcriptstruct:all at 04da9266 after the W2853 run ends, send github-00 both shas (W2853 first, W2854 on it)",
+      "evidence": "2026-11-21T23:06:07Z: 2026-11-21 BUILT on top of W2853 (300b89f8): review/W2854-extract-no-images 04da9266f8a95c67070d8666c2f2ee0bbd83ddef, parent W2853 so the diff is the delta; transcriptstruct only (cli.py, tests/test_cli.py, warrants.bib), a non-hooks stack. CHOICE: a --no-images flag on --extract, NOT a default placeholder. The decoder principle (blocks.py, test_an_unknown_block_is_kept_whole_and_marked_undecoded) is that an undecoded block is kept whole and never truncated, so a default elision would drop bytes unasked; the flag leaves every default read unchanged and lets --extract be used on a record carrying a screenshot. WHAT: --no-images replaces every base64 data string in an UNDECODED block with <N chars of base64 omitted>, keeping the other keys (the media type stays). Only an undecoded block is parsed and re-written (its text is the record own JSON); a decoded block text is prose and is never parsed, so a message that looks like JSON is left exactly as it is. Helpers _without_image_data, _elided; _extract takes a keyword elide. TEST (1, in the EXISTING test_cli.py): a record with a text block and a 5000 character image prints the base64 whole by default, and with --no-images prints <5000 chars of base64 omitted>, the text block and the media type intact. 224 transcriptstruct tests pass, pycheck admits both py files, warrants +1. NOT DONE: the bazel run at the sha (the W2853 run is still using the box), github-00 review. | 2026-11-22T00:24:22Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2854 r2 review/W2854-extract-no-images-r2 d69be5f9feed3505bd95c9eb0796fd5a9b9e4107 (parent r1 04da9266, W2853 300b89f8). CONDITION: bazel green at the sha (met: 42 of 42, BES 1072f93f-3d8f-4610-9856-bc9279074249), submits AFTER b112 and after W2853.",
+      "issued_at": "2026-11-21T21:48:03Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2834",
+      "last_worked": "2026-11-22T00:24:56Z",
+      "ticks_blocked": 0,
+      "weight": 4,
+      "completed": null
+    },
+    {
+      "symbol": "W2855",
+      "title": "Move mutants_gen --check into a bazel test with named inputs (generator, graph, gated-sites.txt, test modules) and retire the pre-commit step",
+      "status": "blocked",
+      "enables": [
+        "W2839"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2839"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-21T23:11:50Z: 2026-11-21 BLOCKED ON W2839, A REAL DEPENDENCY: the bazel test must name as inputs everything mutants_gen --check reads and compares, and on main today that excludes what W2839 adds: the stages markers in the hooks test modules, hooks/site_exports.bzl, and the SITE_EXPORTS load in hooks/BUILD.bazel (gated_sites.bzl and gated-sites.txt come with b112 and are not on main either). Naming the inputs before they exist would build the test against a population that is about to change, so it is cut after b112 and W2839 land. DESIGN (github-00): a bazel test over the generator, hooks/graph.json, gated-sites.txt, the hooks test modules whose markers it reads and the generated files it compares; it runs mutants_gen --dist hooks --check and fails on any stale file; then the .githooks/pre-commit step at lines 863 to 865 is retired once the test is green (the standing rule: precommit is a bazel build). The inputs are named, never a glob, and the test fails when a generated file or a marker-bearing test module is missing from its data. Not started.",
+      "issued_at": "2026-11-21T21:49:03Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2839",
+      "last_worked": "2026-11-21T23:11:50Z",
+      "ticks_blocked": 0,
+      "weight": 7,
+      "completed": null
+    },
+    {
+      "symbol": "W2856",
+      "title": "transcriptstruct --count prints only the denominators line of a --grep or --human query (skills:W84 ask 1)",
+      "status": "working",
+      "enables": [
+        "W2835"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Run bazel //transcriptstruct:all at f13c976a after the W2854 r2 run ends, send github-00 the sha with the W2854 verdict",
+      "evidence": "2026-11-21T23:17:43Z: 2026-11-21 BUILT on top of W2854 r2 (d69be5f9): review/W2856-count-only f13c976a499dacac656f046c3b6805e6c66f72f3, parent W2854 r2 so the diff is the delta; transcriptstruct only (cli.py, tests/test_cli.py, warrants.bib), a non-hooks stack. WHAT: --count on --grep, --human or --prose prints ONLY the denominators line (# N hit(s) in M searched of M record(s), K malformed), no hits: _emit takes a keyword count_only. --count with none of those modes is REFUSED with exit 2 and --count only applies to --grep, --human or --prose, the way --no-images without --extract is, through a helper (main is at its local cap). TESTS (2, in the EXISTING test_cli.py): the counted output equals exactly the last line of the uncounted one for --grep and reads # 1 hit(s) for --human, and --count alone is refused naming the modes. 227 transcriptstruct tests pass, pycheck admits both py files, warrants +2. NOT DONE: the bazel run at the sha and github-00 review. W2857 (the projects-directory sweep) is the other half of skills:W84 and stays its own card. | 2026-11-21T23:21:45Z: 2026-11-21 HELD BY github-00 ORDER: b112 is the critical path and my review-time bazel runs share its box, so no new non-critical bazel run starts until b112 returns. The bazel run for W2856 f13c976a (and every other review-sha run) waits for that verdict. The invocation id of the gate is in the katas commit log (grep for invocation/ over it, never a guess), to be compared across two action-count reads only if the event-stream growth flattens.",
+      "issued_at": "2026-11-21T21:53:08Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2835",
+      "last_worked": "2026-11-21T23:21:45Z",
+      "ticks_blocked": 0,
+      "weight": 6,
+      "completed": null
+    },
+    {
+      "symbol": "W2857",
+      "title": "transcriptstruct --grep and --human over a projects directory sweep every jsonl with one denominators line (skills:W84 ask 2)",
+      "status": "blocked",
+      "enables": [
+        "W2835"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2856"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-21T23:18:28Z: 2026-11-21 DESIGN READ, then BLOCKED ON W2856 BY FILE OVERLAP: the sweep edits the same transcriptstruct cli.py main, _emit and the helpers W2853, W2854 and W2856 add, so it is cut on W2856 sha (f13c976a) to avoid a conflict on the same functions; a stack that edits one file in four places is ordered, not parallel. DESIGN: when the transcript operand is a DIRECTORY, --grep and --human run over every *.jsonl under it and print ONE denominators line for the sweep (hits, searched and total summed, malformed summed, plus how many files), as --harvest-tree already does for harvesting (rulings.harvest_tree is the precedent to read first). A hit must name its file, so the sweep adds a file key to each hit line; the single-file output is unchanged. SYMLINKS ARE REFUSED AS DATA (operator ruling 2026-10-02, memory no-symlinks): a link under the directory is skipped and COUNTED in the denominators line (N link(s) skipped), never followed and never silently dropped. An unreadable file is counted, not fatal. PLANT in the existing test_cli.py: two transcripts in a temp directory, one hit each, give two hits with their files and one denominators line summing both; a link is skipped and counted; --count combines with it (W2856). skills:W84 ask 2 (the census over ~/.claude/projects/*/ the shell refuses to loop).",
+      "issued_at": "2026-11-21T21:53:08Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2835",
+      "last_worked": "2026-11-21T23:18:28Z",
+      "ticks_blocked": 0,
+      "weight": 6,
+      "completed": null
+    },
+    {
+      "symbol": "W2858",
+      "title": "Verified bazel sample: named cells with expected verdicts, red cells read from the baseline and not-green list, run fails on a missing cell or changed verdict",
+      "status": "blocked",
+      "enables": [
+        "W2822"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2811"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Read the baseline file format and the runner own verdict words, then design the sample file as a list of cells only, after W2822 lands the not-green list",
+      "evidence": "2026-11-21T21:54:20Z: 2026-11-21 DESIGN NOTE (github-00 asked to check for shared structure BEFORE designing): the sample lists cells with an expected verdict, and two existing lists already name expected-red cells. (1) hooks/mutants-baseline.txt is the ratchet debt: a cell it lists is expected SURVIVED or ERRORED, with its verdict word, and only falls. (2) W2822 hooks/not-green-sites.txt (planned, shrink-only, each entry citing its cause card) is the expected-red set of the per-site grid. So the sample need not keep a third list of red rows: the expected verdict of a cell is READ from those two (a cell in the baseline or the not-green list is expected red with its recorded verdict, any other cell is expected green), and the sample file keeps only WHICH cells to run (the green ones plus any red one worth watching), as a named list. The run then fails on a cell missing from the run, on a green cell that reads red, and on a red cell that reads differently from the list that names it (including a red cell that turned green, which is STALE, the same rule the ratchet already applies). Depends on W2822 existing for the not-green half; until then the baseline half alone covers the one case at hand, githook_pre_push:_stdin_bytes, which is a baselined cell. | 2026-11-21T21:56:09Z: 2026-11-21 CLARIFICATION (github-00 read the site log wrongly in good faith, and my wording invited it): githook_pre_push.py::_stdin_bytes IS a line of hooks/mutants-baseline.txt (line 13, survived src/mikemol/hooks/githook_pre_push.py::_stdin_bytes), read from the file itself. The per-site log line BASELINE (0 recorded in mutants-baseline.txt): 1 rise(s) is the SITE'S view, not the file: a per-site target stages no baseline slice (W2811), so it records 0 and reads the debt the ratchet already carries as a rise. Two different readings of one cell: the sharded grid sees 40 recorded and no rise, the site sees 0 recorded and a rise. So the baseline half of this design DOES cover the cell, by reading the file, and the red it shows in a site is the W2811 gap, not a missing record. | 2026-11-21T23:21:07Z: 2026-11-21 BLOCKED ON W2811, A REAL DEPENDENCY OF THE VERDICT IT CHECKS: the sample reads a cell expected verdict from hooks/mutants-baseline.txt, and today a baselined cell reads RED in a per-site run (githook_pre_push:_stdin_bytes, BASELINE (0 recorded): 1 rise) while the ratchet records it as debt; W2811 (a per-site baseline slice) is what makes the same cell read recorded debt with no rise. A sample built before W2811 would encode the wrong expectation for every baselined cell (red, which W2811 turns green) and would have to be rewritten. W2811 is itself behind W2809 and W2839. The not-green half waits on W2822, which waits on W2811. ORDER: W2809, W2839, W2811, then this card and W2822.",
+      "issued_at": "2026-11-21T21:54:10Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2839",
+      "last_worked": "2026-11-21T23:21:07Z",
+      "ticks_blocked": 0,
+      "weight": 1,
+      "completed": null
+    },
+    {
+      "symbol": "W2859",
+      "title": "fence isolated-git helper: environment with the working-directory ceiling, both config layers nulled and identity set, tests for skills W87 arms 1, 2, 6 and 7",
+      "status": "ready",
+      "enables": [
+        "W2836"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Send github-00 the sha; bazel //fence:all after b112 returns; then W2860 on top",
+      "evidence": "2026-11-21T23:25:00Z: 2026-11-21 DESIGN, sent to github-00 before building (skills W87 spec arms 1, 2, 6, 7 plus F3b). SHAPE: a new importable function in fence next to git_env.clean_env: isolated_env(home: Path) -> dict[str, str], built ON clean_env (so the GIT_* scrub stays one spelling, arm 6) and adding: GIT_CEILING_DIRECTORIES set to the helper temp dir PARENT so git cannot walk up to a real .git (arm 1); HOME and XDG_CONFIG_HOME at home, GIT_CONFIG_GLOBAL and GIT_CONFIG_SYSTEM at /dev/null, GIT_CONFIG_NOSYSTEM=1 (arm 2); GIT_AUTHOR_NAME and EMAIL, GIT_COMMITTER_NAME and EMAIL set and EMAIL, NAME, GIT_AUTHOR_DATE-style sources removed so identity is supplied and never auto-detected (arm 7, F3b); GIT_CONFIG_PARAMETERS and GIT_CONFIG_COUNT with its KEY_n and VALUE_n variables removed (C39, they ride the GIT_ prefix scrub but are named in a test so a prefix change cannot silently un-scrub them). WHERE EACH ARM LIVES (F3b: arm 1 outer repo and child versus arm 8): the OUTER repository and its CHILD are created under the TEST tmp_path, not under the helper temp dir, because the arm asserts that the helper ceiling STOPS git at the helper dir; arm 8 (W2861) refuses a cwd outside the helper dir and is tested separately. ARM 2 REFUSES when /etc/gitconfig is absent on the host (F3b), by pytest.fail naming why, never passing vacuously, and tolerates the command-line origin in --show-origin. EACH ARM HAS ITS CONTROL: arm 1 control is GIT_CEILING_DIRECTORIES unset where the child resolves to the OUTER repo (exit 0) and the arm is exit 128 with the ceiling; arm 2 control is only HOME changed, where /etc/gitconfig still lists; arm 6 control is a hostile GIT_DIR (the existing decoy-repo test in fence/tests/test_git_env.py); arm 7 control is the same commit under a host with no identity and no helper identity, which must fail. NOT IN THIS CARD: file hooks, config hooks and signing (W2860) and the refusal outside the temp dir (W2861). New tests are folded into the existing fence/tests/test_git_env.py (a new test file is refused until W2800 lands). OPEN QUESTION FOR github-00: whether the helper also creates the temporary repository (spec says the helper creates it) or only returns the environment and a context-managed repo, since W2861 refuses a cwd outside the dir the helper made. | 2026-11-21T23:28:58Z: 2026-11-21 BUILT after github-00 ruling (two functions, layered, with four conditions): review/W2859-isolated-env f5010a8ba65dfdaed5eb9465b3f6941ca209e068 on main 6b54fed2; fence only (src git_env.py, tests/test_git_env.py, warrants.bib), a non-hooks stack. WHAT: isolated_env(home, base=None) in fence git_env.py, built ON clean_env: GIT_CEILING_DIRECTORIES at home parent (arm 1); HOME and XDG_CONFIG_HOME at home, GIT_CONFIG_GLOBAL and GIT_CONFIG_SYSTEM at the null device and GIT_CONFIG_NOSYSTEM 1 (arm 2); no GIT_* survives, including GIT_CONFIG_PARAMETERS, GIT_CONFIG_COUNT and its KEY_n and VALUE_n (arm 6 and C39); author and committer supplied and EMAIL removed (arm 7). CONDITION 1: the docstring says it guarantees arms 1, 2, 6, 7 and the C39 scrub, does NOT guarantee arms 3 to 5, and arm 8 holds only inside the helper that makes the directory (isolated_repo, W2861), so a caller using the env with its own dir gets no arm 8 and is told so. CONDITION 2: arm 2 fails by pytest.fail naming the host fact it needs (a /etc/gitconfig, its control reads its entries) when absent, never skips. TESTS (5, folded into the existing fence/tests/test_git_env.py, each with its control): the ceiling stops git at the helper dir while without it git resolves to the OUTER repo (layout under the test tmp_path); only HOME changed still lists /etc/gitconfig while isolated_env lists only the repo own config; a hostile GIT_DIR stays out of the fixture commit; a commit succeeds with the supplied identity and fails when identity is withheld and config-only identity demanded (EMAIL removed); injected GIT_CONFIG_* reaches git unisolated and never when isolated. 418 fence tests pass locally, pycheck admits both py files, warrants +5. NOT DONE: bazel at the sha (held until b112 returns, github-00 order), review, and CONDITION 4: after W2859 to W2861 land, card luthen run_git_clean moving onto fence isolated_env through its pinned mtools dep and send luthen a letter citing it (that is W2862). | 2026-11-22T00:24:35Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2859 review/W2859-isolated-env f5010a8ba65dfdaed5eb9465b3f6941ca209e068 (main 6b54fed2). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN: no bazel while the gate is in flight), submits AFTER b112 and FIRST of the isolated-git chain (W2860 r2 and W2861 r2 build on it).",
+      "issued_at": "2026-11-21T21:56:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2836",
+      "last_worked": "2026-11-22T00:24:56Z",
+      "ticks_blocked": 0,
+      "weight": 3,
+      "completed": null
+    },
+    {
+      "symbol": "W2860",
+      "title": "fence isolated-git helper: file hooks and config hooks disabled and signing refused, tests for skills W87 arms 3, 4 and 5",
+      "status": "working",
+      "enables": [
+        "W2836"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Send github-00 the sha; then W2861 (isolated_repo refuses a cwd outside its temp dir, arm 8) on top; bazel //fence:all for W2859 and W2860 after b112 returns",
+      "evidence": "2026-11-21T23:25:43Z: 2026-11-21 BLOCKED ON W2859, A REAL DEPENDENCY: file hooks, config hooks and signing are settings of the same isolated environment and repository that W2859 creates (isolated_env, and the isolated_repo whose shape is the open question put to github-00), and they edit the same fence module and test file, so they are cut on W2859 sha. THE ARMS (skills W87 spec 3, 4, 5, with F3 and C39): file hooks need a PLANTED executable pre-commit hook in the temporary repo own .git/hooks, a control with core.hooksPath unset where the marker appears, and the arm with an empty template AND core.hooksPath at /dev/null where it does not; config hooks name the layer they plant in (the repo own .git/config, where a hook runs unless hook.NAME.enabled is false) and REFUSE with a named reason when this git has no config hooks, never passing vacuously; signing needs a control signer that SUCCEEDS, a stub gpg.program that emits the fixed fake signature AND the line [GNUPG:] SIG_CREATED on stderr (F3, without it git reports failed to sign even from a stub that exits 0), the helper failing signer for gpg.program, gpg.ssh.program and gpg.x509.program, a forced-signed commit, tag -s, and a tag made with tag.forceSignAnnotated and no explicit -a (an explicit -a takes precedence and stays unsigned, so that arm uses tag -m), GNUPGHOME, SSH_AUTH_SOCK and GPG_AGENT_INFO absent from the environment, gpg.format ssh and x509, tag.gpgSign and push.gpgSign exercised. | 2026-11-21T23:33:53Z: 2026-11-21 BUILT on W2859 (f5010a8b, PASS-SUBMIT): review/W2860-isolated-repo 6470675855d6a4e3f6541c6a5019db3908333c62, parent W2859 so the diff is the delta; fence only (git_env.py, tests/test_git_env.py, warrants.bib), non-hooks. github-00 NOTE APPLIED: arm 3 is enforced at REPO CREATION, not in the env: isolated_repo(run) makes a temp dir and a repo with an EMPTY template (git init --template=<empty dir>) and writes core.hooksPath=/dev/null, failing gpg.program, gpg.ssh.program and gpg.x509.program, tag.gpgSign and commit.gpgSign off into the repo own config. isolated_env additionally removes GNUPGHOME, SSH_AUTH_SOCK and GPG_AGENT_INFO. DESIGN CHOICE FORCED BY THE LINT RULES: fence runtime stays free of subprocess (the sibling guard_cli carries a per-file exemption, and a new exemption moves debt out of a counted file), so isolated_repo TAKES THE GIT RUNNER FROM THE CALLER (run(env, cwd, args) returning the status, the tests use the procrun capture seam), and raises RuntimeError naming the command on a nonzero status. No noqa, no new exemption. MEASURED AND PINNED, NOT CLAIMED AWAY: a config hook the CALLER writes into the isolated repo own .git/config STILL RUNS (git has no wildcard to disable a hook by name in advance, and a repo own config is not a layer the environment controls); what holds is that a fresh repo carries none and a hook in a layer the env nulls (the global file) does not run, with a control that REFUSES when this git has no config hooks. TESTS (5 new, in the existing test_git_env.py, each with its control): a planted file hook runs in a plain repo and never in the isolated one (the control plants a real hook in .git/hooks, since an empty template alone leaves no hooks dir to test); a config hook in the global layer runs in a plain repo and never isolated; the repo-own-config limit pinned; a SUCCEEDING stub signer that emits [GNUPG:] SIG_CREATED (F3) signs while the failing signers refuse a forced-signed commit, tag -s and tag.forceSignAnnotated; the agents removed and each of the three signer programs failing. 423 fence tests pass locally, pycheck admits both py files, warrants +5. NOT COVERED: push.gpgSign (C39) and a behavioural gpg.format ssh and x509 control; the settings are asserted, not exercised, and that is a stated gap. NOT DONE: bazel (held until b112 returns). | 2026-11-22T00:24:36Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2860 r2 review/W2860-isolated-repo-r2 fbad107daa73d850d4375cbf9ff0fe2577d53b31 (parent r1 64706758, W2859 f5010a8b). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN), submits AFTER b112 and AFTER W2859. W2868 (push.gpgSign) and W2869 (behavioural ssh and x509) carry the stated gaps.",
+      "issued_at": "2026-11-21T21:56:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2836",
+      "last_worked": "2026-11-22T00:24:36Z",
+      "ticks_blocked": 0,
+      "weight": 3,
+      "completed": null
+    },
+    {
+      "symbol": "W2861",
+      "title": "fence isolated-git helper: refuses a working directory outside its own temp dir, tests for skills W87 arm 8 and the F3b and C39 findings",
+      "status": "ready",
+      "enables": [
+        "W2836"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Send github-00 the sha; when W2859 to W2861 land and bazel is green, card luthen run_git_clean onto fence isolated_env (W2862) and send luthen the letter",
+      "evidence": "2026-11-21T23:38:48Z: 2026-11-21 BUILT on W2860 r2 (fbad107d, PASS-SUBMIT): review/W2861-guarded-runner ad78b1b8b097f01959d78f8dbe11ad2ba56c1403, parent W2860 r2 so the diff is the delta; fence only, non-hooks. WHAT: guarded(run, home) wraps a git runner so it raises OutsideTempDirError (an IsolatedGitError) naming the call and what it aimed at when the working directory is outside home, or an operand is: the value after -C, --git-dir or --work-tree (spaced or =), or any argument starting /, ~, ./ or ../, each judged from cwd with symlinks resolved (os.path.realpath), so a link out of home counts as outside. isolated_repo now YIELDS FOUR VALUES (home, repo, env, guarded runner), the W2860 tests were updated to unpack the fourth. The docstrings say the refusal holds ONLY through the yielded runner, so a caller using isolated_env with its own runner gets no arm 8. A DEFECT THE ARMS CAUGHT IN MY OWN FIRST VERSION: routing the helper own creation calls through the guard made it refuse its own core.hooksPath setting, because the null device /dev/null is outside the temp dir; eight W2860 tests went red. The helper own init and its fixed settings now go through the plain runner (fixed literals, stated in the docstring), and the guard is for what the CALLER runs. TESTS (3 new, in the existing test_git_env.py, each with controls): a directory outside the temp dir is refused while the repo directory runs (the message names the directory); -C, --git-dir and --work-tree aimed at a real repository are refused spaced and with = while the same flags aimed inside run; an absolute path and a .. that climbs out are refused while ones inside run. 427 fence tests pass locally, pycheck admits both py files, warrants +3. NOT DONE: bazel (held until b112 returns). | 2026-11-22T00:24:38Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2861 r2 review/W2861-guarded-runner-r2 8d449a5d7085fa45b592d83219337748e4f5a537 (parent r1 ad78b1b8, W2860 r2 fbad107d). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN), submits AFTER b112 and AFTER W2860. The chain W2859 to W2861 is complete; W2862 (luthen move onto isolated_env) waits for it to land.",
+      "issued_at": "2026-11-21T21:56:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2836",
+      "last_worked": "2026-11-22T00:24:56Z",
+      "ticks_blocked": 0,
+      "weight": 3,
+      "completed": null
+    },
+    {
+      "symbol": "W2862",
+      "title": "luthen run_git_clean and mtools git_env.sh switch to the shared isolated-git helper once it lands",
+      "status": "blocked",
+      "enables": [
+        "W2836"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2861"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-21T23:39:22Z: 2026-11-21 BLOCKED ON W2861 (AND THE LANDING OF W2859 TO W2861), A REAL DEPENDENCY: luthen can move run_git_clean onto fence isolated_env only through its PINNED mtools dep, so the function must be in a landed commit and a pin must be able to name its sha; today W2859 f5010a8b, W2860 r2 fbad107d and W2861 ad78b1b8 are review refs, not landed, and all wait behind b112 (inflight in the gate) and bazel green. github-00 condition 4: after W2859 to W2861 land, card luthen move and send luthen a letter citing it. THE LETTER, to write once the sha exists: luthen-observability checks/run_tool.py run_git_clean and scrubbed_env spell the same rule as fence git_env.clean_env (no GIT_* variable, plus a caller pin and exit 127 with no git); switch scrubbed_env to fence isolated_env (or clean_env where isolation is not wanted) through the pinned mtools dependency, keep the pin as a parameter of the call, and keep its exit 127 refusal, which fence does not do because the runner is the caller. The pin is a sha plus tree of the landed commit.",
+      "issued_at": "2026-11-21T21:56:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2836",
+      "last_worked": "2026-11-21T23:39:22Z",
+      "ticks_blocked": 0,
+      "weight": 3,
+      "completed": null
+    },
+    {
+      "symbol": "W2863",
+      "title": "mutation runner: a suite ended as hung records its tree states and wait channels, and a control on an oversubscribed box must not time out",
+      "status": "ready",
+      "enables": [
+        "W2833"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "On the bazel run at be64d44a send github-00 the sha and verdict; submit after b112",
+      "evidence": "2026-11-21T22:08:05Z: 2026-11-21 CAUSE READ FROM THE RUNNER SOURCE (check_mutants/mutate_runner.py), github-00 question answered. WHERE: the control prints \"timed out on the UNMUTATED module\" when _launch_suite raises subprocess.TimeoutExpired (lines 1386 to 1393), and launch() raises it for exactly two things: (1) _hung, a stillness witness: MUTATE_PATIENCE polls (24) of MUTATE_POLL_S (5.0 s) in a row with neither the output bytes nor the tree CPU changed, AND no process of the tree or its group in state R or D (waiting_on_host, W2642, which excuses a starved runnable process and a disk wait), and (2) SIGXCPU at MUTATE_CPU_S (120 s of CPU, an RLIMIT_CPU, a pure CPU bound). WHAT IT MEASURES: (2) is CPU and load-agnostic. (1) is a COUNT OF POLLS, but a poll is a wall interval, so it is 24 x 5 s = 120 s of wall time of genuine sleep (state S) with no output: not contention by construction, because R and D are excused. idle_wall=232.9s in the shard line is NOT a clock: it is a computed figure, shard cpu divided by children (line 1886), the wall the shard would take on an idle host. SO github-00 SUSPICION THAT THE CLOCK COUNTED WALL TIME WHILE THE CHILD SAT IDLE IS HALF RIGHT: the stillness window is wall time, but it only counts polls in which the child was in S, so an oversubscribed box does not trip it unless the child sleeps. WHAT IS STRANGE: the control test is test_judge_reviewing.py::test_a_reviewer_that_is_not_running_is_no_block, a pure in-memory call of judge_reviewing, 3 tests in 0.06 s alone (measured locally in this tree). A 0.06 s test cannot burn 120 CPU s, so (2) did not fire, and it cannot sit asleep for 120 s by itself, so (1) fired on a process that was ASLEEP in S, with no output, for 120 s, at STARTUP (import of 91 modules, pytest plugin load, the node-report plugin, or a lock). The cause is therefore NOT named: it is a start-up stall of unknown wait channel. THE FIX IS AN INSTRUMENT FIRST, as W2818 did for the killer: when _hung fires, write to the log the process states and the wait channel (/proc/<pid>/wchan and stat state) of every process of the tree, so the next stall names what it was waiting on; THEN decide the bound. A CPU-only bound is already the other half (RLIMIT_CPU) and the stillness witness is the absence detector the operator ruled for (no wall clock), so the arm to plant is the one github-00 asked: a control run beside a forced sleep or a CPU hog on an oversubscribed box must not be ended as hung while its process is R or D, and a suite that is genuinely asleep with no output for the patience still is. NOT DONE: the instrument, the arm, and whether main reproduces it (the control run on pristine main 6b54fed2 is still running). This card blocks W2833 and every pathsforward mutation verdict until it names its cause. | 2026-11-21T22:09:33Z: 2026-11-21 INSTRUMENT SPEC WIDENED (github-00): at the kill, besides each tree process state and wchan, log (1) the full /proc/<pid>/syscall line, (2) the open fds with their link targets (ls -l /proc/<pid>/fd, so a lock file or a pipe shows up), and (3) for a pipe, which process holds the other end and THAT process state. THE HYPOTHESIS TO TEST AND NOT TO BANK: a startup sleep in S under load is a wait on another process that is itself starved (an flock on a shared cache such as uv, pytest or bazel output base, or a pipe read from a producer OUTSIDE the tree). waiting_on_host looks only inside the tree and its group, so it would miss it. If the instrument shows that, the fix is to widen the witness to blocked on a runnable process ANYWHERE, not to lengthen the window (120 s of wall). The plant for the arm: a child blocked on a pipe whose writer is a CPU hog outside its tree must not be ended as hung while the writer is R, and the same child with an idle writer in S still is. | 2026-11-21T22:11:57Z: 2026-11-21 CONTROL ON PRISTINE MAIN 6b54fed2 PASSES: //pathsforward:mutants_11 passed in 440 s elapsed, BES 083ec38c-05a3-4619-b0cd-270d6c289837 (copied from the log). The same shard FAILED inside the W2833 whole-pathsforward run at 216d6639 (BES 5b78d99c-81da-4268-81ee-cabe459fa674, 742 s, control timed out on test_a_reviewer_that_is_not_running_is_no_block). W2833 changes only render.py, a test and warrants, and the failing cells are closegate, cli and reconcile cells, so main is NOT red and the failure is a FLAKE with the first cause named only as a startup stall of a 0.06 s test, wait channel unknown. The two runs differ in load: the failing run was a 195-test invocation of 6,447 s elapsed sharing the box with the b112 gate, the passing control was one shard alone. That is consistent with the oversubscription hypothesis and does not prove it. A flake is a blocker: W2833 and every pathsforward mutation verdict wait on this card. | 2026-11-21T22:21:37Z: 2026-11-21 INSTRUMENT BUILT on main 6b54fed2: review/W2863-hang-record be64d44a98a928f4a73210db9edf5ecb5c1a13c4 (check_mutants only: mutate_runner.py, test_mutate_runner.py, warrants.bib; a non-hooks stack, no shard guard). WHAT: hang_record(root, proc) returns one line, \"hang record: \" then per process of the tree (first 6): pid, comm, state, wchan, the /proc syscall line, and each PIPE it holds as fd=pipe:[inode]->peers pid(comm,state) of the OTHER holders anywhere on the host (up to 4); _hung takes it BEFORE the kill and attaches it with note() to the cell that was running, so cell_lines prints it after the id; waiting_on_host now shares _table and _members with it. Each fd is read on its own because the listing own directory descriptor closes mid-read (the first version lost the pipe list to that, caught by the first planted test). TESTS (3, in the EXISTING runner module, no new file), the planted pipe and hog arm github-00 asked for, by construction: (1) a child asleep on a pipe held from outside its tree reads state S, wchan anon_pipe_read, its pipe, and THIS process as the other holder; (2) the same with a CPU hog as the only other holder shows the hog as R; (3) launch with MUTATE_PATIENCE 3 ends a sleeping suite as hung and the cell note starts with hang record pid= and state=S. 145 runner tests pass, pycheck admits both py files, warrants +3. NOT A CAUSE: this names nothing about the 5b78d99c stall; it makes the NEXT stall name its wait channel, so the flake stays open and a blocker until a record shows the cause. The fix after that (widen waiting_on_host to blocked on a runnable process anywhere, or not) is decided from a record, never from load. RUN AT THE SHA: //:test_mutate_runner //:ruff //:mypy_check_mutants //procrun:mutants running. A runner change misses every grid cache once, the cost any runner change has. | 2026-11-21T22:33:57Z: 2026-11-21 REVIEW OF THE INSTRUMENT: r1 be64d44a REVISE (M1 file locks via /proc/locks with holder and waiters, M2 sleepers first with an omitted count), r2 652352e1 REVISE (M3 no counted or wall-bounded poll in the arms), r3 0cec8093 PASS-SUBMIT on condition that bazel at the sha is green, and it submits after b112. r2 bazel run 4 of 4 BES 94debb05-159f-4bac-96c6-a62b46d6fe79 (the r1 run had failed on my own hog-arm race, fixed in r2). NOTE FROM github-00, NOT A BLOCKER: a stuck test poller that sleeps 20 ms per look accrues CPU slowly, each hang_record walk of /proc being its only cost, so the CPU stop could take a long time to fire. That is the trade the no-wall-clock rule chose (no failures under load). IF IT EVER BITES the fix is a cheaper look or a happens-before, never a timer. STILL OPEN: this card names no cause for the 5b78d99c stall; it only makes the next one name its wait channel, so W2863 stays a blocker for W2833 and the pathsforward mutation verdicts until a record shows the cause. | 2026-11-22T00:24:20Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2863 r3 review/W2863-hang-record-r3 0cec8093489a92508fb4624b19985f674cb771fc (parent r2 652352e1, r1 be64d44a). CONDITION: bazel green at the sha (met: 3 of 3, BES 7678da5a-d212-4669-ac19-d9bc3e2a1d5f), submits AFTER b112. It names no cause for the 5b78d99c stall: W2863 stays a blocker for W2833 and the pathsforward mutation verdicts until a record shows the cause.",
+      "issued_at": "2026-11-21T22:07:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2833",
+      "last_worked": "2026-11-22T00:24:56Z",
+      "ticks_blocked": 0,
+      "weight": 8,
+      "completed": null
+    },
+    {
+      "symbol": "W2864",
+      "title": "mikemol-buildlog is not in the pinned luthen-tools set, only in the paperkit and aeternum venvs",
+      "status": "blocked",
+      "enables": [
+        "W2833"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "luthen-observability"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-21T22:08:07Z: 2026-11-21 github-00 asked that mikemol-buildlog come from the pinned bin (luthen-tools/live/nemik/bin). Checked: find over ~/.local/share/luthen-tools/live for mikemol-buildlog finds NOTHING, so it is not in the pinned set. It exists only as paperkit/.venv/bin/mikemol-buildlog and aeternum/.venv/bin/mikemol-buildlog, which is where I read BES 5b78d99c-81da-4268-81ee-cabe459fa674 from. The owner is whoever ships it (summit capability lookup to be done), and the pinned set is nemik and luthen to extend; this card is the claim that it is missing there. | 2026-11-21T22:09:41Z: 2026-11-21 LETTER SENT to luthen-observability inbox (2026-11-21-mtools-pin-mikemol-buildlog.md, citing mtools:W2864) asking it to add mikemol-buildlog to the pinned set through the user apply, per github-00. Blocked on the bare repo name until luthen-observability mints a waypoint that claims W2864; the owner of the tool source is to be named in its reply.",
+      "issued_at": "2026-11-21T22:07:51Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2833",
+      "last_worked": "2026-11-21T22:09:41Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2865",
+      "title": "katas status prints a repo last commit-log verdict beside its CURRENT head with no sha the verdict was judged at, so a stale FAILED reads as head is red",
+      "status": "ready",
+      "enables": [],
+      "touches": [
+        "katas"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Send github-00 the sha with the deviation; bazel //katas:all after b112 returns",
+      "evidence": "2026-11-21T22:38:43Z: 2026-11-21 FROM github-00 (low priority, not on the critical path): mikemol-katas status prints a repo last commit-log verdict beside its CURRENT head with nothing saying which commit the verdict was for. luthen-observability shows FAILED rc=1 cde3bc8b, but the failure is an OLD pre-commit run (an index-vs-tree mismatch on btrbk files, a census of 807 files where today census is 1051); cde3bc8b itself landed with every step at rc 0. The row reads as head is red and is false. FIX: record the sha each log verdict was judged at, and have status print STALE, or the verdict own sha, when it differs from head. ARM: a failed log followed by an out-of-band commit must not show FAILED beside the new head. Edges: this card first carried wrong edges to luthen-observability:W1715 (copied from the exit-census card by mistake) and they are cleared; the consumer that shows the false row is luthen-observability, which has no waypoint citing this yet. | 2026-11-21T23:44:31Z: 2026-11-21 BUILT on main 6b54fed2: review/W2865-stale-verdict c069cfb7b862970c67dc7e5e33a696029315ffee; katas only (fleet.py, tests/test_fleet.py, warrants.bib), non-hooks. ROOT CAUSE READ: katas fleet.status_row printed commits.commit_state(log) beside the CURRENT head (git log -1), and the log carries only rc=N, so a failed pre-commit run followed by a later commit read as head is red. FIX: _verdict(fleet, repo, log) reports STALE(rc=N) or STALE(done) when HEAD committer time (git log -1 --format=%ct, whole seconds) is later than the log mtime, applied to the commit log and the probe log; RUNNING is never stale. A DEVIATION FROM THE ASK, STATED: github-00 asked to RECORD the sha each verdict was judged at; the log is written by the waiter (rc=N only) and a REFUSED run has no sha at all, so the sha cannot be read back for exactly the failing logs. The time comparison needs no log format change and covers the failing case; its stated limit is an out-of-band commit in the SAME whole second as the log last write reads as fresh. If the sha is still wanted, the waiter writing head=<sha> at launch is the follow-up. TESTS (2, in the EXISTING test_fleet.py): a failed log older than HEAD reads STALE(rc=1) and never FAILED while HEAD subject is still shown, with the control that a log written after HEAD still reads FAILED rc=1; a done log older than HEAD reads STALE(done) and a RUNNING one is never stale. 150 katas tests pass locally, pycheck admits both py files, no declared mutant touches the changed lines, warrants +2. NOT DONE: bazel (held until b112 returns). | 2026-11-22T00:24:39Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2865 review/W2865-stale-verdict c069cfb7b862970c67dc7e5e33a696029315ffee (main 6b54fed2) AS AN INTERIM FIX. CONDITION: submits AFTER b112, bazel at the sha NOT YET RUN. The time comparison is a proxy (a committer date is whatever the committer set); W2870 (waiter writes head=sha, time kept as fallback, row names the rule) is the real fix.",
+      "issued_at": "2026-11-21T22:38:24Z",
+      "minted_during": "interrupt",
+      "caused_by": null,
+      "last_worked": "2026-11-22T00:24:56Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2866",
+      "title": "Writer --add-retro --dry-run validates a review retro file against the schema and nemik finding rules without minting an R id",
+      "status": "ready",
+      "enables": [
+        "github:W142"
+      ],
+      "touches": [
+        "pathsforward"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Send github-00 the sha; bazel //pathsforward:all after b112 returns",
+      "evidence": "2026-11-21T23:00:00Z: 2026-11-21 FROM github-00 (host card github:W142, low priority): the writer --retro-scaffold only scaffolds a LANDING retro (a verdict row); a reviewer writing a REVIEW retro has no template and the host found nine refused at add time in one day. TWO OPTIONS, and the choice made here: (a) a review-retro scaffold mode, or (b) a validate-only --add-retro (the writer already has a --dry-run flag), which checks the schema and nemik:W982 finding rules and prints what would be refused without minting an R id. CHOICE (b): it is smaller, it lets a reviewer check its own file against the same code that refuses it at add time (one rule, no second copy in a scaffold that could drift from the refusal), and it answers every kind of retro, not only the review shape. (a) stays open if a template still proves needed after (b). The refusal text should name the line or field that fails. PLANT in the existing pathsforward retro tests: a malformed review retro is refused under --dry-run with the same message as at add time and the queue file and the R counter are byte-identical after; a valid one reports it would pass and mints nothing. | 2026-11-21T23:47:19Z: 2026-11-21 BUILT on main 6b54fed2: review/W2866-add-retro-dry-run 715d2e64c9964f8b7c3484066ab3ba61c22dd3fe; pathsforward only (cli.py, tests/test_retros.py, warrants.bib), non-hooks, the writer. WHAT: --add-retro FILE --dry-run runs the SAME retros.add_retro on a deep copy of the queue (_check_retro), so the rule is one and cannot drift from the refusal at add time; a refusal prints the same --add-retro refused: message and exits EXIT_REFUSED, a valid retro prints that it would be accepted with no R id, and the queue file and retro counter are never touched. The mode-options table gains dry_run for add_retro and --dry-run help names it. TEST (1, in the EXISTING test_retros.py): a valid retro under --dry-run reports it would be accepted and the queue file is byte-identical; a malformed one is refused under --dry-run with stderr EQUAL to the stderr of the real --add-retro refusal and the queue still byte-identical; the control, the same valid file without --dry-run, mints R1 (retro_counter 1). 1486 pathsforward tests pass locally, pycheck admits both py files, warrants +1. THE SCAFFOLD ALTERNATIVE (a review-retro template) stays open if a template still proves needed after this. NOT DONE: bazel (held until b112 returns), github-00 review. | 2026-11-22T00:24:41Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2866 review/W2866-add-retro-dry-run 715d2e64c9964f8b7c3484066ab3ba61c22dd3fe (main 6b54fed2). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN), submits AFTER b112. A dry run still records an acceptance and beats the heartbeat like the writer other previews (leave it). When it lands github-00 updates change-review step 4 and reviewed-loop step 3 to tell reviewers to run --add-retro FILE --dry-run first.",
+      "issued_at": "2026-11-21T22:59:50Z",
+      "minted_during": "interrupt",
+      "caused_by": "github:W142",
+      "last_worked": "2026-11-22T00:24:56Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2867",
+      "title": "Lift the recursive JSON alias into one shared module the dists depend on through pinned deps (ratchet remap, grade, transcriptstruct JsonValue)",
+      "status": "blocked",
+      "enables": [
+        "W2854"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2854"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-21T23:49:25Z: 2026-11-21 BLOCKED ON W2854, A REAL DEPENDENCY: the THIRD copy of the recursive JSON alias is transcriptstruct JsonValue, and it exists only in W2854 r2 (d69be5f9, PASS-SUBMIT behind b112), not on main; lifting three copies into one shared module must read all three landed. ON MAIN TODAY: ratchet remap.py (type Json) and grade.py (type Json), both the same recursive shape. NOT THE SAME THING: transcriptstruct, pathsforward, audiostruct, waldo and pycodemod tests spell Json as dict[str, object], the non-recursive object-typed form github-00 called against the house typing rule, so they are CONSUMERS to move onto the shared alias, not copies of it; the census of those is part of this card. DESIGN QUESTIONS to settle before cutting: (1) the home: an existing stdlib-only dependency every one of these dists already has (check procrun, treeio and fence dependency lists) rather than a new dist, since a new dist costs a BUILD, a graph and a pinned wheel; (2) the dependency must be a normal pinned dep, never a sibling source import, and not a runtime sibling edge that breaks every repo vendoring the wheel (memory runtime-sibling-edge-needs-a-vendoring-check: grep ~/github first); (3) whether a PEP 695 type statement survives the oldest python the dists support. Not started.",
+      "issued_at": "2026-11-21T23:14:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2854",
+      "last_worked": "2026-11-21T23:49:25Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2868",
+      "title": "fence isolated git: a push.gpgSign arm with a control, a gap stated in W2860 (skills W87 C39)",
+      "status": "blocked",
+      "enables": [
+        "W2862"
+      ],
+      "touches": [],
+      "blocked_on": [
+        "W2861"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "",
+      "evidence": "2026-11-22T00:16:30Z: 2026-11-21 BLOCKED ON W2861, A REAL DEPENDENCY: the arm runs through isolated_repo and its guarded runner, which exist only as review refs (W2859 f5010a8b, W2860 r2 fbad107d, W2861 r2 8d449a5d) behind b112, and it edits the same fence git_env.py and test_git_env.py, so it is cut on W2861 sha. DESIGN: push.gpgSign signs the PUSH CERTIFICATE, which needs a receiving side that accepts one: a local BARE repository inside the temp dir with receive.certNonceSeed set (the guarded runner refuses a remote outside the dir, so both ends live under it). CONTROL: with the succeeding stub signer (it must emit [GNUPG:] SIG_CREATED, review finding F3) and push.gpgSign=true, git push to the bare remote succeeds and the remote records a certificate (a push-cert in its refs or a receive hook seeing GIT_PUSH_CERT); ARM: under isolated_repo the failing gpg.program makes the same push FAIL, and push.gpgSign=if-asked with no --signed does not sign. If this git or the bare remote cannot carry a push certificate the control does not show a cert and the arm REFUSES by pytest.fail naming the host fact, never passing vacuously, as arm 2 does. The three gpg.format values are W2869, the sibling card.",
+      "issued_at": "2026-11-21T23:35:38Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2860",
+      "last_worked": "2026-11-22T00:16:30Z",
+      "ticks_blocked": 0,
+      "completed": null
+    },
+    {
+      "symbol": "W2869",
+      "title": "fence isolated git: behavioural gpg.format ssh and x509 arms with controls, asserted today and not exercised (skills W87 C39)",
+      "status": "ready",
+      "enables": [
+        "W2862"
       ],
       "touches": [],
       "blocked_on": [],
       "blocked_kind": null,
       "next_bounded_step": "",
       "evidence": "",
-      "issued_at": "2026-11-21T20:16:23Z",
+      "issued_at": "2026-11-21T23:35:40Z",
       "minted_during": "interrupt",
-      "caused_by": "W2826",
+      "caused_by": "W2860",
       "last_worked": null,
-      "ticks_blocked": 0,
-      "weight": 2
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2870",
+      "title": "katas waiter writes head=<sha> at launch and status compares it to HEAD, naming which rule judged the verdict, time kept as the fallback",
+      "status": "ready",
+      "enables": [
+        "W2865"
+      ],
+      "touches": [
+        "katas"
+      ],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "Read waiter.py and detach.py (the launch writes the log emptied first), add the head line at launch, then the comparison and the rule name in fleet._verdict on top of W2865",
+      "evidence": "2026-11-21T23:45:58Z: 2026-11-21 FROM github-00 (review of W2865 c069cfb7, accepted as an INTERIM fix): the time comparison is a proxy and misses more than a same-second write. A committer date is whatever the committer set: a commit fetched from a peer, or one made with GIT_COMMITTER_DATE, can carry a date OLDER than the log mtime while being a different head, so the row reads fresh and is wrong. THE FIX: the waiter writes head=<sha> at LAUNCH, before the commit runs (the sha HEAD had when the verdict was started), and _verdict compares that sha with the current HEAD. Once it exists the time comparison is only the FALLBACK for old logs that have no head line, and the row says which rule judged it (for example STALE(rc=1,head) versus STALE(rc=1,time)). A REFUSED run has no committed sha, so the launch-time head is the only sha that exists for exactly the failing logs. ARM: a failed log with head=<old> against a newer HEAD reads STALE by head even when the commit date is older than the log mtime (GIT_COMMITTER_DATE in the past), and a log with no head line still falls back to time.",
+      "issued_at": "2026-11-21T23:45:49Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2865",
+      "last_worked": "2026-11-21T23:45:58Z",
+      "ticks_blocked": 0
+    },
+    {
+      "symbol": "W2871",
+      "title": "Review bazel runs: ONE reusable review worktree (checkout --detach per sha) or a bazel shutdown after each verdict, never a fresh worktree and server per run",
+      "status": "ready",
+      "enables": [
+        "W2863"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": null,
+      "next_bounded_step": "",
+      "evidence": "2026-11-22T00:25:04Z: 2026-11-21 PARKED, OLD-WORKTREE PRUNE HELD (github-00 via operator ruling): about a hundred older scratch worktrees (W2164 to W2866) are NOT pruned. WHEN UNPARKED: the table github-00 asked for (per worktree: path, git status --porcelain empty, HEAD reachable from a ref, a bazel server alive for it, output-base size from du -s of the hash dir matched by the recorded workspace_directory in DO_NOT_BUILD_HERE) is produced by the read-only script worktree_survey.py (session scratchpad; it was stopped before finishing, nothing removed). Only clean, reachable and serverless rows are removed; the rest are named back to github-00. The output bases under /var/lib/luthen/ephemeral/bazel are luthen to clear, never mine. 12 servers of this session were shut down and their worktrees removed earlier.",
+      "issued_at": "2026-11-22T00:15:35Z",
+      "minted_during": "interrupt",
+      "caused_by": "W2863",
+      "last_worked": "2026-11-22T00:25:04Z",
+      "ticks_blocked": 0
     }
   ],
   "residue": [
@@ -68607,7 +69170,7 @@
       "action": "update W2614",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68616,7 +69179,7 @@
       "action": "update W2615",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68625,7 +69188,7 @@
       "action": "update W2616",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68634,7 +69197,7 @@
       "action": "update W2618",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68643,7 +69206,7 @@
       "action": "update W2619",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68652,7 +69215,7 @@
       "action": "update W2621",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68661,7 +69224,7 @@
       "action": "update W2631",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68670,7 +69233,7 @@
       "action": "update W2633",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68679,7 +69242,7 @@
       "action": "update W2635",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68688,7 +69251,7 @@
       "action": "update W2637",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68697,7 +69260,7 @@
       "action": "update W2638",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68706,7 +69269,7 @@
       "action": "update W2639",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68715,7 +69278,7 @@
       "action": "update W2660",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68724,7 +69287,7 @@
       "action": "update W2661",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68733,7 +69296,7 @@
       "action": "update W2662",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68742,7 +69305,7 @@
       "action": "update W2663",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68751,7 +69314,7 @@
       "action": "update W2664",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68760,7 +69323,7 @@
       "action": "update W2666",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68769,7 +69332,7 @@
       "action": "update W2669",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68778,7 +69341,7 @@
       "action": "update W2670",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68787,7 +69350,7 @@
       "action": "update W2671",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68796,7 +69359,7 @@
       "action": "update W2672",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68805,7 +69368,7 @@
       "action": "update W2673",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68814,7 +69377,7 @@
       "action": "update W2674",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68823,7 +69386,7 @@
       "action": "update W2675",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68832,7 +69395,7 @@
       "action": "update W2676",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68841,7 +69404,7 @@
       "action": "update W2677",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68850,7 +69413,7 @@
       "action": "update W2678",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68859,7 +69422,7 @@
       "action": "update W2679",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68868,7 +69431,7 @@
       "action": "update W2691",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
     },
     {
       "tool": "update-many",
@@ -68877,7 +69440,115 @@
       "action": "update W2692",
       "first_run": "2026-11-17T19:43:02Z",
       "last_run": "2026-11-17T19:43:02Z",
-      "status": "open"
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2826",
+      "action": "update W2826",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2827",
+      "action": "update W2827",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2830",
+      "action": "update W2830",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2831",
+      "action": "update W2831",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2839",
+      "action": "update W2839",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2853",
+      "action": "update W2853",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2854",
+      "action": "update W2854",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2859",
+      "action": "update W2859",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2861",
+      "action": "update W2861",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2863",
+      "action": "update W2863",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2865",
+      "action": "update W2865",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
+    },
+    {
+      "tool": "update-many",
+      "rule": "update-many",
+      "subject": "W2866",
+      "action": "update W2866",
+      "first_run": "2026-11-22T00:24:52Z",
+      "last_run": "2026-11-22T00:24:52Z",
+      "status": "applied"
     }
   ],
   "retros": [

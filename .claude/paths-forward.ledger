@@ -8474,3 +8474,78 @@
 2026-11-21T20:44:58Z  status W2817 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-21T20:46:07Z  status W2806 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-21T20:48:12Z  status W2806 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T21:22:26Z  status W2830 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T21:29:05Z  interrupt W2847 minted    -         "check_mutants input-mutation mode: for every label of hooks/site-data.txt, removing it must turn its test RED, run on every change to that file"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2839
+2026-11-21T21:35:55Z  status W2831 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T21:37:53Z  status W2832 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T21:37:57Z  interrupt W2848 minted    -         "Writer --tick-open refuses when no card evidence carries a G0 line newer than the last --tick-close (skills:W36 refusal 1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2832
+2026-11-21T21:37:57Z  interrupt W2849 minted    -         "Writer --tick-close --blocked-by refuses a card that is ready with no ask or blocker of its own (skills:W36 refusal 2)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2832
+2026-11-21T21:37:57Z  interrupt W2850 minted    -         "mikemol-commit prints a refusal or warning naming a landing made with no open tick (skills:W36 refusal 3)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2832
+2026-11-21T21:37:57Z  interrupt W2851 minted    -         "Writer --reviewing names the running reviewer ids when it refuses an id that is not running (skills:W83 smaller finding)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2832
+2026-11-21T21:47:56Z  status W2834 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T21:48:03Z  interrupt W2852 minted    -         "Hooks: the no-chaining and structural-query refusals also name find-the-tool and its search order (skills:W83 ask 1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2834
+2026-11-21T21:48:03Z  interrupt W2853 minted    -         "transcriptstruct --kinds refuses an unknown block kind and points at --human or --prose --speakers (skills:W83 observation)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2834
+2026-11-21T21:48:03Z  interrupt W2854 minted    -         "transcriptstruct --extract replaces an attached image with a placeholder or takes --no-images (skills:W83 observation)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2834
+2026-11-21T21:49:03Z  interrupt W2855 minted    -         "Move mutants_gen --check into a bazel test with named inputs (generator, graph, gated-sites.txt, test modules) and retire the pre-commit step"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2839
+2026-11-21T21:53:03Z  status W2835 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T21:53:08Z  interrupt W2856 minted    -         "transcriptstruct --count prints only the denominators line of a --grep or --human query (skills:W84 ask 1)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2835
+2026-11-21T21:53:08Z  interrupt W2857 minted    -         "transcriptstruct --grep and --human over a projects directory sweep every jsonl with one denominators line (skills:W84 ask 2)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2835
+2026-11-21T21:54:10Z  interrupt W2858 minted    -         "Verified bazel sample: named cells with expected verdicts, red cells read from the baseline and not-green list, run fails on a missing cell or changed verdict"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2839
+2026-11-21T21:56:20Z  status W2836 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T21:56:53Z  interrupt W2859 minted    -         "fence isolated-git helper: environment with the working-directory ceiling, both config layers nulled and identity set, tests for skills W87 arms 1, 2, 6 and 7"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2836
+2026-11-21T21:56:53Z  interrupt W2860 minted    -         "fence isolated-git helper: file hooks and config hooks disabled and signing refused, tests for skills W87 arms 3, 4 and 5"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2836
+2026-11-21T21:56:53Z  interrupt W2861 minted    -         "fence isolated-git helper: refuses a working directory outside its own temp dir, tests for skills W87 arm 8 and the F3b and C39 findings"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2836
+2026-11-21T21:56:53Z  interrupt W2862 minted    -         "luthen run_git_clean and mtools git_env.sh switch to the shared isolated-git helper once it lands"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2836
+2026-11-21T21:58:07Z  status W2822 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:05:52Z  status W2837 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:06:35Z  status W2843 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:06:37Z  status W2844 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:07:49Z  interrupt W2863 minted    -         "mutation runner: a suite ended as hung records its tree states and wait channels, and a control on an oversubscribed box must not time out"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2833
+2026-11-21T22:07:51Z  interrupt W2864 minted    -         "mikemol-buildlog is not in the pinned luthen-tools set, only in the paperkit and aeternum venvs"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2833
+2026-11-21T22:09:41Z  status W2864 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:12:56Z  status W2845 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:13:34Z  status W2833 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:13:36Z  status W2848 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:13:37Z  status W2849 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:13:39Z  status W2851 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:17:07Z  status W2846 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:17:16Z  status W2863 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:29:15Z  status W2847 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:35:37Z  status W2850 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:38:24Z  interrupt W2865 minted    -         "katas status prints a repo last commit-log verdict beside its CURRENT head with no sha the verdict was judged at, so a stale FAILED reads as head is red"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1715
+2026-11-21T22:39:43Z  status W2852 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T22:59:50Z  interrupt W2866 minted    -         "Writer --add-retro --dry-run validates a review retro file against the schema and nemik finding rules without minting an R id"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W142
+2026-11-21T23:01:04Z  status W2853 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:03:57Z  status W2854 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:11:50Z  status W2855 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:14:53Z  interrupt W2867 minted    -         "Lift the recursive JSON alias into one shared module the dists depend on through pinned deps (ratchet remap, grade, transcriptstruct JsonValue)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2854
+2026-11-21T23:16:11Z  status W2856 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:18:28Z  status W2857 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:21:07Z  status W2858 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:25:00Z  status W2859 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:25:43Z  status W2860 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:33:53Z  status W2860 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:35:01Z  status W2861 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:35:38Z  interrupt W2868 minted    -         "fence isolated git: a push.gpgSign arm with a control, a gap stated in W2860 (skills W87 C39)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2860
+2026-11-21T23:35:40Z  interrupt W2869 minted    -         "fence isolated git: behavioural gpg.format ssh and x509 arms with controls, asserted today and not exercised (skills W87 C39)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2860
+2026-11-21T23:39:22Z  status W2862 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:42:37Z  status W2865 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:45:01Z  status W2866 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-21T23:45:49Z  interrupt W2870 minted    -         "katas waiter writes head=<sha> at launch and status compares it to HEAD, naming which rule judged the verdict, time kept as the fallback"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2865
+2026-11-21T23:49:25Z  status W2867 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:15:35Z  interrupt W2871 minted    -         "Review bazel runs: ONE reusable review worktree (checkout --detach per sha) or a bazel shutdown after each verdict, never a fresh worktree and server per run"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2863
+2026-11-22T00:16:30Z  status W2868 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2826 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2827 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2830 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2831 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2839 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2853 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2854 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2859 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2861 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2863 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2865 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:24:56Z  status W2866 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T00:35:57Z  status W2826 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T01:33:04Z  status W2827 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
