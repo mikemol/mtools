@@ -139,6 +139,20 @@ def test_another_dists_build_file_does_not_excuse_the_slow_grid(tmp_path: Path) 
     assert "hooks/BUILD.bazel" in said
 
 
+def test_a_failed_store_query_refuses_nothing_even_when_it_printed_a_reading(
+    tmp_path: Path,
+) -> None:
+    """W2811: a nonzero status is the answer, whatever the text says; the same text at 0 refuses."""
+    root, stack = _stack(tmp_path)
+
+    def failed(argv: list[str], cwd: Path) -> tuple[int, str]:
+        status, text = _store(argv, cwd)
+        return (status if argv[0] == "git" else 1), text
+
+    assert shardgate.refusal(root, stack, _ENV, _store) is not None
+    assert shardgate.refusal(root, stack, _ENV, failed) is None
+
+
 def test_nothing_readable_refuses_nothing(tmp_path: Path) -> None:
     """A store that fails, no store at all and no stack all give no refusal."""
     root, stack = _stack(tmp_path)

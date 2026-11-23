@@ -1,0 +1,2 @@
+survived src/mikemol/hooks/no_verify.py::_command_from_stdin
+survived src/mikemol/hooks/no_verify.py::main

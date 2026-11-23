@@ -1467,6 +1467,110 @@ def test_a_module_the_graph_cannot_narrow_stages_the_whole_distribution(
     assert '"//d:tests/test_b.py",' in text
 
 
+_A_SLICE = "d/sites/src/p/a/mutants-baseline.txt"
+_B_SLICE = "d/sites/src/p/b/mutants-baseline.txt"
+
+
+def _baselined_dist(tmp_path: pathlib.Path, text: str) -> pathlib.Path:
+    dist = _gen_dist(tmp_path)
+    (dist / "mutants-baseline.txt").write_text(text, encoding="utf-8")
+    return dist
+
+
+def test_a_module_package_carries_the_slice_of_the_baseline_its_cells_own(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2811: each module's package holds exactly the ratchet lines of that module's cells."""
+    dist = _baselined_dist(tmp_path, "survived src/p/a.py::f\nerrored src/p/b.py::g\n")
+    files = mutants_gen.generate(dist)
+    assert files[_A_SLICE] == "survived src/p/a.py::f\n"
+    assert files[_B_SLICE] == "errored src/p/b.py::g\n"
+
+
+def test_a_module_with_no_baselined_cell_gets_no_slice_and_its_sites_name_none(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2811: only a module with recorded debt stages a slice, so a clean module stays cone-pure."""
+    files = mutants_gen.generate(_baselined_dist(tmp_path, "survived src/p/a.py::f\n"))
+    assert _B_SLICE not in files
+    a_build = files["d/sites/src/p/a/BUILD.bazel"]
+    assert 'baseline = "sites/src/p/a/mutants-baseline.txt"' in a_build
+    assert '":mutants-baseline.txt",' in a_build
+    assert "baseline" not in files["d/sites/src/p/b/BUILD.bazel"]
+
+
+def test_a_ratchet_cell_no_module_has_is_refused_by_name(tmp_path: pathlib.Path) -> None:
+    """W2811: a baseline line that matches no cell of the distribution cannot be sliced."""
+    dist = _baselined_dist(tmp_path, "survived src/p/a.py::f\nsurvived src/p/zzz.py::h\n")
+    problem = ""
+    try:
+        mutants_gen.generate(dist)
+    except mutants_gen.UnknownBaselineCellError as refused:
+        problem = ", ".join(refused.keys)
+    assert problem == "src/p/zzz.py::h"
+
+
+def test_a_slice_that_differs_from_what_the_dist_baseline_generates_is_stale(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2811: one source. A hand-edited slice, and a slice whose debt was paid down, are stale."""
+    dist = _baselined_dist(tmp_path, "survived src/p/a.py::f\n")
+    files = mutants_gen.generate(dist)
+    for rel, text in files.items():
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text(text, encoding="utf-8")
+    assert mutants_gen.stale(tmp_path, "d", files) == []
+    (tmp_path / _A_SLICE).write_text("survived src/p/a.py::g\n", encoding="utf-8")
+    assert mutants_gen.stale(tmp_path, "d", files) == [_A_SLICE]
+    (tmp_path / _A_SLICE).write_text("survived src/p/a.py::f\n", encoding="utf-8")
+    (dist / "mutants-baseline.txt").write_text("", encoding="utf-8")
+    assert _A_SLICE in mutants_gen.stale(tmp_path, "d", mutants_gen.generate(dist))
+
+
+def test_a_site_judged_on_its_slice_reads_recorded_debt_with_no_rise(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2811 arm 1: MUTATE_BASELINE names the slice a per-site run judges against."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    slice_file = tmp_path / "slice.txt"
+    slice_file.write_text(f"survived {_CELL}\n", encoding="utf-8")
+    monkeypatch.setenv("MUTATE_BASELINE", str(slice_file))
+    _seam(monkeypatch, 0, _PASSED)
+    assert _run_main(grid) == 0
+    assert "(1 recorded in mutants-baseline.txt): 0 rise(s), 0 stale" in capsys.readouterr().out
+
+
+def test_a_named_slice_that_is_missing_is_reported_as_not_found_not_as_new_debt(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2811: a MUTATE_BASELINE naming no file says so, and no survivor reads as a rise."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    gone = tmp_path / "gone.txt"
+    monkeypatch.setenv("MUTATE_BASELINE", str(gone))
+    _seam(monkeypatch, 0, _PASSED)
+    assert _run_main(grid) == 1
+    assert f"baseline slice {gone} not found" in capsys.readouterr().err
+
+
+def test_a_site_whose_slice_lacks_a_surviving_cell_still_rises(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2811 arm 2: a slice cannot make a site lenient; an unrecorded survivor is a RISE."""
+    grid = _declared_grid(tmp_path, _DECLARATION)
+    slice_file = tmp_path / "slice.txt"
+    slice_file.write_text("survived src/other.py::elsewhere\n", encoding="utf-8")
+    monkeypatch.setenv("MUTATE_BASELINE", str(slice_file))
+    _seam(monkeypatch, 0, _PASSED)
+    assert _run_main(grid) == 1
+    assert f"RISE survived {_CELL}" in capsys.readouterr().out
+
+
 def test_check_names_a_stale_or_orphaned_package_and_write_makes_it_fresh(
     tmp_path: pathlib.Path,
     monkeypatch: pytest.MonkeyPatch,

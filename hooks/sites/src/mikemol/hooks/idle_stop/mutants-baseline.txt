@@ -1,0 +1,1 @@
+survived src/mikemol/hooks/idle_stop.py::failed-git-names-cards

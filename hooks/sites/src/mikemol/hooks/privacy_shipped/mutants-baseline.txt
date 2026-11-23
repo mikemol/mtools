@@ -1,0 +1,3 @@
+survived src/mikemol/hooks/privacy_shipped.py::main
+survived src/mikemol/hooks/privacy_shipped.py::shipped-decodes-a-binary
+survived src/mikemol/hooks/privacy_shipped.py::shipped-needs-no-judge

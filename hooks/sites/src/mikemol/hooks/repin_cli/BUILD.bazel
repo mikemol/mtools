@@ -26,7 +26,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -52,7 +54,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -78,7 +82,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -104,7 +110,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -130,7 +138,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -156,7 +166,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -182,7 +194,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -208,7 +222,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -234,7 +250,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -260,7 +278,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -286,7 +306,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -312,7 +334,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -338,7 +362,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -364,7 +390,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -390,7 +418,9 @@ mutant_site(
         "//hooks:tests/test_repin_measure.py",
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -417,7 +447,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -444,7 +476,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -471,7 +505,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -498,7 +534,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -525,7 +563,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -552,7 +592,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -579,7 +621,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -606,7 +650,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -633,7 +679,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -660,7 +708,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -687,7 +737,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -714,7 +766,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -741,7 +795,9 @@ mutant_site(
         "//hooks:tests/test_repin_metrics.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/repin_cli/mutants-baseline.txt",
 )
 
 test_suite(

@@ -13,8 +13,10 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        ":mutants-baseline.txt",
         "//:.githooks/pre-push",
     ],
+    baseline = "sites/src/mikemol/hooks/githook_pre_push/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -27,8 +29,10 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        ":mutants-baseline.txt",
         "//:.githooks/pre-push",
     ],
+    baseline = "sites/src/mikemol/hooks/githook_pre_push/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -41,8 +45,10 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        ":mutants-baseline.txt",
         "//:.githooks/pre-push",
     ],
+    baseline = "sites/src/mikemol/hooks/githook_pre_push/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -55,8 +61,10 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        ":mutants-baseline.txt",
         "//:.githooks/pre-push",
     ],
+    baseline = "sites/src/mikemol/hooks/githook_pre_push/mutants-baseline.txt",
 )
 
 test_suite(

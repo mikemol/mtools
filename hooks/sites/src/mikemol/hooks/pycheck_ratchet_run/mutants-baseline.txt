@@ -1,0 +1,2 @@
+survived src/mikemol/hooks/pycheck_ratchet_run.py::mypy_json
+survived src/mikemol/hooks/pycheck_ratchet_run.py::ruff_json

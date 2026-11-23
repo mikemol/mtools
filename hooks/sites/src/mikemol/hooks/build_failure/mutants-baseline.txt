@@ -1,0 +1,1 @@
+survived src/mikemol/hooks/build_failure.py::_stdin_text

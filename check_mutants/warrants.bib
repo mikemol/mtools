@@ -1141,3 +1141,53 @@
             applies is always what this read has seen.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_wrong_marker_is_refused_by_its_module_and_line},
 }
+
+@misc{root-mutate-runner-module-package-carries-the-slice-of-the-baseline-its-cells-own,
+  section = {mutate_runner},
+  title  = {W2811: each module's package holds exactly the ratchet lines of that module's cells},
+  claim  = {W2811: each module's package holds exactly the ratchet lines of that module's cells.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_module_package_carries_the_slice_of_the_baseline_its_cells_own},
+}
+
+@misc{root-mutate-runner-module-with-no-baselined-cell-gets-no-slice-and-its-sites-name-none,
+  section = {mutate_runner},
+  title  = {W2811: only a module with recorded debt stages a slice, so a clean module stays cone-pure},
+  claim  = {W2811: only a module with recorded debt stages a slice, so a clean module stays cone-
+            pure.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_module_with_no_baselined_cell_gets_no_slice_and_its_sites_name_none},
+}
+
+@misc{root-mutate-runner-ratchet-cell-no-module-has-is-refused-by-name,
+  section = {mutate_runner},
+  title  = {W2811: a baseline line that matches no cell of the distribution cannot be sliced},
+  claim  = {W2811: a baseline line that matches no cell of the distribution cannot be sliced.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_ratchet_cell_no_module_has_is_refused_by_name},
+}
+
+@misc{root-mutate-runner-slice-that-differs-from-what-the-dist-baseline-generates-is-stale,
+  section = {mutate_runner},
+  title  = {W2811: one source. A hand-edited slice, and a slice whose debt was paid down, are stale},
+  claim  = {W2811: one source. A hand-edited slice, and a slice whose debt was paid down, are stale.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_slice_that_differs_from_what_the_dist_baseline_generates_is_stale},
+}
+
+@misc{root-mutate-runner-site-judged-on-its-slice-reads-recorded-debt-with-no-rise,
+  section = {mutate_runner},
+  title  = {W2811 arm 1: MUTATE_BASELINE names the slice a per-site run judges against},
+  claim  = {W2811 arm 1: MUTATE_BASELINE names the slice a per-site run judges against.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_site_judged_on_its_slice_reads_recorded_debt_with_no_rise},
+}
+
+@misc{root-mutate-runner-site-whose-slice-lacks-a-surviving-cell-still-rises,
+  section = {mutate_runner},
+  title  = {W2811 arm 2: a slice cannot make a site lenient; an unrecorded survivor is a RISE},
+  claim  = {W2811 arm 2: a slice cannot make a site lenient; an unrecorded survivor is a RISE.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_site_whose_slice_lacks_a_surviving_cell_still_rises},
+}
+
+@misc{root-mutate-runner-named-slice-that-is-missing-is-reported-as-not-found-not-as-new-debt,
+  section = {mutate_runner},
+  title  = {W2811: a MUTATE_BASELINE naming no file says so, and no survivor reads as a rise},
+  claim  = {W2811: a MUTATE_BASELINE naming no file says so, and no survivor reads as a rise.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_named_slice_that_is_missing_is_reported_as_not_found_not_as_new_debt},
+}

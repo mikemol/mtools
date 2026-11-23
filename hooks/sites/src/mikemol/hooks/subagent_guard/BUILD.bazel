@@ -67,7 +67,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -134,7 +136,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -201,7 +205,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -268,7 +274,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -335,7 +343,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -402,7 +412,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -470,7 +482,9 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -538,7 +552,9 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -606,7 +622,9 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -674,7 +692,9 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/subagent_guard/mutants-baseline.txt",
 )
 
 test_suite(

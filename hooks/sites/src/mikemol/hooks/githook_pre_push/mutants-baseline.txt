@@ -1,0 +1,1 @@
+survived src/mikemol/hooks/githook_pre_push.py::_stdin_bytes

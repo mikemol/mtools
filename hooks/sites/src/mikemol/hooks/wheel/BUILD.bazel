@@ -28,7 +28,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -56,7 +58,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -84,7 +88,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -112,7 +118,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -140,7 +148,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -168,7 +178,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -196,7 +208,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -224,7 +238,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -252,7 +268,9 @@ mutant_site(
         "//hooks:tests/test_revendor_apply.py",
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -281,7 +299,9 @@ mutant_site(
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -310,7 +330,9 @@ mutant_site(
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -339,7 +361,9 @@ mutant_site(
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -368,7 +392,9 @@ mutant_site(
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -397,7 +423,9 @@ mutant_site(
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -426,7 +454,9 @@ mutant_site(
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -455,7 +485,9 @@ mutant_site(
         "//hooks:tests/test_revendor_cli.py",
         "//hooks:tests/test_wheel.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/wheel/mutants-baseline.txt",
 )
 
 test_suite(

@@ -1,0 +1,1 @@
+survived src/mikemol/hooks/vlogcli.py::_follow.<locals>.pause

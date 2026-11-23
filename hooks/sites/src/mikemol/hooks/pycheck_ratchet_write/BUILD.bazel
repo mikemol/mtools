@@ -50,7 +50,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_install.py",
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -100,7 +102,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_install.py",
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -150,7 +154,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_install.py",
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -200,7 +206,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_install.py",
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -250,7 +258,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_install.py",
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -301,7 +311,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -352,7 +364,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -403,7 +417,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -454,7 +470,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -505,7 +523,9 @@ mutant_site(
         "//hooks:tests/test_pycheck_ratchet_cli.py",
         "//hooks:tests/test_pycheck_ratchet_write.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/pycheck_ratchet_write/mutants-baseline.txt",
 )
 
 test_suite(

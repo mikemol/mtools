@@ -1,0 +1,2 @@
+survived src/mikemol/hooks/vlogwatch.py::kill_group
+survived src/mikemol/hooks/vlogwatch.py::pid_alive

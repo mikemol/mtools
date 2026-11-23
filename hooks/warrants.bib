@@ -19172,3 +19172,11 @@
             load.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_commit_kata.py -k test_a_stalled_git_is_given_up_on_in_exactly_the_looks_the_correct_watch_needs},
 }
+
+@misc{hooks-shardgate-failed-store-query-refuses-nothing-even-when-it-printed-a-reading,
+  section = {shardgate},
+  title  = {W2811: a nonzero status is the answer, whatever the text says; the same text at 0 refuses},
+  claim  = {W2811: a nonzero status is the answer, whatever the text says; the same text at 0
+            refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_failed_store_query_refuses_nothing_even_when_it_printed_a_reading},
+}

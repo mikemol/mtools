@@ -91,7 +91,7 @@ def mutants_sharded(name = "mutants", shards = 1, cpus = 0, cpu_budget = 0, excl
         names.append(shard)
     native.test_suite(name = name, tests = names)
 
-def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = "small", cpu_budget = 120, tags = ["manual"]):
+def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = "small", cpu_budget = 120, tags = ["manual"], baseline = ""):
     """Declare ONE mutation cell as a test target (mtools:W1883, W1833).
 
     ⚑ EXHAUSTIVE, NOT FLAT: the operator ruled that flat sharding kills caching and that thousands of
@@ -119,8 +119,13 @@ def mutant_site(name, dist, site, data, tests = "", venv = ".venv_deps", size = 
             run 1,789 new tests in the next gate; a site is run by naming it, by a package pattern,
             or by the dist's own gate target. The dist drops `manual` in the commit that retires
             its shards.
+        baseline: the dist-relative path of this module's slice of the dist's mutants-baseline.txt
+            (`MUTATE_BASELINE`, W2811), generated from that file; blank judges against nothing, as
+            a dist with no baseline does. The slice itself is among `data`.
     """
     env = {"MUTATE_SITE": site, "MUTATE_TESTS": tests, "MUTATE_VENV": venv}
+    if baseline:
+        env["MUTATE_BASELINE"] = baseline
     extra = {}
     if cpu_budget:
         env["MUTATE_SHARD_CPU_S"] = str(cpu_budget)

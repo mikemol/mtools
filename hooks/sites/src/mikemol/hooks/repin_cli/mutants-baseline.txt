@@ -1,0 +1,1 @@
+survived src/mikemol/hooks/repin_cli.py::write-without-sha-admitted

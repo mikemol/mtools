@@ -150,7 +150,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -300,7 +302,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -450,7 +454,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -600,7 +606,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -750,7 +758,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -901,7 +911,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1052,7 +1064,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1203,7 +1217,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1354,7 +1370,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1505,7 +1523,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1656,7 +1676,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1807,7 +1829,9 @@ mutant_site(
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/stackahead/mutants-baseline.txt",
 )
 
 test_suite(

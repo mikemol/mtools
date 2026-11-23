@@ -1,0 +1,3 @@
+survived src/mikemol/hooks/commit_kata.py::_witness.<locals>.head
+survived src/mikemol/hooks/commit_kata.py::_witness.<locals>.since
+survived src/mikemol/hooks/commit_kata.py::common_dir

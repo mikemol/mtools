@@ -65,8 +65,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -131,8 +133,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -197,8 +201,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -263,8 +269,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -329,8 +337,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -395,8 +405,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -461,8 +473,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -527,8 +541,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -593,8 +609,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -659,8 +677,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -725,8 +745,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -791,8 +813,10 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -858,8 +882,10 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//:.claude/settings.json",
     ],
+    baseline = "sites/src/mikemol/hooks/no_verify/mutants-baseline.txt",
 )
 
 test_suite(

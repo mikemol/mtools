@@ -66,8 +66,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -133,8 +135,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -200,8 +204,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -267,8 +273,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -334,8 +342,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -401,8 +411,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -468,8 +480,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -535,8 +549,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -602,8 +618,10 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -670,8 +688,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -738,8 +758,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -806,8 +828,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -874,8 +898,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -942,8 +968,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1010,8 +1038,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1078,8 +1108,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1146,8 +1178,10 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
         "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
+    baseline = "sites/src/mikemol/hooks/work_claims_hook/mutants-baseline.txt",
 )
 
 test_suite(

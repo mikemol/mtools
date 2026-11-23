@@ -29,7 +29,6 @@ survived src/mikemol/hooks/pycheck_ratchet_write.py::one-missing-baseline-lowers
 survived src/mikemol/hooks/repin_cli.py::write-without-sha-admitted
 survived src/mikemol/hooks/requeue.py::world_of
 survived src/mikemol/hooks/round_wire.py::ready-card-in-the-gate-still-demanded
-survived src/mikemol/hooks/shardgate.py::failed-store-query-refuses
 survived src/mikemol/hooks/stackahead.py::non-numeric-name-read-as-a-key
 survived src/mikemol/hooks/stackbuildfiles.py::refusal-never-asks-what-is-ahead
 survived src/mikemol/hooks/stackrun.py::no_flaked

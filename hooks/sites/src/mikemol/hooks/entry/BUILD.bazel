@@ -64,7 +64,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -128,7 +130,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -192,7 +196,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -256,7 +262,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -320,7 +328,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -384,7 +394,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -448,7 +460,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -512,7 +526,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -576,7 +592,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -640,7 +658,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -704,7 +724,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -768,7 +790,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -832,7 +856,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -896,7 +922,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -960,7 +988,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1024,7 +1054,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1088,7 +1120,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1152,7 +1186,9 @@ mutant_site(
         "//hooks:tests/test_tick_gate.py",
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/entry/mutants-baseline.txt",
 )
 
 test_suite(

@@ -14,7 +14,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/privacy_shipped.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -28,7 +30,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/privacy_shipped.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -42,7 +46,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/privacy_shipped.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -56,7 +62,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/privacy_shipped.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -71,7 +79,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -86,7 +96,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -101,7 +113,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -116,7 +130,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -131,7 +147,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -146,7 +164,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -161,7 +181,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_privacy_shipped.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/privacy_shipped/mutants-baseline.txt",
 )
 
 test_suite(

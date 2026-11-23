@@ -79,6 +79,7 @@ class Cell:
     sources: tuple[str, ...]
     tests: tuple[str, ...]
     declared: bool = False
+    baselined: bool = False
 
     @property
     def name(self) -> str:
@@ -101,6 +102,11 @@ def package_of(dist: str, module: str) -> str:
 
     """
     return f"{dist}/{SITES}/{module.removesuffix('.py')}"
+
+
+def _slice_path(module: str) -> str:
+    # A module's baseline slice, relative to the distribution: what MUTATE_BASELINE names.
+    return f"{SITES}/{module.removesuffix('.py')}/{mutate_runner.BASELINE_FILE}"
 
 
 def label(dist: str, path: str) -> str:
@@ -194,6 +200,42 @@ def shard_count(dist_dir: pathlib.Path) -> int:
     if len(found) != 1:
         raise ShardCountError(str(dist_dir / BUILD), len(found))
     return int(found[0])
+
+
+class UnknownBaselineCellError(Exception):
+    """A cell of the distribution's baseline is no cell of the distribution; `keys` are those."""
+
+    def __init__(self, *keys: str) -> None:
+        """Keep the unknown keys, typed, beside the exception's own args."""
+        super().__init__(*keys)
+        self.keys = keys
+
+
+def slices_of(dist_dir: pathlib.Path, cells: list[Cell]) -> dict[str, str]:
+    """Cut the distribution's baseline into the slice each module's cells own (W2811).
+
+    The dist file stays the one source; a slice is generated from it, never edited.
+
+    Returns:
+        module -> the baseline lines of that module's cells, in the file's own order, for every
+        module that has a recorded cell.
+
+    Raises:
+        SiteDataError: when the baseline file is malformed.
+        UnknownBaselineCellError: when a baselined cell is no cell of the distribution.
+
+    """
+    known, problem = mutate_runner.read_baseline(dist_dir)
+    if problem:
+        raise SiteDataError(problem)
+    module_of = {cell.key: cell.module for cell in cells}
+    unknown = sorted(set(known) - set(module_of))
+    if unknown:
+        raise UnknownBaselineCellError(*unknown)
+    lines: dict[str, list[str]] = {}
+    for cell, verdict in known.items():
+        lines.setdefault(module_of[cell], []).append(f"{verdict} {cell}\n")
+    return {module: "".join(text) for module, text in lines.items()}
 
 
 class SiteDataError(Exception):
@@ -356,6 +398,8 @@ def render_module(
         data = [label(dist, path) for path in files]
         if cell.declared:
             data.append(label(dist, "mutants.regex"))
+        if cell.baselined:
+            data.append(f":{mutate_runner.BASELINE_FILE}")
         ran = list(cell.tests) or everything_tests
         data += sorted({lab for test in ran for lab in (site_data or {}).get(test, ())})
         out += (
@@ -367,6 +411,7 @@ def render_module(
             "    data = [\n"
             + _list(data)
             + "    ],\n"
+            + (f'    baseline = "{_slice_path(cell.module)}",\n' if cell.baselined else "")
             + ("    tags = [],\n" if cell.key in gated else "")
             + ")\n"
         )
@@ -415,14 +460,18 @@ def generate(dist_dir: pathlib.Path) -> dict[str, str]:
     unknown = sorted(set(gated) - {cell.key for cell in cells})
     if unknown:
         raise UnknownGatedSiteError(*unknown)
+    slices = slices_of(dist_dir, cells)
     for cell in cells:
-        by_module.setdefault(cell.module, []).append(cell)
+        owned = dataclasses.replace(cell, baselined=cell.module in slices)
+        by_module.setdefault(cell.module, []).append(owned)
     files = {
         f"{package_of(dist, module)}/{BUILD}": render_module(
             dist, group, everything_tests, frozenset(gated), site_data=site_data
         )
         for module, group in by_module.items()
     }
+    for module, text in slices.items():
+        files[f"{package_of(dist, module)}/{mutate_runner.BASELINE_FILE}"] = text
     files[f"{dist}/{SITES}/{BUILD}"] = render_root(dist, sorted(by_module))
     if gated:
         files[f"{dist}/{GATED_BZL}"] = render_gated(dist, exclude_in(gated, shard_count(dist_dir)))
@@ -451,8 +500,27 @@ def stale(root: pathlib.Path, dist: str, files: dict[str, str]) -> list[str]:
     """
     changed = [rel for rel, text in files.items() if _read(root / rel) != text]
     folder = root / dist / SITES
-    present = {str(p.relative_to(root)) for p in folder.rglob(BUILD)} if folder.is_dir() else set()
+    present: set[str] = set()
+    if folder.is_dir():
+        for name in (BUILD, mutate_runner.BASELINE_FILE):
+            present |= {str(p.relative_to(root)) for p in folder.rglob(name)}
     return sorted(changed + sorted(present - set(files)))
+
+
+def _generated(dist_dir: pathlib.Path) -> tuple[dict[str, str], str]:
+    # The files a distribution generates, or the refusal that stops generation.
+    try:
+        return generate(dist_dir), ""
+    except UnknownGatedSiteError as exc:
+        return {}, f"mutants_gen: {GATED} names no such site: {', '.join(exc.keys)}\n"
+    except UnknownBaselineCellError as exc:
+        keys = ", ".join(exc.keys)
+        return {}, f"mutants_gen: {mutate_runner.BASELINE_FILE} names no such cell: {keys}\n"
+    except SiteDataError as bad:
+        return {}, "".join(f"mutants_gen: {problem}\n" for problem in bad.problems)
+    except ShardCountError as count:
+        found = f"declares {count.found} `shards = N` (needs exactly 1)"
+        return {}, f"mutants_gen: {count.path} {found}\n"
 
 
 def main(argv: list[str]) -> int:
@@ -475,18 +543,9 @@ def main(argv: list[str]) -> int:
     if not (dist_dir / "src").is_dir():
         sys.stderr.write(f"mutants_gen: {dist_dir}/src is not a directory\n")
         return EXIT_USAGE
-    try:
-        files = generate(dist_dir)
-    except UnknownGatedSiteError as exc:
-        sys.stderr.write(f"mutants_gen: {GATED} names no such site: {', '.join(exc.keys)}\n")
-        return EXIT_USAGE
-    except SiteDataError as bad:
-        sys.stderr.write("".join(f"mutants_gen: {problem}\n" for problem in bad.problems))
-        return EXIT_USAGE
-    except ShardCountError as count:
-        sys.stderr.write(
-            f"mutants_gen: {count.path} declares {count.found} `shards = N` (needs exactly 1)\n"
-        )
+    files, refusal = _generated(dist_dir)
+    if refusal:
+        sys.stderr.write(refusal)
         return EXIT_USAGE
     if write:
         for rel, text in files.items():

@@ -2194,9 +2194,10 @@ def read_baseline(dist: pathlib.Path) -> tuple[dict[str, str], str]:
         is generated sorted, so a hand edit shows).
 
     """
-    path = dist / BASELINE_FILE
+    named = os.environ.get("MUTATE_BASELINE", "")
+    path = dist / (named or BASELINE_FILE)
     if not path.is_file():
-        return {}, ""
+        return {}, (f"baseline slice {path} not found" if named else "")
     cells: dict[str, str] = {}
     previous = ""
     for number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):

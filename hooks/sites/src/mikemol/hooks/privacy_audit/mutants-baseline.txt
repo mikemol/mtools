@@ -1,0 +1,2 @@
+survived src/mikemol/hooks/privacy_audit.py::audit-needs-no-judge
+survived src/mikemol/hooks/privacy_audit.py::main

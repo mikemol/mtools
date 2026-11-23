@@ -86,7 +86,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -172,7 +174,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -258,7 +262,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -344,7 +350,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -430,7 +438,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -516,7 +526,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -602,7 +614,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -688,7 +702,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -774,7 +790,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -860,7 +878,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -947,7 +967,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1034,7 +1056,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1121,7 +1145,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1208,7 +1234,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1295,7 +1323,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1382,7 +1412,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1469,7 +1501,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1556,7 +1590,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1643,7 +1679,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1730,7 +1768,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -1817,7 +1857,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/worktree_submit.py",
         "//hooks:tests/test_requeue.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/requeue/mutants-baseline.txt",
 )
 
 test_suite(

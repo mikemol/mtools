@@ -13,7 +13,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/gatetrend.py",
         "//hooks:src/mikemol/hooks/gatetrend_cli.py",
         "//hooks:tests/test_gatetrend.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/gatetrend_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -26,7 +28,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/gatetrend.py",
         "//hooks:src/mikemol/hooks/gatetrend_cli.py",
         "//hooks:tests/test_gatetrend.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/gatetrend_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -39,7 +43,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/gatetrend.py",
         "//hooks:src/mikemol/hooks/gatetrend_cli.py",
         "//hooks:tests/test_gatetrend.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/gatetrend_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -52,7 +58,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/gatetrend.py",
         "//hooks:src/mikemol/hooks/gatetrend_cli.py",
         "//hooks:tests/test_gatetrend.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/gatetrend_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -65,7 +73,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/gatetrend.py",
         "//hooks:src/mikemol/hooks/gatetrend_cli.py",
         "//hooks:tests/test_gatetrend.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/gatetrend_cli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -78,7 +88,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/gatetrend.py",
         "//hooks:src/mikemol/hooks/gatetrend_cli.py",
         "//hooks:tests/test_gatetrend.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/gatetrend_cli/mutants-baseline.txt",
 )
 
 test_suite(

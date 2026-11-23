@@ -24,7 +24,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -48,7 +50,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -72,7 +76,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -96,7 +102,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -120,7 +128,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -144,7 +154,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -168,7 +180,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -192,7 +206,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -216,7 +232,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -240,7 +258,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -264,7 +284,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -288,7 +310,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -312,7 +336,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -336,7 +362,9 @@ mutant_site(
         "//hooks:src/mikemol/hooks/vlogwatch.py",
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -361,7 +389,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -386,7 +416,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -411,7 +443,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -436,7 +470,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -461,7 +497,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -486,7 +524,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -511,7 +551,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -536,7 +578,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -561,7 +605,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -586,7 +632,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -611,7 +659,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -636,7 +686,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 mutant_site(
@@ -661,7 +713,9 @@ mutant_site(
         "//hooks:tests/test_vlogcli.py",
         "//hooks:tests/test_vlogcli_follow.py",
         "//hooks:mutants.regex",
+        ":mutants-baseline.txt",
     ],
+    baseline = "sites/src/mikemol/hooks/vlogcli/mutants-baseline.txt",
 )
 
 test_suite(
