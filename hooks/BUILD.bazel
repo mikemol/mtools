@@ -13,10 +13,17 @@ load("@rules_python//python:defs.bzl", "py_library", "py_test")
 load(":closure.bzl", "deps_of", "lib", "test_deps")
 load(":dag.bzl", "GRAPH")
 load(":gated_sites.bzl", "GATED_EXCLUDE_IN")
+load(":site_exports.bzl", "SITE_EXPORTS")
 
 # W1989: THE FILES THE GENERATED MUTATION SITES STAGE, exported by the graph's own names (modules,
 # tests, support), so a per-site package under `hooks/sites/` can name them as `//hooks:<path>`.
 exports_files(list(GRAPH["modules"]) + list(GRAPH["tests"]) + list(GRAPH["support"]))
+
+# ⚑ W2839: THE FILES OF THIS PACKAGE THAT TEST MODULES DECLARE THEY NEED STAGED, exported so a site
+# package can stage them (the graph's names above cover Python sources and tests, not these). The
+# list is GENERATED from the `pytestmark = pytest.mark.stages(...)` of each test module, so it cannot
+# drift from what the tests declare: check_mutants/mutants_gen.py --check fails when it is stale.
+exports_files(SITE_EXPORTS)
 
 exports_files([
     "mutants.regex",

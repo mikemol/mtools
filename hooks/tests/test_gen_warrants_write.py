@@ -6,12 +6,12 @@ from __future__ import annotations
 
 import shutil
 from pathlib import Path
-from typing import TYPE_CHECKING
+
+import pytest
 
 from mikemol.hooks import gen_warrants
 
-if TYPE_CHECKING:
-    import pytest
+pytestmark = pytest.mark.stages("//:count_test_functions.py")
 
 # ⚑ `--prune` IS CHECKED AGAINST THE ROOT'S PAIRING CHECK (W840), so a temp repository that prunes
 # needs the real script beside its distributions, exactly as the repository root carries it.

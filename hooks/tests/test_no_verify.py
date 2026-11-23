@@ -22,6 +22,8 @@ import pytest
 from mikemol.hooks import runproc
 from mikemol.hooks.no_verify import findings
 
+pytestmark = pytest.mark.stages("//:.claude/settings.json")
+
 # ⚑⚑⚑ NO `__file__.resolve()`, AND A SIBLING ARM CAUGHT ME WRITING ONE. `test_bar_fires`
 # refuses a path that resolves out of the runfiles tree: under bazel the test runs from a
 # symlink forest, and `resolve()` follows the link back to the DEVELOPER'S WORKING TREE — so

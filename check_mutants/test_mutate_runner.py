@@ -1546,6 +1546,127 @@ def test_a_gated_key_that_is_no_cell_is_refused_by_name(
     assert "src/p/a.py::ghost" in capsys.readouterr().err
 
 
+def _marked(dist: pathlib.Path, name: str, body: str) -> None:
+    # Write one test module of the fixture dist with `body`, and make every root file it names.
+    (dist / "tests" / f"test_{name}.py").write_text(body, encoding="utf-8")
+
+
+def _site_data_dist(tmp_path: pathlib.Path) -> pathlib.Path:
+    dist = _gen_dist(tmp_path)
+    for name in ("only_a", "also_a"):
+        (tmp_path / name).write_text("", encoding="utf-8")
+    (dist / "shared.txt").write_text("", encoding="utf-8")
+    _marked(
+        dist,
+        "a",
+        'import pytest\n\npytestmark = pytest.mark.stages("//:only_a", "//:also_a")\n',
+    )
+    _marked(dist, "b", 'import pytest\n\npytestmark = [pytest.mark.stages("//d:shared.txt")]\n')
+    return dist
+
+
+def test_a_cell_stages_the_data_of_the_tests_it_runs_and_of_no_other(
+    tmp_path: pathlib.Path,
+) -> None:
+    """W2839: the failing case, a test that reads a staged file declares it, in the file.
+
+    Without it a site's control (the suite on the unmutated module) failed for a file the staged
+    tree lacked and the cell was ERRORED: 72 cells of the first whole-suite run. a's cells run
+    test_a and test_b, b's cells run test_b alone, so a stages what either declares and b only
+    what test_b declares: a file read by one test never lands in a site that does not run it.
+    """
+    files = mutants_gen.generate(_site_data_dist(tmp_path))
+    in_a = files["d/sites/src/p/a/BUILD.bazel"]
+    in_b = files["d/sites/src/p/b/BUILD.bazel"]
+    for expected in ('"//:only_a",', '"//:also_a",', '"//d:shared.txt",'):
+        assert expected in in_a
+    assert '"//d:shared.txt",' in in_b
+    assert "only_a" not in in_b
+    assert "also_a" not in in_b
+
+
+def test_the_exports_file_is_derived_from_the_markers_and_stale_when_they_change(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2839: the files this package exports to its sites are the markers' own, never hand-listed.
+
+    Only a label of THIS package is exported (the root's files are exported there); the generated
+    file carries the same REGENERATE header as every other, and a changed marker makes it stale.
+    """
+    dist = _site_data_dist(tmp_path)
+    files = mutants_gen.generate(dist)
+    text = files["d/site_exports.bzl"]
+    assert text.endswith('SITE_EXPORTS = [\n        "shared.txt",\n]\n')
+    assert "REGENERATE: python3 check_mutants/mutants_gen.py --dist d --write" in text
+    assert "only_a" not in text
+    monkeypatch.chdir(tmp_path)
+    assert mutants_gen.main(["--dist", "d", "--write"]) == 0
+    assert mutants_gen.main(["--dist", "d", "--check"]) == 0
+    (dist / "other.txt").write_text("", encoding="utf-8")
+    _marked(dist, "b", 'import pytest\n\npytestmark = pytest.mark.stages("//d:other.txt")\n')
+    assert mutants_gen.main(["--dist", "d", "--check"]) == mutants_gen.EXIT_STALE
+    assert "stale d/site_exports.bzl" in capsys.readouterr().out
+
+
+def test_a_dist_whose_tests_declare_nothing_stages_nothing_extra(tmp_path: pathlib.Path) -> None:
+    """W2839 control: the marker is optional, and without it a site stages what it did before."""
+    dist = _gen_dist(tmp_path)
+    assert mutants_gen.read_site_data(dist) == {}
+    files = mutants_gen.generate(dist)
+    assert "d/site_exports.bzl" not in files
+    assert not any('"//:' in text for text in files.values())
+
+
+def test_a_wrong_marker_is_refused_by_its_module_and_line(
+    tmp_path: pathlib.Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """W2839: pytest checks the marker's NAME only, so its arguments and places are checked here.
+
+    A non-literal argument, a label that is no `//<pkg>:<path>`, a label whose file is absent, a
+    marker applied through a variable or a decorator: each is refused, naming the module and the
+    line, because a quiet skip would stage less than the rule says and the cell would fail its
+    control again with no one told why. A marker the read cannot see is refused too, so what pytest
+    applies is always what this read has seen.
+    """
+    dist = _gen_dist(tmp_path)
+    _marked(
+        dist,
+        "a",
+        "import pytest\n"
+        "\n"
+        "NAME = '//:x'\n"
+        'pytestmark = pytest.mark.stages(NAME, "plain", "//:ghost")\n',
+    )
+    _marked(
+        dist,
+        "b",
+        "import pytest\n"
+        "\n"
+        'marker = pytest.mark.stages("//:x")\n'
+        "pytestmark = marker\n"
+        "\n"
+        '@pytest.mark.stages("//:x")\n'
+        "def test_it() -> None:\n"
+        "    pass\n",
+    )
+    with pytest.raises(mutants_gen.SiteDataError) as raised:
+        mutants_gen.read_site_data(dist)
+    problems = " | ".join(raised.value.problems)
+    assert "tests/test_a.py:4: stages argument is not a string literal" in problems
+    assert "tests/test_a.py:4: plain is not //<pkg>:<path>" in problems
+    assert "tests/test_a.py:4: //:ghost names no file of this tree" in problems
+    assert "tests/test_b.py:4: pytestmark holds a non-literal marker" in problems
+    assert "tests/test_b.py:3: stages marker outside the module-level pytestmark" in problems
+    assert "tests/test_b.py:6: stages marker outside the module-level pytestmark" in problems
+    monkeypatch.chdir(tmp_path)
+    assert mutants_gen.main(["--dist", "d", "--check"]) == mutants_gen.EXIT_USAGE
+    assert "tests/test_a.py:4" in capsys.readouterr().err
+
+
 def test_the_shard_count_is_read_from_the_dists_build_file_and_refused_unless_exactly_one(
     tmp_path: pathlib.Path,
     monkeypatch: pytest.MonkeyPatch,

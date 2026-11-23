@@ -18,6 +18,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -36,6 +37,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -54,6 +56,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -72,6 +75,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -90,6 +94,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -108,6 +113,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -126,6 +132,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -144,6 +151,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -162,6 +170,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -180,6 +189,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -198,6 +208,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -216,6 +227,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -234,6 +246,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -252,6 +265,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -270,6 +284,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -288,6 +303,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -306,6 +322,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -324,6 +341,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -342,6 +360,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -360,6 +379,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -378,6 +398,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -396,6 +417,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -414,6 +436,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -432,6 +455,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -450,6 +474,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_rubric.py",
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -469,6 +494,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
         "//hooks:mutants.regex",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -488,6 +514,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
         "//hooks:mutants.regex",
+        "//:count_test_functions.py",
     ],
 )
 
@@ -507,6 +534,7 @@ mutant_site(
         "//hooks:tests/test_gen_warrants_write.py",
         "//hooks:tests/test_warrant_crosscheck.py",
         "//hooks:mutants.regex",
+        "//:count_test_functions.py",
     ],
 )
 

@@ -15,7 +15,11 @@ import shutil
 from pathlib import Path
 from typing import cast
 
+import pytest
+
 from mikemol.hooks import work_claims, work_claims_hook
+
+pytestmark = pytest.mark.stages("//hooks:tests/fixtures/queue/alpha/paths-forward.json")
 
 FIXTURE = Path(__file__).parent / "fixtures" / "queue" / "alpha" / "paths-forward.json"
 _REPO = "alpha"

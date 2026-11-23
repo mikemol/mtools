@@ -199,6 +199,7 @@ norecursedirs = ["bazel-*", ".venv", ".git", ".claude", "*.egg-info", "__pycache
 addopts = "--strict-markers --strict-config"
 markers = [
     "needs_shellcheck: requires the shellcheck binary, a SYSTEM dependency and not a wheel",
+    "stages: the //pkg:path labels of the data this module's tests read, staged into its per-site mutation targets (W2839)",
 ]
 
 # ⚑⚑ THE BAR IS THE ONE THESE HOOKS ENFORCE, APPLIED TO THEMSELVES. A linting tool held to a

@@ -73,6 +73,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -146,6 +148,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -219,6 +223,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -292,6 +298,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -365,6 +373,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -438,6 +448,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -511,6 +523,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -584,6 +598,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -657,6 +673,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -730,6 +748,8 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -804,6 +824,8 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
         "//hooks:mutants.regex",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -878,6 +900,8 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
         "//hooks:mutants.regex",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -952,6 +976,8 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
         "//hooks:mutants.regex",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 
@@ -1026,6 +1052,8 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_tick_stop_fixture.py",
         "//hooks:mutants.regex",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
     ],
 )
 

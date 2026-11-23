@@ -66,6 +66,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -132,6 +133,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -198,6 +200,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -264,6 +267,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -330,6 +334,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -396,6 +401,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -462,6 +468,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -528,6 +535,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -594,6 +602,7 @@ mutant_site(
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -661,6 +670,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -728,6 +738,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -795,6 +806,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -862,6 +874,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -929,6 +942,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -996,6 +1010,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -1063,6 +1078,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -1130,6 +1146,7 @@ mutant_site(
         "//hooks:tests/test_work_claims_fixture.py",
         "//hooks:tests/test_work_claims_hook.py",
         "//hooks:mutants.regex",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 

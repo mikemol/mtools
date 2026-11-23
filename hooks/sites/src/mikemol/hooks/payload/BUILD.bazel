@@ -274,6 +274,11 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
+        "//:count_test_functions.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -548,6 +553,11 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
+        "//:count_test_functions.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 
@@ -822,6 +832,11 @@ mutant_site(
         "//hooks:tests/test_worktreereap_remove.py",
         "//hooks:tests/test_worktreereap_save.py",
         "//hooks:tests/test_worktreereap_stable.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
+        "//:count_test_functions.py",
+        "//hooks:bin/mikemol-hook-standing",
+        "//hooks:policy/standing.rego",
+        "//hooks:tests/fixtures/queue/alpha/paths-forward.json",
     ],
 )
 

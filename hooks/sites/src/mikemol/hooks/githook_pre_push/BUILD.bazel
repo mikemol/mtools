@@ -13,6 +13,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        "//:.githooks/pre-push",
     ],
 )
 
@@ -26,6 +27,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        "//:.githooks/pre-push",
     ],
 )
 
@@ -39,6 +41,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        "//:.githooks/pre-push",
     ],
 )
 
@@ -52,6 +55,7 @@ mutant_site(
         "//hooks:src/mikemol/hooks/githook_pre_push.py",
         "//hooks:src/mikemol/hooks/runproc.py",
         "//hooks:tests/test_githook_pre_push.py",
+        "//:.githooks/pre-push",
     ],
 )
 

@@ -14,7 +14,8 @@ import os
 import shutil
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
+
+import pytest
 
 from mikemol.hooks import runproc, standing_facts
 from mikemol.hooks.standing_facts import (
@@ -25,8 +26,7 @@ from mikemol.hooks.standing_facts import (
     staged_paths,
 )
 
-if TYPE_CHECKING:
-    import pytest
+pytestmark = pytest.mark.stages("//hooks:bin/mikemol-hook-standing", "//hooks:policy/standing.rego")
 
 _DIST = Path(__file__).parent.parent
 _LAUNCHER = _DIST / "bin" / "mikemol-hook-standing"

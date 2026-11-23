@@ -19,6 +19,8 @@ import pytest
 from mikemol.hooks import runproc
 from mikemol.hooks.githook_pre_push import main
 
+pytestmark = pytest.mark.stages("//:.githooks/pre-push")
+
 _REPO_STUB = Path(__file__).parent.parent.parent / ".githooks" / "pre-push"
 _REFS = (
     b"refs/heads/main 1111111111111111111111111111111111111111 "

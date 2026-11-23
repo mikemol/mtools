@@ -1099,3 +1099,45 @@
             exclusion on the wrong shard.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_shard_count_is_read_from_the_dists_build_file_and_refused_unless_exactly_one},
 }
+
+@misc{root-mutate-runner-cell-stages-the-data-of-the-tests-it-runs-and-of-no-other,
+  section = {mutate_runner},
+  title  = {W2839: the failing case, a test that reads a staged file needs the file in its sites' data},
+  claim  = {W2839: the failing case, a test that reads a staged file needs the file in its sites'
+            data. Without it a site's control (the suite on the unmutated module) failed
+            for a file the staged tree lacked and the cell was ERRORED: 72 cells of the
+            first whole-suite run. a's cells run test_a and test_b, b's cells run test_b
+            alone, so a stages what either names and b only what test_b names: a file
+            read by one test never lands in a site that does not run that test.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_cell_stages_the_data_of_the_tests_it_runs_and_of_no_other},
+}
+
+@misc{root-mutate-runner-exports-file-is-derived-from-the-markers-and-stale-when-they-change,
+  section = {mutate_runner},
+  title  = {W2839: the files this package exports to its sites are the markers' own, never hand-listed},
+  claim  = {W2839: the files this package exports to its sites are the markers' own, never hand-
+            listed. Only a label of THIS package is exported (the root's files are
+            exported there); the generated file carries the same REGENERATE header as
+            every other, and a changed marker makes it stale.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_the_exports_file_is_derived_from_the_markers_and_stale_when_they_change},
+}
+
+@misc{root-mutate-runner-dist-whose-tests-declare-nothing-stages-nothing-extra,
+  section = {mutate_runner},
+  title  = {W2839 control: the marker is optional, and without it a site stages what it did before},
+  claim  = {W2839 control: the marker is optional, and without it a site stages what it did before.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_dist_whose_tests_declare_nothing_stages_nothing_extra},
+}
+
+@misc{root-mutate-runner-wrong-marker-is-refused-by-its-module-and-line,
+  section = {mutate_runner},
+  title  = {W2839: pytest checks the marker's NAME only, so its arguments and places are checked here},
+  claim  = {W2839: pytest checks the marker's NAME only, so its arguments and places are checked
+            here. A non-literal argument, a label that is no `//<pkg>:<path>`, a label
+            whose file is absent, a marker applied through a variable or a decorator:
+            each is refused, naming the module and the line, because a quiet skip would
+            stage less than the rule says and the cell would fail its control again with
+            no one told why. A marker the read cannot see is refused too, so what pytest
+            applies is always what this read has seen.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_wrong_marker_is_refused_by_its_module_and_line},
+}

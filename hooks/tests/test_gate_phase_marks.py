@@ -8,7 +8,11 @@ import shutil
 import time
 from pathlib import Path
 
+import pytest
+
 from mikemol.hooks import gatephase, runproc
+
+pytestmark = pytest.mark.stages("//:.githooks/pre-commit")
 
 GATE = Path(__file__).parent.parent.parent / ".githooks" / "pre-commit"
 BASH = shutil.which("bash") or "bash"

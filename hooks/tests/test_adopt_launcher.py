@@ -13,7 +13,11 @@ import json
 import os
 from pathlib import Path
 
+import pytest
+
 from mikemol.hooks import runproc
+
+pytestmark = pytest.mark.stages("//hooks:adopt/tools-hook")
 
 _DIST = Path(__file__).parent.parent
 _LAUNCHER = _DIST / "adopt" / "tools-hook"

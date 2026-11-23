@@ -22,6 +22,8 @@ import pytest
 
 from mikemol.hooks import routing_table, structural_query
 
+pytestmark = pytest.mark.stages("//:.claude/skills/struct-tools/SKILL.md")
+
 # A routing table in the shape the hooks read: an `artifact | tool | … | claims` row grid.
 _TABLE = """\
 # Structural tools

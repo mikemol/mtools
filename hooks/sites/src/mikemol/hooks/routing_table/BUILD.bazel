@@ -96,6 +96,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -192,6 +193,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -288,6 +290,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -384,6 +387,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -480,6 +484,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -576,6 +581,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -672,6 +678,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -768,6 +775,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -864,6 +872,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
@@ -960,6 +969,7 @@ mutant_site(
         "//hooks:tests/test_tick_release.py",
         "//hooks:tests/test_tick_stop.py",
         "//hooks:tests/test_worktree_venv.py",
+        "//:.claude/skills/struct-tools/SKILL.md",
     ],
 )
 
