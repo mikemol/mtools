@@ -8549,3 +8549,28 @@
 2026-11-22T00:24:56Z  status W2866 working>ready writer    "working -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-22T00:35:57Z  status W2826 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-22T01:33:04Z  status W2827 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T01:50:44Z  status W2830 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-22T02:10:14Z  status W2831 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:23:49Z  status W2830 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:23:49Z  status W2831 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:23:53Z  interrupt W2872 minted    -         "Answer luthen-observability:W2906: waldo gains --exclude, recording its set where the policy reads it, same shape as --target's witness"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2906
+2026-11-23T01:23:54Z  interrupt W2873 minted    -         "Answer nemik:W2403: mikemol-commit no-progress witness is wall-clock; name the wait and holder at the verdict and count the holder's CPU as progress"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W2403
+2026-11-23T01:23:55Z  interrupt W2874 minted    -         "Answer luthen-observability:W2882: the Stop hook names cards the commit hook's round check refuses; it must read the same round"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2882
+2026-11-23T01:24:51Z  status W2839 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2032 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2800 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2807 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2808 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2809 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2812 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2815 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2824 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2845 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2850 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:26:10Z  status W2852 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:27:09Z  status W2839 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:29:27Z  status W2839 blocked>working writer    "blocked -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T01:30:48Z  status W2032 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-23T07:01:11Z  interrupt W2875 minted    -         "Answer luthen-observability:W2912: a hook, same shape as the structural-query refusals (ask in that card)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2912
+2026-11-23T07:01:12Z  interrupt W2876 minted    -         "Answer nemik:W1325: configuration-mechanism census, fleet half: align mtools' per-surface rows"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W1325
+2026-11-23T07:02:06Z  status W2800 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
