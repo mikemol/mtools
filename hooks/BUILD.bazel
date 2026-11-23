@@ -101,6 +101,14 @@ _CPU_BUDGET_S = {
     # derivation above: its largest wall seen is the 60 s timeout, which says nothing about work),
     # and `medium` lifts the wall timeout to 300 s.
     "tests/test_worktreereap_save.py": 30,
+    # W2881: test_bar_fires TIMED OUT at small's 60 s wall (60.4 s, at 94% of its cases) in the b114
+    # gate (BES 367f0003-05a9-4e78-aa79-5988e6729d61, 2804 s, 11 actions running) and passes alone
+    # (BES 92252315-487c-4704-9eea-2c7f25c0b450). MEASURED alone in the hooks venv: 152 cases, user
+    # 24.24 s + sys 3.55 s = 27.8 CPU s, 29.1 s wall, so 46% of this budget. The budget is twice the
+    # largest wall seen (29 s), by the rule above, and the CPU bound is the real one: `medium`'s
+    # 300 s wall stays only as a BACKSTOP beside it, and a backstop hit under load is a defect to
+    # report, not a retry. Reopen for a split along the rule cones if its alone-CPU passes 30 s.
+    "tests/test_bar_fires.py": 60,
 }
 
 # W1988: EVERY TEST DEPENDS ON ITS OWN IMPORT CLOSURE, GENERATED FROM THE GRAPH. A test takes the
