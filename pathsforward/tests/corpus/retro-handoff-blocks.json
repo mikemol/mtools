@@ -1,0 +1,28 @@
+{
+  "vocabularies": {
+    "instrument": "non-empty text",
+    "channel": "non-empty text",
+    "operator": ["self", "other"],
+    "self_probe": "required when operator is other, and must be exactly executed-and-failed"
+  },
+  "cases": [
+    {"name": "self, complete", "valid": true,
+     "handoff": {"instrument": "i", "channel": "c", "operator": "self"}},
+    {"name": "self, with an unneeded self_probe", "valid": true,
+     "handoff": {"instrument": "i", "channel": "c", "operator": "self", "self_probe": "not tried"}},
+    {"name": "other, complete with a failed self probe", "valid": true,
+     "handoff": {"instrument": "i", "channel": "c", "operator": "other", "self_probe": "executed-and-failed"}},
+    {"name": "other, no self_probe", "valid": false,
+     "handoff": {"instrument": "i", "channel": "c", "operator": "other"}},
+    {"name": "other, a self_probe that is not executed-and-failed", "valid": false,
+     "handoff": {"instrument": "i", "channel": "c", "operator": "other", "self_probe": "not tried"}},
+    {"name": "no instrument", "valid": false,
+     "handoff": {"channel": "c", "operator": "self"}},
+    {"name": "an empty instrument", "valid": false,
+     "handoff": {"instrument": "", "channel": "c", "operator": "self"}},
+    {"name": "no channel", "valid": false,
+     "handoff": {"instrument": "i", "operator": "self"}},
+    {"name": "an operator outside the vocabulary", "valid": false,
+     "handoff": {"instrument": "i", "channel": "c", "operator": "someone"}}
+  ]
+}

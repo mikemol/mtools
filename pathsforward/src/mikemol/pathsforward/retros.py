@@ -147,52 +147,59 @@ def retro_refusals(retro: Json) -> list[str]:
     return refused
 
 
-UNSPLIT = "unsplit"
+HANDOFF_KEYS: tuple[str, ...] = ("instrument", "channel", "operator", "self_probe")
 
 
-def _migrated(retro: Json) -> Json | None:
-    """Rewrite one host-schema retro (`cause`, no `root`) into the spec schema.
+def _copied(row: Json) -> Json:
+    # The handoff values the older row ALREADY STATES, copied verbatim: from its handoff block,
+    # else from a flat top-level key of the same name. A copy, never a derivation: nothing is
+    # invented, and trigger, root and contributing are never touched (the operator's ruling).
+    block = row.get("handoff")
+    source: Json = cast("Json", block) if isinstance(block, dict) else {}
+    found: Json = {}
+    for key in HANDOFF_KEYS:
+        value = source.get(key, row.get(key))
+        if value is not None:
+            found[key] = value
+    return found
+
+
+def _carried(row: Json) -> Json:
+    # Everything the older row says, VERBATIM, so the live row of the chain keeps its trigger, root,
+    # precommit, delta and findings for every reader that judges only the live row. Dropped: the
+    # id (a new one is minted), the old supersedes (replaced), the handoff block and any flat
+    # handoff key (both are rebuilt as the new handoff). A copy is not a derivation: nothing that
+    # the older row does not state is ever invented.
+    skipped = {"id", "supersedes", "handoff", *HANDOFF_KEYS}
+    return {key: value for key, value in row.items() if key not in skipped}
+
+
+def scaffolds(doc: Json, repo: str) -> list[tuple[str, Json, list[str]]]:
+    """List a scaffold superseding row for each live retro whose handoff fails the shape (W2888).
+
+    Replaces the in-place `cause` to `root` rename, which the operator ruled a meaning change:
+    nothing here relabels a field. A live retro is one nothing supersedes.
 
     Returns:
-        the rewritten record, or None when it needs no change: it already has a `root`, or it has
-        no `cause` to rename. `cause` becomes `root` and an absent or blank `trigger` becomes
-        `unsplit`, the honest word for a record whose cause was never split from its trigger.
+        (the older id, the scaffold row, its refusals) in list order. The refusals are exactly what
+        `add_retro` would raise on the row, so a scaffold with none is one `--write` adds: the
+        older row's content copied verbatim, its handoff fields copied from its own values. One
+        with refusals needs a reviewer, and its missing fields stay empty.
 
     """
-    if "cause" not in retro or _filled(retro, "root"):
-        return None
-    record: Json = {key: value for key, value in retro.items() if key != "cause"}
-    record["root"] = retro["cause"]
-    if not _filled(record, "trigger"):
-        record["trigger"] = UNSPLIT
-    return record
-
-
-def migrate(doc: Json) -> list[str]:
-    """Rename `cause` to `root` on every retro that carries the host schema (W2091).
-
-    ⚑ ONLY THE TWO FIELDS MOVE: ids, the counter, findings and every other field are untouched, and
-    a record already in the spec schema is left byte for byte, so a second run changes nothing.
-
-    Returns:
-        the ids of the retros that changed, in list order; empty when none did.
-
-    """
-    existing = doc.get("retros")
-    if not isinstance(existing, list):
-        return []
-    changed: list[str] = []
-    rewritten: list[object] = []
-    for item in cast("list[object]", existing):
-        record = _migrated(cast("Json", item)) if isinstance(item, dict) else None
-        if record is None:
-            rewritten.append(item)
+    rows = _rows(doc)
+    superseded = {row.get("supersedes") for row in rows}
+    found: list[tuple[str, Json, list[str]]] = []
+    for row in rows:
+        ident = str(row.get("id"))
+        block = row.get("handoff")
+        shaped = isinstance(block, dict) and not handoff_refusals(cast("Json", block))
+        if ident in superseded or shaped:
             continue
-        rewritten.append(record)
-        changed.append(str(record.get("id", "?")))
-    if changed:
-        doc["retros"] = rewritten
-    return changed
+        scaffold: Json = {**_carried(row), "supersedes": ident, "handoff": _copied(row)}
+        refused = retro_refusals(scaffold) + _supersede_refusals(doc, repo, scaffold)
+        found.append((ident, scaffold, refused))
+    return found
 
 
 RETRO_FIELDS: tuple[str, ...] = (
@@ -209,6 +216,7 @@ RETRO_FIELDS: tuple[str, ...] = (
     "recurring",
     "one_off",
     "handoff",
+    "supersedes",
 )
 FINDING_FIELDS: tuple[str, ...] = (
     "finding_card",
@@ -269,6 +277,53 @@ def render_full(doc: Json, wanted: list[str]) -> tuple[list[str], list[str]]:
     return [line for row in chosen for line in _retro_block(row)], unknown
 
 
+SELF_PROBE = "executed-and-failed"
+
+
+def handoff_refusals(handoff: Json) -> list[str]:
+    """Say what is wrong with a handoff block, by the shape nemik pins (nemik:W2488).
+
+    The shared fixture `tests/corpus/retro-handoff-blocks.json` holds the cases both sides test.
+
+    Returns:
+        the refusals, empty when the block has a non-empty instrument and channel, an operator of
+        `self` or `other`, and, for `other`, a self_probe of exactly `executed-and-failed`; a
+        self_probe on a `self` block is ignored.
+
+    """
+    refused = [
+        f"handoff has no {key}" for key in ("instrument", "channel") if not _filled(handoff, key)
+    ]
+    operator = handoff.get("operator")
+    if operator not in OPERATORS:
+        refused.append(f"handoff operator is not one of {', '.join(OPERATORS)}")
+    elif operator == "other" and handoff.get("self_probe") != SELF_PROBE:
+        refused.append(f"handoff operator other needs self_probe {SELF_PROBE!r}")
+    return refused
+
+
+def _supersede_refusals(doc: Json, repo: str, retro: Json) -> list[str]:
+    # A superseding row names an older retro of THIS repository that nothing has superseded yet, so
+    # a chain has one live row (nemik:W2478), and it carries the COMPLETE handoff the older row
+    # lacked. The older row is never touched: supersession adds a row, it does not relabel one
+    # (the operator's ruling on the in-place cause-to-root rename).
+    if "supersedes" not in retro:
+        return []
+    target = retro["supersedes"]
+    if not isinstance(target, str) or not target.startswith(f"{repo}:R"):
+        return [f"supersedes {target!r} is not a retro id of {repo}"]
+    rows = _rows(doc)
+    if target not in {str(row.get("id")) for row in rows}:
+        return [f"supersedes {target}: no such retro"]
+    taken = [str(row.get("id")) for row in rows if row.get("supersedes") == target]
+    if taken:
+        return [f"supersedes {target}: already superseded by {taken[0]}"]
+    handoff = retro.get("handoff")
+    if not isinstance(handoff, dict):
+        return ["a superseding row has no handoff block"]
+    return handoff_refusals(cast("Json", handoff))
+
+
 def add_retro(doc: Json, repo: str, retro: Json) -> str:
     """Mint the next retro id and append the record, or refuse it.
 
@@ -276,10 +331,11 @@ def add_retro(doc: Json, repo: str, retro: Json) -> str:
         the new id, `<repo>:R<n>`.
 
     Raises:
-        ValueError: when the record fails `retro_refusals`; nothing is changed then.
+        ValueError: when the record fails `retro_refusals` or names a retro it may not supersede;
+            nothing is changed then.
 
     """
-    refused = retro_refusals(retro)
+    refused = retro_refusals(retro) + _supersede_refusals(doc, repo, retro)
     if refused:
         raise ValueError("; ".join(refused))
     counter = doc.get("retro_counter")

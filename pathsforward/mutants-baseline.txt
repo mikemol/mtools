@@ -7,5 +7,4 @@ survived src/mikemol/pathsforward/cli.py::export-overwrites-the-state
 survived src/mikemol/pathsforward/promptwatch.py::ack-claims-without-reading-back
 survived src/mikemol/pathsforward/reconcile.py::oldest-commit-named
 survived src/mikemol/pathsforward/refusal_record.py::spawn
-survived src/mikemol/pathsforward/retros.py::spec-record-rewritten
 survived src/mikemol/pathsforward/triage.py::an-operator-ask-is-ignored

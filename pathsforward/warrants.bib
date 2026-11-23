@@ -7527,20 +7527,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_regressions.py -k test_a_counter_lag_beyond_the_bound_warns},
 }
 
-@misc{pathsforward-retros-migrate-renames-cause-and-leaves-a-spec-record-alone,
-  section = {retros},
-  title  = {A host record gains `root` and `unsplit`; a spec record is untouched; a rerun is empty},
-  claim  = {A host record gains `root` and `unsplit`; a spec record is untouched; a rerun is empty.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_migrate_renames_cause_and_leaves_a_spec_record_alone},
-}
-
-@misc{pathsforward-retros-migrate-command-dry-run-saves-nothing,
-  section = {retros},
-  title  = {--migrate-retros --dry-run names the ids and leaves the file; without it the file moves},
-  claim  = {--migrate-retros --dry-run names the ids and leaves the file; without it the file moves.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_migrate_command_dry_run_saves_nothing},
-}
-
 @misc{pathsforward-landed-handoff-line-carries-the-last-tick-lines-own-time-and-session,
   section = {landed},
   title  = {W2154: the header names the repo, the symbol, the ledger timestamp and the session},
@@ -8449,4 +8435,75 @@
   claim  = {read_gate returns the tool's stdout when it agrees and None when it refuses or is
             absent.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_gate_refusal.py -k test_the_gate_map_is_read_through_the_tool_found_and_a_refusal_reads_as_none},
+}
+
+@misc{pathsforward-retros-superseding-row-names-a-retro-of-its-own-repo-and-leaves-it-untouched,
+  section = {retros},
+  title  = {W2888: supersedes adds a row and never relabels one: the older row is byte for byte},
+  claim  = {W2888: supersedes adds a row and never relabels one: the older row is byte for byte.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_superseding_row_names_a_retro_of_its_own_repo_and_leaves_it_untouched},
+}
+
+@misc{pathsforward-retros-supersedes-naming-an-unknown-foreign-or-already-superseded-retro-is-refused,
+  section = {retros},
+  title  = {W2888: one live row per chain, in the same repository, naming a retro that exists},
+  claim  = {W2888: one live row per chain, in the same repository, naming a retro that exists.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_supersedes_naming_an_unknown_foreign_or_already_superseded_retro_is_refused},
+}
+
+@misc{pathsforward-retros-every-case-of-the-shared-handoff-fixture-gets-the-verdict-nemik-pins,
+  section = {retros},
+  title  = {W2888: nemik:W2488's cases, byte for byte: valid exactly when nothing is refused},
+  claim  = {W2888: nemik:W2488's cases, byte for byte: valid exactly when nothing is refused.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_every_case_of_the_shared_handoff_fixture_gets_the_verdict_nemik_pins},
+}
+
+@misc{pathsforward-retros-superseding-row-failing-the-handoff-shape-is-refused-and-changes-nothing,
+  section = {retros},
+  title  = {W2888: the superseding row must carry the complete handoff the older row lacked},
+  claim  = {W2888: the superseding row must carry the complete handoff the older row lacked.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_superseding_row_failing_the_handoff_shape_is_refused_and_changes_nothing},
+}
+
+@misc{pathsforward-retros-shared-supersession-pair-replays-through-the-writer,
+  section = {retros},
+  title  = {W2888: nemik R3 lacks instrument and channel, R9 supersedes it with the complete handoff},
+  claim  = {W2888: nemik R3 lacks instrument and channel, R9 supersedes it with the complete
+            handoff.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_shared_supersession_pair_replays_through_the_writer},
+}
+
+@misc{pathsforward-retros-in-place-cause-to-root-rename-is-gone-not-left-callable,
+  section = {retros},
+  title  = {W2888: the operator ruled a pure rename a meaning change, so nothing may still call it},
+  claim  = {W2888: the operator ruled a pure rename a meaning change, so nothing may still call it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_in_place_cause_to_root_rename_is_gone_not_left_callable},
+}
+
+@misc{pathsforward-retros-scaffold-copies-only-stated-handoff-values-and-never-derives-a-cause,
+  section = {retros},
+  title  = {W2888: a complete copy is writable, a gap stays empty and listed, no cause field moves},
+  claim  = {W2888: a complete copy is writable, a gap stays empty and listed, no cause field moves.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_a_scaffold_copies_only_stated_handoff_values_and_never_derives_a_cause},
+}
+
+@misc{pathsforward-retros-migrate-retros-lists-then-writes-exactly-the-set-it-listed,
+  section = {retros},
+  title  = {W2888: the dry run is the default and prints the set --write then adds, with no relabel},
+  claim  = {W2888: the dry run is the default and prints the set --write then adds, with no relabel.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_migrate_retros_lists_then_writes_exactly_the_set_it_listed},
+}
+
+@misc{pathsforward-retros-superseding-row-is-the-older-row-with-only-id-supersedes-and-handoff-changed,
+  section = {retros},
+  title  = {W2888: superseding must not erase the retro's content from a reader of the live row},
+  claim  = {W2888: superseding must not erase the retro's content from a reader of the live row.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_the_superseding_row_is_the_older_row_with_only_id_supersedes_and_handoff_changed},
+}
+
+@misc{pathsforward-retros-older-row-with-no-findings-list-is-not-given-an-empty-one,
+  section = {retros},
+  title  = {W2888: absent means G7 never ran, so the scaffold invents no [] and lists a reviewer},
+  claim  = {W2888: absent means G7 never ran, so the scaffold invents no [] and lists a reviewer.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_an_older_row_with_no_findings_list_is_not_given_an_empty_one},
 }

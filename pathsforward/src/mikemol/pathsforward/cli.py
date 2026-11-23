@@ -750,7 +750,7 @@ _APPLIES: dict[str, frozenset[str]] = {
     "add_retro": frozenset(),
     "retro_scaffold": frozenset(),
     "retros": frozenset(),
-    "migrate_retros": frozenset({"dry_run"}),
+    "migrate_retros": frozenset({"write"}),
     "regressions": frozenset(),
     "warrant": frozenset(
         {"transcript", "uuid", "claim", "line", "reader", "root", "reason", "dry_run"}
@@ -3486,19 +3486,27 @@ def _retro_scaffold(ctx: Ctx) -> int:
 
 
 def _migrate_retros(ctx: Ctx) -> int:
-    """Rename `cause` to `root` on host-schema retros, or say which would change (W2091).
+    """List a scaffold superseding row for each live retro failing the handoff shape (W2888).
+
+    The in-place `cause` to `root` rename (W2091) is gone: it asserted that every recorded cause was
+    a root cause. Nothing here relabels a field. A scaffold whose handoff fields were all COPIED
+    from the older row's own values is one `--write` adds as a superseding row; every other row is
+    listed as needing a reviewer, and nothing is written for it.
 
     Returns:
-        EXIT_OK; with --dry-run nothing is saved and the ids that would change are listed.
+        EXIT_OK; without --write nothing is saved and the rows it would add are listed.
 
     """
-    if ctx.opts.get("dry_run"):
-        scratch = cast("dict[str, object]", json.loads(json.dumps(store.load(ctx.path).doc)))
-        _say(f"WOULD MIGRATE {' '.join(retros.migrate(scratch)) or 'none'}")
+    repo = inbound.repo_name(ctx.path)
+    for old, _row, refused in retros.scaffolds(store.load(ctx.path).doc, repo):
+        _say(f"NEEDS A REVIEWER {old}: {'; '.join(refused)}" if refused else f"WOULD WRITE {old}")
+    if not ctx.opts.get("write"):
         return EXIT_OK
 
     def edit(state: State) -> int:
-        _say(f"MIGRATED {' '.join(retros.migrate(state.doc)) or 'none'}")
+        for old, row, refused in retros.scaffolds(state.doc, repo):
+            if not refused:
+                _say(f"WROTE {retros.add_retro(state.doc, repo, row)} superseding {old}")
         return EXIT_OK
 
     return _mutate(ctx, edit)

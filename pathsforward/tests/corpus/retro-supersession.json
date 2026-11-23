@@ -1,0 +1,21 @@
+{
+  "note": "supersedes is the FULL id the writer stores, <repo>:R<n>, of an older row of the SAME repo (a foreign repo's id is refused); the graph keys a retro by that same id, so it is the join key",
+  "retros": [
+    {
+      "id": "nemik:R3",
+      "precommit": "an older retro whose handoff names no instrument and no channel",
+      "handoff": {"operator": "other"}
+    },
+    {
+      "id": "nemik:R9",
+      "supersedes": "nemik:R3",
+      "precommit": "the superseding row: it carries the complete handoff the old row lacked",
+      "handoff": {
+        "instrument": "the writer's --add-retro",
+        "channel": "mikemol-paths-forward",
+        "operator": "other",
+        "self_probe": "executed-and-failed"
+      }
+    }
+  ]
+}

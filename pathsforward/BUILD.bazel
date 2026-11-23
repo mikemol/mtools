@@ -55,8 +55,10 @@ py_library(
         ],
         # W850: test_certify runs the real policy under the hash-pinned opa, named by OPA_BIN.
         # W1258: test_vtodo_golden compares the writer's output to tests/golden/queue.ics.
+        # W2888: tests/corpus/* are nemik's shared retro fixtures, copied byte for byte and pinned by
+        # sha256 in test_retros (a copy that differs fails its holder).
         data = ["pyproject.toml", "@opa//file", "//frontier:src/mikemol/frontier/walk.py"] + glob(
-            ["tests/golden/*"],
+            ["tests/golden/*", "tests/corpus/*"],
             allow_empty = True,
         ),
         env = {
@@ -156,6 +158,9 @@ mutants_sharded(
         # the declared cell warrantfind.py::cited-card-called-unresolved.
         # NAMED, NEVER GLOBBED (github-cb): the one golden file, from `git ls-files tests/golden`.
         "tests/golden/queue.ics",
+        # W2888: nemik's two shared retro fixtures, NAMED the same way (test_retros reads both).
+        "tests/corpus/retro-handoff-blocks.json",
+        "tests/corpus/retro-supersession.json",
         "@opa//file",
         "//frontier:src/mikemol/frontier/walk.py",
     ] + glob(["src/**/*.py", "src/**/*.rego", "tests/**/*.py"]),

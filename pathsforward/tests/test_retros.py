@@ -4,7 +4,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 import pytest
@@ -12,9 +14,22 @@ import pytest
 from mikemol.pathsforward import cli, retros
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from mikemol.pathsforward.model import Json
+
+_HANDOFF: Json = {"instrument": "i", "channel": "c", "operator": "self"}
+_CORPUS = Path(__file__).parent / "corpus"
+_PINNED = {
+    "retro-handoff-blocks.json": "8f6948d6192289116a9076b7ed9249734a3428af27ff4010bed5d50ccbaa04b3",
+    "retro-supersession.json": "f4818250ab98b3df67d108d862fefcc903411b3f38d96aa7bee194dbe5575bcb",
+}
+
+
+def _fixture(name: str) -> Json:
+    # A shared fixture, read only when it is the bytes nemik pinned (a copy that differs fails).
+    raw = (_CORPUS / name).read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == _PINNED[name], name
+    return cast("Json", json.loads(raw))
+
 
 _CARD: Json = {
     "finding_card": "mtools:W1",
@@ -122,6 +137,67 @@ def test_adding_a_retro_mints_the_next_id_and_a_refused_one_changes_nothing() ->
     assert doc == before
 
 
+def test_a_superseding_row_names_a_retro_of_its_own_repo_and_leaves_it_untouched() -> None:
+    """W2888: supersedes adds a row and never relabels one: the older row is byte for byte."""
+    doc: Json = {"waypoints": []}
+    first = retros.add_retro(doc, "mtools", {"trigger": "t", "findings": [_CARD]})
+    old = json.dumps(doc["retros"], sort_keys=True)
+    row: Json = {"supersedes": first, "handoff": _HANDOFF, "findings": []}
+    assert retros.add_retro(doc, "mtools", row) == "mtools:R2"
+    rows = cast("list[Json]", doc["retros"])
+    assert rows[1]["supersedes"] == first
+    assert json.dumps(rows[:1], sort_keys=True) == old
+
+
+def test_a_supersedes_naming_an_unknown_foreign_or_already_superseded_retro_is_refused() -> None:
+    """W2888: one live row per chain, in the same repository, naming a retro that exists."""
+    doc: Json = {"waypoints": []}
+    first = retros.add_retro(doc, "mtools", {"trigger": "t", "findings": []})
+    retros.add_retro(doc, "mtools", {"supersedes": first, "handoff": _HANDOFF, "findings": []})
+    before = json.dumps(doc, sort_keys=True)
+    for named, why in (
+        ("mtools:R99", "no such retro"),
+        ("nemik:R1", "is not a retro id of mtools"),
+        (first, "already superseded by mtools:R2"),
+    ):
+        row: Json = {"supersedes": named, "handoff": _HANDOFF, "findings": []}
+        with pytest.raises(ValueError, match=why):
+            retros.add_retro(doc, "mtools", row)
+    assert json.dumps(doc, sort_keys=True) == before
+
+
+def test_every_case_of_the_shared_handoff_fixture_gets_the_verdict_nemik_pins() -> None:
+    """W2888: nemik:W2488's cases, byte for byte: valid exactly when nothing is refused."""
+    cases = cast("list[Json]", _fixture("retro-handoff-blocks.json")["cases"])
+    assert {case["valid"] for case in cases} == {True, False}
+    for case in cases:
+        refused = retros.handoff_refusals(cast("Json", case["handoff"]))
+        assert (not refused) is case["valid"], case["name"]
+
+
+def test_a_superseding_row_failing_the_handoff_shape_is_refused_and_changes_nothing() -> None:
+    """W2888: the superseding row must carry the complete handoff the older row lacked."""
+    doc: Json = {"waypoints": []}
+    first = retros.add_retro(doc, "mtools", {"trigger": "t", "findings": []})
+    before = json.dumps(doc, sort_keys=True)
+    bare: Json = {"supersedes": first, "findings": []}
+    with pytest.raises(ValueError, match="no handoff block"):
+        retros.add_retro(doc, "mtools", bare)
+    weak: Json = {"supersedes": first, "handoff": {**_HANDOFF, "operator": "other"}, "findings": []}
+    with pytest.raises(ValueError, match="needs self_probe"):
+        retros.add_retro(doc, "mtools", weak)
+    assert json.dumps(doc, sort_keys=True) == before
+
+
+def test_the_shared_supersession_pair_replays_through_the_writer() -> None:
+    """W2888: nemik R3 lacks instrument and channel, R9 supersedes it with the complete handoff."""
+    old, new = cast("list[Json]", _fixture("retro-supersession.json")["retros"])
+    doc: Json = {"retros": [old], "retro_counter": 8}
+    row = {**{key: value for key, value in new.items() if key != "id"}, "findings": []}
+    assert retros.add_retro(doc, "nemik", row) == new["id"]
+    assert cast("list[Json]", doc["retros"])[0] == old
+
+
 def _project(tmp_path: Path) -> Path:
     queue = tmp_path / ".claude" / "paths-forward.json"
     queue.parent.mkdir()
@@ -170,31 +246,91 @@ def test_the_retros_command_prints_all_or_the_named_and_refuses_an_unknown_id(
     assert "R7: no retro with that id" in capsys.readouterr().err
 
 
-def test_migrate_renames_cause_and_leaves_a_spec_record_alone() -> None:
-    """A host record gains `root` and `unsplit`; a spec record is untouched; a rerun is empty."""
-    spec: Json = {"id": "r:R2", "root": "r", "trigger": "t"}
-    doc: Json = {"retros": [{"id": "r:R1", "cause": "why", "keep": 1}, spec]}
-    assert retros.migrate(doc) == ["r:R1"]
-    assert doc["retros"] == [
-        {"id": "r:R1", "keep": 1, "root": "why", "trigger": retros.UNSPLIT},
-        spec,
-    ]
-    assert retros.migrate(doc) == []
+def test_the_in_place_cause_to_root_rename_is_gone_not_left_callable() -> None:
+    """W2888: the operator ruled a pure rename a meaning change, so nothing may still call it."""
+    assert not any(hasattr(retros, name) for name in ("migrate", "_migrated", "UNSPLIT"))
 
 
-def test_migrate_command_dry_run_saves_nothing(tmp_path: Path) -> None:
-    """--migrate-retros --dry-run names the ids and leaves the file; without it the file moves."""
+def _flat(ident: str) -> Json:
+    # An older row whose handoff values sit as flat keys beside its real content: the handoff moves
+    # into the block, the content is carried verbatim, and nothing is derived.
+    return {
+        "id": ident,
+        "trigger": "the proximate cause",
+        "root": "the root",
+        "precommit": "what was expected",
+        "delta": "what happened",
+        "findings": [_CARD],
+        "instrument": "i",
+        "channel": "c",
+        "operator": "self",
+    }
+
+
+def test_the_superseding_row_is_the_older_row_with_only_id_supersedes_and_handoff_changed() -> None:
+    """W2888: superseding must not erase the retro's content from a reader of the live row."""
+    old = _flat("r:R2")
+    [(ident, row, refused)] = retros.scaffolds({"retros": [old]}, "r")
+    assert (ident, refused) == ("r:R2", [])
+    flat = {"instrument", "channel", "operator"}
+    assert {k: v for k, v in row.items() if k not in {"supersedes", "handoff"}} == {
+        k: v for k, v in old.items() if k not in {"id", *flat}
+    }
+    assert row["supersedes"] == "r:R2"
+    assert row["handoff"] == _HANDOFF
+
+
+def test_an_older_row_with_no_findings_list_is_not_given_an_empty_one() -> None:
+    """W2888: absent means G7 never ran, so the scaffold invents no [] and lists a reviewer."""
+    old = {key: value for key, value in _flat("r:R2").items() if key != "findings"}
+    [(_, row, refused)] = retros.scaffolds({"retros": [old]}, "r")
+    assert "findings" not in row
+    assert any("no findings list" in line for line in refused)
+
+
+def test_a_scaffold_copies_only_stated_handoff_values_and_never_derives_a_cause() -> None:
+    """W2888: a complete copy is writable, a gap stays empty and listed, nothing is derived."""
+    shaped: Json = {"id": "r:R1", "handoff": _HANDOFF, "findings": []}
+    partial: Json = {"id": "r:R3", "handoff": {"operator": "other"}, "findings": []}
+    bare: Json = {"id": "r:R4", "cause": "why", "findings": []}
+    done: Json = {"id": "r:R5", "handoff": {"operator": "other"}, "findings": []}
+    later: Json = {"id": "r:R6", "supersedes": "r:R5", "handoff": _HANDOFF, "findings": []}
+    doc: Json = {"retros": [shaped, _flat("r:R2"), partial, bare, done, later]}
+    found = {old: (row, refused) for old, row, refused in retros.scaffolds(doc, "r")}
+    assert sorted(found) == ["r:R2", "r:R3", "r:R4"]
+    assert not found["r:R2"][1]
+    assert found["r:R3"][1]
+    assert found["r:R4"][1]
+    assert found["r:R4"][0]["handoff"] == {}
+    assert found["r:R4"][0]["cause"] == "why"
+
+
+def test_migrate_retros_lists_then_writes_exactly_the_set_it_listed(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """W2888: WOULD WRITE equals what --write writes; a row add_retro would refuse is listed."""
     queue = _project(tmp_path)
+    repo = tmp_path.name
     doc = _saved(queue)
-    doc["retros"] = [{"id": "r:R1", "cause": "why"}]
+    refuse: Json = {"id": f"{repo}:R3", "cause": "why", "findings": []}
+    doc["retros"] = [_flat(f"{repo}:R1"), _flat(f"{repo}:R2"), refuse]
+    doc["retro_counter"] = 3
     queue.write_text(json.dumps(doc), encoding="utf-8")
     before = _saved(queue)
-    assert cli.main(["--state", str(queue), "--migrate-retros", "--dry-run"]) == cli.EXIT_OK
-    assert _saved(queue) == before
     assert cli.main(["--state", str(queue), "--migrate-retros"]) == cli.EXIT_OK
-    [stored] = cast("list[Json]", _saved(queue)["retros"])
-    assert stored["root"] == "why"
-    assert "cause" not in stored
+    listed = capsys.readouterr().out
+    assert f"WOULD WRITE {repo}:R1" in listed
+    assert f"WOULD WRITE {repo}:R2" in listed
+    assert f"NEEDS A REVIEWER {repo}:R3" in listed
+    assert _saved(queue) == before
+    assert cli.main(["--state", str(queue), "--migrate-retros", "--write"]) == cli.EXIT_OK
+    wrote = capsys.readouterr().out
+    assert f"WROTE {repo}:R4 superseding {repo}:R1" in wrote
+    assert f"WROTE {repo}:R5 superseding {repo}:R2" in wrote
+    assert f"superseding {repo}:R3" not in wrote
+    after = cast("list[Json]", _saved(queue)["retros"])
+    assert after[:3] == before["retros"]
+    assert [row.get("supersedes") for row in after[3:]] == [f"{repo}:R1", f"{repo}:R2"]
 
 
 def test_self_reproach_in_delta_or_cause_is_refused_naming_field_and_phrase() -> None:
