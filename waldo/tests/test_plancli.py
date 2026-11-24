@@ -25,7 +25,9 @@ _COMMAND = "python -m the.tool"
 def _plan_text() -> str:
     change: dict[str, object] = {"actions": ["create"]}
     resource: dict[str, object] = {"address": "a.x", "change": change}
-    doc: dict[str, object] = {"resource_changes": [resource]}
+    held = [{"address": "p.one"}, {"address": "p.two"}]
+    config: dict[str, object] = {"root_module": {"resources": held}}
+    doc: dict[str, object] = {"resource_changes": [resource], "configuration": config}
     return json.dumps(doc)
 
 
@@ -56,10 +58,12 @@ class _Host:
         return Path("/bin") / name if name in _TOOLS else None
 
     def _tofu(self, args: tuple[str, ...]) -> _Done:
+        if args == ("version",):
+            return _Done(0, "OpenTofu v1.10.6-dev\n")
         sub = args[1]
         if sub == "plan":
             self.planned_flags.append(
-                tuple(a for a in args if a.startswith(("-replace", "-target")))
+                tuple(a for a in args if a.startswith(("-replace", "-target", "-exclude")))
             )
             out = next(a for a in args if a.startswith("-out="))[len("-out=") :]
             Path(out).write_bytes(b"PLANBYTES")
@@ -216,6 +220,44 @@ def test_the_flags_reach_tofu_and_a_planfile_that_holds_a_plan_is_refused(tmp_pa
     assert world.host.planned_flags == [("-replace=a", "-target=b")]
     assert world.main("--root", "stage2", "--planfile", str(plan)) == planflow.EXIT_STOPPED
     assert "already holds a plan" in world.text()
+
+
+def test_two_excludes_reach_the_plan_in_order_after_replace_and_target(tmp_path: Path) -> None:
+    """W2872: --exclude is repeatable and spelled last, so the operator-facing flag is pinned."""
+    world = _World(tmp_path)
+    plan = tmp_path / "p.tfplan"
+    code = world.main(
+        "--root",
+        "stage2",
+        "--planfile",
+        str(plan),
+        "--exclude",
+        "p.one",
+        "--target",
+        "b",
+        "--exclude",
+        "p.two",
+        "--replace",
+        "a",
+    )
+    assert code == planflow.EXIT_OK
+    assert world.host.planned_flags == [
+        ("-replace=a", "-target=b", "-exclude=p.one", "-exclude=p.two")
+    ]
+    parsed = plancli.build_parser().parse_args(["--exclude", "x", "--exclude", "y"])
+    assert cast("list[str]", parsed.exclude) == ["x", "y"]
+    assert cast("object", plancli.build_parser().parse_args([]).exclude) is None
+
+
+def test_an_empty_exclude_is_refused_before_anything_is_planned(tmp_path: Path) -> None:
+    """W2872: an empty address would defer nothing and look like a deferral."""
+    world = _World(tmp_path)
+    plan = tmp_path / "p.tfplan"
+    code = world.main("--root", "stage2", "--planfile", str(plan), "--exclude", " ")
+    assert code == planflow.EXIT_STOPPED
+    assert "--exclude needs an address" in world.text()
+    assert world.host.planned_flags == []
+    assert not plan.exists()
 
 
 def test_a_plan_made_under_declarations_verifies_under_them(tmp_path: Path) -> None:

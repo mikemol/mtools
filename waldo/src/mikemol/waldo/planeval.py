@@ -48,6 +48,7 @@ class Evidence:
     plan_json: Path
     targets: tuple[str, ...] = ()
     extra_data: tuple[Path, ...] = ()
+    excludes: tuple[str, ...] = ()
 
 
 def refuse_unless(
@@ -77,15 +78,19 @@ def refuse_unless(
     return tofu, opa
 
 
-def scope_file(plan_json: Path, targets: tuple[str, ...]) -> Path:
-    """Write the plan's -target set where the policy reads it (`data.plan_scope.targets`).
+def scope_file(plan_json: Path, targets: tuple[str, ...], excludes: tuple[str, ...] = ()) -> Path:
+    """Write the plan's -target and -exclude sets where the policy reads them.
+
+    `data.plan_scope.targets` and `data.plan_scope.excludes` (W2872): tofu's plan JSON records
+    neither, so the gate that passed the flag is the only witness. An address in `excludes` is
+    DEFERRED, never clean: the policy must keep reading it as not installed.
 
     Returns:
         the scope file's path, beside the plan JSON.
 
     """
     path = plan_json.with_suffix(".scope.json")
-    scope: dict[str, object] = {"targets": list(targets)}
+    scope: dict[str, object] = {"targets": list(targets), "excludes": list(excludes)}
     document: dict[str, object] = {"plan_scope": scope}
     path.write_text(json.dumps(document), encoding="utf-8")
     return path
@@ -124,7 +129,7 @@ def evaluate(
 
     """
     plan_json = evidence.plan_json
-    scope = scope_file(plan_json, evidence.targets)
+    scope = scope_file(plan_json, evidence.targets, evidence.excludes)
     args = ["eval", "-f", "json", "-i", str(plan_json), "-d", str(config.policy), "-d", str(scope)]
     for directory in evidence.extra_data:
         args += ["-d", str(directory)]

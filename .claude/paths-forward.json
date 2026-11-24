@@ -2,7 +2,7 @@
   "version": 1,
   "project_root": "/home/mikemol/github/mtools",
   "state_path": "/home/mikemol/github/mtools/.claude/paths-forward.json",
-  "counter": 2892,
+  "counter": 2894,
   "armed_at": "2026-09-19T00:00:00Z",
   "heartbeat": "2026-10-29T04:12:08Z",
   "job_id": "c82cd746",
@@ -53146,7 +53146,7 @@
         "importdag"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Emit the rerun fraction per dist (share of mutation cells a median source change reruns: hooks 18.5, pathsforward 100, transcriptstruct 91, witness 93, fence 76 at the 2026-10-24 measurement) as a counter through the telemetry store, so the falling rate is the visible measure of the atomization.",
@@ -53154,7 +53154,7 @@
       "issued_at": "2026-11-06T21:19:12Z",
       "minted_during": "interrupt",
       "caused_by": "W1888",
-      "last_worked": "2026-11-23T21:35:11Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
       "completed": null,
       "vector": "WV:1/R:H/E:Y/C:N/I:N/A:N/X:N/S:U/F:K/W:Y",
@@ -57431,8 +57431,7 @@
         "check_mutants"
       ],
       "blocked_on": [
-        "W2884",
-        "W2888"
+        "W2884"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "write_baseline keeps every known cell the logs did not run and baseline_gate judges only cells in 'ran', so an entry for a def-site that was deleted, renamed or made unreachable stays forever: debt that cannot fall, and deleting the code does not lower the count. Fix: write_baseline and --check-baseline compare entries against the grid's current site keys (mutants_gen / site_keys) plus the declared labels (mutants.regex) and refuse an entry naming neither. Test with a baseline entry for a deleted function. Not a block on b66 (github-cb 2026-11-14: today's baselines come from complete fresh runs, so no vanished entry exists yet).",
@@ -60135,7 +60134,7 @@
         "pathsforward"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Send github-cb the four blobs and invocation e55a739d for review; hold for a stack slot behind the b89 repair (W2694 plus W2642). Landing needs no new shard decision beyond pathsforward's existing 36-shard grid, which this slice adds one killed def-site to.",
@@ -60143,7 +60142,7 @@
       "issued_at": "2026-11-16T21:18:21Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2233",
-      "last_worked": "2026-11-23T21:35:11Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
       "weight": 7,
       "completed": null,
@@ -60163,7 +60162,7 @@
         "struct-tools"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Send github-cb the blobs and invocation a2849d5c; landing waits on W2573 part 2 (shard guard on hooks).",
@@ -60171,7 +60170,7 @@
       "issued_at": "2026-11-16T21:18:24Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2234",
-      "last_worked": "2026-11-23T21:35:11Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
       "weight": 7,
       "completed": null,
@@ -60217,7 +60216,7 @@
         "watchdog"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Send github-cb the blobs (watchdog.py 825b0608, test_watchdog.py 42e26771, warrants.bib 66360525, sites BUILD 6dee5836) and invocation f68b60da; github-cb is the reviewer who asked for this for the unfreeze review. Landing waits on W2573 part 2. After landing, restart any running watchdog so it pulses.",
@@ -60225,7 +60224,7 @@
       "issued_at": "2026-11-16T23:10:16Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2238",
-      "last_worked": "2026-11-23T21:35:11Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
       "weight": 7,
       "completed": null,
@@ -63192,7 +63191,7 @@
         "onboarding"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "STEP 3 MEASURED 2026-11-19: W2739's rule 17 in mtools-scratch/mtools-W2739 is the first deny written with a # METADATA block, and 'opa inspect -a --format pretty hooks/policy/standing.rego' printed both annotations (title, description, custom.remedy) with the rule and line, so the generator can read annotations that way (use --format json for the tool). The 15 older deny sites still carry none. Remaining as before: annotate them, the generator, the currency test, the ratchet baseline for the 2 undocumented hook scripts. Hooks dist: behind the W2573 cutover.",
@@ -63200,7 +63199,7 @@
       "issued_at": "2026-11-18T21:05:45Z",
       "minted_during": "interrupt",
       "caused_by": "github-cb",
-      "last_worked": "2026-11-23T21:35:11Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:N/C:N/I:L/A:N/X:N/S:U/F:K/W:Y",
       "vector_source": "agent",
@@ -63441,7 +63440,7 @@
       "issued_at": "2026-11-19T02:03:47Z",
       "minted_during": "interrupt",
       "caused_by": "W2730",
-      "last_worked": "2026-11-23T21:27:04Z",
+      "last_worked": "2026-11-23T22:55:30Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:H/E:N/C:N/I:N/A:N/X:N/S:U/F:K/W:N",
       "vector_source": "agent",
@@ -63575,7 +63574,7 @@
       "issued_at": "2026-11-19T02:32:05Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2310",
-      "last_worked": "2026-11-23T21:09:05Z",
+      "last_worked": "2026-11-23T22:55:30Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:H/E:N/C:N/I:N/A:N/X:N/S:U/F:K/W:N",
       "vector_source": "agent",
@@ -63846,23 +63845,26 @@
     {
       "symbol": "W2753",
       "title": "State what the gate's run, admission and failed telemetry series measure, and which run-seconds family is canonical",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "nemik:W2337"
       ],
       "touches": [
         "telemetry"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "ANSWERED FROM THE CODE 2026-11-19 (store read-back NOT done): (1) target.cpu.seconds is user+sys. It comes from the 'shard cpu=S children=K idle_wall=W' line the mutation runner prints (check_mutants/mutate_runner.py cpu_line, line 1658, called at 1801 with resource.getrusage(RUSAGE_CHILDREN).ru_utime + ru_stime): CPU seconds of the runner's reaped child processes, summed, never wall; children = workers; idle_wall = cpu / children. hooks gatetargets.py reads that line from each :mutants or :test_* target's local test.log (kind_of: mutants, pytest, other); a target whose log has no shard line gets NO cpu or children row, only wall (so cpu is absent for plain pytest targets that do not print it, and 'other' kinds are never read). (2) run.emitted{repo} = the count of targets whose result RAN in this bazel invocation (cached results excluded), 0 for a fully cached gate; target.failed{target,kind,repo} = 1 when that target's final attempt did not PASS else 0, one per fresh result that carries a status; target.wall.seconds = the target's own wall seconds from the build event; admission_wait_seconds = the commit's submit to its lease (gate queue wait); (3) run.seconds and run_seconds are TWO DIFFERENT QUANTITIES from two emitters, not one family: mikemol.gate.run.seconds (gatetargets.py RUN_SECONDS) = the bazel invocation's wall, finished minus started event; mikemol.gate.run_seconds (commit_span.py RUN_NAME) = lease to verdict of the whole gate (pre-bazel steps included). The literal repo='repo': mikemol-gate-targets takes REPO from .githooks/pre-commit line 942, basename of MIKEMOL_REAL_ROOT or the root; a repository directory literally named 'repo' (the hook's own test fixtures, stackrun tests, create one) labels itself repo. NOT PROVED: that the 'repo' rows come from fixtures (needs a store query for the nonce or time); the twelve repo values of run_seconds; whether any consumer reads both names as one. NEXT: send nemik-ce; then one store read-back of the label values.",
       "evidence": "",
       "issued_at": "2026-11-19T07:15:20Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2337",
-      "last_worked": "2026-11-23T07:10:04Z",
+      "last_worked": "2026-11-24T01:03:44Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2754",
@@ -63875,7 +63877,7 @@
         "hooks"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "BUILT 2026-11-19 in mtools-scratch/mtools-W2754 (on 3ab540f): hooks/src/mikemol/hooks/surfaces.py gains EXPORT_FILE (.claude/surfaces.export.json), EXPORT_FLAG, write_export(repo) (writes to a sibling .tmp then Path.replace, so atomic; document byte-equal to to_json, schema 1 unchanged) and 'mikemol-surfaces [--export] [REPO_DIR]' (flag in any position; stdout 'wrote <path>' instead of the census; a bad directory still exits 2). hooks/tests/test_surfaces.py: 3 new tests (file equals to_json and no census printed; a second export replaces the first and leaves no .tmp; flag order and the directory check): 9 pass; pycheck admits both files. NOT DONE, in order: warrants (gen-warrants --prune), declared mutants for write_export and the flag branch (MUTATE_LINT after the last edit), graph/sites regeneration, bazel //hooks targets, review branch+sha to github-00, then nemik-ce is told the file exists. luthen's host-side export copy carrying the file is nemik's ask to luthen-observability, not this card. Hooks dist: behind the W2573 cutover.",
@@ -63883,7 +63885,7 @@
       "issued_at": "2026-11-19T07:27:01Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2018",
-      "last_worked": "2026-11-23T21:35:11Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
       "completed": null,
       "prior_status": "ready"
@@ -64029,42 +64031,48 @@
     {
       "symbol": "W2761",
       "title": "Migrate every dist's rubric.tsv to a named-field format (jsonl, toml or bib): the fleet rule is no whitespace-sensitive formats (github-00 2026-11-19 on W2758)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "otlp",
         "rubric"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "BUILD as one codemod over a scratch tree. Per dist: convert rubric.tsv with paperkit-rubric --to-jsonl into rubric.jsonl, git rm the tsv, and set paper.toml to rubric = rubric.jsonl (otlp/paper.toml line 5 and the other 44). Then fix the named consumers: check_mutants/MODULE.bazel, hooks new_dist.py (new dists start as jsonl), hooks tests test_new_dist, test_gen_warrants_rubric, test_gen_warrants_write, test_pairing_sections, test_standing_facts, test_warrant_crosscheck, grade/tests/test_ladder.py, and standing_test.rego. Finish with a read-back equality check: keys and titles of each jsonl equal the tsv rows. Land AFTER W2758 (b97), because otlp/rubric.tsv is a path of that stack. Hooks-dist bytes land behind the W2573 cutover, so the dist rows go first as one entry and the hooks bytes second.",
       "evidence": "2026-11-19T10:17:34Z: 2026-11-19 github-00 (W2758 review): W2758 adds a row to otlp/rubric.tsv; fleet rule says no whitespace-sensitive formats. Not a blocker for W2758. A lost trailing TAB broke the commit gate twice (W835). | 2026-11-19T10:58:02Z: 2026-11-19 CENSUS: 45 dists carry rubric.tsv and none rubric.jsonl. Readers that already take jsonl: hooks gen_warrants.py (RUBRIC_NAMES is jsonl then tsv), count_test_functions.py (rubric_rows reads both) and paperkit rubric.py (chosen by suffix, and it ships paperkit-rubric --to-jsonl). Every dist's paper.toml names rubric = rubric.tsv, so each needs that line changed. Collision: otlp/rubric.tsv is in stack b97 (W2758), so otlp is converted after it lands.",
       "issued_at": "2026-11-19T10:17:28Z",
       "minted_during": "interrupt",
       "caused_by": "W2758",
-      "last_worked": "2026-11-23T07:10:04Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2762",
       "title": "Scratch bazel namespace maps the user to root, so a scratch reading differs from the gate's, and waldo's test_planplan asserts chmod 0o444 behaviour that root defeats: map the real uid in scratch_bazel, and make that test root-safe or refuse naming why it cannot judge as root (github-00 2026-11-19, W2760)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "scratch-bazel",
         "waldo"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "BUILT in scratch tree mtools-W2762 (base f8909d86 = hooks-B W2263), branch review/W2762-scratch-real-uid f8549345. NOT DONE, in order: the second half (waldo test_planplan's chmod 0o444 test is still wrong as root: make it root-safe or refuse naming why it cannot judge as root) as its own waldo-dist change; hooks warrants (gen-warrants --layout dist hooks --prune), declared mutants if scratch_bazel has any, graph and sites, bazel //hooks target for test_scratch_bazel; send branch+sha to github-00 as a delta on hooks-B (rides W2573 with it). Pitfall to document: an existing bazel server for an output base keeps its old mapping, so run shutdown once after the change.",
       "evidence": "2026-11-19T11:01:31Z: 2026-11-19 BUILT. scratch_bazel.namespace_argv takes an owner (uid, gid): the bind mount runs as the outer namespace root, then exec unshare --user --map-user/--map-group bazel runs as the caller. Probe: nested namespace gives uid 1000 and chmod 0444 reads READONLY. Witness: //waldo:test_planplan FAILED under the root mapping (BES a0db81f9-e5a1-45da-9d69-c5fc30f6881f, tmp_path pytest-of-root) and PASSED after bazel shutdown and rerun under the new mapping (BES 532d90b9-ad9e-4990-a568-a2ba14dca761). Unit: test_scratch_bazel 11 passed, pycheck admits all three files. First attempt kept failing because the old server kept the root mapping: shutdown first.",
       "issued_at": "2026-11-19T10:25:18Z",
       "minted_during": "interrupt",
       "caused_by": "W2760",
-      "last_worked": "2026-11-23T07:10:04Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2763",
@@ -64172,7 +64180,7 @@
       "issued_at": "2026-11-19T13:51:49Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W2769",
-      "last_worked": "2026-11-23T21:09:05Z",
+      "last_worked": "2026-11-23T22:55:30Z",
       "ticks_blocked": 0,
       "vector": "WV:1/R:L/E:N/C:N/I:L/A:L/X:N/S:U/F:K/W:Y",
       "vector_source": "agent",
@@ -64695,22 +64703,25 @@
     {
       "symbol": "W2792",
       "title": "ratchet-residue: read_baseline returns (value, problem) pairs where a typed error would carry the problem",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "check_mutants",
         "soundness"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Convert check_mutants read_baseline to raise a typed BaselineReadError (the class W2777 already has: BaselineMergeError); change its three callers (known_baseline at about 2014, write_baseline at about 2135, main at about 2302) and its four test calls in check_mutants/test_mutate_runner.py (lines 2165 to 2171); plants first: each malformed-baseline case now raises with its problem; separately decide portable_python (line 1453) which returns (python, note) and is a different shape; send github-00 the design",
       "evidence": "2026-11-20T00:09:50Z: RESIDUE of the W2777 review (github-00 2026-11-19): the module's older (value, problem) convention in read_baseline (and any other pair-returning reader in check_mutants) is pre-existing and not widened into the W2777 entry, which makes its own new functions raise one typed BaselineMergeError. This card converts the older readers. Blocked on W2777 because it shares mutate_runner.py. ESTIMATE as_of 2026-11-19, basis guess, not a CPU effect: cost ~1 attempt and ~1000 CPU-s; effect on escapes: removes a discard-the-problem class (the R1 defect of this review) from the older readers; interval 0 to 1 per half-year, guess. | 2026-11-20T08:34:17Z: 2026-11-20 CENSUS (read-only, by grep over the repo, as of main 66a28a85): in check_mutants/mutate_runner.py the (value, problem) pair readers are read_baseline (line 1958, -> tuple[dict[str, str], str], empty string meaning clean) with THREE callers (known_baseline about 2014, write_baseline about 2135, main about 2302, which takes [1] only) and FOUR test calls (check_mutants/test_mutate_runner.py 2165 to 2171 asserting ({}, '') and the problem text); portable_python (1453, -> tuple[str, str]) is a pair of (python, note), a different shape, to read before deciding; _row (404) is a (int, int, str) record, not a problem pair. ratchet's read_baseline (ratchet/core.py 107) returns (BaselineState, keys), a state enum, not a problem string: out of scope. The empty-string sentinel for 'no problem' is the maybe-result. NOT DONE: the conversion; planted cases first.",
       "issued_at": "2026-11-20T00:09:04Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-11-23T07:10:04Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2793",
@@ -64758,23 +64769,26 @@
     {
       "symbol": "W2795",
       "title": "mikemol-otlp query-metrics refuses an instant query on an event-driven family and names the windowed form",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "otlp",
         "telemetry",
         "soundness"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Check what VictoriaMetrics returns (metadata endpoint, a marker label on the sample); send github-00 the design with the three options and my lean, then the plant (an instant query on an event-driven family refuses naming last_over_time)",
       "evidence": "2026-11-20T00:23:57Z: FROM github-00 2026-11-20 (after my instant-query reading error on the ratchet shard series): the rule that an instrument's window must exceed the reading interval should be a REFUSAL, not a lesson. mikemol-otlp query-metrics should refuse an INSTANT query on a family the registry marks event-driven (mikemol.gate.target.cpu.seconds is registered 'event-driven (a cached result is not re-emitted)') and require an explicit window, or apply last_over_time over a declared one. PLANT: an instant query on that family refuses, naming the windowed form. ESTIMATE as_of 2026-11-20, basis analogue (my own wrong reading of tonight), low confidence, not a CPU effect: cost ~2 attempts and ~1500 CPU-s (an otlp dist change with the registry read); EFFECT on escapes: wrong readings avoided (an empty vector read as no data); the hit tonight cost one wrong estimate and a correction to a reviewer, interval 0 to 2 per month, guess. Not read: how the registry marks a family and the instant path in query_metrics.py. | 2026-11-20T00:26:00Z: READ 2026-11-20: (1) mikemol-otlp query-metrics (otlp/src/mikemol/otlp/query_metrics.py) builds an instant query URL (query_url, INSTANT_PATH /api/v1/query) or a range one when a window (start, end, step) is given; it knows nothing about families. (2) THE REGISTRY lives in luthen-observability, policy/metric_families/data.json, NOT in mtools: mikemol.gate.target.cpu.seconds is registered with owner mtools and a free-text 'purpose' that says 'EVENT-DRIVEN: a cached result is not re-emitted, so a target is absent when its last result was cached (the model joins by timestamp, never by presence)'; wall.seconds and children say 'event-driven like cpu.seconds'. (3) So 'the registry marks it event-driven' is PROSE inside a purpose string, not a typed field: a refusal in mikemol-otlp that read it would be matching free text, the defect removed from the closing signal tonight. DESIGN OPTIONS, not chosen: (a) luthen adds a typed field to each family's row (for example emission: event-driven) and the otlp reader reads that file by a path named in the endpoints file or an argument, a cross-repo read of luthen's file; (b) the metric carries its own marker as an OTLP attribute or in its description (W1914: the sample names what it counts), read back through the store's metadata, so the registry is not needed at query time; (c) a short list inside mikemol-otlp of event-driven family names, a duplicate of luthen's knowledge (the parity-test shape used elsewhere tonight). I lean to (b), because the reader then needs no sibling file and the marker travels with the data, but I have NOT checked that VictoriaMetrics returns a metric's description or an attribute through its API. Nothing is built.",
       "issued_at": "2026-11-20T00:23:46Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-11-23T07:10:04Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2796",
@@ -64801,21 +64815,24 @@
     {
       "symbol": "W2797",
       "title": "pathsforward: pin store.py's queue companion suffixes (.json .md .ledger .flock .export.json) to a literal test, the writer half of landing_verify's QUEUE_SUFFIXES copy",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2778"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Wait for bazel //pathsforward:all at 1584b071 (fresh detached worktree), send github-00 the sha and the run, stack it after b103 (both touch pathsforward/warrants.bib, so rebuild the warrants over b103's landed tree)",
       "evidence": "2026-11-20T04:50:43Z: 2026-11-20: minted by W2778's build: the verifier cannot import the writer, so the writer's half of the pin is its own card. ESTIMATE as_of 2026-11-20, basis guess: own cost ~1 attempt, ~600 CPU-s (a pathsforward grid run); effect on landings: 0 CPU-s per landing, escapes: a writer change to a companion suffix fails a named test instead of making the verifier refuse a legitimate queue file. | 2026-11-20T04:55:43Z: 2026-11-20: BUILT pathsforward/tests/test_store_companions.py (2 tests; a planted MIRROR='.markdown' fails it naming landing_verify.QUEUE_SUFFIXES, reverted) and the warrants; review branch review/W2797-store-companion-pin 1584b0719025695c46d523c093b9dfeb3601c0bd sent to github-00; bazel //pathsforward:all running at that sha.",
       "issued_at": "2026-11-20T04:50:29Z",
       "minted_during": "interrupt",
       "caused_by": "W2778",
-      "last_worked": "2026-11-23T16:51:24Z",
+      "last_worked": "2026-11-23T23:54:11Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2798",
@@ -65040,8 +65057,7 @@
         "mutation"
       ],
       "blocked_on": [
-        "W2884",
-        "W2888"
+        "W2884"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Read ratchet's census and baseline API (ratchet/core.py, census.py); plant first: a BUILD file whose shards = N rises is refused naming the file and both values, a fall is admitted, a new target at its first count is admitted only with a baseline entry; baseline = today's counts (hooks 597, ratchet 5, and every other dist), shrink-only; send github-00 the design",
@@ -65338,7 +65354,7 @@
         "gate-repair"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Read the duplicate cell (two labels, one cell), map each cause to its card W2825 to W2829, then write hooks/not-green-sites.txt and the mutants_gen flip in the scratch tree on top of b110, with its ratchet check, after b110 lands",
@@ -65346,7 +65362,7 @@
       "issued_at": "2026-11-20T20:52:13Z",
       "minted_during": "interrupt",
       "caused_by": "W2809",
-      "last_worked": "2026-11-23T22:16:27Z",
+      "last_worked": "2026-11-24T00:48:48Z",
       "ticks_blocked": 0,
       "completed": null,
       "prior_status": "ready"
@@ -65467,8 +65483,7 @@
         "W2838",
         "W2840",
         "W2841",
-        "W2842",
-        "W2888"
+        "W2842"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Atomize into one card per staged-file group (routing table, count_test_functions.py, adopt tools-hook, work-claims fixture, settings/githook/standing-facts singletons), each naming its sites and the data = [...] edit in the site generator, then work the largest (routing table, 13 sites)",
@@ -65570,8 +65585,7 @@
         "gate-repair"
       ],
       "blocked_on": [
-        "W2884",
-        "W2888"
+        "W2884"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Cells: commit_kata:declared_waiter-exit-never-signalled (TIMED_OUT, find the second), commitprogress:declared_watch-never-gives-up (refused on budget; W2806's bounds should clear it, re-read it after b110) and its sibling; for each plant a count bound on the loop the mutant makes unbounded, as W2806's four test files do",
@@ -65593,8 +65607,7 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2884",
-        "W2888"
+        "W2884"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "",
@@ -65617,7 +65630,7 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Wait for skills to confirm the row (their W26 is blocked on the bare repo name mtools until then), then close this card; send a new row on any landing that edits .claude/skills/struct-tools",
@@ -65625,7 +65638,7 @@
       "issued_at": "2026-11-21T19:32:08Z",
       "minted_during": "interrupt",
       "caused_by": "skills:W26",
-      "last_worked": "2026-11-23T22:16:27Z",
+      "last_worked": "2026-11-24T00:48:48Z",
       "ticks_blocked": 0,
       "weight": 5,
       "completed": null,
@@ -65929,7 +65942,7 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "",
@@ -65937,7 +65950,7 @@
       "issued_at": "2026-11-21T20:13:48Z",
       "minted_during": "interrupt",
       "caused_by": "W2775",
-      "last_worked": "2026-11-23T22:05:18Z",
+      "last_worked": "2026-11-24T00:48:48Z",
       "ticks_blocked": 0,
       "weight": 4,
       "completed": null,
@@ -65974,8 +65987,7 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2884",
-        "W2888"
+        "W2884"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Read mutants_gen and defs.bzl: prefer emitting the exports list from site-data.txt as a loaded bzl (one source), else a check mode comparing the two lists; plant the failing case (a named file not exported) and the converse; then the input-mutation mode",
@@ -66095,42 +66107,48 @@
     {
       "symbol": "W2853",
       "title": "transcriptstruct --kinds refuses an unknown block kind and points at --human or --prose --speakers (skills:W83 observation)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2834"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "On the bazel run send github-00 the sha and verdict; then the zero-hit note (print the block kinds present when a grep finds nothing), also in the existing module",
       "evidence": "2026-11-21T21:48:28Z: 2026-11-21 READ: transcriptstruct/src/mikemol/transcriptstruct/cli.py main passes --kinds straight to grep_blocks as block_kinds (query.py line 201 filters block.kind in block_kinds), so an unknown kind matches nothing and prints a count of zero hits. DESIGN: block kinds are an OPEN set (the decoder keeps whatever type the record carries, blocks.py lines 79 and 114, with \"?\" for a non-string), so a closed whitelist would refuse a legitimate new kind (image, redacted_thinking). The refusal is therefore on the SPEAKER names, which the tool documents (cli.py _DEFAULT_SPEAKERS is human, peer, assistant; --prose --speakers and --human take them): refuse any --kinds value that is a speaker kind, exit 2 with a message that names --human and --prose --speakers, as argparse already refuses an unknown flag. A kind that is neither a speaker nor in this transcript is still a quiet zero, so ALSO print on a zero-hit --grep the block kinds the transcript does carry (the stats mode already counts them). Both are planted in the existing transcriptstruct tests (a speaker kind refused naming the right flags, a real block kind unchanged, a zero-hit grep names the kinds present). A transcriptstruct-only change, not a hooks stack, so the shard guard does not apply; the round check will. | 2026-11-21T23:03:21Z: 2026-11-21 BUILT on main 6b54fed2: review/W2853-kinds-refuses-speakers 300b89f8ec63131f78442eb27805bb2f10f32468 (transcriptstruct only: cli.py, tests/test_cli.py, warrants.bib; a non-hooks stack, no shard guard). WHAT: _refuse_speakers(kinds) in cli.py, called in the --grep branch, refuses any --kinds value that is a speaker name (human, peer, assistant, the documented _DEFAULT_SPEAKERS) with exit 2 through the parser own error: --kinds takes block kinds (text, thinking, tool_use, tool_result), not speaker kinds (human); use --human TEXT or --prose --speakers human. A real block kind is NOT refused, since block kinds are an open set (a whitelist would refuse a new legitimate kind). The helper holds it because main was at the local-variable cap. TESTS (2, in the EXISTING test_cli.py): the speaker kind is refused naming --human TEXT and --prose --speakers human; the control, --kinds text, still runs and prints its denominators line. 223 transcriptstruct tests pass in the tree, pycheck admits both py files, warrants +2. NOT DONE HERE: the second half of the original ask, a zero-hit --grep naming the block kinds the transcript does carry (stays on this card); the bazel run at the sha is running. | 2026-11-22T00:24:21Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2853 review/W2853-kinds-refuses-speakers 300b89f8ec63131f78442eb27805bb2f10f32468 (main 6b54fed2). CONDITION: submits AFTER b112. Bazel green at the sha (42 of 42, BES 374b13b4-292d-402e-9f24-bc6ba16402d1). The second half (a zero-hit grep naming the block kinds the transcript carries) is still on this card.",
       "issued_at": "2026-11-21T21:48:03Z",
       "minted_during": "interrupt",
       "caused_by": "W2834",
-      "last_worked": "2026-11-22T00:24:56Z",
+      "last_worked": "2026-11-24T01:01:43Z",
       "ticks_blocked": 0,
       "weight": 4,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2854",
       "title": "transcriptstruct --extract replaces an attached image with a placeholder or takes --no-images (skills:W83 observation)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2834"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Run bazel //transcriptstruct:all at 04da9266 after the W2853 run ends, send github-00 both shas (W2853 first, W2854 on it)",
       "evidence": "2026-11-21T23:06:07Z: 2026-11-21 BUILT on top of W2853 (300b89f8): review/W2854-extract-no-images 04da9266f8a95c67070d8666c2f2ee0bbd83ddef, parent W2853 so the diff is the delta; transcriptstruct only (cli.py, tests/test_cli.py, warrants.bib), a non-hooks stack. CHOICE: a --no-images flag on --extract, NOT a default placeholder. The decoder principle (blocks.py, test_an_unknown_block_is_kept_whole_and_marked_undecoded) is that an undecoded block is kept whole and never truncated, so a default elision would drop bytes unasked; the flag leaves every default read unchanged and lets --extract be used on a record carrying a screenshot. WHAT: --no-images replaces every base64 data string in an UNDECODED block with <N chars of base64 omitted>, keeping the other keys (the media type stays). Only an undecoded block is parsed and re-written (its text is the record own JSON); a decoded block text is prose and is never parsed, so a message that looks like JSON is left exactly as it is. Helpers _without_image_data, _elided; _extract takes a keyword elide. TEST (1, in the EXISTING test_cli.py): a record with a text block and a 5000 character image prints the base64 whole by default, and with --no-images prints <5000 chars of base64 omitted>, the text block and the media type intact. 224 transcriptstruct tests pass, pycheck admits both py files, warrants +1. NOT DONE: the bazel run at the sha (the W2853 run is still using the box), github-00 review. | 2026-11-22T00:24:22Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2854 r2 review/W2854-extract-no-images-r2 d69be5f9feed3505bd95c9eb0796fd5a9b9e4107 (parent r1 04da9266, W2853 300b89f8). CONDITION: bazel green at the sha (met: 42 of 42, BES 1072f93f-3d8f-4610-9856-bc9279074249), submits AFTER b112 and after W2853.",
       "issued_at": "2026-11-21T21:48:03Z",
       "minted_during": "interrupt",
       "caused_by": "W2834",
-      "last_worked": "2026-11-22T00:24:56Z",
+      "last_worked": "2026-11-24T01:01:43Z",
       "ticks_blocked": 0,
       "weight": 4,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2855",
@@ -66204,7 +66222,7 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Read the baseline file format and the runner own verdict words, then design the sample file as a list of cells only, after W2822 lands the not-green list",
@@ -66212,7 +66230,7 @@
       "issued_at": "2026-11-21T21:54:10Z",
       "minted_during": "interrupt",
       "caused_by": "W2839",
-      "last_worked": "2026-11-23T22:16:27Z",
+      "last_worked": "2026-11-24T00:48:48Z",
       "ticks_blocked": 0,
       "weight": 1,
       "completed": null,
@@ -66221,62 +66239,71 @@
     {
       "symbol": "W2859",
       "title": "fence isolated-git helper: environment with the working-directory ceiling, both config layers nulled and identity set, tests for skills W87 arms 1, 2, 6 and 7",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2836"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Send github-00 the sha; bazel //fence:all after b112 returns; then W2860 on top",
       "evidence": "2026-11-21T23:25:00Z: 2026-11-21 DESIGN, sent to github-00 before building (skills W87 spec arms 1, 2, 6, 7 plus F3b). SHAPE: a new importable function in fence next to git_env.clean_env: isolated_env(home: Path) -> dict[str, str], built ON clean_env (so the GIT_* scrub stays one spelling, arm 6) and adding: GIT_CEILING_DIRECTORIES set to the helper temp dir PARENT so git cannot walk up to a real .git (arm 1); HOME and XDG_CONFIG_HOME at home, GIT_CONFIG_GLOBAL and GIT_CONFIG_SYSTEM at /dev/null, GIT_CONFIG_NOSYSTEM=1 (arm 2); GIT_AUTHOR_NAME and EMAIL, GIT_COMMITTER_NAME and EMAIL set and EMAIL, NAME, GIT_AUTHOR_DATE-style sources removed so identity is supplied and never auto-detected (arm 7, F3b); GIT_CONFIG_PARAMETERS and GIT_CONFIG_COUNT with its KEY_n and VALUE_n variables removed (C39, they ride the GIT_ prefix scrub but are named in a test so a prefix change cannot silently un-scrub them). WHERE EACH ARM LIVES (F3b: arm 1 outer repo and child versus arm 8): the OUTER repository and its CHILD are created under the TEST tmp_path, not under the helper temp dir, because the arm asserts that the helper ceiling STOPS git at the helper dir; arm 8 (W2861) refuses a cwd outside the helper dir and is tested separately. ARM 2 REFUSES when /etc/gitconfig is absent on the host (F3b), by pytest.fail naming why, never passing vacuously, and tolerates the command-line origin in --show-origin. EACH ARM HAS ITS CONTROL: arm 1 control is GIT_CEILING_DIRECTORIES unset where the child resolves to the OUTER repo (exit 0) and the arm is exit 128 with the ceiling; arm 2 control is only HOME changed, where /etc/gitconfig still lists; arm 6 control is a hostile GIT_DIR (the existing decoy-repo test in fence/tests/test_git_env.py); arm 7 control is the same commit under a host with no identity and no helper identity, which must fail. NOT IN THIS CARD: file hooks, config hooks and signing (W2860) and the refusal outside the temp dir (W2861). New tests are folded into the existing fence/tests/test_git_env.py (a new test file is refused until W2800 lands). OPEN QUESTION FOR github-00: whether the helper also creates the temporary repository (spec says the helper creates it) or only returns the environment and a context-managed repo, since W2861 refuses a cwd outside the dir the helper made. | 2026-11-21T23:28:58Z: 2026-11-21 BUILT after github-00 ruling (two functions, layered, with four conditions): review/W2859-isolated-env f5010a8ba65dfdaed5eb9465b3f6941ca209e068 on main 6b54fed2; fence only (src git_env.py, tests/test_git_env.py, warrants.bib), a non-hooks stack. WHAT: isolated_env(home, base=None) in fence git_env.py, built ON clean_env: GIT_CEILING_DIRECTORIES at home parent (arm 1); HOME and XDG_CONFIG_HOME at home, GIT_CONFIG_GLOBAL and GIT_CONFIG_SYSTEM at the null device and GIT_CONFIG_NOSYSTEM 1 (arm 2); no GIT_* survives, including GIT_CONFIG_PARAMETERS, GIT_CONFIG_COUNT and its KEY_n and VALUE_n (arm 6 and C39); author and committer supplied and EMAIL removed (arm 7). CONDITION 1: the docstring says it guarantees arms 1, 2, 6, 7 and the C39 scrub, does NOT guarantee arms 3 to 5, and arm 8 holds only inside the helper that makes the directory (isolated_repo, W2861), so a caller using the env with its own dir gets no arm 8 and is told so. CONDITION 2: arm 2 fails by pytest.fail naming the host fact it needs (a /etc/gitconfig, its control reads its entries) when absent, never skips. TESTS (5, folded into the existing fence/tests/test_git_env.py, each with its control): the ceiling stops git at the helper dir while without it git resolves to the OUTER repo (layout under the test tmp_path); only HOME changed still lists /etc/gitconfig while isolated_env lists only the repo own config; a hostile GIT_DIR stays out of the fixture commit; a commit succeeds with the supplied identity and fails when identity is withheld and config-only identity demanded (EMAIL removed); injected GIT_CONFIG_* reaches git unisolated and never when isolated. 418 fence tests pass locally, pycheck admits both py files, warrants +5. NOT DONE: bazel at the sha (held until b112 returns, github-00 order), review, and CONDITION 4: after W2859 to W2861 land, card luthen run_git_clean moving onto fence isolated_env through its pinned mtools dep and send luthen a letter citing it (that is W2862). | 2026-11-22T00:24:35Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2859 review/W2859-isolated-env f5010a8ba65dfdaed5eb9465b3f6941ca209e068 (main 6b54fed2). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN: no bazel while the gate is in flight), submits AFTER b112 and FIRST of the isolated-git chain (W2860 r2 and W2861 r2 build on it).",
       "issued_at": "2026-11-21T21:56:53Z",
       "minted_during": "interrupt",
       "caused_by": "W2836",
-      "last_worked": "2026-11-22T00:24:56Z",
+      "last_worked": "2026-11-24T01:01:43Z",
       "ticks_blocked": 0,
       "weight": 3,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2860",
       "title": "fence isolated-git helper: file hooks and config hooks disabled and signing refused, tests for skills W87 arms 3, 4 and 5",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2836"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Send github-00 the sha; then W2861 (isolated_repo refuses a cwd outside its temp dir, arm 8) on top; bazel //fence:all for W2859 and W2860 after b112 returns",
       "evidence": "2026-11-21T23:25:43Z: 2026-11-21 BLOCKED ON W2859, A REAL DEPENDENCY: file hooks, config hooks and signing are settings of the same isolated environment and repository that W2859 creates (isolated_env, and the isolated_repo whose shape is the open question put to github-00), and they edit the same fence module and test file, so they are cut on W2859 sha. THE ARMS (skills W87 spec 3, 4, 5, with F3 and C39): file hooks need a PLANTED executable pre-commit hook in the temporary repo own .git/hooks, a control with core.hooksPath unset where the marker appears, and the arm with an empty template AND core.hooksPath at /dev/null where it does not; config hooks name the layer they plant in (the repo own .git/config, where a hook runs unless hook.NAME.enabled is false) and REFUSE with a named reason when this git has no config hooks, never passing vacuously; signing needs a control signer that SUCCEEDS, a stub gpg.program that emits the fixed fake signature AND the line [GNUPG:] SIG_CREATED on stderr (F3, without it git reports failed to sign even from a stub that exits 0), the helper failing signer for gpg.program, gpg.ssh.program and gpg.x509.program, a forced-signed commit, tag -s, and a tag made with tag.forceSignAnnotated and no explicit -a (an explicit -a takes precedence and stays unsigned, so that arm uses tag -m), GNUPGHOME, SSH_AUTH_SOCK and GPG_AGENT_INFO absent from the environment, gpg.format ssh and x509, tag.gpgSign and push.gpgSign exercised. | 2026-11-21T23:33:53Z: 2026-11-21 BUILT on W2859 (f5010a8b, PASS-SUBMIT): review/W2860-isolated-repo 6470675855d6a4e3f6541c6a5019db3908333c62, parent W2859 so the diff is the delta; fence only (git_env.py, tests/test_git_env.py, warrants.bib), non-hooks. github-00 NOTE APPLIED: arm 3 is enforced at REPO CREATION, not in the env: isolated_repo(run) makes a temp dir and a repo with an EMPTY template (git init --template=<empty dir>) and writes core.hooksPath=/dev/null, failing gpg.program, gpg.ssh.program and gpg.x509.program, tag.gpgSign and commit.gpgSign off into the repo own config. isolated_env additionally removes GNUPGHOME, SSH_AUTH_SOCK and GPG_AGENT_INFO. DESIGN CHOICE FORCED BY THE LINT RULES: fence runtime stays free of subprocess (the sibling guard_cli carries a per-file exemption, and a new exemption moves debt out of a counted file), so isolated_repo TAKES THE GIT RUNNER FROM THE CALLER (run(env, cwd, args) returning the status, the tests use the procrun capture seam), and raises RuntimeError naming the command on a nonzero status. No noqa, no new exemption. MEASURED AND PINNED, NOT CLAIMED AWAY: a config hook the CALLER writes into the isolated repo own .git/config STILL RUNS (git has no wildcard to disable a hook by name in advance, and a repo own config is not a layer the environment controls); what holds is that a fresh repo carries none and a hook in a layer the env nulls (the global file) does not run, with a control that REFUSES when this git has no config hooks. TESTS (5 new, in the existing test_git_env.py, each with its control): a planted file hook runs in a plain repo and never in the isolated one (the control plants a real hook in .git/hooks, since an empty template alone leaves no hooks dir to test); a config hook in the global layer runs in a plain repo and never isolated; the repo-own-config limit pinned; a SUCCEEDING stub signer that emits [GNUPG:] SIG_CREATED (F3) signs while the failing signers refuse a forced-signed commit, tag -s and tag.forceSignAnnotated; the agents removed and each of the three signer programs failing. 423 fence tests pass locally, pycheck admits both py files, warrants +5. NOT COVERED: push.gpgSign (C39) and a behavioural gpg.format ssh and x509 control; the settings are asserted, not exercised, and that is a stated gap. NOT DONE: bazel (held until b112 returns). | 2026-11-22T00:24:36Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2860 r2 review/W2860-isolated-repo-r2 fbad107daa73d850d4375cbf9ff0fe2577d53b31 (parent r1 64706758, W2859 f5010a8b). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN), submits AFTER b112 and AFTER W2859. W2868 (push.gpgSign) and W2869 (behavioural ssh and x509) carry the stated gaps.",
       "issued_at": "2026-11-21T21:56:53Z",
       "minted_during": "interrupt",
       "caused_by": "W2836",
-      "last_worked": "2026-11-23T07:10:04Z",
+      "last_worked": "2026-11-24T01:01:43Z",
       "ticks_blocked": 0,
       "weight": 3,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2861",
       "title": "fence isolated-git helper: refuses a working directory outside its own temp dir, tests for skills W87 arm 8 and the F3b and C39 findings",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2836"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Send github-00 the sha; when W2859 to W2861 land and bazel is green, card luthen run_git_clean onto fence isolated_env (W2862) and send luthen the letter",
       "evidence": "2026-11-21T23:38:48Z: 2026-11-21 BUILT on W2860 r2 (fbad107d, PASS-SUBMIT): review/W2861-guarded-runner ad78b1b8b097f01959d78f8dbe11ad2ba56c1403, parent W2860 r2 so the diff is the delta; fence only, non-hooks. WHAT: guarded(run, home) wraps a git runner so it raises OutsideTempDirError (an IsolatedGitError) naming the call and what it aimed at when the working directory is outside home, or an operand is: the value after -C, --git-dir or --work-tree (spaced or =), or any argument starting /, ~, ./ or ../, each judged from cwd with symlinks resolved (os.path.realpath), so a link out of home counts as outside. isolated_repo now YIELDS FOUR VALUES (home, repo, env, guarded runner), the W2860 tests were updated to unpack the fourth. The docstrings say the refusal holds ONLY through the yielded runner, so a caller using isolated_env with its own runner gets no arm 8. A DEFECT THE ARMS CAUGHT IN MY OWN FIRST VERSION: routing the helper own creation calls through the guard made it refuse its own core.hooksPath setting, because the null device /dev/null is outside the temp dir; eight W2860 tests went red. The helper own init and its fixed settings now go through the plain runner (fixed literals, stated in the docstring), and the guard is for what the CALLER runs. TESTS (3 new, in the existing test_git_env.py, each with controls): a directory outside the temp dir is refused while the repo directory runs (the message names the directory); -C, --git-dir and --work-tree aimed at a real repository are refused spaced and with = while the same flags aimed inside run; an absolute path and a .. that climbs out are refused while ones inside run. 427 fence tests pass locally, pycheck admits both py files, warrants +3. NOT DONE: bazel (held until b112 returns). | 2026-11-22T00:24:38Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2861 r2 review/W2861-guarded-runner-r2 8d449a5d7085fa45b592d83219337748e4f5a537 (parent r1 ad78b1b8, W2860 r2 fbad107d). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN), submits AFTER b112 and AFTER W2860. The chain W2859 to W2861 is complete; W2862 (luthen move onto isolated_env) waits for it to land.",
       "issued_at": "2026-11-21T21:56:53Z",
       "minted_during": "interrupt",
       "caused_by": "W2836",
-      "last_worked": "2026-11-22T00:24:56Z",
+      "last_worked": "2026-11-24T01:01:43Z",
       "ticks_blocked": 0,
       "weight": 3,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2862",
@@ -66309,7 +66336,7 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "On the bazel run at be64d44a send github-00 the sha and verdict; submit after b112",
@@ -66317,7 +66344,7 @@
       "issued_at": "2026-11-21T22:07:49Z",
       "minted_during": "interrupt",
       "caused_by": "W2833",
-      "last_worked": "2026-11-23T22:16:27Z",
+      "last_worked": "2026-11-24T00:48:48Z",
       "ticks_blocked": 0,
       "weight": 8,
       "completed": null,
@@ -66348,42 +66375,48 @@
     {
       "symbol": "W2865",
       "title": "katas status prints a repo last commit-log verdict beside its CURRENT head with no sha the verdict was judged at, so a stale FAILED reads as head is red",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "katas"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Send github-00 the sha with the deviation; bazel //katas:all after b112 returns",
       "evidence": "2026-11-21T22:38:43Z: 2026-11-21 FROM github-00 (low priority, not on the critical path): mikemol-katas status prints a repo last commit-log verdict beside its CURRENT head with nothing saying which commit the verdict was for. luthen-observability shows FAILED rc=1 cde3bc8b, but the failure is an OLD pre-commit run (an index-vs-tree mismatch on btrbk files, a census of 807 files where today census is 1051); cde3bc8b itself landed with every step at rc 0. The row reads as head is red and is false. FIX: record the sha each log verdict was judged at, and have status print STALE, or the verdict own sha, when it differs from head. ARM: a failed log followed by an out-of-band commit must not show FAILED beside the new head. Edges: this card first carried wrong edges to luthen-observability:W1715 (copied from the exit-census card by mistake) and they are cleared; the consumer that shows the false row is luthen-observability, which has no waypoint citing this yet. | 2026-11-21T23:44:31Z: 2026-11-21 BUILT on main 6b54fed2: review/W2865-stale-verdict c069cfb7b862970c67dc7e5e33a696029315ffee; katas only (fleet.py, tests/test_fleet.py, warrants.bib), non-hooks. ROOT CAUSE READ: katas fleet.status_row printed commits.commit_state(log) beside the CURRENT head (git log -1), and the log carries only rc=N, so a failed pre-commit run followed by a later commit read as head is red. FIX: _verdict(fleet, repo, log) reports STALE(rc=N) or STALE(done) when HEAD committer time (git log -1 --format=%ct, whole seconds) is later than the log mtime, applied to the commit log and the probe log; RUNNING is never stale. A DEVIATION FROM THE ASK, STATED: github-00 asked to RECORD the sha each verdict was judged at; the log is written by the waiter (rc=N only) and a REFUSED run has no sha at all, so the sha cannot be read back for exactly the failing logs. The time comparison needs no log format change and covers the failing case; its stated limit is an out-of-band commit in the SAME whole second as the log last write reads as fresh. If the sha is still wanted, the waiter writing head=<sha> at launch is the follow-up. TESTS (2, in the EXISTING test_fleet.py): a failed log older than HEAD reads STALE(rc=1) and never FAILED while HEAD subject is still shown, with the control that a log written after HEAD still reads FAILED rc=1; a done log older than HEAD reads STALE(done) and a RUNNING one is never stale. 150 katas tests pass locally, pycheck admits both py files, no declared mutant touches the changed lines, warrants +2. NOT DONE: bazel (held until b112 returns). | 2026-11-22T00:24:39Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2865 review/W2865-stale-verdict c069cfb7b862970c67dc7e5e33a696029315ffee (main 6b54fed2) AS AN INTERIM FIX. CONDITION: submits AFTER b112, bazel at the sha NOT YET RUN. The time comparison is a proxy (a committer date is whatever the committer set); W2870 (waiter writes head=sha, time kept as fallback, row names the rule) is the real fix.",
       "issued_at": "2026-11-21T22:38:24Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-11-22T00:24:56Z",
+      "last_worked": "2026-11-24T01:01:43Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2866",
       "title": "Writer --add-retro --dry-run validates a review retro file against the schema and nemik finding rules without minting an R id",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "github:W142"
       ],
       "touches": [
         "pathsforward"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Send github-00 the sha; bazel //pathsforward:all after b112 returns",
       "evidence": "2026-11-21T23:00:00Z: 2026-11-21 FROM github-00 (host card github:W142, low priority): the writer --retro-scaffold only scaffolds a LANDING retro (a verdict row); a reviewer writing a REVIEW retro has no template and the host found nine refused at add time in one day. TWO OPTIONS, and the choice made here: (a) a review-retro scaffold mode, or (b) a validate-only --add-retro (the writer already has a --dry-run flag), which checks the schema and nemik:W982 finding rules and prints what would be refused without minting an R id. CHOICE (b): it is smaller, it lets a reviewer check its own file against the same code that refuses it at add time (one rule, no second copy in a scaffold that could drift from the refusal), and it answers every kind of retro, not only the review shape. (a) stays open if a template still proves needed after (b). The refusal text should name the line or field that fails. PLANT in the existing pathsforward retro tests: a malformed review retro is refused under --dry-run with the same message as at add time and the queue file and the R counter are byte-identical after; a valid one reports it would pass and mints nothing. | 2026-11-21T23:47:19Z: 2026-11-21 BUILT on main 6b54fed2: review/W2866-add-retro-dry-run 715d2e64c9964f8b7c3484066ab3ba61c22dd3fe; pathsforward only (cli.py, tests/test_retros.py, warrants.bib), non-hooks, the writer. WHAT: --add-retro FILE --dry-run runs the SAME retros.add_retro on a deep copy of the queue (_check_retro), so the rule is one and cannot drift from the refusal at add time; a refusal prints the same --add-retro refused: message and exits EXIT_REFUSED, a valid retro prints that it would be accepted with no R id, and the queue file and retro counter are never touched. The mode-options table gains dry_run for add_retro and --dry-run help names it. TEST (1, in the EXISTING test_retros.py): a valid retro under --dry-run reports it would be accepted and the queue file is byte-identical; a malformed one is refused under --dry-run with stderr EQUAL to the stderr of the real --add-retro refusal and the queue still byte-identical; the control, the same valid file without --dry-run, mints R1 (retro_counter 1). 1486 pathsforward tests pass locally, pycheck admits both py files, warrants +1. THE SCAFFOLD ALTERNATIVE (a review-retro template) stays open if a template still proves needed after this. NOT DONE: bazel (held until b112 returns), github-00 review. | 2026-11-22T00:24:41Z: 2026-11-21 PARKED. github-00 PASS-SUBMIT of W2866 review/W2866-add-retro-dry-run 715d2e64c9964f8b7c3484066ab3ba61c22dd3fe (main 6b54fed2). CONDITION: bazel green at the sha once b112 returns (NOT YET RUN), submits AFTER b112. A dry run still records an acceptance and beats the heartbeat like the writer other previews (leave it). When it lands github-00 updates change-review step 4 and reviewed-loop step 3 to tell reviewers to run --add-retro FILE --dry-run first.",
       "issued_at": "2026-11-21T22:59:50Z",
       "minted_during": "interrupt",
       "caused_by": "github:W142",
-      "last_worked": "2026-11-22T00:24:56Z",
+      "last_worked": "2026-11-24T01:01:43Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": null,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2867",
@@ -66415,7 +66448,8 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2861"
+        "W2861",
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "",
@@ -66423,158 +66457,178 @@
       "issued_at": "2026-11-21T23:35:38Z",
       "minted_during": "interrupt",
       "caused_by": "W2860",
-      "last_worked": "2026-11-22T00:16:30Z",
+      "last_worked": "2026-11-24T01:03:44Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2869",
       "title": "fence isolated git: behavioural gpg.format ssh and x509 arms with controls, asserted today and not exercised (skills W87 C39)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2862"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-21T23:35:40Z",
       "minted_during": "interrupt",
       "caused_by": "W2860",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T01:03:44Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2870",
       "title": "katas waiter writes head=<sha> at launch and status compares it to HEAD, naming which rule judged the verdict, time kept as the fallback",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2865"
       ],
       "touches": [
         "katas"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Read waiter.py and detach.py (the launch writes the log emptied first), add the head line at launch, then the comparison and the rule name in fleet._verdict on top of W2865",
       "evidence": "2026-11-21T23:45:58Z: 2026-11-21 FROM github-00 (review of W2865 c069cfb7, accepted as an INTERIM fix): the time comparison is a proxy and misses more than a same-second write. A committer date is whatever the committer set: a commit fetched from a peer, or one made with GIT_COMMITTER_DATE, can carry a date OLDER than the log mtime while being a different head, so the row reads fresh and is wrong. THE FIX: the waiter writes head=<sha> at LAUNCH, before the commit runs (the sha HEAD had when the verdict was started), and _verdict compares that sha with the current HEAD. Once it exists the time comparison is only the FALLBACK for old logs that have no head line, and the row says which rule judged it (for example STALE(rc=1,head) versus STALE(rc=1,time)). A REFUSED run has no committed sha, so the launch-time head is the only sha that exists for exactly the failing logs. ARM: a failed log with head=<old> against a newer HEAD reads STALE by head even when the commit date is older than the log mtime (GIT_COMMITTER_DATE in the past), and a log with no head line still falls back to time.",
       "issued_at": "2026-11-21T23:45:49Z",
       "minted_during": "interrupt",
       "caused_by": "W2865",
-      "last_worked": "2026-11-21T23:45:58Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T01:03:44Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2871",
       "title": "Review bazel runs: ONE reusable review worktree (checkout --detach per sha) or a bazel shutdown after each verdict, never a fresh worktree and server per run",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "W2863"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "2026-11-22T00:25:04Z: 2026-11-21 PARKED, OLD-WORKTREE PRUNE HELD (github-00 via operator ruling): about a hundred older scratch worktrees (W2164 to W2866) are NOT pruned. WHEN UNPARKED: the table github-00 asked for (per worktree: path, git status --porcelain empty, HEAD reachable from a ref, a bazel server alive for it, output-base size from du -s of the hash dir matched by the recorded workspace_directory in DO_NOT_BUILD_HERE) is produced by the read-only script worktree_survey.py (session scratchpad; it was stopped before finishing, nothing removed). Only clean, reachable and serverless rows are removed; the rest are named back to github-00. The output bases under /var/lib/luthen/ephemeral/bazel are luthen to clear, never mine. 12 servers of this session were shut down and their worktrees removed earlier.",
       "issued_at": "2026-11-22T00:15:35Z",
       "minted_during": "interrupt",
       "caused_by": "W2863",
-      "last_worked": "2026-11-22T00:25:04Z",
-      "ticks_blocked": 0
-    },
-    {
-      "symbol": "W2872",
-      "title": "Answer luthen-observability:W2906: waldo gains --exclude, recording its set where the policy reads it, same shape as --target's witness",
-      "status": "blocked",
-      "enables": [
-        "luthen-observability:W2906"
-      ],
-      "touches": [],
-      "blocked_on": [
-        "W2884"
-      ],
-      "blocked_kind": "agent",
-      "next_bounded_step": "Plants first: excluded address recorded as deferred (a tombstone by address in the verdict record, convergence reads it as not installed); unknown exclude refused by name; tofu version below 1.9 refuses with the version named and plans nothing; then the five touch points. Check the pinned tofu version first (tofu version)",
-      "evidence": "2026-11-23T19:06:03Z: 2026-11-23 github-82 (peer, relaying an operator-approved priority change): luthen's host apply loop has refused every pass since 2026-11-12 because one row fails portage's dry run, and a set-level refusal holds all 387 rows; luthen-observability:W963 would defer just the refused row with tofu -exclude but waits on this card. Rank right after W2884: held behind W2884 for that order. READ (code): the -target witness is planeval.scope_file writing data.plan_scope.targets (planeval.py:24-25, 80-88), Evidence(shown_json, targets, data) at planflow.py:162, plan_flags at planplan.py:73-80, the flag at plancli.py:64, the verdict record's targets at planflow.py:177 and planplan.record_verdict extra. --exclude has the same five touch points. NOT VERIFIED: that the pinned tofu supports -exclude (OpenTofu added it in a recent release; check the pinned binary's plan --help). | 2026-11-23T19:07:18Z: 2026-11-23 github-82: design APPROVED (mirrors --target's five touch points, the gate the only witness). ANSWER to my question: an excluded address stays UNAPPLIED DEBT, never clean (tombstones, not absence): the pass that excludes it records it as DEFERRED BY ADDRESS, and the host's convergence and witnesses keep reading it as not installed until a later pass applies it; 'partial' means the pass applies the rest, never that the set converged. Refuse an exclude naming an address the plan does not hold. TOFU: luthen ran -exclude on OpenTofu 1.10.6-dev in a scratch plan (W963's evidence); check the PINNED host tofu matches, and the plan step must FAIL LOUDLY below 1.9, never fall back to a whole plan. Build after W2884.",
-      "issued_at": "2026-11-23T01:23:53Z",
-      "minted_during": "interrupt",
-      "caused_by": "luthen-observability:W2906",
-      "last_worked": "2026-11-23T19:07:18Z",
+      "last_worked": "2026-11-24T01:03:44Z",
       "ticks_blocked": 0,
       "prior_status": "ready"
     },
     {
+      "symbol": "W2872",
+      "title": "Answer luthen-observability:W2906: waldo gains --exclude, recording its set where the policy reads it, same shape as --target's witness",
+      "status": "working",
+      "enables": [
+        "luthen-observability:W2906"
+      ],
+      "touches": [],
+      "blocked_on": [],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Send github-82 the review ref and ask which owed waldo key to carry; tell luthen-observability the key and the deferred field once it lands",
+      "evidence": "2026-11-23T19:06:03Z: 2026-11-23 github-82 (peer, relaying an operator-approved priority change): luthen's host apply loop has refused every pass since 2026-11-12 because one row fails portage's dry run, and a set-level refusal holds all 387 rows; luthen-observability:W963 would defer just the refused row with tofu -exclude but waits on this card. Rank right after W2884: held behind W2884 for that order. READ (code): the -target witness is planeval.scope_file writing data.plan_scope.targets (planeval.py:24-25, 80-88), Evidence(shown_json, targets, data) at planflow.py:162, plan_flags at planplan.py:73-80, the flag at plancli.py:64, the verdict record's targets at planflow.py:177 and planplan.record_verdict extra. --exclude has the same five touch points. NOT VERIFIED: that the pinned tofu supports -exclude (OpenTofu added it in a recent release; check the pinned binary's plan --help). | 2026-11-23T19:07:18Z: 2026-11-23 github-82: design APPROVED (mirrors --target's five touch points, the gate the only witness). ANSWER to my question: an excluded address stays UNAPPLIED DEBT, never clean (tombstones, not absence): the pass that excludes it records it as DEFERRED BY ADDRESS, and the host's convergence and witnesses keep reading it as not installed until a later pass applies it; 'partial' means the pass applies the rest, never that the set converged. Refuse an exclude naming an address the plan does not hold. TOFU: luthen ran -exclude on OpenTofu 1.10.6-dev in a scratch plan (W963's evidence); check the PINNED host tofu matches, and the plan step must FAIL LOUDLY below 1.9, never fall back to a whole plan. Build after W2884. | 2026-11-23T23:54:10Z: 2026-11-23 begun (github-82: W2872 now is fine; W2884 legitimately waits on outside shas). First: check the pinned tofu version, then plants (deferred tombstone, unknown exclude refused, tofu below 1.9 fails loudly), then the five touch points. | 2026-11-24T00:01:15Z: 2026-11-23 BUILT in the scratch worktree for W2872 (base main 87857abb, uncommitted): planplan.plan_flags(replace, targets, excludes) spells -exclude= last; planplan.exclude_refusal(tools, tofu) reads 'tofu version' and refuses below v1.9 or when unreadable (never plans wide; host tofu is OpenTofu v1.10.6-dev); planeval.Evidence gains excludes and scope_file writes data.plan_scope.excludes ONLY when there are some (no excludes: the scope file is byte for byte as before); planflow.judge takes (replace, targets, excludes), stops via exclude_stopped before any plan when the tofu cannot exclude, and records deferred: [excludes] in the sealed verdict; plancli gains --exclude (repeatable). Planted tests: test_planplan (flag order, version guard over 1.8/1.9/1.10/unreadable/rc1), test_planeval (scope file names excludes only when any), test_planflow (excluded address reaches tofu, scope file and the verdict as deferred; tofu 1.8 stops with no plan made; no exclude never asks the version); 6 warrants. RUN: //waldo:test_planflow test_planplan test_planeval //:ruff 4 of 4, BES 76e0883d-ff6d-4070-aa22-707c7c7d9a3b. NOT DONE: (1) the refusal of an --exclude naming an address the plan does not hold (needs a rule for what 'holds' means: the plan JSON's configuration, unverified whether tofu itself errors on an unknown -exclude), (2) the POLICY side, data.plan_scope.excludes read by the consumer's rego so an excluded address is reported and never clean (the policy is the consumer's, luthen's), (3) a plancli test for the flag, (4) the waldo mutation shards for the new def-sites, (5) review branch to github-82. | 2026-11-24T00:43:03Z: 2026-11-23 github-82 RULING: (a), tightened. Resolve each --exclude against the plan JSON's configuration, walking root_module and module_calls recursively (module.a.module.b.res.x), and refuse one that names no configured resource or module. For an INDEXED address (res.x[\"a\"], res.x[0]) the config check is not enough: also require the instance in prior_state or planned_values, refuse otherwise. Tests: unknown address, unknown nested module, a known resource with an unknown key, a known instance accepted. ALSO: write data.plan_scope.excludes ALWAYS, as [] when none (absence must not be ambiguous: tombstones, not absence), overruling my write-only-when-non-empty. Tell luthen-observability the key and the deferred verdict field when it lands (that policy edit is theirs). Waldo mutation grid (unsharded //waldo:mutants) running in the scratch tree. | 2026-11-24T00:49:52Z: 2026-11-23 REVIEW BRANCH review/W2872-waldo-exclude 649ab7fa26fd9a21434777b97c6be21a35d43f50 (parent main 87857abb, tree f0b7bea1, 9 paths: waldo/src/mikemol/waldo plancli, planeval, planflow, planplan, tests test_planeval, test_planflow, test_planplan, mutants.regex, warrants.bib). BUILT: --exclude (repeatable); planplan.plan_flags spells -exclude= last; exclude_refusal refuses tofu below v1.9 or unreadable (never plans wide); unheld_excludes resolves each exclude against the plan JSON's configuration (root_module, module_calls recursively) and, for an indexed address, requires the instance in prior_state or planned_values (github-82's (a)); scope_file ALWAYS writes data.plan_scope.excludes ([] when none); planflow.judge stops before planning when the tofu cannot exclude, stops after planning when an exclude names nothing held (one line per address), and records deferred: [excludes] in the sealed verdict. mutants.regex: flags-in-the-wrong-order and targets-never-written rewritten for the new lines, excludes-never-spelled and excludes-never-written added. RUN: //waldo:mutants (whole unsharded grid), test_planflow, test_planplan, test_planeval, //:ruff, all pass (grid + 3 tests + ruff), the two rises of the first runs (declared mutants that stopped applying) fixed. NOT DONE: a plancli test for the flag (the parser line is exercised only through the plan flow), the consumer's rego reading data.plan_scope.excludes and verdict deferred (luthen's), paydown named for waldo's ratchets (waldo/pyproject.toml owes 1). | 2026-11-24T00:58:55Z: 2026-11-23 github-82 PASS-SUBMIT of review/W2872-waldo-exclude 649ab7fa after one addition: the plancli test of the flag (two --exclude values in order after -replace= and -target=, one refusing an empty value), scoped, submit without re-sending, name the sha. PAYDOWN ruled: tests/* assert stays counted and not payable, so carry ONE test that kills one of pathsforward's 7 surviving mutants and name the cell. DONE as r2 review/W2872-waldo-exclude-r2 6b9a820fbd73812b7a31c21b3d9bc5415615e60e (parent 649ab7fa, tree d59b5741): plancli refuses an empty --exclude before planning and the flag tests are planted; reconcile.py::oldest-commit-named (declared mutant: the newest commit is kept only if newer) killed by test_the_newest_naming_commit_wins_whatever_order_the_log_lists_them_in (the commits listed oldest first), its line removed from pathsforward/mutants-baseline.txt; addblocker.py::given-human-kind-ignored was REJECTED as a paydown because it is an equivalent mutant (given == human returns human either way, so no test can kill it). RUN: //pathsforward:mutants_11 (holds the cell) with test_reconcile, //waldo:test_plancli, test_planflow, //waldo:mutants and //:ruff pass. SUBMITTED as b116 (one entry, 13 paths); the published round (as_of 2026-11-24T00:58:19Z) lists W2872 at rank 1.",
+      "issued_at": "2026-11-23T01:23:53Z",
+      "minted_during": "interrupt",
+      "caused_by": "luthen-observability:W2906",
+      "last_worked": "2026-11-24T00:58:55Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready",
+      "completed": null
+    },
+    {
       "symbol": "W2873",
       "title": "Answer nemik:W2403: mikemol-commit no-progress witness is wall-clock; name the wait and holder at the verdict and count the holder's CPU as progress",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "nemik:W2403"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-23T01:23:54Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2403",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T00:48:48Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2874",
       "title": "Answer luthen-observability:W2882: the Stop hook names cards the commit hook's round check refuses; it must read the same round",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "luthen-observability:W2882"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-23T01:23:55Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W2882",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T00:48:48Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2875",
       "title": "Answer luthen-observability:W2912: a hook, same shape as the structural-query refusals (ask in that card)",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "luthen-observability:W2912"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-23T07:01:11Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W2912",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T00:48:48Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2876",
       "title": "Answer nemik:W1325: configuration-mechanism census, fleet half: align mtools' per-surface rows",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "nemik:W1325"
       ],
       "touches": [],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "",
       "evidence": "",
       "issued_at": "2026-11-23T07:01:12Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W1325",
-      "last_worked": null,
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T00:48:48Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2877",
@@ -66622,7 +66676,7 @@
       ],
       "touches": [],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Closed by the fractions stand-in card and nemik's reader change; nothing further here",
@@ -66630,7 +66684,7 @@
       "issued_at": "2026-11-23T10:39:56Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2466",
-      "last_worked": "2026-11-23T22:23:17Z",
+      "last_worked": "2026-11-24T00:48:48Z",
       "ticks_blocked": 0,
       "prior_status": "ready"
     },
@@ -66645,7 +66699,7 @@
         "websubset"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Plant tests for exactly that surface against the real fractions.Fraction (the oracle), then write the stand-in as a plain annotated class (Codon-safe form A); ask nemik-e3 for the pinned Codon path and the other importers' operations (blocks, cachestore) before widening",
@@ -66653,7 +66707,7 @@
       "issued_at": "2026-11-23T10:41:40Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2466",
-      "last_worked": "2026-11-23T22:23:17Z",
+      "last_worked": "2026-11-24T00:48:48Z",
       "ticks_blocked": 0,
       "prior_status": "ready"
     },
@@ -66697,22 +66751,25 @@
     {
       "symbol": "W2883",
       "title": "The stack gate runs the frozen tree's own gate script from that tree object, not the live checkout's",
-      "status": "ready",
+      "status": "blocked",
       "enables": [
         "nemik:W2472"
       ],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Read how mikemol-commit's stack gate and .githooks/pre-commit pick tools/gate_staged.sh (live path today, per nemik-e3); design: materialize the script with git show TREE:path into a run-owned file, as nemik's presubmit does; plants first: live script edited mid-run gives the frozen tree's verdict; send github-00 the design; relate to W2780 (run at SHA) and the W2372 live-versus-tree refusal",
       "evidence": "",
       "issued_at": "2026-11-23T12:59:54Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2472",
-      "last_worked": "2026-11-23T13:07:56Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T01:01:43Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2884",
@@ -66724,53 +66781,60 @@
       ],
       "blocked_on": [
         "luthen-observability:W2969",
-        "nemik:W2483"
+        "nemik:W2483",
+        "nemik:W2443"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Wait for: luthen gate_trial.sum registration, luthen row landing sha, nemik:W2483 sha; meanwhile take W2887's first class for this stack's paydown",
-      "evidence": "2026-11-23T17:19:40Z: 2026-11-23 github-00 order: W2884 FIRST (emit only after a land: a refused or failed gate can pre-count a fall, which cost b114 a cycle). Begun: read the emit call sites and the pace before any design; if the pace double-counts any of today's falls, that reading is this card's witness case. | 2026-11-23T17:20:05Z: 2026-11-23 READ (code, not run): TWO emit call sites. (1) .githooks/pre-commit:954-958 emits at GATE time with NO stage argument: 'mikemol-ratchet-emit <repo> <root>' (the gate emits before its verdict; a refused stack leaves values in the store). (2) .githooks/post-commit:104-110 emits AFTER the push with the third word 'landed' (detached, flock-queued). The emitter already supports the stage word: ratchet_emit.py STAGES = ('staged','landed'), rows_of(stage=) labels the row, and W2171 (nemik:W1179) documents the same defect: 'the gate emits before its verdict, so a refused stack left numbers the pace counted as landings'; the fix then labelled landed rows and left gate rows UNLABELED, 'a reader that wants landings selects stage=landed'. So the mtools half is mostly built; the defect that cost b114 a cycle is the READER: nemik reads ratchetseries.py as counting any stage other than 'landed' as gate-time and counting it, and the pre-commit rows carry no stage. DESIGN SKETCH (not final, to github-00): (a) pre-commit:956 passes 'staged' as the third word (a live-hook edit: alone, on an empty gate, per the standing rule), so a gate row is labelled; (b) a reader that selects stage=landed for the paydown pace (nemik:W2465 is changing ratchetseries; luthen's pace unit reads the store); (c) THE ALTERNATIVE github-00 asked for, delete the gate-time emit entirely so only post-commit emits, loses the gate-time sample W2171 deliberately kept; decide with github-00. NOT YET READ: which reader the submit-time paydown guard uses (hooks/src/mikemol/hooks/ratchet_pace.py has no stage handling; the guard's source of 'observed' is not in that file) and the pace's current values, so the double-count witness is not yet taken. | 2026-11-23T17:21:41Z: 2026-11-23 github-00 RULING: (c), fail closed: only post-commit emits, after the push (same as nemik:W2465); a label is fail-open. BEFORE deleting the gate-time emit settle what W2171 kept it FOR: consumer census of the unlabeled rows: submit guard's observed (ratchet_pace.py reads only nemik's ratchet-pace.json, MIKEMOL_PACE_FILE, no store read: found), nemik's ratchetseries and pace (asked nemik-e3), luthen's panels and alerts (asked luthen-observability, not reading its tree), summit's capability index for the series name (not yet asked). In mtools: ratchet/trend.py has no stage handling; no other in-repo reader with stage found (a broad grep matched the module name, so the narrow reading is only trend.py and ratchet_pace.py). If a reader needs a pre-land signal for a real purpose it gets a differently NAMED series (e.g. ratchet_gate_trial), never counted by the pace. The design needs the census result and today's double-count witness. | 2026-11-23T17:23:18Z: 2026-11-23 CENSUS ANSWER luthen-observability (git grep over origin/main objects: alerts, policy, panels.json, metric_dashboards.json, host, user, checks, terraform, docs; live store rule use NOT queried): TWO alerts read mikemol.ratchet.value with no stage selector. (1) ratchet_value_dark (alerts.rego:3518, vmalert.rules.json:984): fires when mikemol.gate.run.emitted has samples in 6 h and mikemol.ratchet.value{repo!=tree} has none, so it NEEDS a ratchet sample after every gate run, a real pre-land signal (is the emitter alive). Deleting the gate-time rows would make it fire falsely on a 6 h window with gate runs and no landing. (2) ratchet_required_fell (alerts.rego:3606, vmalert.rules.json:971): max by (repo, ratchet) of last_over_time(mikemol.ratchet.value[24h]) against nemik_ratchet_fall_required; happy with landed-only (the fall is judged at landings). NO panel reads it. The family declares labels [repo, ratchet, kind] with no stage, ceiling 600. NOT read from luthen's side: nemik's pace reader (luthen-nemik-pace.service runs nemik-hostroot --pace). DECISION INPUT for the design: a reader DOES need a pre-land signal for a real purpose, so by github-00's ruling it gets a differently NAMED series the pace never counts (gate-time emit renamed to a new metric, e.g. mikemol.ratchet.gate_trial, same labels; post-commit keeps mikemol.ratchet.value with stage=landed); luthen then edits alert (1) to count the new series and adds a family row; alert (2) unchanged. | 2026-11-23T17:24:00Z: 2026-11-23 CENSUS ANSWER nemik-e3 (read at nemik 24f609cf): readers of mikemol.ratchet.value in src/nemik: endpoint.py, hostroot_cli.py (RATCHET_SELECTOR, ratchet-pace.json through pacewrite), pacerun.py, ratchetseries.py (the only place a stage label is read). The pace merges every sample of a repo+ratchet by time whatever its stage, so an unlabelled gate-time row and a landed row BOTH count in the window of 10 (the double count, the W1660 repair, unlanded); only ended_series reads the label: a series' END is judged against the repo's newest NON-landed sample (W1654). If the unlabelled rows stop: values improve (landed only, one per landing); ENDED breaks (gate_end has no sample, every series reads NO_END) unless nemik moves the end clock onto landed rows first. My answer to nemik's open fact (read from ratchet_emit.py main): a landed emit ships EVERY ratchet of the repo (the whole census plus tombstones), once per commit of a stack, silently skipped when the emit tool is unbuilt or the census fails (a gap, not an end). With luthen's census: rename the gate-time rows to a separately named series (alert ratchet_value_dark needs a per-gate-run sample) rather than delete. | 2026-11-23T17:26:21Z: 2026-11-23 STORE WITNESS (vmsingle-http from ~/.config/mikemol/endpoints.json; the telemetry skill's port 30829 is dead; query mikemol.ratchet.value{repo=mtools,ratchet=hooks/mutants-baseline.txt}[8h], raw samples by stage): UNLABELLED (gate-time) series: 39 at 1795434690 = 2026-11-23T11:51:30Z (the REFUSED b114 r3 gate run, tree 658cb8d8, the unlanded paydown) and 39 at 1795454129 (the landing gate); stage=landed series: 39 at 1795454245 = 2026-11-23T17:17:25Z (post-commit after the push). So a gate-time sample carrying the unlanded tree's fall (40 entries at HEAD 9b48b58, 39 in the tree) sat in the store 5 h 26 min before the landed row; the pace merges both by time (nemik), so the fall read as paid hours before it landed, which is why the guard stopped listing hooks/mutants-baseline.txt as owed and refused b114 the second time. Both series exist for every ratchet of mtools (an unlabelled and a stage=landed series each). Only one metric name exists, mikemol.ratchet.value (no .sum series is present for it). FINAL NAME sent to luthen-observability and nemik-e3 with the ORDER: (1) luthen family row + ratchet_value_dark to gate_trial, (2) nemik end clock onto landed rows, (3) my pre-commit change by the normal stack (github-00: not a live edit in the checkout). ALSO: mikemol-otlp is NOT in the pinned bin (the pinned listing has no mikemol-otlp), so the store was read with curl; a pinned-set gap for luthen-observability:W2937. | 2026-11-23T17:46:52Z: 2026-11-23 BUILT in the main tree (uncommitted, hooks): ratchet_emit.py gains TRIAL = mikemol.ratchet.gate_trial and TRIAL_SUM = mikemol.ratchet.gate_trial.sum, STAGES = (staged, landed, trial), rows_of(stage='trial') names the trial series and sets NO stage label (landed unchanged on mikemol.ratchet.value / .sum); planted test test_a_trial_run_sends_its_own_metric_names_so_the_pace_never_reads_it in the existing hooks/tests/test_ratchet_emit.py; 16 tests of test_ratchet_emit and test_ratchet_emit_retired pass (run in hooks/.venv, a pytest run, not a fleet tool). NOT DONE: the warrant (mikemol-gen-warrants hooks ratchet_emit=ratchet_emit), the .githooks/pre-commit line 956 change ('trial' as the third word) which github-00 wants through the normal stack from a scratch worktree, not as a live edit in this checkout, AFTER luthen's family row and alert (step 1) and nemik's end clock (step 2) land. | 2026-11-23T19:46:26Z: 2026-11-23 luthen-observability STEP 1 STATUS: bound gate of refs/review/W2950-2 (a12994dd) GREEN in the passing shape (rc 3, only tofu-root HELD; opa-policy 910 of 910, alert-rules 127 ok, unit-tests 6625 ok, mypy clean): adds the mikemol.ratchet.gate_trial family row and makes ratchet_value_dark count a sample of EITHER name during the switch. NOT LANDED: waits on github-82's PASS; luthen-observability sends me the landing sha. The first cut W2950-1 was refused at opa fmt and recut. Still waiting on: that landing sha (step 1) and nemik-e3's end-clock sha (step 2). | 2026-11-23T20:43:58Z: 2026-11-23 PREPARED (not submitted): the scratch worktree for W2884 (base main HEAD b9c9d7c8) holds hooks/src/mikemol/hooks/ratchet_emit.py, hooks/tests/test_ratchet_emit.py, hooks/warrants.bib and .githooks/pre-commit with the gate-time emit's third word 'trial' (line 956, comment cites W2884). The other emit tests (test_ratchet_hook, test_ratchet_emit_retired, test_githook_post_commit) use synthetic gate scripts and do not pin mtools' pre-commit line (read test_ratchet_hook). The main tree's hooks edits are the same bytes; the main-tree .githooks/pre-commit is NOT edited (github-00: normal stack, not a live edit). | 2026-11-23T20:48:02Z: 2026-11-23 REVIEW BRANCH review/W2884-gate-trial 5dfafdb31661bb5639371462dfdda76a606ca2de (parent main b9c9d7c8, tree 9b50186a; paths: hooks/src/mikemol/hooks/ratchet_emit.py, hooks/tests/test_ratchet_emit.py, hooks/warrants.bib, .githooks/pre-commit). RUN in the scratch tree: bazel test //hooks:test_ratchet_emit //hooks:test_ratchet_emit_retired //hooks:test_ratchet_hook //hooks:test_githook_post_commit //hooks:test_bar_fires //:ruff //hooks:mod_pycheck, 6 tests pass, BES 6ac303b3-4e43-467f-856e-64c62f7118a6 (the first run used a guessed target name and never started). | 2026-11-23T20:49:52Z: 2026-11-23 github-82 (holds github-00's review threads, hooks included): review/W2884-gate-trial 5dfafdb3 code RIGHT, PASS conditional. ONE GAP: the stack emits a SECOND new family, mikemol.ratchet.gate_trial.sum, and luthen's W2950-2 registers only mikemol.ratchet.gate_trial; an unregistered family trips luthen_metric_unregistered_families. ORDER gains a step: luthen registers gate_trial.sum (same labels as mikemol.ratchet.sum, present only for file-rule-count baselines, freshness via ratchet_value_dark) BEFORE my submit; github-82 told luthen. Then PASS: keep github-00's order (luthen row and alert, PASSed and landing; nemik's ended_series move; then mine). PAYDOWN GUARD: carry the mechanical paydown per github-00's approval, classified by W2887; name the fall's ratchet and count in the stack message. | 2026-11-23T20:50:31Z: 2026-11-23 nemik-25: nemik:W2483 carded (ended_series' end clock from stage=landed batches; my landed-emit facts recorded). Built in a scratch worktree, presubmit run 2 in the gate (run 1 failed one lint line, fixed); review ref and sha come to me when rc 0 and github has seen it. W2483 moves only the END clock; the VALUE merge still counts unlabelled rows until my series rename lands. | 2026-11-23T21:27:48Z: 2026-11-23 YIELDS to W2888 (github-82: W2888 is the critical path for every nemik stack, and W2884 waits on luthen's W2969 anyway). The review branch review/W2884-gate-trial 5dfafdb3 and its scratch worktree stay as they are. Resume when luthen's W2969 and gate_trial.sum registration and nemik:W2483 land. | 2026-11-23T21:30:38Z: 2026-11-23 BLOCKED on luthen-observability:W2969 (the gate_trial family row and ratchet_value_dark alert, plus registering gate_trial.sum) and nemik:W2483 (ended_series' end clock onto landed rows); yields to W2888 (github-82). Review branch review/W2884-gate-trial 5dfafdb3 is PASS conditional on those. | 2026-11-23T21:35:46Z: 2026-11-23 luthen-observability STEP 1 LANDED: W2950-2 landed on its main as 06e456b3 (the mikemol.ratchet.gate_trial family row, the union expression in the ratchet_value_dark rule, the vmalert arm). The FOLLOW-UP row for mikemol.ratchet.gate_trial.sum (same labels as mikemol.ratchet.sum, no dark rule) is luthen-observability:W2969, their sha to come when it lands; this card stays blocked on W2969 and nemik:W2483.",
+      "evidence": "2026-11-23T17:19:40Z: 2026-11-23 github-00 order: W2884 FIRST (emit only after a land: a refused or failed gate can pre-count a fall, which cost b114 a cycle). Begun: read the emit call sites and the pace before any design; if the pace double-counts any of today's falls, that reading is this card's witness case. | 2026-11-23T17:20:05Z: 2026-11-23 READ (code, not run): TWO emit call sites. (1) .githooks/pre-commit:954-958 emits at GATE time with NO stage argument: 'mikemol-ratchet-emit <repo> <root>' (the gate emits before its verdict; a refused stack leaves values in the store). (2) .githooks/post-commit:104-110 emits AFTER the push with the third word 'landed' (detached, flock-queued). The emitter already supports the stage word: ratchet_emit.py STAGES = ('staged','landed'), rows_of(stage=) labels the row, and W2171 (nemik:W1179) documents the same defect: 'the gate emits before its verdict, so a refused stack left numbers the pace counted as landings'; the fix then labelled landed rows and left gate rows UNLABELED, 'a reader that wants landings selects stage=landed'. So the mtools half is mostly built; the defect that cost b114 a cycle is the READER: nemik reads ratchetseries.py as counting any stage other than 'landed' as gate-time and counting it, and the pre-commit rows carry no stage. DESIGN SKETCH (not final, to github-00): (a) pre-commit:956 passes 'staged' as the third word (a live-hook edit: alone, on an empty gate, per the standing rule), so a gate row is labelled; (b) a reader that selects stage=landed for the paydown pace (nemik:W2465 is changing ratchetseries; luthen's pace unit reads the store); (c) THE ALTERNATIVE github-00 asked for, delete the gate-time emit entirely so only post-commit emits, loses the gate-time sample W2171 deliberately kept; decide with github-00. NOT YET READ: which reader the submit-time paydown guard uses (hooks/src/mikemol/hooks/ratchet_pace.py has no stage handling; the guard's source of 'observed' is not in that file) and the pace's current values, so the double-count witness is not yet taken. | 2026-11-23T17:21:41Z: 2026-11-23 github-00 RULING: (c), fail closed: only post-commit emits, after the push (same as nemik:W2465); a label is fail-open. BEFORE deleting the gate-time emit settle what W2171 kept it FOR: consumer census of the unlabeled rows: submit guard's observed (ratchet_pace.py reads only nemik's ratchet-pace.json, MIKEMOL_PACE_FILE, no store read: found), nemik's ratchetseries and pace (asked nemik-e3), luthen's panels and alerts (asked luthen-observability, not reading its tree), summit's capability index for the series name (not yet asked). In mtools: ratchet/trend.py has no stage handling; no other in-repo reader with stage found (a broad grep matched the module name, so the narrow reading is only trend.py and ratchet_pace.py). If a reader needs a pre-land signal for a real purpose it gets a differently NAMED series (e.g. ratchet_gate_trial), never counted by the pace. The design needs the census result and today's double-count witness. | 2026-11-23T17:23:18Z: 2026-11-23 CENSUS ANSWER luthen-observability (git grep over origin/main objects: alerts, policy, panels.json, metric_dashboards.json, host, user, checks, terraform, docs; live store rule use NOT queried): TWO alerts read mikemol.ratchet.value with no stage selector. (1) ratchet_value_dark (alerts.rego:3518, vmalert.rules.json:984): fires when mikemol.gate.run.emitted has samples in 6 h and mikemol.ratchet.value{repo!=tree} has none, so it NEEDS a ratchet sample after every gate run, a real pre-land signal (is the emitter alive). Deleting the gate-time rows would make it fire falsely on a 6 h window with gate runs and no landing. (2) ratchet_required_fell (alerts.rego:3606, vmalert.rules.json:971): max by (repo, ratchet) of last_over_time(mikemol.ratchet.value[24h]) against nemik_ratchet_fall_required; happy with landed-only (the fall is judged at landings). NO panel reads it. The family declares labels [repo, ratchet, kind] with no stage, ceiling 600. NOT read from luthen's side: nemik's pace reader (luthen-nemik-pace.service runs nemik-hostroot --pace). DECISION INPUT for the design: a reader DOES need a pre-land signal for a real purpose, so by github-00's ruling it gets a differently NAMED series the pace never counts (gate-time emit renamed to a new metric, e.g. mikemol.ratchet.gate_trial, same labels; post-commit keeps mikemol.ratchet.value with stage=landed); luthen then edits alert (1) to count the new series and adds a family row; alert (2) unchanged. | 2026-11-23T17:24:00Z: 2026-11-23 CENSUS ANSWER nemik-e3 (read at nemik 24f609cf): readers of mikemol.ratchet.value in src/nemik: endpoint.py, hostroot_cli.py (RATCHET_SELECTOR, ratchet-pace.json through pacewrite), pacerun.py, ratchetseries.py (the only place a stage label is read). The pace merges every sample of a repo+ratchet by time whatever its stage, so an unlabelled gate-time row and a landed row BOTH count in the window of 10 (the double count, the W1660 repair, unlanded); only ended_series reads the label: a series' END is judged against the repo's newest NON-landed sample (W1654). If the unlabelled rows stop: values improve (landed only, one per landing); ENDED breaks (gate_end has no sample, every series reads NO_END) unless nemik moves the end clock onto landed rows first. My answer to nemik's open fact (read from ratchet_emit.py main): a landed emit ships EVERY ratchet of the repo (the whole census plus tombstones), once per commit of a stack, silently skipped when the emit tool is unbuilt or the census fails (a gap, not an end). With luthen's census: rename the gate-time rows to a separately named series (alert ratchet_value_dark needs a per-gate-run sample) rather than delete. | 2026-11-23T17:26:21Z: 2026-11-23 STORE WITNESS (vmsingle-http from ~/.config/mikemol/endpoints.json; the telemetry skill's port 30829 is dead; query mikemol.ratchet.value{repo=mtools,ratchet=hooks/mutants-baseline.txt}[8h], raw samples by stage): UNLABELLED (gate-time) series: 39 at 1795434690 = 2026-11-23T11:51:30Z (the REFUSED b114 r3 gate run, tree 658cb8d8, the unlanded paydown) and 39 at 1795454129 (the landing gate); stage=landed series: 39 at 1795454245 = 2026-11-23T17:17:25Z (post-commit after the push). So a gate-time sample carrying the unlanded tree's fall (40 entries at HEAD 9b48b58, 39 in the tree) sat in the store 5 h 26 min before the landed row; the pace merges both by time (nemik), so the fall read as paid hours before it landed, which is why the guard stopped listing hooks/mutants-baseline.txt as owed and refused b114 the second time. Both series exist for every ratchet of mtools (an unlabelled and a stage=landed series each). Only one metric name exists, mikemol.ratchet.value (no .sum series is present for it). FINAL NAME sent to luthen-observability and nemik-e3 with the ORDER: (1) luthen family row + ratchet_value_dark to gate_trial, (2) nemik end clock onto landed rows, (3) my pre-commit change by the normal stack (github-00: not a live edit in the checkout). ALSO: mikemol-otlp is NOT in the pinned bin (the pinned listing has no mikemol-otlp), so the store was read with curl; a pinned-set gap for luthen-observability:W2937. | 2026-11-23T17:46:52Z: 2026-11-23 BUILT in the main tree (uncommitted, hooks): ratchet_emit.py gains TRIAL = mikemol.ratchet.gate_trial and TRIAL_SUM = mikemol.ratchet.gate_trial.sum, STAGES = (staged, landed, trial), rows_of(stage='trial') names the trial series and sets NO stage label (landed unchanged on mikemol.ratchet.value / .sum); planted test test_a_trial_run_sends_its_own_metric_names_so_the_pace_never_reads_it in the existing hooks/tests/test_ratchet_emit.py; 16 tests of test_ratchet_emit and test_ratchet_emit_retired pass (run in hooks/.venv, a pytest run, not a fleet tool). NOT DONE: the warrant (mikemol-gen-warrants hooks ratchet_emit=ratchet_emit), the .githooks/pre-commit line 956 change ('trial' as the third word) which github-00 wants through the normal stack from a scratch worktree, not as a live edit in this checkout, AFTER luthen's family row and alert (step 1) and nemik's end clock (step 2) land. | 2026-11-23T19:46:26Z: 2026-11-23 luthen-observability STEP 1 STATUS: bound gate of refs/review/W2950-2 (a12994dd) GREEN in the passing shape (rc 3, only tofu-root HELD; opa-policy 910 of 910, alert-rules 127 ok, unit-tests 6625 ok, mypy clean): adds the mikemol.ratchet.gate_trial family row and makes ratchet_value_dark count a sample of EITHER name during the switch. NOT LANDED: waits on github-82's PASS; luthen-observability sends me the landing sha. The first cut W2950-1 was refused at opa fmt and recut. Still waiting on: that landing sha (step 1) and nemik-e3's end-clock sha (step 2). | 2026-11-23T20:43:58Z: 2026-11-23 PREPARED (not submitted): the scratch worktree for W2884 (base main HEAD b9c9d7c8) holds hooks/src/mikemol/hooks/ratchet_emit.py, hooks/tests/test_ratchet_emit.py, hooks/warrants.bib and .githooks/pre-commit with the gate-time emit's third word 'trial' (line 956, comment cites W2884). The other emit tests (test_ratchet_hook, test_ratchet_emit_retired, test_githook_post_commit) use synthetic gate scripts and do not pin mtools' pre-commit line (read test_ratchet_hook). The main tree's hooks edits are the same bytes; the main-tree .githooks/pre-commit is NOT edited (github-00: normal stack, not a live edit). | 2026-11-23T20:48:02Z: 2026-11-23 REVIEW BRANCH review/W2884-gate-trial 5dfafdb31661bb5639371462dfdda76a606ca2de (parent main b9c9d7c8, tree 9b50186a; paths: hooks/src/mikemol/hooks/ratchet_emit.py, hooks/tests/test_ratchet_emit.py, hooks/warrants.bib, .githooks/pre-commit). RUN in the scratch tree: bazel test //hooks:test_ratchet_emit //hooks:test_ratchet_emit_retired //hooks:test_ratchet_hook //hooks:test_githook_post_commit //hooks:test_bar_fires //:ruff //hooks:mod_pycheck, 6 tests pass, BES 6ac303b3-4e43-467f-856e-64c62f7118a6 (the first run used a guessed target name and never started). | 2026-11-23T20:49:52Z: 2026-11-23 github-82 (holds github-00's review threads, hooks included): review/W2884-gate-trial 5dfafdb3 code RIGHT, PASS conditional. ONE GAP: the stack emits a SECOND new family, mikemol.ratchet.gate_trial.sum, and luthen's W2950-2 registers only mikemol.ratchet.gate_trial; an unregistered family trips luthen_metric_unregistered_families. ORDER gains a step: luthen registers gate_trial.sum (same labels as mikemol.ratchet.sum, present only for file-rule-count baselines, freshness via ratchet_value_dark) BEFORE my submit; github-82 told luthen. Then PASS: keep github-00's order (luthen row and alert, PASSed and landing; nemik's ended_series move; then mine). PAYDOWN GUARD: carry the mechanical paydown per github-00's approval, classified by W2887; name the fall's ratchet and count in the stack message. | 2026-11-23T20:50:31Z: 2026-11-23 nemik-25: nemik:W2483 carded (ended_series' end clock from stage=landed batches; my landed-emit facts recorded). Built in a scratch worktree, presubmit run 2 in the gate (run 1 failed one lint line, fixed); review ref and sha come to me when rc 0 and github has seen it. W2483 moves only the END clock; the VALUE merge still counts unlabelled rows until my series rename lands. | 2026-11-23T21:27:48Z: 2026-11-23 YIELDS to W2888 (github-82: W2888 is the critical path for every nemik stack, and W2884 waits on luthen's W2969 anyway). The review branch review/W2884-gate-trial 5dfafdb3 and its scratch worktree stay as they are. Resume when luthen's W2969 and gate_trial.sum registration and nemik:W2483 land. | 2026-11-23T21:30:38Z: 2026-11-23 BLOCKED on luthen-observability:W2969 (the gate_trial family row and ratchet_value_dark alert, plus registering gate_trial.sum) and nemik:W2483 (ended_series' end clock onto landed rows); yields to W2888 (github-82). Review branch review/W2884-gate-trial 5dfafdb3 is PASS conditional on those. | 2026-11-23T21:35:46Z: 2026-11-23 luthen-observability STEP 1 LANDED: W2950-2 landed on its main as 06e456b3 (the mikemol.ratchet.gate_trial family row, the union expression in the ratchet_value_dark rule, the vmalert arm). The FOLLOW-UP row for mikemol.ratchet.gate_trial.sum (same labels as mikemol.ratchet.sum, no dark rule) is luthen-observability:W2969, their sha to come when it lands; this card stays blocked on W2969 and nemik:W2483. | 2026-11-24T00:51:52Z: 2026-11-23 github-82 (from nemik-25): once gate-time rows leave mikemol.ratchet.value, a repo with no landed emitter keeps its last gate-time values in the store and is judged on them forever (a stale verdict, silently). The fix is nemik:W2443's freshness rule (stale reads unknown), which must land BEFORE W2884's pre-commit change; nemik adds the edge W2443 enables mtools:W2884. Added to W2884's blocked_on: now luthen-observability:W2969, nemik:W2483, nemik:W2443.",
       "issued_at": "2026-11-23T13:06:18Z",
       "minted_during": "interrupt",
       "caused_by": "github-00:W2465",
-      "last_worked": "2026-11-23T21:35:46Z",
+      "last_worked": "2026-11-24T00:51:52Z",
       "ticks_blocked": 0,
       "completed": null
     },
     {
       "symbol": "W2885",
       "title": "A gate check fails when .claude/unmanifested-baseline.txt differs as a set from --blocked-on-list W1667 --all",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Write the check as a test or gate step (planted first: an entry with no W1667 blocker, a blocked card missing from the file, a comment line ignored); design to github-00; enforces the file's own header invariant mechanically (github-00 2026-11-23)",
       "evidence": "",
       "issued_at": "2026-11-23T13:10:18Z",
       "minted_during": "interrupt",
       "caused_by": "W1667",
-      "last_worked": "2026-11-23T13:10:57Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T00:42:15Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2886",
       "title": "mutations_emit takes repo from state.parent.parent.name with no check, so a --state outside <repo>/.claude/ emits junk repo labels (session uuids, 'a')",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "pathsforward"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Read mutations_emit.emit (line 141) and its callers; plant first: a state at <x>/scratch/state.json and at <a>/.claude/paths-forward.json in a non-repo emit nothing or repo=unknown (one declared value), a real <repo>/.claude/paths-forward.json still names the repo; answer luthen-observability:W1418; send github-00 the design",
       "evidence": "2026-11-23T13:53:51Z: held behind W2811 (github-00: one stack at a time)",
       "issued_at": "2026-11-23T13:53:45Z",
       "minted_during": "interrupt",
       "caused_by": "luthen-observability:W1418",
-      "last_worked": "2026-11-23T13:53:51Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T00:42:15Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2887",
@@ -66782,7 +66846,7 @@
         "ratchet"
       ],
       "blocked_on": [
-        "W2888"
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Ask github-82 for the ruling on tests/* = assert (standing exemption not counted, or leave counted), then take one mutant from a small baseline (katas 1, mdstruct 1, procrun 2) as the W2884 stack's paydown",
@@ -66790,14 +66854,14 @@
       "issued_at": "2026-11-23T13:57:04Z",
       "minted_during": "interrupt",
       "caused_by": "github-00:W2884",
-      "last_worked": "2026-11-23T22:01:29Z",
+      "last_worked": "2026-11-24T00:42:15Z",
       "ticks_blocked": 0,
       "prior_status": "ready"
     },
     {
       "symbol": "W2888",
       "title": "Retro supersession in the writer: retire the cause-to-root rename; an optional supersedes field and a --migrate-retros that writes superseding rows",
-      "status": "working",
+      "status": "done",
       "enables": [
         "nemik:W2478"
       ],
@@ -66806,33 +66870,36 @@
       ],
       "blocked_on": [],
       "blocked_kind": null,
-      "next_bounded_step": "Build the stack file from the scratch tree, confirm W2888 is in the published round, submit, name r3 sha to github-82",
-      "evidence": "2026-11-23T14:45:23Z: held behind W2811 (github-00: one stack at a time; a pathsforward stack follows b114) | 2026-11-23T14:48:41Z: 2026-11-23 github-00 (operator: a pure rename of cause to root forgets proximate cause; G3 keeps TRIGGER, ROOT CAUSE and CONTRIBUTING FACTORS distinct, so relabelling every cause as root asserts each was a root cause): (2) W2888 must NOT reuse the rename; the new mode writes SUPERSEDING rows and never relabels an old field; (3) HOLD any further run of --migrate-retros on any queue until github-00's warm and cold review of the cause/root semantics rules. W2091 facts sent to github-00: landed 895d204 (stack-pathsforward-b); the card records no warm or cold review; no --migrate-retros run appears in mtools' ledger and the 2026-11-08 dry run here read 'WOULD MIGRATE none'; whether the host queue's R1-R63 were migrated is not in any record I hold. | 2026-11-23T14:50:20Z: 2026-11-23 github-00 RULING after checking the host queue (no retro carries 'unsplit'; with mtools' ledger, no stored record anywhere was relabelled, so the damage was latent code): W2888 RETIRES the rename. Remove retros.migrate's cause-to-root path and the old --migrate-retros behaviour outright; the mode's name passes to the new superseding writer; splitting a cause into trigger (proximate), root and contributing is JUDGEMENT, so superseding rows for the host's cause-only R1 to R63 are written by a reviewer, never derived by the tool; the tool may carry the old cause text verbatim into the new row's evidence but never into root; a test in W2888 refuses any derived value in trigger, root or contributing; the design goes to github-00 for warm and cold review before any code. | 2026-11-23T21:26:18Z: 2026-11-23 DESIGN v1 sent to github-82 (code read: pathsforward/src/mikemol/pathsforward/retros.py). TODAY: retro_refusals (line 125) checks only shape, blame, trigger/root distinct when a layer is set, and handoff.operator in OPERATORS; add_retro (272) appends a record with a minted id; migrate/_migrated (153-195) rename cause to root and mark absent trigger 'unsplit'; RETRO_FIELDS (198) has no supersedes. DESIGN. (1) SCHEMA: RETRO_FIELDS gains optional supersedes (a retro id of the same repo). (2) add_retro: when supersedes is present, refuse unless the named id exists in doc retros, carries the same repo prefix, and no other retro already supersedes it (one live row per chain), and the new row passes the FULL handoff shape: retro_refusals' handoff check grows from operator-only to instrument, channel, operator and self_probe where the operator is other (nemik owns the shape vocabulary, so I take the field names from nemik:W2488, not guess); the superseded row is never touched. (3) RETIRE the rename: delete retros.migrate and _migrated and the UNSPLIT marker and the old --migrate-retros behaviour outright (not left callable), per github-00's ruling after the operator's proximate-cause objection; the mode name --migrate-retros passes to a LISTING-AND-SCAFFOLDING mode: for each live row violating the handoff shape it prints a scaffold superseding row (supersedes set, the old text carried VERBATIM into evidence only) and the list of fields the old row's own text states for the handoff-shape fields only (instrument, channel, operator, self_probe), each filled field carrying derived_by provenance, an unstated field left EMPTY (no tombstone value) and the row listed 'needs a reviewer'. It writes nothing to the queue itself: a reviewer writes the row, and add_retro admits it. (4) trigger, root and contributing are NEVER derived: a planted test refuses a derived_by on any of them and a scaffold that fills them. (5) export keeps supersedes in the exported graph so nemik's shapes can judge only the live row (the export module reads RETRO_FIELDS, to confirm). PLANTS FIRST: supersedes of an unknown id refused, of an id from another repo refused, of an already-superseded id refused, a superseding row failing the handoff shape refused, the old row byte-identical after a supersede, derived_by on trigger/root/contributing refused, an unstated handoff field left empty and the row listed, the export carries supersedes, retros.migrate no longer importable. OPEN for you: whether the scaffold mode should WRITE the row when every handoff field is stated (I say no: github-00 said reviewer-written), and the exact handoff shape (nemik:W2488). | 2026-11-23T21:27:41Z: 2026-11-23 github-82 DESIGN v1 PASS with one change, START NOW; W2884 yields (it waits on luthen's W2969 anyway, and W2888 is the critical path for every nemik stack). Holds: (1) supersedes, same repo, one live row per chain, superseded row byte-identical; (2) full handoff shape with field names from nemik:W2488, coordinated with nemik-25 and pinned in ONE shared fixture both sides test against; (3) retire the in-place rename outright, nothing callable; (4) trigger/root/contributing never derived, planted refusals; (5) export carries supersedes. CHANGE (open a): the scaffold mode gets an --apply that writes a superseding row ONLY when every required handoff field is COPIED VERBATIM from the old row's own text (a copy, not a derivation, so no derived_by); every other row stays scaffold-only and is listed 'needs a reviewer'. The dry run prints the exact set of rows --apply would write, and a test checks --apply writes exactly that set. (b) the handoff shape from nemik:W2488. Plant those first. | 2026-11-23T21:28:45Z: 2026-11-23 TRANCHE 1 BUILT in the scratch worktree for W2888 (base main HEAD b9c9d7c8, uncommitted): retros.py RETRO_FIELDS gains supersedes, _supersede_refusals (same repo prefix, the id must exist, nothing may already supersede it) wired into add_retro; two planted tests in the existing pathsforward/tests/test_retros.py (a superseding row leaves the older row byte for byte, unknown id and foreign-repo id and already-superseded id refused with the document unchanged); 17 tests of test_retros pass (pytest from the scratch source). NOT DONE: (1) retire retros.migrate, _migrated, UNSPLIT, the --migrate-retros CLI path (cli.py) and the two migrate tests (test_migrate_renames_cause..., test_migrate_command_dry_run...), plus a test that they are gone, (2) the full handoff shape on a superseding row, field names from nemik:W2488 in ONE shared fixture with nemik-25 (asked), (3) the list-and-scaffold --migrate-retros with --apply that writes ONLY rows whose required handoff fields are copied verbatim, dry run printing the exact set and a test that --apply writes exactly that set, (4) refusals for derived_by or any derived value in trigger/root/contributing, (5) export carries supersedes (export.py does not name retros, so check the whole-document export) , (6) warrants, bazel run, review branch to github-82. | 2026-11-23T21:29:52Z: 2026-11-23 nemik-25 (nemik:W2488) HANDOFF SHAPE: vocabularies instrument = non-empty text, channel = non-empty text, operator in {self, other}, self_probe required when operator is other and must be exactly 'executed-and-failed' (any other value or none is invalid for other, ignored for self). NINE CASES: self complete valid, self with an unneeded self_probe 'not tried' valid, other complete with executed-and-failed valid, other with no self_probe INVALID, other with self_probe 'not tried' INVALID, no instrument INVALID, empty instrument INVALID, no channel INVALID, operator 'someone' INVALID. SHARED FIXTURE: nemik tests/corpus/retro-handoff-blocks.json, sha256 8f6948d6192289116a9076b7ed9249734a3428af27ff4010bed5d50ccbaa04b3 (vocabularies and cases), and tests/corpus/retro-supersession.json; copy BYTE FOR BYTE and pin the digest; both are in nemik's presubmit tree. I asked for a REVIEW REF (a branch and sha) so I copy from a git object, not from prose. OPEN: nemik spells supersedes as the repo-local id 'R3'; the writer stores ids as <repo>:R<n> and my tranche 1 validates the full id of the same repo: proposed the full id, asked nemik to state which in the supersession fixture before we pin. | 2026-11-23T21:33:57Z: 2026-11-23 nemik-25 SETTLED supersedes = the FULL id <repo>:R<n> (nemik's graph keys a retro by the writer's id, retro/nemik:R3, so a bare R3 would not match a node), and gave the review ref in the nemik repo, refs/review/W2488-v1 = 6ae62dbd (tree f8dd6de1, parent 24f609cf). COPIED with git show from that ref into the scratch tree under pathsforward/tests/corpus/: retro-handoff-blocks.json sha256 8f6948d6192289116a9076b7ed9249734a3428af27ff4010bed5d50ccbaa04b3 and retro-supersession.json sha256 f4818250ab98b3df67d108d862fefcc903411b3f38d96aa7bee194dbe5575bcb, BOTH VERIFIED with sha256sum against the pins before use. TRANCHE 2 BUILT in the scratch tree (uncommitted): retros.handoff_refusals (instrument and channel non-empty, operator in self/other, other needs self_probe exactly executed-and-failed) applied to every superseding row by _supersede_refusals (a superseding row with no handoff block refused); tests in the existing test_retros.py read each fixture only when its bytes match the pin: all nine handoff cases get nemik's verdict, a superseding row with no handoff or a weak other is refused with the document unchanged, and nemik's R3/R9 pair replays through add_retro. 20 tests pass. NOT DONE: retire migrate/_migrated/UNSPLIT and the --migrate-retros CLI path and its two tests, the scaffold --apply mode, derived-value refusals for trigger/root/contributing, the export check, warrants, bazel, review branch. | 2026-11-23T22:00:36Z: 2026-11-23 REVIEW BRANCH review/W2888-retro-supersession dd71b1e13da66fc9730ae8046377d9e56c71ddc0 (parent main b9c9d7c8, tree 9eaf0808; 7 paths: pathsforward/src/mikemol/pathsforward/retros.py and cli.py, tests/test_retros.py, tests/corpus/retro-handoff-blocks.json and retro-supersession.json copied byte for byte from nemik refs/review/W2488-v1 6ae62dbd and pinned by sha256, BUILD.bazel (corpus declared as test data, named in the mutants data), warrants.bib +8 -2, mutants.regex: two declared mutants of the deleted _migrated replaced by two for _supersede_refusals). BUILT: supersedes (full <repo>:R<n> id, same repo, exists, one live row per chain, older row byte-identical), the full handoff shape on every superseding row (handoff_refusals, nemik's nine cases), retros.migrate/_migrated/UNSPLIT deleted and a test that they are gone, --migrate-retros now LISTS a scaffold per live retro failing the shape (WOULD WRITE or NEEDS A REVIEWER) and --write adds only rows whose handoff values were COPIED verbatim from the older row's own handoff block or flat keys, exactly the set listed, never trigger/root/contributing/cause/derived_by. RUN: bazel test //pathsforward:test_retros //pathsforward:test_retroscaffold //pathsforward:test_cli //:ruff, 4 of 4 pass, BES 32d25b15-0364-44f3-b663-3cd1ff690256 (the first run failed for want of the fixtures as bazel data, fixed in BUILD.bazel). NOT RUN: the pathsforward mutation grid (new def-sites _copied, scaffolds, handoff_refusals, _supersede_refusals may survive and rise in the gate; two declared mutants added for _supersede_refusals), mypy/pycheck target, MUTATE_LINT. NOT DONE: the export check (the v2 export is cards only, nemik reads the queue document directly), --apply was spelled --write here (the writer's own flag). | 2026-11-23T22:15:44Z: 2026-11-23 github-82 REVISE of dd71b1e1, three defects, ALL ADDRESSED in r2 review/W2888-retro-supersession-r2 08f32ea2bf33cf668e7e94932542a0293593765c (parent dd71b1e1, tree 31883234): (1) the live row was bare: scaffolds now copies EVERY field of the older row except id, the old supersedes, the handoff block and any flat handoff key (those become the new handoff), so the superseding row equals the old row with only id, supersedes and handoff differing (test_the_superseding_row_is_the_older_row_with_only_id_supersedes_and_handoff_changed); (2) WOULD WRITE equals what --write writes: the scaffold's refusals are now retro_refusals plus _supersede_refusals on the FULL row, exactly add_retro's checks, scaffolds(doc, repo) takes the repo, and an end-to-end test lists then writes and the WROTE ids equal the WOULD WRITE set, with a row add_retro would refuse listed NEEDS A REVIEWER and never written; (3) mutation grid run for the shards holding the new cells: mutants_0, 2, 4, 8, 22, 23, 26 (computed with the runner's own FNV-1a hash, 0-based shard index, the 7 new def-sites and declared mutants) plus //:ruff pass, 8 of 8 (the first two attempts to run one cell by MUTATE_SITE were refused because the sharded target already sets MUTATE_SHARD). Then //pathsforward:test_retros, test_cli, test_retroscaffold and //:ruff pass 4 of 4, BES f9c79a65-0bb4-4555-a6d2-3877f7b105c7. pycheck ran per edit through the edit hook. PAYDOWN carried: pathsforward/mutants-baseline.txt falls by 1: retros.py::spec-record-rewritten (the survivor of the declared mutant on the deleted _migrated, whose function and mutant line are both retired, so the cell no longer exists). NOT run: the whole 36-shard grid (29 shards untouched by new cells), MUTATE_LINT. | 2026-11-23T22:21:52Z: 2026-11-23 github-82 PASS-SUBMIT of r2 (08f32ea2) after one line: carried.setdefault('findings', []) invented an empty findings list for an older row that had none (absent means G7 never ran). DONE as r3: review/W2888-retro-supersession-r3 c9e38f3e843608b40a476dad5ba1cc742ab9c42c (parent 08f32ea2, tree 25412d67): the setdefault is gone, test_an_older_row_with_no_findings_list_is_not_given_an_empty_one plants the case (the scaffold has no findings key and is listed with a 'no findings list' refusal), +2 warrants. RUN: //pathsforward:test_retros, test_cli, test_retroscaffold, //:ruff, mutants_0, mutants_2, mutants_4, 7 of 7, BES 566c76d7-ba0a-4597-9fab-5662aa0f0e12. PAYDOWN ACCEPTED by github-82: pathsforward/mutants-baseline.txt falls by 1, retros.py::spec-record-rewritten, because its code is deleted (independently ruled by the operator's ruling against the in-place rename): the cell is gone, not hidden or relocated, so a real fall. Say so in the stack message; pathsforward/pyproject.toml (owes 4) and the 7 remaining survivors stay owed. SUBMIT without re-sending to github-82, naming the sha.",
+      "next_bounded_step": null,
+      "evidence": "2026-11-23T14:45:23Z: held behind W2811 (github-00: one stack at a time; a pathsforward stack follows b114) | 2026-11-23T14:48:41Z: 2026-11-23 github-00 (operator: a pure rename of cause to root forgets proximate cause; G3 keeps TRIGGER, ROOT CAUSE and CONTRIBUTING FACTORS distinct, so relabelling every cause as root asserts each was a root cause): (2) W2888 must NOT reuse the rename; the new mode writes SUPERSEDING rows and never relabels an old field; (3) HOLD any further run of --migrate-retros on any queue until github-00's warm and cold review of the cause/root semantics rules. W2091 facts sent to github-00: landed 895d204 (stack-pathsforward-b); the card records no warm or cold review; no --migrate-retros run appears in mtools' ledger and the 2026-11-08 dry run here read 'WOULD MIGRATE none'; whether the host queue's R1-R63 were migrated is not in any record I hold. | 2026-11-23T14:50:20Z: 2026-11-23 github-00 RULING after checking the host queue (no retro carries 'unsplit'; with mtools' ledger, no stored record anywhere was relabelled, so the damage was latent code): W2888 RETIRES the rename. Remove retros.migrate's cause-to-root path and the old --migrate-retros behaviour outright; the mode's name passes to the new superseding writer; splitting a cause into trigger (proximate), root and contributing is JUDGEMENT, so superseding rows for the host's cause-only R1 to R63 are written by a reviewer, never derived by the tool; the tool may carry the old cause text verbatim into the new row's evidence but never into root; a test in W2888 refuses any derived value in trigger, root or contributing; the design goes to github-00 for warm and cold review before any code. | 2026-11-23T21:26:18Z: 2026-11-23 DESIGN v1 sent to github-82 (code read: pathsforward/src/mikemol/pathsforward/retros.py). TODAY: retro_refusals (line 125) checks only shape, blame, trigger/root distinct when a layer is set, and handoff.operator in OPERATORS; add_retro (272) appends a record with a minted id; migrate/_migrated (153-195) rename cause to root and mark absent trigger 'unsplit'; RETRO_FIELDS (198) has no supersedes. DESIGN. (1) SCHEMA: RETRO_FIELDS gains optional supersedes (a retro id of the same repo). (2) add_retro: when supersedes is present, refuse unless the named id exists in doc retros, carries the same repo prefix, and no other retro already supersedes it (one live row per chain), and the new row passes the FULL handoff shape: retro_refusals' handoff check grows from operator-only to instrument, channel, operator and self_probe where the operator is other (nemik owns the shape vocabulary, so I take the field names from nemik:W2488, not guess); the superseded row is never touched. (3) RETIRE the rename: delete retros.migrate and _migrated and the UNSPLIT marker and the old --migrate-retros behaviour outright (not left callable), per github-00's ruling after the operator's proximate-cause objection; the mode name --migrate-retros passes to a LISTING-AND-SCAFFOLDING mode: for each live row violating the handoff shape it prints a scaffold superseding row (supersedes set, the old text carried VERBATIM into evidence only) and the list of fields the old row's own text states for the handoff-shape fields only (instrument, channel, operator, self_probe), each filled field carrying derived_by provenance, an unstated field left EMPTY (no tombstone value) and the row listed 'needs a reviewer'. It writes nothing to the queue itself: a reviewer writes the row, and add_retro admits it. (4) trigger, root and contributing are NEVER derived: a planted test refuses a derived_by on any of them and a scaffold that fills them. (5) export keeps supersedes in the exported graph so nemik's shapes can judge only the live row (the export module reads RETRO_FIELDS, to confirm). PLANTS FIRST: supersedes of an unknown id refused, of an id from another repo refused, of an already-superseded id refused, a superseding row failing the handoff shape refused, the old row byte-identical after a supersede, derived_by on trigger/root/contributing refused, an unstated handoff field left empty and the row listed, the export carries supersedes, retros.migrate no longer importable. OPEN for you: whether the scaffold mode should WRITE the row when every handoff field is stated (I say no: github-00 said reviewer-written), and the exact handoff shape (nemik:W2488). | 2026-11-23T21:27:41Z: 2026-11-23 github-82 DESIGN v1 PASS with one change, START NOW; W2884 yields (it waits on luthen's W2969 anyway, and W2888 is the critical path for every nemik stack). Holds: (1) supersedes, same repo, one live row per chain, superseded row byte-identical; (2) full handoff shape with field names from nemik:W2488, coordinated with nemik-25 and pinned in ONE shared fixture both sides test against; (3) retire the in-place rename outright, nothing callable; (4) trigger/root/contributing never derived, planted refusals; (5) export carries supersedes. CHANGE (open a): the scaffold mode gets an --apply that writes a superseding row ONLY when every required handoff field is COPIED VERBATIM from the old row's own text (a copy, not a derivation, so no derived_by); every other row stays scaffold-only and is listed 'needs a reviewer'. The dry run prints the exact set of rows --apply would write, and a test checks --apply writes exactly that set. (b) the handoff shape from nemik:W2488. Plant those first. | 2026-11-23T21:28:45Z: 2026-11-23 TRANCHE 1 BUILT in the scratch worktree for W2888 (base main HEAD b9c9d7c8, uncommitted): retros.py RETRO_FIELDS gains supersedes, _supersede_refusals (same repo prefix, the id must exist, nothing may already supersede it) wired into add_retro; two planted tests in the existing pathsforward/tests/test_retros.py (a superseding row leaves the older row byte for byte, unknown id and foreign-repo id and already-superseded id refused with the document unchanged); 17 tests of test_retros pass (pytest from the scratch source). NOT DONE: (1) retire retros.migrate, _migrated, UNSPLIT, the --migrate-retros CLI path (cli.py) and the two migrate tests (test_migrate_renames_cause..., test_migrate_command_dry_run...), plus a test that they are gone, (2) the full handoff shape on a superseding row, field names from nemik:W2488 in ONE shared fixture with nemik-25 (asked), (3) the list-and-scaffold --migrate-retros with --apply that writes ONLY rows whose required handoff fields are copied verbatim, dry run printing the exact set and a test that --apply writes exactly that set, (4) refusals for derived_by or any derived value in trigger/root/contributing, (5) export carries supersedes (export.py does not name retros, so check the whole-document export) , (6) warrants, bazel run, review branch to github-82. | 2026-11-23T21:29:52Z: 2026-11-23 nemik-25 (nemik:W2488) HANDOFF SHAPE: vocabularies instrument = non-empty text, channel = non-empty text, operator in {self, other}, self_probe required when operator is other and must be exactly 'executed-and-failed' (any other value or none is invalid for other, ignored for self). NINE CASES: self complete valid, self with an unneeded self_probe 'not tried' valid, other complete with executed-and-failed valid, other with no self_probe INVALID, other with self_probe 'not tried' INVALID, no instrument INVALID, empty instrument INVALID, no channel INVALID, operator 'someone' INVALID. SHARED FIXTURE: nemik tests/corpus/retro-handoff-blocks.json, sha256 8f6948d6192289116a9076b7ed9249734a3428af27ff4010bed5d50ccbaa04b3 (vocabularies and cases), and tests/corpus/retro-supersession.json; copy BYTE FOR BYTE and pin the digest; both are in nemik's presubmit tree. I asked for a REVIEW REF (a branch and sha) so I copy from a git object, not from prose. OPEN: nemik spells supersedes as the repo-local id 'R3'; the writer stores ids as <repo>:R<n> and my tranche 1 validates the full id of the same repo: proposed the full id, asked nemik to state which in the supersession fixture before we pin. | 2026-11-23T21:33:57Z: 2026-11-23 nemik-25 SETTLED supersedes = the FULL id <repo>:R<n> (nemik's graph keys a retro by the writer's id, retro/nemik:R3, so a bare R3 would not match a node), and gave the review ref in the nemik repo, refs/review/W2488-v1 = 6ae62dbd (tree f8dd6de1, parent 24f609cf). COPIED with git show from that ref into the scratch tree under pathsforward/tests/corpus/: retro-handoff-blocks.json sha256 8f6948d6192289116a9076b7ed9249734a3428af27ff4010bed5d50ccbaa04b3 and retro-supersession.json sha256 f4818250ab98b3df67d108d862fefcc903411b3f38d96aa7bee194dbe5575bcb, BOTH VERIFIED with sha256sum against the pins before use. TRANCHE 2 BUILT in the scratch tree (uncommitted): retros.handoff_refusals (instrument and channel non-empty, operator in self/other, other needs self_probe exactly executed-and-failed) applied to every superseding row by _supersede_refusals (a superseding row with no handoff block refused); tests in the existing test_retros.py read each fixture only when its bytes match the pin: all nine handoff cases get nemik's verdict, a superseding row with no handoff or a weak other is refused with the document unchanged, and nemik's R3/R9 pair replays through add_retro. 20 tests pass. NOT DONE: retire migrate/_migrated/UNSPLIT and the --migrate-retros CLI path and its two tests, the scaffold --apply mode, derived-value refusals for trigger/root/contributing, the export check, warrants, bazel, review branch. | 2026-11-23T22:00:36Z: 2026-11-23 REVIEW BRANCH review/W2888-retro-supersession dd71b1e13da66fc9730ae8046377d9e56c71ddc0 (parent main b9c9d7c8, tree 9eaf0808; 7 paths: pathsforward/src/mikemol/pathsforward/retros.py and cli.py, tests/test_retros.py, tests/corpus/retro-handoff-blocks.json and retro-supersession.json copied byte for byte from nemik refs/review/W2488-v1 6ae62dbd and pinned by sha256, BUILD.bazel (corpus declared as test data, named in the mutants data), warrants.bib +8 -2, mutants.regex: two declared mutants of the deleted _migrated replaced by two for _supersede_refusals). BUILT: supersedes (full <repo>:R<n> id, same repo, exists, one live row per chain, older row byte-identical), the full handoff shape on every superseding row (handoff_refusals, nemik's nine cases), retros.migrate/_migrated/UNSPLIT deleted and a test that they are gone, --migrate-retros now LISTS a scaffold per live retro failing the shape (WOULD WRITE or NEEDS A REVIEWER) and --write adds only rows whose handoff values were COPIED verbatim from the older row's own handoff block or flat keys, exactly the set listed, never trigger/root/contributing/cause/derived_by. RUN: bazel test //pathsforward:test_retros //pathsforward:test_retroscaffold //pathsforward:test_cli //:ruff, 4 of 4 pass, BES 32d25b15-0364-44f3-b663-3cd1ff690256 (the first run failed for want of the fixtures as bazel data, fixed in BUILD.bazel). NOT RUN: the pathsforward mutation grid (new def-sites _copied, scaffolds, handoff_refusals, _supersede_refusals may survive and rise in the gate; two declared mutants added for _supersede_refusals), mypy/pycheck target, MUTATE_LINT. NOT DONE: the export check (the v2 export is cards only, nemik reads the queue document directly), --apply was spelled --write here (the writer's own flag). | 2026-11-23T22:15:44Z: 2026-11-23 github-82 REVISE of dd71b1e1, three defects, ALL ADDRESSED in r2 review/W2888-retro-supersession-r2 08f32ea2bf33cf668e7e94932542a0293593765c (parent dd71b1e1, tree 31883234): (1) the live row was bare: scaffolds now copies EVERY field of the older row except id, the old supersedes, the handoff block and any flat handoff key (those become the new handoff), so the superseding row equals the old row with only id, supersedes and handoff differing (test_the_superseding_row_is_the_older_row_with_only_id_supersedes_and_handoff_changed); (2) WOULD WRITE equals what --write writes: the scaffold's refusals are now retro_refusals plus _supersede_refusals on the FULL row, exactly add_retro's checks, scaffolds(doc, repo) takes the repo, and an end-to-end test lists then writes and the WROTE ids equal the WOULD WRITE set, with a row add_retro would refuse listed NEEDS A REVIEWER and never written; (3) mutation grid run for the shards holding the new cells: mutants_0, 2, 4, 8, 22, 23, 26 (computed with the runner's own FNV-1a hash, 0-based shard index, the 7 new def-sites and declared mutants) plus //:ruff pass, 8 of 8 (the first two attempts to run one cell by MUTATE_SITE were refused because the sharded target already sets MUTATE_SHARD). Then //pathsforward:test_retros, test_cli, test_retroscaffold and //:ruff pass 4 of 4, BES f9c79a65-0bb4-4555-a6d2-3877f7b105c7. pycheck ran per edit through the edit hook. PAYDOWN carried: pathsforward/mutants-baseline.txt falls by 1: retros.py::spec-record-rewritten (the survivor of the declared mutant on the deleted _migrated, whose function and mutant line are both retired, so the cell no longer exists). NOT run: the whole 36-shard grid (29 shards untouched by new cells), MUTATE_LINT. | 2026-11-23T22:21:52Z: 2026-11-23 github-82 PASS-SUBMIT of r2 (08f32ea2) after one line: carried.setdefault('findings', []) invented an empty findings list for an older row that had none (absent means G7 never ran). DONE as r3: review/W2888-retro-supersession-r3 c9e38f3e843608b40a476dad5ba1cc742ab9c42c (parent 08f32ea2, tree 25412d67): the setdefault is gone, test_an_older_row_with_no_findings_list_is_not_given_an_empty_one plants the case (the scaffold has no findings key and is listed with a 'no findings list' refusal), +2 warrants. RUN: //pathsforward:test_retros, test_cli, test_retroscaffold, //:ruff, mutants_0, mutants_2, mutants_4, 7 of 7, BES 566c76d7-ba0a-4597-9fab-5662aa0f0e12. PAYDOWN ACCEPTED by github-82: pathsforward/mutants-baseline.txt falls by 1, retros.py::spec-record-rewritten, because its code is deleted (independently ruled by the operator's ruling against the in-place rename): the cell is gone, not hidden or relocated, so a real fall. Say so in the stack message; pathsforward/pyproject.toml (owes 4) and the 7 remaining survivors stay owed. SUBMIT without re-sending to github-82, naming the sha. | 2026-11-23T23:51:44Z: 2026-11-23 LANDED 87857ab (b115, one entry, HEAD pushed 87857abb) after github-82's PASS-SUBMIT of r2 with the one-line r3 fix. pathsforward/mutants-baseline.txt fell by 1 (retros.py::spec-record-rewritten, cell deleted with its code). The in-place cause-to-root rename is gone from the code. NOT DONE: nemik:W2479's derivable share for prose-stated handoff values, the 7 remaining pathsforward survivors, pathsforward/pyproject.toml (owes 4).",
       "issued_at": "2026-11-23T14:45:17Z",
       "minted_during": "interrupt",
       "caused_by": "nemik:W2478",
-      "last_worked": "2026-11-23T22:21:52Z",
+      "last_worked": "2026-11-23T23:51:44Z",
       "ticks_blocked": 0,
-      "completed": null
+      "completed": "20261123T235144Z"
     },
     {
       "symbol": "W2889",
       "title": "Sweep hooks, katas and the writer for tools that read a working tree instead of git objects, card each site",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks",
         "pathsforward"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "First pass (literal-path hits only, not yet read): hooks vlogconfig 2, siblingcensus 4, repin_cli 1, structural_query 1, commit_span 1, tick_stop 1, shellcheck 1; pathsforward attach 2, check 1, promptwatch 2, foreign 3, cli 3, watchdogcmd 1; katas none. Read each hit (path in a comment or a live read?), then sweep the broader class (open() or read_text() of a path under a repo root given as an argument, cwd-relative reads in hooks), card each live site with the git-object replacement; the three named sites: the hooks run from the checkout (W2877), the commit gate's live gate script (W2883, W2780), and the writer's own reads",
       "evidence": "2026-11-23T14:47:07Z: 2026-11-23 OPERATOR RULING relayed by github-00 (host L216159, uuid e28ace7c-8fe4-41c8-bb09-3df589186e6c, 14:45:02Z): 'There ain't _jack_ that should be reading a working tree.' held behind W2811 (one stack at a time); the sweep list was sent to github-00 as a first pass.",
       "issued_at": "2026-11-23T14:47:00Z",
       "minted_during": "interrupt",
       "caused_by": "github-00:W2780",
-      "last_worked": "2026-11-23T14:47:07Z",
-      "ticks_blocked": 0
+      "last_worked": "2026-11-24T00:42:15Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2890",
@@ -66858,21 +66925,24 @@
     {
       "symbol": "W2891",
       "title": "A PreToolUse Bash hook refuses a fleet tool run from a checkout path and names the pinned replacement or the pinned-set gap",
-      "status": "ready",
+      "status": "blocked",
       "enables": [],
       "touches": [
         "hooks"
       ],
-      "blocked_on": [],
-      "blocked_kind": null,
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
       "next_bounded_step": "Design to github-00 first. Hook shaped like no-chaining and structural-query: refuse a command running mikemol-* or nemik-* from */.venv/bin/, */bazel-bin/ or under ~/github/<repo>/; the refusal names ~/.local/share/luthen-tools/live/nemik/bin/<tool> when the pinned bin carries it, else names the pinned-set gap (a card for luthen). Plants first: a checkout venv path refused with the pinned path named; the pinned path admitted; a tool absent from the pinned set refused with the gap named. Ships fleet-wide through luthen's settings render. The pinned listing is read at hook time (no typed list)",
       "evidence": "2026-11-23T15:02:24Z: 2026-11-23 OPERATOR (typed, relayed by github-00): 'I still need everyone up to date on the pinned stuff. I also need to not have to say that again.' Carded high (weight 100); held behind W2811 only because one stack at a time; it is the first hooks stack after b114. Until it lands every fleet tool runs from the pinned bin (~/.local/share/luthen-tools/live/nemik/bin); this session's earlier calls of pathsforward/.venv and hooks/.venv tools were the failure, switched from now on. | 2026-11-23T15:05:20Z: 2026-11-23 github-00: shape right, design to github-00 before code, after b114. DESIGN REQUIREMENT: if the pinned bin cannot be listed, the hook REFUSES the fleet-tool call naming that reason (fail closed), never admits it. Plant: an unreadable or absent pinned directory refuses a fleet-tool command and names the cause.",
       "issued_at": "2026-11-23T15:02:17Z",
       "minted_during": "interrupt",
       "caused_by": "github-00:W138",
-      "last_worked": "2026-11-23T15:05:20Z",
+      "last_worked": "2026-11-24T00:42:15Z",
       "ticks_blocked": 0,
-      "weight": 100
+      "weight": 100,
+      "prior_status": "ready"
     },
     {
       "symbol": "W2892",
@@ -66886,7 +66956,8 @@
         "fence"
       ],
       "blocked_on": [
-        "W2884"
+        "W2884",
+        "W2872"
       ],
       "blocked_kind": "agent",
       "next_bounded_step": "Per piece, read the diff and decide: katas hangwatch/proctree/waiter (+tests, mutants.regex, warrants.bib, maybe the katas waiter.py::_end errored cell paydown), mutantcell eval (+test, mutants.regex, warrants.bib), pathsforward closegate (+2 tests), fence/pyproject.toml (6 lines removed: a ratchet fall, verify against ruff), INSTALL.md (+14): each either gets a review branch and a stack or residue with the reason, never landed as one lump",
@@ -66894,7 +66965,47 @@
       "issued_at": "2026-11-23T21:10:45Z",
       "minted_during": "interrupt",
       "caused_by": null,
-      "last_worked": "2026-11-23T21:10:51Z",
+      "last_worked": "2026-11-24T00:42:15Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
+    },
+    {
+      "symbol": "W2893",
+      "title": "The pinned mikemol-pathsforward moves to 87857abb so the pinned writer carries supersedes and --migrate-retros",
+      "status": "blocked",
+      "enables": [],
+      "touches": [],
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Ask luthen-observability to repin through luthen's user apply (software update, operator L126887: just do it); on their sha confirm the pinned writer lists supersedes in its retro fields, then tell nemik-25 the pin moved",
+      "evidence": "",
+      "issued_at": "2026-11-23T23:53:20Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-82:W2888",
+      "last_worked": "2026-11-24T00:42:15Z",
+      "ticks_blocked": 0,
+      "prior_status": "ready"
+    },
+    {
+      "symbol": "W2894",
+      "title": "The submit-time round check runs before the gate wherever the land can refuse on it, so a card not in the published round fails in seconds, not after a 30 minute gate",
+      "status": "blocked",
+      "enables": [],
+      "touches": [
+        "hooks"
+      ],
+      "blocked_on": [
+        "W2872"
+      ],
+      "blocked_kind": "agent",
+      "next_bounded_step": "Find where mikemol-commit refuses a land for 'card not in the published round' AFTER the gate (luthen paid about 30 min today) versus the submit-time round check (hooks round_check, W1942); make cut and presubmit run the same check first (failure_rate over cost order); plants first: a stack card absent from the published round is refused before any gate step; send the design to github-82",
+      "evidence": "",
+      "issued_at": "2026-11-23T23:53:21Z",
+      "minted_during": "interrupt",
+      "caused_by": "github-82:W2888",
+      "last_worked": "2026-11-24T00:42:15Z",
       "ticks_blocked": 0,
       "prior_status": "ready"
     }

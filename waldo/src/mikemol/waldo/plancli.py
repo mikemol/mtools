@@ -63,6 +63,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--target", action="append", default=None, help="resource address to plan (repeatable)"
     )
+    parser.add_argument(
+        "--exclude",
+        action="append",
+        default=None,
+        help="resource address to DEFER (repeatable): recorded as deferred, never clean (W2872)",
+    )
     return parser
 
 
@@ -138,7 +144,11 @@ def plan_flow(seams: Seams, args: argparse.Namespace, root: Path, command: str) 
         return seams.exits.stopped
     replace = tuple(cast("list[str] | None", args.replace) or ())
     targets = tuple(cast("list[str] | None", args.target) or ())
-    code = judge(seams, pre, root, planfile, (replace, targets))
+    excludes = tuple(cast("list[str] | None", args.exclude) or ())
+    if not all(address.strip() for address in excludes):
+        seams.out("opa_plan S: REFUSED -- --exclude needs an address, not an empty value\n")
+        return seams.exits.stopped
+    code = judge(seams, pre, root, planfile, (replace, targets, excludes))
     if code != EXIT_OK:
         return code
     seams.out("opa_plan: ADMITTED -- apply exactly this plan:\n")

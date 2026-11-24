@@ -31,6 +31,13 @@ def _plan_text(address: str, action: str) -> str:
     return json.dumps(doc)
 
 
+def _held_plan() -> str:
+    # A plan whose configuration holds portage.row, so an exclude of it names something real.
+    config: dict[str, object] = {"root_module": {"resources": [{"address": "portage.row"}]}}
+    doc: dict[str, object] = {"resource_changes": [], "configuration": config}
+    return json.dumps(doc)
+
+
 def _opa_text(deny: list[str], withheld: list[str]) -> str:
     value: dict[str, object] = {"deny": deny, "withheld": withheld}
     expr: dict[str, object] = {"value": value}
@@ -63,6 +70,7 @@ class _Host:
     apply_exit: int = 0
     witness_exit: int = 0
     writes_plan: bool = True
+    tofu_version: str = "OpenTofu v1.10.6-dev\non linux_amd64\n"
     applied: int = 0
     readings: list[str] = field(default_factory=list)
     calls: list[tuple[str, tuple[str, ...]]] = field(default_factory=list)
@@ -77,6 +85,8 @@ class _Host:
         return _Done(0, _opa_text(self.deny, self.withheld))
 
     def _tofu(self, args: tuple[str, ...]) -> _Done:
+        if args == ("version",):
+            return _Done(0, self.tofu_version)
         sub = args[1]
         if sub == "plan":
             out = next(a for a in args if a.startswith("-out="))[len("-out=") :]
@@ -158,8 +168,9 @@ class _World:
     def binaries(self) -> tuple[Path, Path]:
         return self.tofu, self.opa
 
-    def judge(self) -> int:
-        return planflow.judge(self.seams(), self.binaries(), self.root, self.plan, ((), ()))
+    def judge(self, excludes: tuple[str, ...] = ()) -> int:
+        flags = ((), (), excludes)
+        return planflow.judge(self.seams(), self.binaries(), self.root, self.plan, flags)
 
     def apply(self, *, yes: bool = True) -> int:
         return planflow.confirm_and_apply(
@@ -178,6 +189,45 @@ class _World:
 
 def _world(tmp: Path, host: _Host | None = None) -> _World:
     return _World(tmp, host or _Host())
+
+
+def test_an_excluded_address_is_planned_around_and_recorded_as_deferred(tmp_path: Path) -> None:
+    """W2872: -exclude reaches tofu, the scope file and the sealed verdict, never read as clean."""
+    world = _world(tmp_path, _Host(plan_json=_held_plan()))
+    assert world.judge(("portage.row",)) == planflow.EXIT_OK
+    planned = [args for name, args in world.host.calls if name == "tofu" and "plan" in args]
+    assert any("-exclude=portage.row" in args for args in planned)
+    scope = world.plan.with_suffix(".scope.json").read_text(encoding="utf-8")
+    assert '"excludes": ["portage.row"]' in scope
+    doc = planverdict.load_verdict(world.config, world.plan)
+    assert isinstance(doc, dict)
+    assert doc["deferred"] == ["portage.row"]
+
+
+def test_an_exclude_naming_nothing_the_plan_holds_stops_and_records_no_verdict(
+    tmp_path: Path,
+) -> None:
+    """W2872: a deferral that matches nothing would look like one, so it is refused by name."""
+    world = _world(tmp_path, _Host(plan_json=_held_plan()))
+    assert world.judge(("no.such",)) == world.exits.stopped
+    assert "no.such: names no resource of the configuration" in world.text()
+    assert isinstance(planverdict.load_verdict(world.config, world.plan), str)
+
+
+def test_a_tofu_that_cannot_exclude_stops_the_plan_instead_of_planning_wide(tmp_path: Path) -> None:
+    """W2872: below v1.9 the plan step fails loudly and no whole plan is made."""
+    world = _world(tmp_path, _Host(tofu_version="OpenTofu v1.8.2\n"))
+    assert world.judge(("portage.row",)) == world.exits.stopped
+    assert "cannot -exclude" in world.text()
+    assert not any("plan" in args for name, args in world.host.calls if name == "tofu")
+    assert not world.plan.exists()
+
+
+def test_a_plan_with_no_exclude_never_asks_tofu_its_version(tmp_path: Path) -> None:
+    """W2872: the guard costs nothing, and changes nothing, when nothing is excluded."""
+    world = _world(tmp_path, _Host(tofu_version="OpenTofu v1.8.2\n"))
+    assert world.judge() == planflow.EXIT_OK
+    assert ("tofu", ("version",)) not in world.host.calls
 
 
 def test_a_clean_plan_is_judged_ok_and_its_verdict_loads(tmp_path: Path) -> None:

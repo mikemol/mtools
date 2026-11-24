@@ -116,7 +116,8 @@ src/mikemol/waldo/planeval.py|missing-opa-runs-anyway|    if opa is None:|    if
 src/mikemol/waldo/planeval.py|uninitialised-root-runs|    if not \(root / "\.terraform"\)\.is_dir\(\):|    if False:|def=refuse_unless
 src/mikemol/waldo/planeval.py|missing-policy-runs|    if not config\.policy\.is_dir\(\):|    if False:|def=refuse_unless
 src/mikemol/waldo/planeval.py|host-root-planned-as-a-user|    if config\.root_custody and root\.name in config\.root_planned and euid != config\.trusted_uid:|    if False:|def=refuse_unless
-src/mikemol/waldo/planeval.py|targets-never-written|    scope: dict\[str, object\] = \{"targets": list\(targets\)\}|    scope: dict[str, object] = {"targets": []}|def=scope_file
+src/mikemol/waldo/planeval.py|targets-never-written|    scope: dict\[str, object\] = \{"targets": list\(targets\), "excludes": list\(excludes\)\}|    scope: dict[str, object] = {"targets": [], "excludes": list(excludes)}|def=scope_file
+src/mikemol/waldo/planeval.py|excludes-never-written|    scope: dict\[str, object\] = \{"targets": list\(targets\), "excludes": list\(excludes\)\}|    scope: dict[str, object] = {"targets": list(targets), "excludes": []}|def=scope_file
 src/mikemol/waldo/planeval.py|failed-opa-read-as-a-shape|    if proc\.returncode != 0:|    if False:|def=evaluate
 src/mikemol/waldo/planeval.py|extra-data-never-passed|    for directory in evidence\.extra_data:|    for directory in ():|def=evaluate
 src/mikemol/waldo/planledger.py|every-ledger-in-the-user-directory|    return config\.state_dir\(root_name\) / LEDGER_NAME|    return config.user_state / LEDGER_NAME|def=ledger_path
@@ -139,7 +140,8 @@ src/mikemol/waldo/planprecond.py|aliases-ignored|    wanted = \{address, \*\(str
 src/mikemol/waldo/planprecond.py|failing-command-met|    return None if proc\.returncode == 0 else f"\{name\} \{' '\.join\(args\)\} exited \{proc\.returncode\}"|    return None|def=witness_now
 src/mikemol/waldo/planprecond.py|unknown-kind-met|    return f"unknown requirement kind \{kind!r\}"|    return None|def=_why
 src/mikemol/waldo/planplan.py|lock-always-taken|    return \["-lock=false"\] if state\.exists\(\) and not os\.access\(state, os\.W_OK\) else \[\]|    return []|def=lock_args
-src/mikemol/waldo/planplan.py|flags-in-the-wrong-order|    return \(\*\(f"-replace=\{a\}" for a in replace\), \*\(f"-target=\{a\}" for a in targets\)\)|    return (*(f"-target={a}" for a in targets), *(f"-replace={a}" for a in replace))|def=plan_flags
+src/mikemol/waldo/planplan.py|flags-in-the-wrong-order|        \*\(f"-replace=\{a\}" for a in replace\),|        *(f"-target={a}" for a in targets),|def=plan_flags
+src/mikemol/waldo/planplan.py|excludes-never-spelled|        \*\(f"-exclude=\{a\}" for a in excludes\),|        *(f"-exclude={a}" for a in ()),|def=plan_flags
 src/mikemol/waldo/planplan.py|empty-planfile-accepted|    if not planfile\.is_file\(\) or planfile\.stat\(\)\.st_size == 0:|    if not planfile.is_file():|def=plan_and_show
 src/mikemol/waldo/planplan.py|failed-show-accepted|    if show\.returncode != 0:|    if False:|def=plan_and_show
 src/mikemol/waldo/planplan.py|no-op-counted-as-a-change|    if actions and actions not in QUIET_ACTIONS:|    if actions:|def=plan_changes

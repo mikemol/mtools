@@ -134,9 +134,18 @@ def test_the_scope_file_lists_the_targets_beside_the_plan(tmp_path: Path) -> Non
     plan = tmp_path / "p.json"
     empty = planeval.scope_file(plan, ())
     assert empty == tmp_path / "p.scope.json"
-    assert _read(empty) == {"plan_scope": {"targets": []}}
+    assert _read(empty) == {"plan_scope": {"targets": [], "excludes": []}}
     planeval.scope_file(plan, ("a.b", "c.d"))
-    assert _read(empty) == {"plan_scope": {"targets": ["a.b", "c.d"]}}
+    assert _read(empty) == {"plan_scope": {"targets": ["a.b", "c.d"], "excludes": []}}
+
+
+def test_the_scope_file_always_names_the_excludes_empty_when_there_are_none(tmp_path: Path) -> None:
+    """W2872: absence must not be ambiguous: an empty list says nothing was deferred."""
+    plan = tmp_path / "p.json"
+    path = planeval.scope_file(plan, ("t",), ("portage.row",))
+    assert _read(path) == {"plan_scope": {"targets": ["t"], "excludes": ["portage.row"]}}
+    planeval.scope_file(plan, ("t",), ())
+    assert _read(path) == {"plan_scope": {"targets": ["t"], "excludes": []}}
 
 
 def test_the_evaluation_returns_deny_and_withheld_and_runs_the_consumers_query(

@@ -170,3 +170,10 @@
   claim  = {A child silent for a second before its line still answers: the bound is in seconds.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_first_line_waits_for_a_child_that_is_slow_to_speak},
 }
+
+@misc{procrun-proc-capture-stdout-gives-up-on-a-child-that-outlasts-its-timeout,
+  section = {proc},
+  title  = {W2872 paydown: the stdout-only variant honours its timeout and does not wait it out},
+  claim  = {W2872 paydown: the stdout-only variant honours its timeout and does not wait it out.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_stdout_gives_up_on_a_child_that_outlasts_its_timeout},
+}

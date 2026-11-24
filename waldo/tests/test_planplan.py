@@ -78,6 +78,70 @@ def test_the_flags_spell_replace_then_target_in_order() -> None:
     assert planplan.plan_flags((), ()) == ()
 
 
+def test_an_exclude_is_spelled_last_so_a_plan_without_one_keeps_its_exact_flags() -> None:
+    """W2872: -exclude= follows -replace= and -target=, and nothing changes without it."""
+    assert planplan.plan_flags(("a",), ("c",), ("x", "y")) == (
+        "-replace=a",
+        "-target=c",
+        "-exclude=x",
+        "-exclude=y",
+    )
+    assert planplan.plan_flags(("a",), ("c",)) == planplan.plan_flags(("a",), ("c",), ())
+
+
+def test_a_tofu_below_1_9_or_unreadable_is_refused_never_planned_wide() -> None:
+    """W2872: -exclude needs v1.9; an older or unreadable tofu fails loudly, a newer one passes."""
+    for text, rc, why in (
+        ("OpenTofu v1.8.2\non linux_amd64\n", 0, "cannot -exclude"),
+        ("OpenTofu v1.9.0\n", 0, ""),
+        ("OpenTofu v1.10.6-dev\non linux_amd64\n", 0, ""),
+        ("no version here\n", 0, "could not be read"),
+        ("OpenTofu v1.10.0\n", 1, "could not be read"),
+    ):
+        tools = _Tofu(show=_Done(rc, text))
+        got = planplan.exclude_refusal(tools, _TOFU)
+        assert (got is None) is (not why), text
+        assert why in (got or "")
+
+
+_CONFIG: planjson.Json = {
+    "root_module": {
+        "resources": [{"address": "portage.row"}, {"address": "keyed.res"}],
+        "module_calls": {
+            "a": {
+                "module": {
+                    "module_calls": {"b": {"module": {"resources": [{"address": "deep.res"}]}}}
+                }
+            }
+        },
+    }
+}
+_STATE: planjson.Json = {
+    "prior_state": {"values": {"root_module": {"resources": [{"address": 'keyed.res["a"]'}]}}},
+    "planned_values": {"root_module": {}},
+}
+
+
+def test_an_exclude_must_name_something_the_plan_holds_down_to_the_instance() -> None:
+    """W2872: unknown address, unknown nested module, unknown key refused; known ones accepted."""
+    plan: planjson.Json = {"configuration": _CONFIG, **_STATE}
+    held = ("portage.row", "module.a.module.b.deep.res", "keyed.res", 'keyed.res["a"]')
+    assert planplan.unheld_excludes(plan, held) == []
+    got = planplan.unheld_excludes(
+        plan, ("no.such", "module.zzz.deep.res", "module.a.module.q.deep.res", 'keyed.res["z"]')
+    )
+    assert [line.partition(": ")[0] for line in got] == [
+        "no.such",
+        "module.zzz.deep.res",
+        "module.a.module.q.deep.res",
+        'keyed.res["z"]',
+    ]
+    assert "names no resource" in got[0]
+    assert "names no module" in got[1]
+    assert "names no module" in got[2]
+    assert "neither prior_state nor planned_values" in got[3]
+
+
 def test_the_state_lock_is_skipped_only_for_state_this_user_cannot_write(tmp_path: Path) -> None:
     """No state, writable state and read-only state."""
     assert planplan.lock_args(tmp_path) == []

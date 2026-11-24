@@ -23,6 +23,7 @@ when the consumer has none, where luthen's code required the file.
 
 import json
 import os
+import re
 from collections.abc import Mapping
 from pathlib import Path
 
@@ -36,6 +37,9 @@ RECORD_MODE = 0o644
 QUIET_ACTIONS = (["no-op"], ["read"])
 SHOW_ERROR_CHARS = 200
 PLAN_ERROR_CHARS = 600
+EXCLUDE_SINCE = (1, 9)
+"""The first OpenTofu release that plans with `-exclude` (W2872)."""
+_TOFU_VERSION = re.compile(r"v(\d+)\.(\d+)")
 
 
 def plan_failure(stderr: str) -> str:
@@ -70,14 +74,124 @@ def lock_args(root: Path) -> list[str]:
     return ["-lock=false"] if state.exists() and not os.access(state, os.W_OK) else []
 
 
-def plan_flags(replace: tuple[str, ...], targets: tuple[str, ...]) -> tuple[str, ...]:
-    """Spell the addresses to replace and to target as tofu's flags.
+def plan_flags(
+    replace: tuple[str, ...], targets: tuple[str, ...], excludes: tuple[str, ...] = ()
+) -> tuple[str, ...]:
+    """Spell the addresses to replace, target and exclude as tofu's flags.
 
     Returns:
-        every `-replace=` flag, then every `-target=` flag, in the order given.
+        every `-replace=` flag, then every `-target=` flag, then every `-exclude=` flag (W2872),
+        in the order given.
 
     """
-    return (*(f"-replace={a}" for a in replace), *(f"-target={a}" for a in targets))
+    return (
+        *(f"-replace={a}" for a in replace),
+        *(f"-target={a}" for a in targets),
+        *(f"-exclude={a}" for a in excludes),
+    )
+
+
+def exclude_refusal(tools: Tools, tofu: Path) -> str | None:
+    """Say why `-exclude` cannot be used with this tofu, failing loudly rather than planning wide.
+
+    ⚑ A TOFU THAT DOES NOT KNOW `-exclude` MUST NEVER FALL BACK TO A WHOLE PLAN (github-82): the
+    excluded row is the one that fails, so a plan over everything would defer nothing and judge
+    the very row the caller meant to hold back.
+
+    Returns:
+        the reason, or None when the tofu is at least `EXCLUDE_SINCE`.
+
+    """
+    done = tools.run(tofu, "version")
+    found = _TOFU_VERSION.search(done.stdout)
+    if done.returncode != 0 or found is None:
+        return "tofu version could not be read, so -exclude is refused rather than assumed"
+    if (int(found[1]), int(found[2])) < EXCLUDE_SINCE:
+        return f"tofu {found[0]} cannot -exclude (needs v1.9 or later): refusing, not planning wide"
+    return None
+
+
+def _segments(address: str) -> list[str]:
+    # An address split on the dots that are outside brackets and quotes: a key may hold a dot.
+    parts: list[str] = []
+    depth, quoted, start = 0, False, 0
+    for at, char in enumerate(address):
+        if char == '"':
+            quoted = not quoted
+        elif quoted:
+            continue
+        elif char == "[":
+            depth += 1
+        elif char == "]":
+            depth -= 1
+        elif char == "." and depth == 0:
+            parts.append(address[start:at])
+            start = at + 1
+    return [*parts, address[start:]]
+
+
+def _module_node(config: Json, names: list[str]) -> Json | None:
+    # The configuration of the module `module.<a>.module.<b>` names, or None when a call is absent.
+    node = config
+    for name in names:
+        call = as_object(node.get("module_calls")).get(name)
+        if not isinstance(call, dict):
+            return None
+        node = as_object(as_object(call).get("module"))
+    return node
+
+
+def _collect(module: Json, found: set[str]) -> None:
+    # Every instance address under a values module, through its child modules.
+    found.update(str(as_object(item).get("address")) for item in as_list(module.get("resources")))
+    for child in as_list(module.get("child_modules")):
+        _collect(as_object(child), found)
+
+
+def _instances(plan: Json) -> set[str]:
+    # The instances the plan knows: those already in the state and those it plans.
+    found: set[str] = set()
+    prior = as_object(as_object(plan.get("prior_state")).get("values"))
+    _collect(as_object(prior.get("root_module")), found)
+    _collect(as_object(as_object(plan.get("planned_values")).get("root_module")), found)
+    return found
+
+
+def _unheld(plan: Json, address: str) -> str | None:
+    # Why an excluded address names nothing the plan holds, or None when it does.
+    segments = _segments(address)
+    names: list[str] = []
+    while len(segments) > 1 and segments[0] == "module":
+        names.append(segments[1].partition("[")[0])
+        segments = segments[2:]
+    node = _module_node(as_object(as_object(plan.get("configuration")).get("root_module")), names)
+    if node is None:
+        return "names no module of the configuration"
+    resource = ".".join(segment.partition("[")[0] for segment in segments)
+    if segments and resource not in {
+        str(as_object(item).get("address")) for item in as_list(node.get("resources"))
+    }:
+        return "names no resource of the configuration"
+    if "[" in address and not any(
+        held == address or held.startswith(f"{address}.") for held in _instances(plan)
+    ):
+        return "names an instance that is in neither prior_state nor planned_values"
+    return None
+
+
+def unheld_excludes(plan: Json, excludes: tuple[str, ...]) -> list[str]:
+    """Say which excluded addresses name nothing this plan holds (W2872, github-82).
+
+    ⚑ AN EXCLUDE THAT MATCHES NOTHING DEFERS NOTHING AND LOOKS LIKE A DEFERRAL: tofu's plan JSON
+    lists only what is planned, so an excluded address is absent from it by construction. Each is
+    resolved against the plan's `configuration` (root module and `module_calls`, recursively), and
+    an indexed one must also be an instance in `prior_state` or `planned_values`.
+
+    Returns:
+        one `address: reason` line per address that is not held, empty when all are.
+
+    """
+    return [f"{a}: {why}" for a in excludes if (why := _unheld(plan, a)) is not None]
 
 
 def plan_and_show(

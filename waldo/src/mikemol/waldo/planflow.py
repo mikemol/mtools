@@ -39,11 +39,13 @@ from mikemol.waldo.planjson import Json, as_object, list_at, parse_object
 from mikemol.waldo.planledger import append_ledger, current_applier, repo_commit
 from mikemol.waldo.planplan import (
     UndecidablePlanError,
+    exclude_refusal,
     plan_and_show,
     plan_changes,
     plan_flags,
     plan_has_work,
     record_verdict,
+    unheld_excludes,
 )
 from mikemol.waldo.planprecond import fired_names, unmet_preconditions
 from mikemol.waldo.planreading import READ, Prior
@@ -57,6 +59,36 @@ EXIT_STOPPED = 2
 EXIT_WITHHELD = 3
 EXIT_WITNESS = 4
 WITNESS_OK = ("pass", "none-declared")
+
+
+def exclude_stopped(seams: "Seams", tofu: Path, excludes: tuple[str, ...]) -> int | None:
+    """Stop a plan that excludes addresses when this tofu cannot, naming why (W2872).
+
+    Returns:
+        the STOPPED exit code with the reason said, or None when there is no exclude or the tofu
+        can plan with it.
+
+    """
+    reason = exclude_refusal(seams.tools, tofu) if excludes else None
+    if reason is None:
+        return None
+    seams.out(f"opa_plan A: {reason}\n")
+    return seams.exits.stopped
+
+
+def unheld_stopped(seams: "Seams", shown_json: Path, excludes: tuple[str, ...]) -> int | None:
+    """Stop a plan whose excluded addresses name nothing it holds, one line each (W2872).
+
+    Returns:
+        the STOPPED exit code with every unheld address said, or None when all are held.
+
+    """
+    plan = as_object(parse_object(shown_json.read_text(encoding="utf-8")))
+    problems = unheld_excludes(plan, excludes)
+    if not problems:
+        return None
+    seams.out("".join(f"opa_plan A: exclude {line}\n" for line in problems))
+    return seams.exits.stopped
 
 
 @dataclass(frozen=True, slots=True)
@@ -142,24 +174,31 @@ def judge(
     binaries: tuple[Path, Path],
     root: Path,
     planfile: Path,
-    flags: tuple[tuple[str, ...], tuple[str, ...]],
+    flags: tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
 ) -> int:
     """Plan to `planfile`, evaluate the policy, record the verdict.
 
-    `binaries` is (tofu, opa); `flags` is (replace addresses, target addresses).
+    `binaries` is (tofu, opa); `flags` is (replace, target, exclude addresses). An exclude is
+    DEFERRED (W2872): recorded by address in the verdict, never read as installed or clean.
 
     Returns:
         the verdict's exit code: OK, DENY, WITHHELD, or CANNOT when it could not be judged.
 
     """
-    (tofu, opa), (replace, targets) = binaries, flags
+    targets, excludes = flags[1], flags[2]
     config, out = seams.config, seams.out
-    shown_json = plan_and_show(seams.tools, tofu, planfile, root, plan_flags(replace, targets))
+    if (stopped := exclude_stopped(seams, binaries[0], excludes)) is not None:
+        return stopped
+    shown_json = plan_and_show(seams.tools, binaries[0], planfile, root, plan_flags(*flags))
     if isinstance(shown_json, str):
         out(f"opa_plan A: {shown_json}\n")
         return seams.exits.stopped
+    if (unheld := unheld_stopped(seams, shown_json, excludes)) is not None:
+        return unheld
     with seams.data() as data:
-        verdict = evaluate(seams.tools, config, opa, Evidence(shown_json, targets, tuple(data)))
+        verdict = evaluate(
+            seams.tools, config, binaries[1], Evidence(shown_json, targets, tuple(data), excludes)
+        )
     if isinstance(verdict, str):
         out(f"opa_plan A: {verdict}\n")
         return seams.exits.stopped
@@ -175,6 +214,7 @@ def judge(
         "root": root.name,
         "changes": changes,
         "targets": list(targets),
+        "deferred": list(excludes),
         "reported": reported,
     }
     record_verdict(config, planfile, (code, deny, withheld), extra, seams.declarations)

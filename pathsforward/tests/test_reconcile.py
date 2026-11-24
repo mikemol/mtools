@@ -58,6 +58,14 @@ def test_a_commit_naming_the_card_since_it_went_working_is_landed_with_its_sha()
     assert got == [reconcile.Verdict("W1", reconcile.LANDED, "new", "done")]
 
 
+def test_the_newest_naming_commit_wins_whatever_order_the_log_lists_them_in() -> None:
+    """W2872 paydown: the older commit first, so keeping the first one found names the wrong sha."""
+    state = _state(_card("W1", next_bounded_step=None))
+    commits = [_commit("old", _EARLY, "W1"), _commit("new", _LATE, "W1")]
+    got = reconcile.verdicts(state, commits, {}, {"W1": _EARLY})
+    assert got == [reconcile.Verdict("W1", reconcile.LANDED, "new", "done")]
+
+
 def test_a_commit_before_the_card_went_working_does_not_land_it() -> None:
     """The window starts when the card went working, so an earlier commit is another story."""
     state = _state(_card("W1"))

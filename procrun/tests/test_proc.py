@@ -105,6 +105,12 @@ def test_capture_stdout_captures_stdout_bytes_and_lets_stderr_reach_the_terminal
     assert "touch your key" in capfd.readouterr().err
 
 
+def test_capture_stdout_gives_up_on_a_child_that_outlasts_its_timeout() -> None:
+    """W2872 paydown: the stdout-only variant honours its timeout and does not wait it out."""
+    with pytest.raises(TimeoutExpired):
+        capture_stdout([sys.executable, "-c", _SLEEP], timeout=_SHORT)
+
+
 def test_spawn_returns_a_live_child_that_polls_waits_and_reports_its_status() -> None:
     """A running child has a pid and no status; once it exits, wait and poll both give its code."""
     with spawn([sys.executable, "-c", "import sys; sys.exit(7)"], output="discard") as child:

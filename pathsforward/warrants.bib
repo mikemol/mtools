@@ -8507,3 +8507,11 @@
   claim  = {W2888: absent means G7 never ran, so the scaffold invents no [] and lists a reviewer.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_retros.py -k test_an_older_row_with_no_findings_list_is_not_given_an_empty_one},
 }
+
+@misc{pathsforward-reconcile-newest-naming-commit-wins-whatever-order-the-log-lists-them-in,
+  section = {reconcile},
+  title  = {W2872 paydown: the older commit first, so keeping the first one found names the wrong sha},
+  claim  = {W2872 paydown: the older commit first, so keeping the first one found names the wrong
+            sha.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_reconcile.py -k test_the_newest_naming_commit_wins_whatever_order_the_log_lists_them_in},
+}

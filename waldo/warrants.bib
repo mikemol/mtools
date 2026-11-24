@@ -1919,3 +1919,75 @@
   claim  = {A plan whose every action is a no-op is exit zero with no apply and no question.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_plan_of_no_ops_is_nothing_to_apply_and_asks_nothing},
 }
+
+@misc{waldo-planflow-excluded-address-is-planned-around-and-recorded-as-deferred,
+  section = {planflow},
+  title  = {W2872: -exclude reaches tofu, the scope file and the sealed verdict, never read as clean},
+  claim  = {W2872: -exclude reaches tofu, the scope file and the sealed verdict, never read as
+            clean.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_excluded_address_is_planned_around_and_recorded_as_deferred},
+}
+
+@misc{waldo-planflow-tofu-that-cannot-exclude-stops-the-plan-instead-of-planning-wide,
+  section = {planflow},
+  title  = {W2872: below v1.9 the plan step fails loudly and no whole plan is made},
+  claim  = {W2872: below v1.9 the plan step fails loudly and no whole plan is made.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_tofu_that_cannot_exclude_stops_the_plan_instead_of_planning_wide},
+}
+
+@misc{waldo-planflow-plan-with-no-exclude-never-asks-tofu-its-version,
+  section = {planflow},
+  title  = {W2872: the guard costs nothing, and changes nothing, when nothing is excluded},
+  claim  = {W2872: the guard costs nothing, and changes nothing, when nothing is excluded.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_a_plan_with_no_exclude_never_asks_tofu_its_version},
+}
+
+@misc{waldo-planplan-exclude-is-spelled-last-so-a-plan-without-one-keeps-its-exact-flags,
+  section = {planplan},
+  title  = {W2872: -exclude= follows -replace= and -target=, and nothing changes without it},
+  claim  = {W2872: -exclude= follows -replace= and -target=, and nothing changes without it.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_an_exclude_is_spelled_last_so_a_plan_without_one_keeps_its_exact_flags},
+}
+
+@misc{waldo-planplan-tofu-below-1-9-or-unreadable-is-refused-never-planned-wide,
+  section = {planplan},
+  title  = {W2872: -exclude needs v1.9; an older or unreadable tofu fails loudly, a newer one passes},
+  claim  = {W2872: -exclude needs v1.9; an older or unreadable tofu fails loudly, a newer one
+            passes.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_a_tofu_below_1_9_or_unreadable_is_refused_never_planned_wide},
+}
+
+@misc{waldo-planflow-exclude-naming-nothing-the-plan-holds-stops-and-records-no-verdict,
+  section = {planflow},
+  title  = {W2872: a deferral that matches nothing would look like one, so it is refused by name},
+  claim  = {W2872: a deferral that matches nothing would look like one, so it is refused by name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planflow.py -k test_an_exclude_naming_nothing_the_plan_holds_stops_and_records_no_verdict},
+}
+
+@misc{waldo-planplan-exclude-must-name-something-the-plan-holds-down-to-the-instance,
+  section = {planplan},
+  title  = {W2872: unknown address, unknown nested module, unknown key refused; known ones accepted},
+  claim  = {W2872: unknown address, unknown nested module, unknown key refused; known ones accepted.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planplan.py -k test_an_exclude_must_name_something_the_plan_holds_down_to_the_instance},
+}
+
+@misc{waldo-planeval-scope-file-always-names-the-excludes-empty-when-there-are-none,
+  section = {planeval},
+  title  = {W2872: absence must not be ambiguous: an empty list says nothing was deferred},
+  claim  = {W2872: absence must not be ambiguous: an empty list says nothing was deferred.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_planeval.py -k test_the_scope_file_always_names_the_excludes_empty_when_there_are_none},
+}
+
+@misc{waldo-plancli-two-excludes-reach-the-plan-in-order-after-replace-and-target,
+  section = {plancli},
+  title  = {W2872: --exclude is repeatable and spelled last, so the operator-facing flag is pinned},
+  claim  = {W2872: --exclude is repeatable and spelled last, so the operator-facing flag is pinned.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_two_excludes_reach_the_plan_in_order_after_replace_and_target},
+}
+
+@misc{waldo-plancli-empty-exclude-is-refused-before-anything-is-planned,
+  section = {plancli},
+  title  = {W2872: an empty address would defer nothing and look like a deferral},
+  claim  = {W2872: an empty address would defer nothing and look like a deferral.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_plancli.py -k test_an_empty_exclude_is_refused_before_anything_is_planned},
+}
