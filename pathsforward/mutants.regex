@@ -125,9 +125,11 @@ src/mikemol/pathsforward/closegate.py|close-ignores-an-empty-ready-set|if not re
 src/mikemol/pathsforward/closegate.py|close-ignores-a-named-block|if note:|if False:|def=judge
 src/mikemol/pathsforward/closegate.py|blocked-by-need-not-exist|if blocked_by is not None and blocked_by in live:|if blocked_by is not None:|def=_named
 src/mikemol/pathsforward/closegate.py|blocked-by-may-be-done|if text\(w, "status"\) != "done" and|if True and|def=_named
-src/mikemol/pathsforward/closegate.py|reason-need-not-cite-a-card|if s in live\]|if s]|def=_named
+src/mikemol/pathsforward/closegate.py|reason-need-not-cite-a-card|if s in live and s not in workable|if s|def=_named
 src/mikemol/pathsforward/closegate.py|the-card-worked-may-be-the-block|and text\(w, "symbol"\) != worked|and True|def=_named
 src/mikemol/pathsforward/closegate.py|a-peers-card-is-not-a-block|named = \[\*foreign, \*cited\]|named = cited|def=_named
+src/mikemol/pathsforward/closegate.py|a-ready-card-is-a-block|        if s in live and s not in workable|        if s in live|def=_named
+src/mikemol/pathsforward/closegate.py|a-reason-citing-only-itself-is-accepted|    if SYMBOL\.search\(FOREIGN\.sub\("", reason or ""\)\):|    if False:|def=judge
 src/mikemol/pathsforward/cli.py|close-gate-always-passes|return EXIT_REFUSED if verdict\.refused else EXIT_OK|return EXIT_OK|def=_close_gate
 src/mikemol/pathsforward/cli.py|done-leaves-a-stale-blocker|if code == EXIT_OK and upd\.status == "done":|if False:|def=_update
 src/mikemol/pathsforward/cli.py|close-writes-through-a-refusal|if verdict\.refused:|if False:|def=_tick_close

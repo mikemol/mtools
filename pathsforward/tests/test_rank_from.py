@@ -104,15 +104,28 @@ def test_a_skipped_top_card_refuses_the_close_and_names_it(
     "extra",
     [
         ("--blocked-by", "W4"),
-        ("--reason", "W4 waits on the gate"),
+        ("--reason", "W4 waits on W2"),
     ],
 )
 def test_naming_the_top_card_lets_the_close_through(tmp_path: Path, extra: tuple[str, ...]) -> None:
-    """A --blocked-by of the top card, or a --reason that cites it, accounts for it."""
+    """A --blocked-by of the top card, or a --reason that cites it beside a real block, accounts."""
     state = _state(tmp_path)
     rank = _rank(tmp_path, _top("W4"))
     assert _close(state, *extra, "--rank-from", rank) == _OK
     assert not _locked(state)
+
+
+@pytest.mark.parametrize("reason", ["W4 waits on the gate", "W1 waits on the gate", "W3 and W4"])
+def test_a_reason_that_cites_only_the_worked_or_a_ready_card_is_not_a_block(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], reason: str
+) -> None:
+    """W2688: W1 is the card worked and W3, W4 are ready: none of them blocks the close."""
+    state = _state(tmp_path)
+    rank = _rank(tmp_path, _top("W4"))
+    assert _close(state, "--reason", reason, "--rank-from", rank) == _REFUSED
+    out = capsys.readouterr().out
+    assert "a reason that cites the card it is about is not a block" in out
+    assert _locked(state)
 
 
 def test_the_worked_card_being_top_is_not_a_skip(tmp_path: Path) -> None:

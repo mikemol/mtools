@@ -129,12 +129,13 @@ def test_close_gate_says_the_verdict_and_writes_nothing(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """`--close-gate` is the read half (W1202): refused with ready cards, ok when named."""
-    path = _state(tmp_path, [_card("W1", "working"), _card("W2", "ready")])
+    path = _state(tmp_path, [_card("W1", "working"), _card("W2", "ready"), _card("W3", "blocked")])
     before = path.read_text(encoding="utf-8")
     gate = ["--state", str(path), "--close-gate"]
     assert cli.main(gate) == _REFUSED
     assert "ready and unblocked: 1; top: W2" in capsys.readouterr().out
-    assert cli.main([*gate, "--reason", "waiting on W2"]) == _OK
+    assert cli.main([*gate, "--reason", "waiting on W2"]) == _REFUSED
+    assert cli.main([*gate, "--reason", "waiting on W3"]) == _OK
     assert cli.main([*gate, "--blocked-by", "W1"]) == _OK
     assert path.read_text(encoding="utf-8") == before
     assert not (tmp_path / "paths-forward.ledger").exists()

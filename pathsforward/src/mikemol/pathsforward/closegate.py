@@ -218,7 +218,14 @@ def _named(state: State, blocked_by: str | None, reason: str | None, worked: str
         return f"blocked by {blocked_by}"
     said = reason or ""
     foreign = cast("list[str]", FOREIGN.findall(said))
-    cited = [s for s in cast("list[str]", SYMBOL.findall(FOREIGN.sub("", said))) if s in live]
+    # ⚑ A READY CARD IS WORK, NOT A BLOCK (W2688, amr-skills W402): a reason that cites only a card
+    # the tick could have worked, such as the top card the close was refused for, blocks nothing.
+    workable = set(ready_cards(state))
+    cited = [
+        s
+        for s in cast("list[str]", SYMBOL.findall(FOREIGN.sub("", said)))
+        if s in live and s not in workable
+    ]
     named = [*foreign, *cited]
     return f"reason: {reason} (cites {', '.join(named)})" if named else ""
 
@@ -389,6 +396,13 @@ def judge(
     if note:
         named = f"closing on a named block ({note})"
         return Verdict(refused=False, lines=(count, named), note=note)
+    if SYMBOL.search(FOREIGN.sub("", reason or "")):
+        why = (
+            "REFUSED: a reason that cites the card it is about is not a block: name the card "
+            "that blocks it, or work it (a card cited here that is the one worked, or is ready, "
+            "blocks nothing)"
+        )
+        return Verdict(refused=True, lines=(count, why), note="")
     why = (
         "REFUSED: a tick is a loop cycle, not a card. "
         f"{len(ready)} ready card(s) can be worked; name the real block with "

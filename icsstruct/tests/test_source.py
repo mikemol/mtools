@@ -80,6 +80,17 @@ def test_remote_source_without_a_calname_is_labelled_by_hash() -> None:
     assert _PLANTED not in repr(source)
 
 
+def test_a_calname_inside_a_component_is_not_the_calendars_label() -> None:
+    """An X-WR-CALNAME nested in a VEVENT is not the calendar's own name: the label is the hash."""
+    url = "https://calendar.invalid" + _PRIVATE
+    nested = (
+        b"BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nX-WR-CALNAME:Nested\r\n"
+        b"END:VEVENT\r\nEND:VCALENDAR\r\n"
+    )
+    source = read(url, lambda _: nested)
+    assert source.label == url_label(url)
+
+
 def test_http_status_error_names_the_label_not_the_url(origin: str) -> None:
     """A 404 from the server is a `SourceError` carrying the label and the status only."""
     url = origin + _PRIVATE.replace("basic", "missing")
