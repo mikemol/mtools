@@ -9501,3 +9501,26 @@
 2026-11-26T20:42:44Z  status W2965 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-26T20:42:44Z  status W2966 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-26T20:43:22Z  status W2804 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T20:47:23Z  interrupt W2969 minted    -         "The paydown guard credits a fall it can read from git, so a landed paydown counts at once and not after the pace store's next publish"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T20:50:50Z  interrupt W2970 minted    -         "A shared hook helper run-index-blob PATH runs a gate script from the INDEX's bytes, never the working copy (skills:W131)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=skills:W131
+2026-11-26T20:50:53Z  status W2970 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:00:34Z  interrupt W2971 minted    -         "A card that takes more than two attempts to advance raises a big warning at --tick-open and a nemik Warning row naming the card and its attempts"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T21:01:25Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:05:00Z  status W1259 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:06:31Z  interrupt W2972 minted    -         "A stack of queue files alone runs no full //... bazel gate: its impact cone is empty (b122 read 2026-11-26)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T21:11:26Z  status W1267 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:17:19Z  status W2972 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:17:46Z  status W1268 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:20:38Z  interrupt W2973 minted    -         "A shared hook helper stages the git index into a PERSISTENT directory in place, writing only the blobs that differ and removing stray files, so every repo's gate keeps its bazel server warm (W2972, with run-index-blob W2970)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2972
+2026-11-26T21:20:47Z  status W2973 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:28:39Z  status W1308 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:46:32Z  status W2943 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:48:47Z  status W2943 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:48:47Z  status W2944 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:48:49Z  status W2944 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:54:02Z  interrupt W2974 minted    -         "Every bazel test's wall timeout stops deciding: a test whose real stop is CPU or a progress witness carries a long non-deciding wall timeout, so --local_test_jobs can widen without W1100's failure"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T21:54:08Z  status W2974 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T21:56:51Z  status W1334 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:05:49Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:08:17Z  interrupt W2975 minted    -         "The 192 wall-only sh_test checks get a CPU bound, so the hour backstop is not their steady state"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2944
+2026-11-26T22:09:33Z  status W1388 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

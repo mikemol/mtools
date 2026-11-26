@@ -610,3 +610,10 @@
   claim  = {Usage: with no root it is exit 2 and the usage line on stderr.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_main_refuses_a_missing_operand},
 }
+
+@misc{corpus-codoncensus-report-leads-with-the-blind-spot-and-orders-each-total-by-count,
+  section = {corpus},
+  title  = {The totals list the biggest class first, whatever order the modules were read in},
+  claim  = {The totals list the biggest class first, whatever order the modules were read in.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_the_report_leads_with_the_blind_spot_and_orders_each_total_by_count},
+}

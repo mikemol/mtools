@@ -1174,3 +1174,15 @@ src/mikemol/hooks/isolated.py|a-leftover-link-is-followed|    if \(root / path\)
 src/mikemol/hooks/stackempty.py|the-mode-is-ignored|\(f\.mode, f\.blob\) == head_entry\(f\.path\)|f.blob == head_entry(f.path)[1]|def=empty_entries
 src/mikemol/hooks/stackempty.py|one-equal-file-makes-an-entry-empty|        if files and all\(|        if files and any(|def=empty_entries
 src/mikemol/hooks/commit_kata.py|empty-entry-not-asked-at-submit|        or _empty_refusal\(root, stack_file, snap, run_git_in\)|        or None|def=submit_problem
+src/mikemol/hooks/shardgate.py|an-equal-shards-value-is-a-raise|        if prior is not None and now > prior:|        if prior is not None and now >= prior:|def=raises_in
+src/mikemol/hooks/shardgate.py|a-rename-carries-no-value|        prior = before\.get\(name, carried\)|        prior = before.get(name)|def=raises_in
+src/mikemol/hooks/shardgate.py|only-the-first-target-is-compared|    for name, now in after\.items\(\):|    for name, now in list(after.items())[:1]:|def=raises_in
+src/mikemol/hooks/shardgate.py|a-comment-is-read-as-a-value|    return "" if text\.startswith\("#"\) else text|    return text|def=_uncommented
+src/mikemol/hooks/shardgate.py|a-rename-carries-the-largest-removed-value|    carried = min\(removed, default=None\)|    carried = max(removed, default=None)|def=raises_in
+src/mikemol/hooks/shardgate.py|an-unreadable-shards-is-admitted|        if now is None:|        if now is None and False:|def=raises_in
+src/mikemol/hooks/shardgate.py|a-top-level-constant-is-not-resolved|    return int\(word\) if word\.isdecimal\(\) else constants\.get\(word\)|    return int(word) if word.isdecimal() else None|def=_value_of
+src/mikemol/hooks/shardgate.py|a-cell-alone-past-half-is-split-by-module|    if spent > FRACTION \* budget:|    if False:|def=unit_of
+src/mikemol/hooks/shardgate.py|a-module-is-named-by-its-whole-cell-id|        module = cell\.split\("::", 1\)\[0\]|        module = cell|def=unit_of
+src/mikemol/hooks/shardgate.py|a-nested-build-file-is-skipped|        if path\.rpartition\("/"\)\[2\] != "BUILD\.bazel" or path not in blobs:|        if path.count("/") != 1 or path not in blobs:|def=_raises
+src/mikemol/hooks/gatetargets.py|every-kind-gets-cell-rows|    if kind == MUTANTS and text:|    if text:|def=_rows_of_result
+src/mikemol/hooks/gatetargets.py|a-cell-id-carries-the-run-time|            _row\(CELL_CPU, cpu, result\.finished_ns, \{\*\*fields, "cell": cell\}\)|            _row(CELL_CPU, cpu, result.finished_ns, {**fields, "cell": f"{cell}{result.finished_ns}"})|def=_rows_of_result

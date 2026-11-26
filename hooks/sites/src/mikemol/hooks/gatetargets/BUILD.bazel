@@ -142,6 +142,29 @@ mutant_site(
 )
 
 mutant_site(
+    name = "cell_lines",
+    dist = "hooks",
+    site = "src/mikemol/hooks/gatetargets.py::cell_lines",
+    tests = "tests/test_gatetargets.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/gatetargets.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_gatetargets.py",
+    ],
+)
+
+mutant_site(
     name = "log_reader",
     dist = "hooks",
     site = "src/mikemol/hooks/gatetargets.py::log_reader",
@@ -468,6 +491,54 @@ mutant_site(
     ],
 )
 
+mutant_site(
+    name = "declared_every-kind-gets-cell-rows",
+    dist = "hooks",
+    site = "src/mikemol/hooks/gatetargets.py::every-kind-gets-cell-rows",
+    tests = "tests/test_gatetargets.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/gatetargets.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_gatetargets.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
+mutant_site(
+    name = "declared_a-cell-id-carries-the-run-time",
+    dist = "hooks",
+    site = "src/mikemol/hooks/gatetargets.py::a-cell-id-carries-the-run-time",
+    tests = "tests/test_gatetargets.py",
+    data = [
+        "//hooks:src/mikemol/hooks/__init__.py",
+        "//hooks:src/mikemol/hooks/commit_span.py",
+        "//hooks:src/mikemol/hooks/gatephase.py",
+        "//hooks:src/mikemol/hooks/gatetargets.py",
+        "//hooks:src/mikemol/hooks/runproc.py",
+        "//hooks:src/mikemol/hooks/verdictlog.py",
+        "//hooks:src/mikemol/hooks/vlogconfig.py",
+        "//hooks:src/mikemol/hooks/vlogdetach.py",
+        "//hooks:src/mikemol/hooks/vlogrecord.py",
+        "//hooks:src/mikemol/hooks/vlogship.py",
+        "//hooks:src/mikemol/hooks/vlogsink.py",
+        "//hooks:src/mikemol/hooks/vlogspool.py",
+        "//hooks:src/mikemol/hooks/vlogwatch.py",
+        "//hooks:tests/test_gatetargets.py",
+        "//hooks:mutants.regex",
+    ],
+)
+
 test_suite(
     name = "suite",
     tests = [
@@ -477,6 +548,7 @@ test_suite(
         ":run_seconds",
         ":kind_of",
         ":shard_line",
+        ":cell_lines",
         ":log_reader",
         ":log_reader._locals_.read",
         ":_row",
@@ -491,6 +563,8 @@ test_suite(
         ":declared_pytest-log-not-read-for-the-shard-line",
         ":declared_finish-before-start-kept",
         ":declared_gate-wall-time-left-in-milliseconds",
+        ":declared_every-kind-gets-cell-rows",
+        ":declared_a-cell-id-carries-the-run-time",
     ],
     tags = ["manual"],
     visibility = ["//hooks/sites:__pkg__"],

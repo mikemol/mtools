@@ -115,6 +115,21 @@ def test_the_tally_counts_accepted_and_each_kind() -> None:
     assert codoncensus.tally(rows, "stripped") == {"accepted": 2, "missing-name": 1}
 
 
+def test_the_report_leads_with_the_blind_spot_and_orders_each_total_by_count() -> None:
+    """The totals list the biggest class first, whatever order the modules were read in."""
+    rejected = codoncensus.Verdict("future-import", "m")
+    rows = [
+        codoncensus.Row("c", None, None),
+        codoncensus.Row("a", rejected, None),
+        codoncensus.Row("b", rejected, codoncensus.Verdict("missing-name", "n")),
+    ]
+    lines = codoncensus.render(rows).splitlines()
+    assert lines[0].startswith("# cannot see:")
+    assert "TOTAL as-is (3 modules): future-import 2, accepted 1" in lines
+    assert "TOTAL without-future (3 modules): accepted 2, missing-name 1" in lines
+    assert "c\n    as-is: accepted\n    without-future: accepted\n" in codoncensus.render(rows)
+
+
 def test_main_refuses_a_missing_operand(capsys: pytest.CaptureFixture[str]) -> None:
     """Usage: with no root it is exit 2 and the usage line on stderr."""
     assert codoncensus.main(["codon"]) == codoncensus.EXIT_USAGE

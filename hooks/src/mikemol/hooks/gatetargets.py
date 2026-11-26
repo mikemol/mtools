@@ -8,6 +8,7 @@ series. This is mtools' side, the emit, to the contract luthen fixed on luthen-o
 
     mikemol.gate.target.cpu.seconds | .wall.seconds | .children
         {target, kind, repo}, kind in mutants|pytest|other, at the time the test finished
+    mikemol.gate.cell.cpu.seconds {target, kind=mutants, cell, repo}   one per mutants cell (W2804)
     mikemol.gate.run.emitted{repo}   the number of targets emitted in this run, 0 when all cached
     mikemol.gate.target.failed {target, kind, repo}   1 when the final attempt did not pass, else 0
 
@@ -49,6 +50,7 @@ CPU = "mikemol.gate.target.cpu.seconds"
 WALL = "mikemol.gate.target.wall.seconds"
 CHILDREN = "mikemol.gate.target.children"
 FAILED = "mikemol.gate.target.failed"
+CELL_CPU = "mikemol.gate.cell.cpu.seconds"
 RUN_SECONDS = "mikemol.gate.run.seconds"
 PASSED = "PASSED"
 EMITTED = "mikemol.gate.run.emitted"
@@ -61,6 +63,7 @@ EXIT_USAGE = 2
 ARGUMENTS = 3
 _LABEL = re.compile(r"//[A-Za-z0-9_./-]*:[A-Za-z0-9_.+/-]+")
 _SHARD = re.compile(r"shard cpu=([0-9.]+)s children=(\d+) idle_wall=[0-9.]+s")
+_CELL = re.compile(r"^cell cpu=([0-9.]+)s (\S+)", re.MULTILINE)
 
 type Row = dict[str, object]
 type Spawn = Callable[[Sequence[str], str], None]
@@ -193,6 +196,19 @@ def shard_line(text: str) -> tuple[float, int] | None:
     return (float(found.group(1)), int(found.group(2))) if found else None
 
 
+def cell_lines(text: str) -> list[tuple[str, float]]:
+    """Read each cell's CPU line out of a mutants shard log (W2805, W2804).
+
+    ⚑ THE CELL ID IS THE STABLE ONE the runner prints (`<file>::<site or declared name>`), never a
+    run id, so the series' label set is the same from gate to gate and does not grow per run.
+
+    Returns:
+        (cell id, CPU seconds) in log order; a line that does not parse is skipped.
+
+    """
+    return [(found.group(2), float(found.group(1))) for found in _CELL.finditer(text)]
+
+
 def log_reader(testlogs: Path) -> Reader:
     """Build the reader of a target's `test.log` under a testlogs directory.
 
@@ -238,6 +254,11 @@ def _rows_of_result(result: Result, read: Reader) -> list[Row]:
                 _row(CPU, shard[0], result.finished_ns, fields),
                 _row(CHILDREN, shard[1], result.finished_ns, fields),
             ]
+        )
+    if kind == MUTANTS and text:
+        rows.extend(
+            _row(CELL_CPU, cpu, result.finished_ns, {**fields, "cell": cell})
+            for cell, cpu in cell_lines(text)
         )
     return rows
 

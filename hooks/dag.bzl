@@ -963,7 +963,9 @@ GRAPH = {
         "src/mikemol/hooks/commit_span.py",
         "src/mikemol/hooks/presubmit.py",
         "src/mikemol/hooks/runproc.py",
-        "src/mikemol/hooks/stackrun.py"
+        "src/mikemol/hooks/stackfreeze.py",
+        "src/mikemol/hooks/stackrun.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []
@@ -3117,7 +3119,9 @@ GRAPH = {
     "tests/test_shardgate.py": {
       "imports": [
         "src/mikemol/hooks/commit_span.py",
-        "src/mikemol/hooks/shardgate.py"
+        "src/mikemol/hooks/shardgate.py",
+        "src/mikemol/hooks/stackfreeze.py",
+        "src/mikemol/hooks/stacksnap.py"
       ],
       "reads": [],
       "typing_only": []

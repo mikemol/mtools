@@ -13864,13 +13864,6 @@
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_the_readings_join_the_cpu_samples_to_their_times_and_drop_a_target_with_no_time},
 }
 
-@misc{hooks-shardgate-shard-past-half-of-the-budget-names-the-dist-and-a-shard-count,
-  section = {shardgate},
-  title  = {188.1 of 300 is 63%: with 80 shards, ceil(80 * 188.1 / (0.4 * 300)) = 126},
-  claim  = {188.1 of 300 is 63%: with 80 shards, ceil(80 * 188.1 / (0.4 * 300)) = 126.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_shard_past_half_of_the_budget_names_the_dist_and_a_shard_count},
-}
-
 @misc{hooks-shardgate-reading-older-than-the-build-files-last-change-is-not-judged,
   section = {shardgate},
   title  = {The reshard landed after that sample, so it describes a grid that is gone},
@@ -13897,21 +13890,6 @@
   title  = {No `cpu_budget` to compare with is not a verdict},
   claim  = {No `cpu_budget` to compare with is not a verdict.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_dist_with_no_budget_or_no_build_file_is_not_judged},
-}
-
-@misc{hooks-shardgate-proposal-is-always-at-least-one-more-shard,
-  section = {shardgate},
-  title  = {A small overshoot still adds a shard to the 80 there are},
-  claim  = {A small overshoot still adds a shard to the 80 there are.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_the_proposal_is_always_at_least_one_more_shard},
-}
-
-@misc{hooks-shardgate-stack-touching-the-slow-grid-is-refused-with-the-findings,
-  section = {shardgate},
-  title  = {The store answers a current past-half shard of hooks, and the stack changes a hooks file},
-  claim  = {The store answers a current past-half shard of hooks, and the stack changes a hooks
-            file.},
-  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_stack_touching_the_slow_grid_is_refused_with_the_findings},
 }
 
 @misc{hooks-shardgate-nothing-readable-refuses-nothing,
@@ -19196,4 +19174,140 @@
   title  = {The control: judging the frozen tree is not admitting it; its failure refuses},
   claim  = {The control: judging the frozen tree is not admitting it; its failure refuses.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_a_failing_test_in_the_freeze_tree_still_refuses_the_stack},
+}
+
+@misc{hooks-shardgate-cell-samples-group-by-shard-and-cell-and-skip-a-line-with-no-cell,
+  section = {shardgate},
+  title  = {W2804: a cell line has the shard and the stable cell id; a shard-only line is no cell},
+  claim  = {W2804: a cell line has the shard and the stable cell id; a shard-only line is no cell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_the_cell_samples_group_by_shard_and_cell_and_skip_a_line_with_no_cell},
+}
+
+@misc{hooks-shardgate-shard-past-half-names-the-modules-and-their-cpu-and-no-shard-count,
+  section = {shardgate},
+  title  = {W2804: 188.1 of 300 is 63%: the line lists the modules by summed CPU and the top cell},
+  claim  = {W2804: 188.1 of 300 is 63%: the line lists the modules by summed CPU and the top cell.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_shard_past_half_names_the_modules_and_their_cpu_and_no_shard_count},
+}
+
+@misc{hooks-shardgate-cell-alone-past-half-the-budget-is-named-indivisible,
+  section = {shardgate},
+  title  = {A single 160 s cell of a 300 s budget cannot be helped by any decomposition of targets},
+  claim  = {A single 160 s cell of a 300 s budget cannot be helped by any decomposition of targets.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_cell_alone_past_half_the_budget_is_named_indivisible},
+}
+
+@misc{hooks-shardgate-no-per-cell-reading-is-a-named-absence-and-still-no-count,
+  section = {shardgate},
+  title  = {The first gate after the series exists has no cells: the line says so, never a guess},
+  claim  = {The first gate after the series exists has no cells: the line says so, never a guess.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_no_per_cell_reading_is_a_named_absence_and_still_no_count},
+}
+
+@misc{hooks-shardgate-stack-touching-the-slow-grid-is-refused-with-the-unit,
+  section = {shardgate},
+  title  = {The store answers a current past-half shard of hooks, and the stack changes a hooks file},
+  claim  = {The store answers a current past-half shard of hooks, and the stack changes a hooks
+            file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_stack_touching_the_slow_grid_is_refused_with_the_unit},
+}
+
+@misc{hooks-shardgate-raise-of-shards-is-refused-even-when-the-stack-carries-the-build-file,
+  section = {shardgate},
+  title  = {W2804: 80 to 126 in hooks/BUILD.bazel is refused from the snapshot and git alone},
+  claim  = {W2804: 80 to 126 in hooks/BUILD.bazel is refused from the snapshot and git alone.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_raise_of_shards_is_refused_even_when_the_stack_carries_the_build_file},
+}
+
+@misc{hooks-shardgate-lower-a-deleted-an-unchanged-or-a-new-shards-value-is-admitted,
+  section = {shardgate},
+  title  = {The ratchet only refuses a rise: 80 to 40, no value at all, 80 to 80, no HEAD file},
+  claim  = {The ratchet only refuses a rise: 80 to 40, no value at all, 80 to 80, no HEAD file.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_lower_a_deleted_an_unchanged_or_a_new_shards_value_is_admitted},
+}
+
+@misc{hooks-shardgate-raise-names-the-dist-it-is-in-and-a-file-not-frozen-is-not-judged,
+  section = {shardgate},
+  title  = {Another dist's raise is named by that dist; a BUILD path with no frozen bytes is skipped},
+  claim  = {Another dist's raise is named by that dist; a BUILD path with no frozen bytes is
+            skipped.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_raise_names_the_dist_it_is_in_and_a_file_not_frozen_is_not_judged},
+}
+
+@misc{hooks-gatetargets-cell-lines-give-each-cells-stable-id-and-cpu-and-skip-a-garbled-line,
+  section = {gatetargets},
+  title  = {W2804: `cell cpu=Ns <id>` per cell; the summary line and a non-number are not cells},
+  claim  = {W2804: `cell cpu=Ns <id>` per cell; the summary line and a non-number are not cells.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_the_cell_lines_give_each_cells_stable_id_and_cpu_and_skip_a_garbled_line},
+}
+
+@misc{hooks-gatetargets-fresh-mutants-target-gives-one-cell-row-per-cell-keyed-by-its-stable-id,
+  section = {gatetargets},
+  title  = {The labels are target, kind and cell: the cell is the runner's id, never a run id},
+  claim  = {The labels are target, kind and cell: the cell is the runner's id, never a run id.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_fresh_mutants_target_gives_one_cell_row_per_cell_keyed_by_its_stable_id},
+}
+
+@misc{hooks-gatetargets-pytest-target-and-a-cached-mutants-target-give-no-cell-rows,
+  section = {gatetargets},
+  title  = {Only a fresh mutants shard has cells; a pytest log with cell-shaped lines does not},
+  claim  = {Only a fresh mutants shard has cells; a pytest log with cell-shaped lines does not.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_gatetargets.py -k test_a_pytest_target_and_a_cached_mutants_target_give_no_cell_rows},
+}
+
+@misc{hooks-shardgate-raise-in-a-nested-build-file-is-refused-too,
+  section = {shardgate},
+  title  = {W2804 (github-82): the ratchet is on `shards =` anywhere, so a site package is judged},
+  claim  = {W2804 (github-82): the ratchet is on `shards =` anywhere, so a site package is judged.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_raise_in_a_nested_build_file_is_refused_too},
+}
+
+@misc{hooks-shardgate-raise-in-the-second-of-two-targets-is-refused-naming-it,
+  section = {shardgate},
+  title  = {The first match is only one value: audiostruct's BUILD holds two sharded rules},
+  claim  = {The first match is only one value: audiostruct's BUILD holds two sharded rules.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_raise_in_the_second_of_two_targets_is_refused_naming_it},
+}
+
+@misc{hooks-shardgate-lowering-of-one-target-does-not-excuse-a-raise-of-another,
+  section = {shardgate},
+  title  = {Paired by name: 34 to 20 in the first and 4 to 9 in the second still names the second},
+  claim  = {Paired by name: 34 to 20 in the first and 4 to 9 in the second still names the second.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_lowering_of_one_target_does_not_excuse_a_raise_of_another},
+}
+
+@misc{hooks-shardgate-new-target-is-admitted-and-a-rename-carries-its-old-value,
+  section = {shardgate},
+  title  = {A new target has no prior value and a renamed one is its old value: a higher count raises},
+  claim  = {A new target has no prior value and a renamed one is its old value: a higher count
+            raises.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_new_target_is_admitted_and_a_rename_carries_its_old_value},
+}
+
+@misc{hooks-shardgate-comment-or-a-string-is-never-read-as-a-shards-value,
+  section = {shardgate},
+  title  = {The comment `shards = 999` and the glob string with a parenthesis change nothing},
+  claim  = {The comment `shards = 999` and the glob string with a parenthesis change nothing.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_comment_or_a_string_is_never_read_as_a_shards_value},
+}
+
+@misc{hooks-shardgate-shards-bound-to-a-top-level-constant-is-judged-by-its-value,
+  section = {shardgate},
+  title  = {W2804 (github-82): `shards = SHARDS` with `SHARDS = 34` reads 34, a raise is named},
+  claim  = {W2804 (github-82): `shards = SHARDS` with `SHARDS = 34` reads 34, a raise is named.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_shards_bound_to_a_top_level_constant_is_judged_by_its_value},
+}
+
+@misc{hooks-shardgate-shards-that-cannot-be-read-is-refused-and-never-admitted,
+  section = {shardgate},
+  title  = {An expression, an unbound name and a call are unjudgeable: refused by target name},
+  claim  = {An expression, an unbound name and a call are unjudgeable: refused by target name.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_shards_that_cannot_be_read_is_refused_and_never_admitted},
+}
+
+@misc{hooks-shardgate-new-target-carries-the-smallest-removed-value-not-the-largest,
+  section = {shardgate},
+  title  = {Two removed (34 and 10) and one added at 20 could raise the 10: refused, saying so},
+  claim  = {Two removed (34 and 10) and one added at 20 could raise the 10: refused, saying so.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_new_target_carries_the_smallest_removed_value_not_the_largest},
 }

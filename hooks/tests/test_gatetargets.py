@@ -166,6 +166,53 @@ def test_a_pytest_target_with_the_shard_line_gets_cpu_rows_and_a_log_without_it_
     assert rows[3]["fields"] == {"target": _PYTEST, "kind": gatetargets.PYTEST}
 
 
+_CELL_LOG = (
+    "cell cpu=34.0s src/a.py::f killed by tests/t.py::t (control: passed on the unmutated module)\n"
+    "cell cpu=14.0s src/b.py::g survived\n"
+    "cell cpu=x src/c.py::h garbled\n"
+    "cells cpu=48.0s shard cpu=63.5s unattributed=15.5s\n"
+) + _LOG
+_CELL_A = 34.0
+_CELL_B = 14.0
+
+
+def test_the_cell_lines_give_each_cells_stable_id_and_cpu_and_skip_a_garbled_line() -> None:
+    """W2804: `cell cpu=Ns <id>` per cell; the summary line and a non-number are not cells."""
+    assert gatetargets.cell_lines(_CELL_LOG) == [("src/a.py::f", _CELL_A), ("src/b.py::g", _CELL_B)]
+    assert gatetargets.cell_lines("no cells here\n") == []
+
+
+def test_a_fresh_mutants_target_gives_one_cell_row_per_cell_keyed_by_its_stable_id() -> None:
+    """The labels are target, kind and cell: the cell is the runner's id, never a run id."""
+    results = gatetargets.results_of([_event(_MUTANT)])
+    rows = gatetargets.rows_of(results, _reader({_MUTANT: _CELL_LOG}), _NOW_NS)
+    cells = [row for row in rows if row["name"] == gatetargets.CELL_CPU]
+    assert [row["value"] for row in cells] == [_CELL_A, _CELL_B]
+    assert cells[0]["time_ns"] == _FINISHED_NS
+    assert cells[0]["fields"] == {
+        "target": _MUTANT,
+        "kind": gatetargets.MUTANTS,
+        "cell": "src/a.py::f",
+    }
+    again = gatetargets.rows_of(results, _reader({_MUTANT: _CELL_LOG}), _NOW_NS + _ONE)
+    same = [row["fields"] for row in again if row["name"] == gatetargets.CELL_CPU]
+    assert same == [row["fields"] for row in cells]
+
+
+def test_a_pytest_target_and_a_cached_mutants_target_give_no_cell_rows() -> None:
+    """Only a fresh mutants shard has cells; a pytest log with cell-shaped lines does not."""
+    pytest_rows = gatetargets.rows_of(
+        gatetargets.results_of([_event(_PYTEST)]), _reader({_PYTEST: _CELL_LOG}), _NOW_NS
+    )
+    cached_rows = gatetargets.rows_of(
+        gatetargets.results_of([_event(_MUTANT, cached=True)]),
+        _reader({_MUTANT: _CELL_LOG}),
+        _NOW_NS,
+    )
+    assert gatetargets.CELL_CPU not in _names(pytest_rows)
+    assert gatetargets.CELL_CPU not in _names(cached_rows)
+
+
 def test_a_target_that_did_not_pass_is_one_and_a_passing_one_is_zero() -> None:
     """The target half of a failure history: 1.0 for any final status but PASSED, else 0.0."""
     lines = [
