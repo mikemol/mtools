@@ -252,7 +252,10 @@ mutants_sharded(
         "//fence:fence",
         "//mutation:mutation",
         "@mikemol_check_mutants//:mutate_runner.py",
-    ] + glob(["src/**/*.py", "tests/**/*.py"]),
+        # W2447: the test targets stage stubs/** (test_stub_authority reads it) and the mutants
+        # target did not, so that test failed on the UNMUTATED module and every cell it killed read
+        # ERRORED. Staged here, as mdstruct's was (W2340).
+    ] + glob(["src/**/*.py", "tests/**/*.py", "stubs/**"], allow_empty = True),
     size = "medium",
     tags = ["exclusive"],  # W518: GPU set; serial to fit /dev/shm quota
 )

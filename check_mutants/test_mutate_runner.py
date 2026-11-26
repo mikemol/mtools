@@ -361,6 +361,60 @@ def test_a_silent_idle_suite_is_ended_after_the_patience_not_a_deadline(
         _launch(_SILENT, monkeypatch, tmp_path)
 
 
+_POLL_S = 60.0
+_AT_LEAST_TWO_POLLS = 2
+_NOW_S = 1000.0
+
+
+class _FrozenClock:
+    """A clock that moves only when told: every read of `monotonic` is the same instant."""
+
+    def __init__(self, now: float) -> None:
+        self.now = now
+
+    def monotonic(self) -> float:
+        return self.now
+
+
+class _Drain(threading.Thread):
+    """A drain stand-in: alive or ended as told, and every join is recorded and returns at once."""
+
+    def __init__(self, *, alive: bool) -> None:
+        super().__init__()
+        self.alive = alive
+        self.waited: list[float] = []
+
+    def is_alive(self) -> bool:
+        return self.alive
+
+    def join(self, timeout: float | None = None) -> None:
+        self.waited.append(-1.0 if timeout is None else timeout)
+
+
+def test_each_stalled_iteration_after_the_exit_waits_one_whole_poll_on_the_live_reader(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2904 (github-82's arithmetic witness): an ended drain must not shorten a real poll.
+
+    Two drains, as `launch` makes: stdout has read its EOF and stderr is held by a leaked child.
+    The poll is 60 s and the patience 2. Every join the held drain is given is one whole poll (a
+    split of the poll across both drains gave it 30), the ended drain is never waited on, and the
+    verdict arrives after a finite count of iterations with no sleep, because the held drain's
+    join is stubbed to return at once.
+    """
+    monkeypatch.setattr(mutate_runner, "time", _FrozenClock(_NOW_S))
+    ended, held = _Drain(alive=False), _Drain(alive=True)
+    leader = subprocess.Popen([sys.executable, "-c", "pass"])
+    leader.wait()
+    exited = threading.Event()
+    exited.set()
+    verdict = mutate_runner.suite_hung(leader, (([], ended), ([], held)), (_POLL_S, 2), exited)
+    assert verdict is True
+    assert not ended.waited
+    assert len(held.waited) >= _AT_LEAST_TWO_POLLS
+    assert held.waited == [_POLL_S] * len(held.waited)
+
+
 _SLOW_SILENT = "import time\ntime.sleep(1.2)\nprint('done')\n"
 
 

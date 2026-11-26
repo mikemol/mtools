@@ -1191,3 +1191,16 @@
   claim  = {W2811: a MUTATE_BASELINE naming no file says so, and no survivor reads as a rise.},
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_named_slice_that_is_missing_is_reported_as_not_found_not_as_new_debt},
 }
+
+@misc{root-mutate-runner-each-stalled-iteration-after-the-exit-waits-one-whole-poll-on-the-live-reader,
+  section = {mutate_runner},
+  title  = {W2904 (github-82's arithmetic witness): an ended drain must not shorten a real poll},
+  claim  = {W2904 (github-82's arithmetic witness): an ended drain must not shorten a real poll. Two
+            drains, as `launch` makes: stdout has read its EOF and stderr is held by a
+            leaked child. The poll is 60 s and the patience 2. Every join the held drain
+            is given is one whole poll (a split of the poll across both drains gave it
+            30), the ended drain is never waited on, and the verdict arrives after a
+            finite count of iterations with no sleep, because the held drain's join is
+            stubbed to return at once.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_each_stalled_iteration_after_the_exit_waits_one_whole_poll_on_the_live_reader},
+}

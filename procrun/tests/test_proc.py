@@ -111,6 +111,26 @@ def test_capture_stdout_gives_up_on_a_child_that_outlasts_its_timeout() -> None:
         capture_stdout([sys.executable, "-c", _SLEEP], timeout=_SHORT)
 
 
+_DISCARD_HARNESS = (
+    "import sys\n"
+    "from mikemol.procrun.proc import spawn\n"
+    "reader = 'import sys; sys.exit(0 if sys.stdin.read() == \"\" else 9)'\n"
+    "with spawn([sys.executable, '-c', reader], stdin='discard') as child:\n"
+    "    sys.exit(child.wait(timeout=30))\n"
+)
+
+
+def test_a_discarded_stdin_is_empty_even_when_the_caller_has_input() -> None:
+    """W2284: a harness whose OWN stdin holds data spawns a child with stdin discarded.
+
+    Under pytest the test process's stdin is usually empty already, so a child that inherited it
+    would read nothing and the discard would go unwitnessed; here the caller really has input, so
+    a child that is not given an empty stdin reads it and exits 9.
+    """
+    done = capture([sys.executable, "-c", _DISCARD_HARNESS], input_text="caller input\n")
+    assert done.returncode == 0, done.stderr
+
+
 def test_spawn_returns_a_live_child_that_polls_waits_and_reports_its_status() -> None:
     """A running child has a pid and no status; once it exits, wait and poll both give its code."""
     with spawn([sys.executable, "-c", "import sys; sys.exit(7)"], output="discard") as child:

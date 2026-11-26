@@ -177,3 +177,14 @@
   claim  = {W2872 paydown: the stdout-only variant honours its timeout and does not wait it out.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_capture_stdout_gives_up_on_a_child_that_outlasts_its_timeout},
 }
+
+@misc{procrun-proc-discarded-stdin-is-empty-even-when-the-caller-has-input,
+  section = {proc},
+  title  = {W2284: a harness whose OWN stdin holds data spawns a child with stdin discarded},
+  claim  = {W2284: a harness whose OWN stdin holds data spawns a child with stdin discarded. Under
+            pytest the test process's stdin is usually empty already, so a child that
+            inherited it would read nothing and the discard would go unwitnessed; here
+            the caller really has input, so a child that is not given an empty stdin
+            reads it and exits 9.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_proc.py -k test_a_discarded_stdin_is_empty_even_when_the_caller_has_input},
+}

@@ -49,6 +49,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 from select import select as wait_readable
 from typing import TYPE_CHECKING, Protocol, cast
 
@@ -395,7 +396,8 @@ def tree_cpu(root: int) -> float | None:
     """Sum the CPU seconds of `root` and every live descendant, read from `/proc`.
 
     ⚑ A TREE THAT IS GONE IS None, NOT 0: a finished suite and an idle one are different answers,
-    and the sum falls when a descendant ends, which `_hung` counts as progress, never as stillness.
+    and the sum falls when a descendant ends, which `suite_hung` counts as progress, never as
+    stillness.
 
     Returns:
         the seconds, or None when `root` is not a live process.
@@ -512,7 +514,7 @@ def _drain(fd: int, chunks: list[bytes]) -> None:
         chunks.append(block)
 
 
-def _hung(
+def suite_hung(
     proc: subprocess.Popen[bytes],
     drains: tuple[tuple[list[bytes], threading.Thread], ...],
     watch: tuple[float, int],
@@ -540,6 +542,16 @@ def _hung(
     while True:
         exited.wait(timeout=poll)
         ended = exited.is_set()
+        if ended:
+            # ⚑ A POLL IS A WAIT, NEVER A SPIN (W2904): once the leader has exited `exited` is SET,
+            # so the wait above returns at once, and without this the loop reached `patience`
+            # iterations in about no time while the drain threads had not yet read their EOF, and
+            # killed a suite that was only finishing. The readers are what remains to wait for, so
+            # each iteration waits on them for the poll, and ends the moment they have all ended.
+            until = time.monotonic() + poll
+            for _chunks, reader in drains:
+                if reader.is_alive():
+                    reader.join(timeout=max(0.0, until - time.monotonic()))
         if ended and not any(reader.is_alive() for _chunks, reader in drains):
             return False
         cpu = _cpu(proc.pid)
@@ -643,7 +655,7 @@ def launch(
         reader.start()
     exited = threading.Event()
     threading.Thread(target=_watch_exit, args=(proc.pid, exited), daemon=True).start()
-    hung = _hung(proc, drains, (poll, patience), exited)
+    hung = suite_hung(proc, drains, (poll, patience), exited)
     code, used = reap(proc)
     charge(used)
     if hung:
