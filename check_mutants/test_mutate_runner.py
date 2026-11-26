@@ -375,44 +375,59 @@ class _FrozenClock:
     def monotonic(self) -> float:
         return self.now
 
+    def advance(self, seconds: float) -> None:
+        self.now += seconds
+
 
 class _Drain(threading.Thread):
-    """A drain stand-in: alive or ended as told, and every join is recorded and returns at once."""
+    """A drain stand-in: alive or ended as told; a join is recorded and spends its whole timeout.
 
-    def __init__(self, *, alive: bool) -> None:
+    ⚑ A JOIN SPENDS THE TIME IT WAS GIVEN (W2959): the stand-in clock moves by the timeout, as a
+    real join on a reader that never ends would, so a second reader's share depends on the first's.
+    """
+
+    def __init__(self, *, alive: bool, clock: _FrozenClock) -> None:
         super().__init__()
         self.alive = alive
+        self.clock = clock
         self.waited: list[float] = []
 
     def is_alive(self) -> bool:
         return self.alive
 
     def join(self, timeout: float | None = None) -> None:
-        self.waited.append(-1.0 if timeout is None else timeout)
+        given = 0.0 if timeout is None else timeout
+        self.waited.append(given)
+        self.clock.advance(given)
 
 
-def test_each_stalled_iteration_after_the_exit_waits_one_whole_poll_on_the_live_reader(
+def test_each_stalled_iteration_after_the_exit_shares_one_poll_between_the_live_readers(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """W2904 (github-82's arithmetic witness): an ended drain must not shorten a real poll.
+    """W2904 and W2959: an iteration is ONE deadline, spent by the readers in turn, ended or not.
 
-    Two drains, as `launch` makes: stdout has read its EOF and stderr is held by a leaked child.
-    The poll is 60 s and the patience 2. Every join the held drain is given is one whole poll (a
-    split of the poll across both drains gave it 30), the ended drain is never waited on, and the
-    verdict arrives after a finite count of iterations with no sleep, because the held drain's
-    join is stubbed to return at once.
+    Three drains, as a leaked child makes them: one ended, two held. The poll is 60 s and the
+    patience 2. The first held drain is given one whole poll (a split of the poll across the
+    drains gave it less) and the clock moves by it; the second is then given what is left, which is
+    nothing (a fresh poll per reader gave it another 60 s, so an iteration took twice as long as a
+    poll). The ended drain is never waited on.
     """
-    monkeypatch.setattr(mutate_runner, "time", _FrozenClock(_NOW_S))
-    ended, held = _Drain(alive=False), _Drain(alive=True)
+    clock = _FrozenClock(_NOW_S)
+    monkeypatch.setattr(mutate_runner, "time", clock)
+    ended = _Drain(alive=False, clock=clock)
+    first, second = _Drain(alive=True, clock=clock), _Drain(alive=True, clock=clock)
     leader = subprocess.Popen([sys.executable, "-c", "pass"])
     leader.wait()
     exited = threading.Event()
     exited.set()
-    verdict = mutate_runner.suite_hung(leader, (([], ended), ([], held)), (_POLL_S, 2), exited)
+    verdict = mutate_runner.suite_hung(
+        leader, (([], ended), ([], first), ([], second)), (_POLL_S, 2), exited
+    )
     assert verdict is True
     assert not ended.waited
-    assert len(held.waited) >= _AT_LEAST_TWO_POLLS
-    assert held.waited == [_POLL_S] * len(held.waited)
+    assert len(first.waited) >= _AT_LEAST_TWO_POLLS
+    assert first.waited == [_POLL_S] * len(first.waited)
+    assert second.waited == [0.0] * len(first.waited)
 
 
 _SLOW_SILENT = "import time\ntime.sleep(1.2)\nprint('done')\n"

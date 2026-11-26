@@ -1192,15 +1192,15 @@
   check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_a_named_slice_that_is_missing_is_reported_as_not_found_not_as_new_debt},
 }
 
-@misc{root-mutate-runner-each-stalled-iteration-after-the-exit-waits-one-whole-poll-on-the-live-reader,
+@misc{root-mutate-runner-each-stalled-iteration-after-the-exit-shares-one-poll-between-the-live-readers,
   section = {mutate_runner},
-  title  = {W2904 (github-82's arithmetic witness): an ended drain must not shorten a real poll},
-  claim  = {W2904 (github-82's arithmetic witness): an ended drain must not shorten a real poll. Two
-            drains, as `launch` makes: stdout has read its EOF and stderr is held by a
-            leaked child. The poll is 60 s and the patience 2. Every join the held drain
-            is given is one whole poll (a split of the poll across both drains gave it
-            30), the ended drain is never waited on, and the verdict arrives after a
-            finite count of iterations with no sleep, because the held drain's join is
-            stubbed to return at once.},
-  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_each_stalled_iteration_after_the_exit_waits_one_whole_poll_on_the_live_reader},
+  title  = {W2904 and W2959: an iteration is ONE deadline, spent by the readers in turn, ended or not},
+  claim  = {W2904 and W2959: an iteration is ONE deadline, spent by the readers in turn, ended or
+            not. Three drains, as a leaked child makes them: one ended, two held. The
+            poll is 60 s and the patience 2. The first held drain is given one whole
+            poll (a split of the poll across the drains gave it less) and the clock
+            moves by it; the second is then given what is left, which is nothing (a
+            fresh poll per reader gave it another 60 s, so an iteration took twice as
+            long as a poll). The ended drain is never waited on.},
+  check  = {cmd:hooks/.venv/bin/python3 -m pytest test_mutate_runner.py -k test_each_stalled_iteration_after_the_exit_shares_one_poll_between_the_live_readers},
 }
