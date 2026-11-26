@@ -38,7 +38,7 @@ def _set(
 def test_a_stack_nothing_refuses_may_wait(monkeypatch: pytest.MonkeyPatch) -> None:
     """The control: all three refusals have nothing to say."""
     _set(monkeypatch, None, None, None)
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) is None
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) is None
 
 
 def test_the_slow_grid_refusal_is_asked_last_and_speaks_when_the_others_do_not(
@@ -46,15 +46,15 @@ def test_the_slow_grid_refusal_is_asked_last_and_speaks_when_the_others_do_not(
 ) -> None:
     """With imports and build files in order, the grid's finding is the stack's problem."""
     _set(monkeypatch, None, None, "hooks grid is past half")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "hooks grid is past half"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "hooks grid is past half"
 
 
 def test_an_earlier_refusal_wins_over_a_later_one(monkeypatch: pytest.MonkeyPatch) -> None:
     """The import problem is reported before the build file's, and both before the grid's."""
     _set(monkeypatch, "imports", "build", "grid")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "imports"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "imports"
     _set(monkeypatch, None, "build", "grid")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "build"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "build"
 
 
 def test_an_entry_that_changes_nothing_is_the_stacks_problem_after_the_imports(
@@ -63,9 +63,9 @@ def test_an_entry_that_changes_nothing_is_the_stacks_problem_after_the_imports(
     """W2346: an empty entry is refused; the import finding still comes first."""
     _set(monkeypatch, None, None, None)
     monkeypatch.setattr(commit_kata, "_empty_refusal", _says("entry 1 changes nothing"))
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "entry 1 changes nothing"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "entry 1 changes nothing"
     _set(monkeypatch, "imports", None, None)
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "imports"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "imports"
 
 
 def test_a_round_card_skipped_for_an_outside_card_is_the_stacks_problem_when_nothing_else_is(
@@ -73,9 +73,10 @@ def test_a_round_card_skipped_for_an_outside_card_is_the_stacks_problem_when_not
 ) -> None:
     """W1948: the round is asked last; an earlier finding still wins."""
     _set(monkeypatch, None, None, None, "W1 is in this repository's round")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "W1 is in this repository's round"
+    problem = commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT)
+    assert problem == "W1 is in this repository's round"
     _set(monkeypatch, None, None, "grid", "W1 is in this repository's round")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "grid"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "grid"
 
 
 def test_the_paydown_pace_is_asked_after_the_round_and_before_the_test_run(
@@ -85,9 +86,9 @@ def test_the_paydown_pace_is_asked_after_the_round_and_before_the_test_run(
     _set(monkeypatch, None, None, None)
     monkeypatch.setattr(commit_kata, "_pace_refusal", _says("behind its ratchet paydown"))
     monkeypatch.setattr(commit_kata, "_test_refusal", _says("tests fail"))
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "behind its ratchet paydown"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "behind its ratchet paydown"
     _set(monkeypatch, None, None, None, "round")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "round"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "round"
 
 
 def test_a_stacks_own_failing_test_is_asked_after_the_cheap_refusals(
@@ -96,9 +97,45 @@ def test_a_stacks_own_failing_test_is_asked_after_the_cheap_refusals(
     """W2055: the sandbox test run is last, because it runs bazel; an earlier finding wins."""
     _set(monkeypatch, None, None, None)
     monkeypatch.setattr(commit_kata, "_test_refusal", _says("//hooks:test_x fails"))
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "//hooks:test_x fails"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "//hooks:test_x fails"
     _set(monkeypatch, None, None, None, "round")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "round"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "round"
+
+
+def test_the_stacks_own_tests_run_over_the_freeze_tree_not_the_live_checkout(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """W2800, the failing case of b102: a stack that adds a test file carries it in the freeze tree.
+
+    The sandbox test run is handed the tree the files are frozen from, so a target only that tree
+    declares is found; with no freeze tree it keeps the repository root.
+    """
+    seen: list[Path] = []
+
+    def record(tree: Path, *_rest: object) -> str | None:
+        seen.append(tree)
+        return None
+
+    _set(monkeypatch, None, None, None)
+    monkeypatch.setattr(commit_kata, "_test_refusal", record)
+    frozen = Path("/scratch/tree")
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, frozen) is None
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) is None
+    assert seen == [frozen, _ROOT]
+
+
+def test_a_failing_test_in_the_freeze_tree_still_refuses_the_stack(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The control: judging the frozen tree is not admitting it; its failure refuses."""
+    frozen = Path("/scratch/tree")
+
+    def judge(tree: Path, *_rest: object) -> str | None:
+        return "//hooks:test_new fails" if tree == frozen else None
+
+    _set(monkeypatch, None, None, None)
+    monkeypatch.setattr(commit_kata, "_test_refusal", judge)
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, frozen) == "//hooks:test_new fails"
 
 
 def test_a_file_shared_with_a_stack_ahead_is_refused_after_the_build_files_before_the_grid(
@@ -113,13 +150,13 @@ def test_a_file_shared_with_a_stack_ahead_is_refused_after_the_build_files_befor
 
     _set(monkeypatch, None, None, "grid")
     monkeypatch.setattr(commit_kata, "_unbuilt_on", unbuilt)
-    said = commit_kata.submit_problem(_ROOT, _STACK, _ENV)
+    said = commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT)
     assert said is not None
     assert "hooks/warrants.bib" in said
     assert "--freeze-from" in said
     assert seen == ["snap"]
     _set(monkeypatch, None, "build", "grid")
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "build"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "build"
 
 
 def test_a_stack_sharing_nothing_with_a_stack_ahead_goes_on_to_the_grid(
@@ -132,7 +169,7 @@ def test_a_stack_sharing_nothing_with_a_stack_ahead_goes_on_to_the_grid(
 
     _set(monkeypatch, None, None, "grid")
     monkeypatch.setattr(commit_kata, "_unbuilt_on", nothing)
-    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV) == "grid"
+    assert commit_kata.submit_problem(_ROOT, _STACK, _ENV, _ROOT) == "grid"
 
 
 def test_the_round_check_is_handed_the_waypoints_the_stack_carries(
@@ -157,5 +194,5 @@ def test_the_round_check_is_handed_the_waypoints_the_stack_carries(
     _set(monkeypatch, None, None, None)
     monkeypatch.setattr(commit_kata, "_round_refusal", round_check)
     stack.write_text(json.dumps(entries), encoding="utf-8")
-    assert commit_kata.submit_problem(_ROOT, stack, _ENV) is None
+    assert commit_kata.submit_problem(_ROOT, stack, _ENV, _ROOT) is None
     assert asked == [frozenset({"W1", "W2"})]

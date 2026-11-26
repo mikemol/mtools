@@ -1208,8 +1208,15 @@ def stack_cards(stack_file: Path) -> frozenset[str]:
     return frozenset() if isinstance(items, str) else frozenset(i.waypoint for i in items)
 
 
-def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str | None:
+def submit_problem(
+    root: Path, stack_file: Path, env: Mapping[str, str], tested: Path
+) -> str | None:
     """Judge a submitted stack by the refusals made before it waits for its turn.
+
+    ⚑ THE STACK'S OWN TESTS RUN OVER THE TREE THE CALLER NAMES (`tested`, W2800, required so the
+    choice is visible at each call site): the freeze tree when files are frozen, else the root. A
+    stack that adds a test file and its `dag.bzl` carries them in the freeze tree only, so a
+    snapshot of the live tree declared no such target and refused b102 (BES f64273b0).
 
     The first that has something to say wins: an import only a later entry adds (W1527), a build
     file naming a source no entry carries (W1604), an entry that changes nothing (W2346),
@@ -1233,7 +1240,7 @@ def submit_problem(root: Path, stack_file: Path, env: Mapping[str, str]) -> str 
         or _round_refusal(root, stack_cards(stack_file))
         or _flake_refusal(root)
         or _pace_refusal(root, stack_file, env)
-        or _test_refusal(root, stack_file, env)
+        or _test_refusal(tested, stack_file, env)
     )
 
 
@@ -1324,7 +1331,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         env[SNAP_ENV] = at_submit(freeze_root(bare, root), stacked[1], ledger, key, run_git_in)
         # ⚑ W1604: a build file naming a Python source no entry carries is refused here, before the
         # queue turn, as an unsound import is (W1603's finding, the waiting-for-failure case).
-        problem = submit_problem(root, stacked[1], env)
+        problem = submit_problem(root, stacked[1], env, freeze_root(bare, root))
         if problem is not None:
             return unordered(root, ledger, key, env, problem)
         # ⚑ W1615: each entry's tree is pinned now, so a presubmit can run on it while this stack

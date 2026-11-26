@@ -1626,3 +1626,10 @@
             none.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_graph.py -k test_an_input_mutant_is_named_for_each_test_and_each_import_or_read},
 }
+
+@misc{importdag-cost-test-is-never-its-own-neighbour,
+  section = {cost},
+  title  = {The projection rests on the OTHER tests that share the name, never on the test itself},
+  claim  = {The projection rests on the OTHER tests that share the name, never on the test itself.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_cost.py -k test_a_test_is_never_its_own_neighbour},
+}

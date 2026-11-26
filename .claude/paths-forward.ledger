@@ -9303,3 +9303,114 @@
 2026-11-26T07:40:09Z  interrupt W2932 minted    -         "mikemol-hook-beat is idempotent per tool call, keyed by the payload's tool_use id"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W2936
 2026-11-26T07:40:53Z  status W1875 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-26T08:20:40Z  status W1899 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T08:40:23Z  status W1944 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T09:03:53Z  status W1949 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T09:23:19Z  status W1960 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T09:43:04Z  status W1963 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T10:05:07Z  status W1975 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T10:14:05Z  interrupt W2933 minted    -         "mikemol-commit --freeze-from takes a stack's deletions from the diff of its tree against the base, not from ls-tree HEAD in the frozen directory"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T10:15:02Z  status W1978 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T10:22:33Z  interrupt W2934 minted    -         "mikemol-commit names the gate's progress file and prints its counter line, so a submitter watching the commit log sees progress"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T10:22:34Z  interrupt W2935 minted    -         "audiostruct's mutants shards are tagged exclusive, serialising 34 shards ahead of the whole gate"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2904
+2026-11-26T10:23:31Z  status W1984 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T10:42:29Z  status W2389 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T11:07:18Z  status W2409 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T11:26:08Z  status W2410 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T12:04:48Z  status W2435 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T12:24:04Z  status W2445 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T12:43:10Z  status W2456 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T12:50:58Z  interrupt W2936 minted    -         "A runner change must not rerun the whole mutation grid: pin the runner the grid consumes, or cut the runner into cones"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2904
+2026-11-26T12:50:59Z  status W2460 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T13:09:00Z  status W2927 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T13:09:01Z  status W2462 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T13:31:36Z  status W2474 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T14:10:31Z  status W2481 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T14:33:37Z  status W2484 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T14:38:28Z  interrupt W2937 minted    -         "Answer nemik:W2546: the submit-time paydown guard attributes a baseline's required fall to the repos its ids name"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W2546
+2026-11-26T14:39:17Z  status W2487 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T15:05:51Z  status W2492 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T15:34:23Z  status W2497 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T15:45:22Z  interrupt W2938 minted    -         "Writer: --park and --unpark as built-in transitions recorded in the queue, refused by --tick-open while parked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W163
+2026-11-26T15:45:26Z  interrupt W2939 minted    -         "The watchdog exits 0 without waking while its queue is parked, and the Stop hook's ready-work rules stay silent while parked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W163
+2026-11-26T15:46:40Z  status W2498 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:12:53Z  status W2499 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:17:35Z  interrupt W2940 minted    -         "The gate's bazel job count is sized once from a busy instant and held for hours: size it from what the OS grants, not a start-of-run sample"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T16:18:19Z  status W2500 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:19:54Z  interrupt W2941 minted    -         "Read how drum and the membudget lease admit runs against the cores the gate has, and whether they admit fewer than the cores allow"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2940
+2026-11-26T16:19:55Z  interrupt W2942 minted    -         "Confirm no macro default serialises the grid: read the exclusive and resources tags in hooks, rewake, rules_py dist.bzl and check_mutants defs.bzl"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2940
+2026-11-26T16:20:39Z  status W2501 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:25:29Z  interrupt W2943 minted    -         "Establish whether drum's exec admission reaches bazel's server and sandboxed spawns (W1778 reinstated)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1778
+2026-11-26T16:25:35Z  interrupt W2944 minted    -         "No run-wide gate width: bazel --jobs stops being the throttle and admission is decided live per spawn at exec"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W1777
+2026-11-26T16:25:40Z  status W2944 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:25:53Z  status W2940 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:31:02Z  interrupt W2945 minted    -         "transcriptstruct's transcript argument accepts claude:transcript:<project>/<session> and the urn form, through one shared resolver"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github:W165
+2026-11-26T16:31:43Z  status W2504 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:33:18Z  status W2531 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T16:51:30Z  status W2568 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:09:06Z  status W2585 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:26:29Z  status W2615 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:43:56Z  status W2616 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1259 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1267 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1334 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1336 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1341 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1388 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1389 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1415 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1416 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1428 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1433 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1443 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1746 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1823 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1861 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1875 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1899 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1944 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1949 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1960 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1963 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1975 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1978 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W1984 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2113 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2123 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2306 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2409 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2410 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2435 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2456 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2460 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2462 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2474 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2481 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2484 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2487 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2492 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2497 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2498 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2499 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2500 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2501 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2504 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2531 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2568 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2585 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2615 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2616 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2800 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:52:30Z  status W2904 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:53:03Z  status W2800 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:55:26Z  status W1259 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T17:59:36Z  interrupt W2946 minted    -         "audiostruct's mutants and test targets name the 8 committed stub files in one list, not a widened glob with allow_empty"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2447
+2026-11-26T18:01:04Z  status W1267 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T18:09:20Z  status W1334 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T18:13:52Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T18:17:41Z  status W1341 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T18:21:48Z  interrupt W2947 minted    -         "admission_wait_seconds writes an epoch-sized wait from an unset submit moment, and a fixture repo emits to the real store"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T18:26:21Z  status W1388 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T18:29:34Z  interrupt W2948 minted    -         "the commit gate's inputs are a materialized git state, so a queue write during a run cannot reach them (amr-skills' gate was refused 'modified during execution' by a write to .claude/paths-forward.json)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=amr-skills:W429
+2026-11-26T18:31:02Z  status W1389 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T18:34:06Z  interrupt W2949 minted    -         "audiostruct's mutation grid is per-site (mutants_gen --dist audiostruct), its flat shards = deleted, the two-survivor fall (review/W2447-audiostruct-two-survivors 95b166c3, PASS-SUBMIT) riding with it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T18:37:49Z  status W1415 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

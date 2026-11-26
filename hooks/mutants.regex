@@ -128,6 +128,7 @@ src/mikemol/hooks/probe.py|a-hung-launcher-raises-past-the-probe|    except \(OS
 # call must not wait on its own parent; the host's budget variables must be restored (not the other
 # way round); the load gate must stay off and an override of the wait must be honoured.
 src/mikemol/hooks/commit_kata.py|nested-call-waits-on-itself|if env\.get\(HELD_ENV\):|if False:|def=claim_of
+src/mikemol/hooks/commit_kata.py|sandbox-tests-run-over-the-live-tree|        or _test_refusal\(tested, stack_file, env\)|        or _test_refusal(root, stack_file, env)|def=submit_problem
 src/mikemol/hooks/commit_kata.py|restore-and-removal-swapped|for name in BUDGET if name not in env for part|for name in BUDGET if name in env for part|def=claim_of
 src/mikemol/hooks/commit_kata.py|load-gate-left-on|held\["MEMBUDGET_MAXLOAD"\] = "0"|held["MEMBUDGET_MAXLOAD"] = "1"|def=claim_of
 src/mikemol/hooks/commit_kata.py|lease-wait-gets-a-deadline|held\.pop\("MEMBUDGET_TIMEOUT", None\)|held["MEMBUDGET_TIMEOUT"] = "3600"|def=claim_of
@@ -812,7 +813,7 @@ src/mikemol/hooks/testgate.py|repeated-test-file-run-twice|        if label and 
 src/mikemol/hooks/testgate.py|passing-run-refused|    if status == 0 or out\.lstrip|    if status == 99 or out.lstrip|def=refusal
 src/mikemol/hooks/testgate.py|snapshot-failure-refuses-the-stack|    if status == 0 or out\.lstrip\(\)\.startswith\(SNAPSHOT_VOICE\):|    if status == 0:|def=refusal
 src/mikemol/hooks/testgate.py|no-snapshot-tool-runs-anyway|    if not targets or snapshot is None:|    if not targets:|def=refusal
-src/mikemol/hooks/commit_kata.py|test-refusal-never-asked|        or _test_refusal\(root, stack_file, env\)||def=submit_problem
+src/mikemol/hooks/commit_kata.py|test-refusal-never-asked|        or _test_refusal\(tested, stack_file, env\)||def=submit_problem
 src/mikemol/hooks/commit_span.py|wait-read-to-the-verdict|    wait = max\(moments\.lease_ns - moments\.submit_ns, 0\) / NS_PER_S|    wait = max(moments.end_ns - moments.submit_ns, 0) / NS_PER_S|def=gate_series
 src/mikemol/hooks/commit_span.py|run-time-not-clamped|    run = max\(moments\.end_ns - moments\.lease_ns, 0\) / NS_PER_S|    run = (moments.end_ns - moments.lease_ns) / NS_PER_S|def=gate_series
 src/mikemol/hooks/ratchet_pace.py|debt-with-no-card-held|    return bool\(open_cards\) and all\(|    return all(|def=operator_held

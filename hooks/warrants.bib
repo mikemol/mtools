@@ -19180,3 +19180,20 @@
             refuses.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_shardgate.py -k test_a_failed_store_query_refuses_nothing_even_when_it_printed_a_reading},
 }
+
+@misc{hooks-submit-problem-stacks-own-tests-run-over-the-freeze-tree-not-the-live-checkout,
+  section = {shardgate},
+  title  = {W2800, the failing case of b102: a stack that adds a test file carries it in the freeze tree},
+  claim  = {W2800, the failing case of b102: a stack that adds a test file carries it in the freeze
+            tree. The sandbox test run is handed the tree the files are frozen from, so
+            a target only that tree declares is found; with no freeze tree it keeps the
+            repository root.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_the_stacks_own_tests_run_over_the_freeze_tree_not_the_live_checkout},
+}
+
+@misc{hooks-submit-problem-failing-test-in-the-freeze-tree-still-refuses-the-stack,
+  section = {shardgate},
+  title  = {The control: judging the frozen tree is not admitting it; its failure refuses},
+  claim  = {The control: judging the frozen tree is not admitting it; its failure refuses.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_submit_problem.py -k test_a_failing_test_in_the_freeze_tree_still_refuses_the_stack},
+}

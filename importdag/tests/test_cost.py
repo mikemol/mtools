@@ -73,3 +73,13 @@ def test_two_cards_count_an_overlap_once_and_a_card_after_its_enabler_pays_the_r
     assert both == {"t/test_a.py", "t/test_b.py"}
     assert cost.price(both, _TABLE).median_s == pytest.approx(_A_AND_B_MEDIAN)
     assert cost.after(first, second) == {"t/test_b.py"}
+
+
+def test_a_test_is_never_its_own_neighbour() -> None:
+    """The projection rests on the OTHER tests that share the name, never on the test itself."""
+    path = "t/test_ratchet_pace_held.py"
+    table = {
+        path: cost.Measured(100.0, 100.0, 1),
+        "t/test_ratchet_pace.py": cost.Measured(4.0, 5.0, 1),
+    }
+    assert cost.neighbour(path, table) == (4.0, 1)
