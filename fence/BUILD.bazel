@@ -9,6 +9,7 @@ load("@mikemol_check_mutants//:defs.bzl", "mutants_sharded")
 load("@mikemol_rules_py//:dist.bzl", "dist_checks")
 load("@mikemol_rules_py//:venv.bzl", "venv_from_hub")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+load(":dag.bzl", "GRAPH")
 
 exports_files([
     # ⚑ EXPORTED FOR A SIBLING'S WITNESS, not for this package's own use. `//hooks:test_bar_fires`
@@ -303,6 +304,26 @@ sh_test(
     size = "small",
 )
 
+# W2995: THE COMMITTED IMPORT GRAPH CANNOT GO STALE. `graph.json` is what lets the mutation grid run
+# only the tests that can see a mutated module (a cell cost 3 to 5 s running all 378 before it, which put
+# //fence:mutants_6 past half its budget); `importdag.graph --check` regenerates it and `dag.bzl` from the
+# sources below and refuses on any byte of difference, as //hooks:graph_fresh does (W1503).
+sh_test(
+    name = "graph_fresh",
+    srcs = ["graph_check.sh"],
+    args = [
+        "$(location //importdag:graph)",
+        "fence",
+        "mikemol.fence",
+    ],
+    data = [
+        "//importdag:graph",
+        "dag.bzl",
+        "graph.json",
+    ] + list(GRAPH["modules"]) + list(GRAPH["tests"]) + list(GRAPH["support"]),
+    size = "small",
+)
+
 # ⚑⚑ THE MUTATION GRID AS A GATE TARGET — same shape as //ratchet:mutants, which carries the
 # rationale; //mdstruct:mutants is the F-arm (real deps). fence, like ratchet, passes under a
 # bare interpreter and cannot detect a wrong-interpreter defect.
@@ -320,6 +341,9 @@ mutants_sharded(
         "pyproject.toml",
         # W629: the defect classes this distribution declares, planted one at a time by the runner.
         "mutants.regex",
+        # W2995: the committed import graph, so each cell runs the tests that can see its module
+        # and not the whole suite (the runner's selected_tests reads graph.json beside the config).
+        "graph.json",
         ":.venv",
         "//fence:fence",
         "//mutation:mutation",
