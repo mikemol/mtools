@@ -103,6 +103,17 @@ def test_pick_keeps_src_modules_and_thins_evenly(tmp_path: Path) -> None:
     assert [p.name for p in thinned] == ["m0.py", "m2.py", "m4.py", "m6.py", "m8.py"]
 
 
+def test_pick_skips_a_tests_or_stubs_directory_that_sits_inside_src(tmp_path: Path) -> None:
+    """A module under `src` is left out when a skipped name is on its path."""
+    src = tmp_path / "d" / "src" / "p"
+    src.mkdir(parents=True)
+    (src / "kept.py").write_text("x = 1\n", encoding="utf-8")
+    for skipped in ("tests", "stubs", ".venv"):
+        (src / skipped).mkdir()
+        (src / skipped / "left_out.py").write_text("x = 1\n", encoding="utf-8")
+    assert [p.name for p in codoncensus.pick([tmp_path / "d"], None)] == ["kept.py"]
+
+
 def test_the_tally_counts_accepted_and_each_kind() -> None:
     """The totals line: how many modules fall in each class for each reading."""
     rejected = codoncensus.Verdict("future-import", "m")

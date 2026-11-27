@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import signal
+import threading
 from pathlib import Path
 
 from mikemol.fence import frozen
@@ -14,8 +15,20 @@ from mikemol.fence.frozen import Ident, Record
 OWNER = Ident(100, 5000)
 CHILD_A = Ident(201, 6000)
 CHILD_B = Ident(202, 6100)
-POLLS = 5000
 START = 7777
+LATE_STOP_S = 0.2
+
+
+def _stop_later(pid: int) -> threading.Timer:
+    """Send SIGSTOP to `pid` after LATE_STOP_S, so the stop lands after the waiter has begun.
+
+    Returns:
+        the started timer, which the caller cancels and joins.
+
+    """
+    timer = threading.Timer(LATE_STOP_S, os.kill, args=(pid, signal.SIGSTOP))
+    timer.start()
+    return timer
 
 
 def _stat(start: int, comm: str = "worker") -> str:
@@ -160,13 +173,35 @@ def test_named_leaves_out_a_pid_that_cannot_be_read(tmp_path: Path) -> None:
     assert frozen.named([CHILD_A.pid, 404], tmp_path) == (CHILD_A,)
 
 
-def _state(pid: int) -> str:
-    text = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8")
-    return text.rpartition(")")[2].split()[0]
+def _status_after(pid: int, flag: int) -> int:
+    """Wait for the kernel's report of a child's change and return its wait status.
+
+    ⚑ waitpid IS THE HAPPENS-BEFORE: `os.kill` returns before the target has processed SIGSTOP, so
+    a read of its state right after can still say S, and a count of back-to-back reads of /proc
+    (5000 of them, the earlier shape) finishes before a loaded host schedules the child. waitpid
+    returns exactly when the kernel has stopped or continued it, so there is no clock and no count.
+
+    Returns:
+        the wait status the kernel reports for `flag`.
+
+    """
+    return os.waitpid(pid, flag)[1]
 
 
-def _wait_for(pid: int, stopped: bool) -> bool:
-    return any((_state(pid) == "T") == stopped for _ in range(POLLS))
+def test_a_stop_that_lands_late_is_still_seen_by_the_kernels_report() -> None:
+    """A stop sent after a delay is seen: waitpid waits for the kernel, in either order."""
+    child = os.fork()
+    if child == 0:
+        signal.pause()
+        os._exit(0)
+    late = _stop_later(child)
+    try:
+        assert os.WIFSTOPPED(_status_after(child, os.WUNTRACED))
+    finally:
+        late.cancel()
+        late.join()
+        os.kill(child, signal.SIGKILL)
+        os.waitpid(child, 0)
 
 
 def test_a_real_stopped_child_is_continued_by_the_janitor(tmp_path: Path) -> None:
@@ -179,11 +214,11 @@ def test_a_real_stopped_child_is_continued_by_the_janitor(tmp_path: Path) -> Non
         who = frozen.identify(child)
         assert who is not None
         os.kill(child, signal.SIGSTOP)
-        assert _wait_for(child, stopped=True)
+        assert os.WIFSTOPPED(_status_after(child, os.WUNTRACED))
         state = tmp_path / "state"
         frozen.write(state, _record(who, owner=Ident(0, 0)))
         assert frozen.janitor(state) == [child]
-        assert _wait_for(child, stopped=False)
+        assert os.WIFCONTINUED(_status_after(child, os.WCONTINUED))
     finally:
         os.kill(child, signal.SIGKILL)
         os.waitpid(child, 0)

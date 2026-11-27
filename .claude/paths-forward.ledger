@@ -9524,3 +9524,84 @@
 2026-11-26T22:05:49Z  status W1336 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
 2026-11-26T22:08:17Z  interrupt W2975 minted    -         "The 192 wall-only sh_test checks get a CPU bound, so the hour backstop is not their steady state"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2944
 2026-11-26T22:09:33Z  status W1388 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:14:54Z  interrupt W2976 minted    -         "The pre-submit runs the gate's own pre-suite cheap checks (the pre-commit's phases before bazel test) over the stack's tree before the submit"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T22:15:47Z  status W1389 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:17:38Z  interrupt W2977 minted    -         "A tool lists the built review refs whose cards are still open, so reviewed work parked in refs is never lost from sight"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T22:18:28Z  status W1415 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:21:57Z  interrupt W2978 minted    -         "pyratchet resolves a tool's relative finding paths against the CALLER's cwd, not the ratchet root, so --ratchet ROOT from another cwd crashes or reads the wrong tree (skills-9b, via github-82)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T22:24:36Z  status W1416 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:26:50Z  interrupt W2979 minted    -         "nemik-rank hides a ready card with open child cards even when it carries a built, reviewed fix (the seven umbrellas W2769, W2772, W2778, W2824, W2854, W2863, W2865)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-26T22:27:27Z  interrupt W2980 minted    -         "mikemol-repin --revendor also rewrites a repo's hermetic runtime pin (tools/checks-runtime.in and its lock), or says it is out of scope"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W1150
+2026-11-26T22:34:54Z  status W2724 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:34:54Z  status W2758 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:34:54Z  status W2769 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:34:54Z  status W2776 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:42:59Z  status W1428 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:46:27Z  status W1433 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:48:17Z  interrupt W2981 minted    -         "mutants_gen --write rewrites a module's site BUILD but leaves its now-empty baseline slice, which --check names stale"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2449
+2026-11-26T22:49:02Z  status W1443 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T22:51:42Z  status W1746 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T23:31:35Z  status W1823 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T23:39:10Z  status W1861 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T23:42:45Z  interrupt W2982 minted    -         "stackahead.unbuilt_on compares a stack's FINAL blob with the stack ahead's, so built-on and conflicts-with read the same and any stack adding to a shared file behind another is refused"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2944
+2026-11-26T23:42:50Z  interrupt W2983 minted    -         "hooks/warrants.bib is ONE shared append-only file per dist, so every hooks test addition touches it and serializes behind every other: atomize the source"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2982
+2026-11-26T23:43:43Z  status W1875 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T23:50:41Z  status W1899 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T23:53:19Z  status W1944 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-26T23:59:23Z  status W1949 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:01:24Z  status W1960 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:04:03Z  interrupt W2984 minted    -         "The commit gate's persistent tree keeps wheels a stack names as deleted, so a repin fails its one-wheel-per-dist check"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W963
+2026-11-27T00:04:04Z  interrupt W2985 minted    -         "The commit gate runs unit tests under the repo's current .venv, so it and the cut gate disagree on every repin (design ruling)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W963
+2026-11-27T00:05:26Z  status W1963 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:08:16Z  interrupt W2986 minted    -         "mikemol-wheel and mikemol-repin spell the local version differently (+g<sha> against +<sha>): one spelling or one builder, with a digest-match test"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W2571
+2026-11-27T00:09:12Z  interrupt W2987 minted    -         "mutants_gen stages no support file (tests/conftest.py and its imports) in any hooks site target, so a test using a conftest fixture errors its control in the sandbox"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2772
+2026-11-27T00:11:48Z  status W1975 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:13:48Z  status W1978 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:31:36Z  status W1984 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:34:05Z  status W2032 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:50:26Z  status W2113 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:56:04Z  status W2123 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T00:57:37Z  status W2306 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T01:10:24Z  status W2409 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T01:11:00Z  interrupt W2988 minted    -         "While a subagent the session launched runs, the session's own tool calls are refused and a text reply still ends the turn (standing 10)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-27T02:00:28Z  interrupt W2989 minted    -         "Before review, each claim of a change file OUTSIDE its AFTER text is checked to cite a probe that was run, or else cut"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-27T02:00:29Z  interrupt W2990 minted    -         "The structural-query hook refuses grep on a named .md file but lets grep -rnF over a directory of .md files through"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-27T02:01:09Z  interrupt W2991 minted    -         "A review-ref cut that waits on the gate lease writes the ref with the NEW main as parent over the OLD tree, so landing it would revert landed work"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=luthen-observability:W3064
+2026-11-27T02:02:02Z  status W2410 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:25:25Z  interrupt W2992 minted    -         "The writer has no --update-many selector for the cards a tick touched"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2178
+2026-11-27T02:25:26Z  interrupt W2993 minted    -         "The writer's --reviewing accepts only the transcript stem agent-ID and refuses a bare agent id with no message"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2178
+2026-11-27T02:25:27Z  interrupt W2994 minted    -         "mikemol-transcriptstruct needs a mode pairing each tool_use with its tool_result, so a reviewer can tell an executed change from a refused attempt"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=nemik:W2572
+2026-11-27T02:42:22Z  status W2959 ready>done writer    "ready -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W1122 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W1259 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W1267 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W1268 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W1308 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W1334 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2804 working>done writer    "working -> done"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2937 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2957 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2963 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2964 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2968 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2970 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:42:23Z  status W2973 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:50:06Z  status W2284 working>blocked writer    "working -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T02:58:29Z  interrupt W2995 minted    -         "fence's mutation grid is past half in //fence:mutants_6: decompose it along the cone (a module or one cell is the unit), never a shards raise"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2949
+2026-11-27T02:58:32Z  status W2861 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T03:02:05Z  status W1122 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T03:25:49Z  interrupt W2996 minted    -         "Flake: fence test_a_real_stopped_child_is_continued_by_the_janitor busy-polls /proc 5000 times with no happens-before, so a loaded host fails it"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2944
+2026-11-27T03:29:33Z  status W1259 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T03:34:51Z  interrupt W2997 minted    -         "The pinned structural-query guard denies from any project and any working directory, with no per-project copy of its routing table"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-27T03:34:53Z  interrupt W2998 minted    -         "The pinned hooks package ships no mikemol-hook-standing or mikemol-hook-standing-stop console script, so the standing hooks run only from a working tree"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-27T03:45:18Z  status W1267 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T03:45:25Z  status W2995 ready>working writer    "ready -> working"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T03:47:33Z  interrupt W2999 minted    -         "One graph_check.sh for every distribution that commits an import graph (hooks and fence each carry a copy)"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=W2995
+2026-11-27T03:49:15Z  status W1268 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T03:58:03Z  status W1308 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T04:01:58Z  status W1334 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T04:03:08Z  interrupt W3000 minted    -         "nemik_check passes project.parent as nemik's --root, so a project that IS the fleet root prints about 60 false Violations"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-27T04:03:10Z  interrupt W3001 minted    -         "build_failure reads PATHSFORWARD_BIN while settings and the other hooks spell it PATHS_FORWARD_BIN, and a missing writer is skipped in silence"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0  evidence=github-82
+2026-11-27T04:05:21Z  status W2435 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T04:10:56Z  status W2456 ready>blocked writer    "ready -> blocked"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0
+2026-11-27T04:15:46Z  status W2456 blocked>ready writer    "blocked -> ready"  session=0709aae6-1dba-4fe5-bfbe-24d21edd31e0

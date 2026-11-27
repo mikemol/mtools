@@ -617,3 +617,10 @@
   claim  = {The totals list the biggest class first, whatever order the modules were read in.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_the_report_leads_with_the_blind_spot_and_orders_each_total_by_count},
 }
+
+@misc{corpus-codoncensus-pick-skips-a-tests-or-stubs-directory-that-sits-inside-src,
+  section = {exitcensus},
+  title  = {A module under `src` is left out when a skipped name is on its path},
+  claim  = {A module under `src` is left out when a skipped name is on its path.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_codoncensus.py -k test_pick_skips_a_tests_or_stubs_directory_that_sits_inside_src},
+}

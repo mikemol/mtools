@@ -2669,3 +2669,10 @@
             named.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_admit_holder.py -k test_a_plain_run_held_beside_a_plain_run_gets_no_note},
 }
+
+@misc{fence-frozen-stop-that-lands-late-is-still-seen-by-the-kernels-report,
+  section = {frozen},
+  title  = {A stop sent after a delay is seen: waitpid waits for the kernel, in either order},
+  claim  = {A stop sent after a delay is seen: waitpid waits for the kernel, in either order.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_frozen.py -k test_a_stop_that_lands_late_is_still_seen_by_the_kernels_report},
+}
