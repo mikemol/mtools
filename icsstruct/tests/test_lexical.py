@@ -117,6 +117,13 @@ def test_a_folded_line_unfolds_into_one_record_spanning_both_lines() -> None:
     assert (rec.first, rec.last, rec.value) == (1, 2, "Synthetic long title")
 
 
+def test_a_tab_led_continuation_unfolds_as_a_space_led_one_does() -> None:
+    """A continuation may begin with a tab: its one leading blank goes and the rest joins on."""
+    (rec,) = lex("SUMMARY:Synthetic long\r\n\ttitle\r\n")
+    assert isinstance(rec, ContentLine)
+    assert (rec.first, rec.last, rec.value) == (1, 2, "Synthetic longtitle")
+
+
 def test_a_colon_inside_a_quoted_parameter_is_not_the_split() -> None:
     """The split is the first colon OUTSIDE quotes; a naive `partition(':')` cuts the CN."""
     split = split_content_line('ATTENDEE;cn="Room: 4";ROLE=CHAIR:mailto:x@life.invalid')

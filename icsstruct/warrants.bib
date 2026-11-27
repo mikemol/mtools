@@ -291,3 +291,10 @@
             hash.},
   check  = {cmd:.venv/bin/python3 -m pytest tests/test_source.py -k test_a_calname_inside_a_component_is_not_the_calendars_label},
 }
+
+@misc{icsstruct-lexical-tab-led-continuation-unfolds-as-a-space-led-one-does,
+  section = {lexical},
+  title  = {A continuation may begin with a tab: its one leading blank goes and the rest joins on},
+  claim  = {A continuation may begin with a tab: its one leading blank goes and the rest joins on.},
+  check  = {cmd:.venv/bin/python3 -m pytest tests/test_lexical.py -k test_a_tab_led_continuation_unfolds_as_a_space_led_one_does},
+}

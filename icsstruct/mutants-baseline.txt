@@ -10,5 +10,4 @@ survived src/mikemol/icsstruct/lexical.py::open-at-end-not-reported
 survived src/mikemol/icsstruct/lexical.py::ordinals-shared-across-parents
 survived src/mikemol/icsstruct/lexical.py::parameter-without-equals-accepted
 survived src/mikemol/icsstruct/lexical.py::parameter-without-key-accepted
-survived src/mikemol/icsstruct/lexical.py::tab-continuation-ignored
 survived src/mikemol/icsstruct/source.py::empty-calname-used
